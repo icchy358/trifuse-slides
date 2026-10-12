@@ -10,6 +10,11 @@ body{margin:0;min-height:100vh;background:var(--bg);color:#fff;font-family:'Noto
 main{max-width:960px;margin:0 auto;padding:clamp(40px,9vh,96px) 24px 48px}
 .tl{font-size:16px;font-weight:700;color:var(--note);letter-spacing:.3em}
 h1{margin:6px 0 32px;font-size:clamp(28px,5vw,44px);line-height:1.3}
+.lane{margin-top:36px;padding-left:18px;border-left:6px solid var(--main)}
+h2{margin:0;font-size:clamp(22px,3.6vw,30px);line-height:1.4}
+h2 small{display:block;font-size:16px;font-weight:400;color:var(--note)}
+h3{margin:22px 0 12px;font-size:18px;color:var(--hl);letter-spacing:.08em}
+.soon{margin:12px 0 0;font-size:16px;color:var(--note)}
 ul{list-style:none;margin:0;padding:0;display:grid;gap:18px}
 a{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 22px;background:#fff;color:var(--ink);text-decoration:none;border-top:10px solid var(--main);padding:24px 26px}
 a:hover,a:focus-visible{outline:5px solid var(--hl);outline-offset:0}
@@ -22,12 +27,26 @@ footer{margin-top:36px;font-size:14px;line-height:1.8;color:var(--note)}
 <main>
 <div class="tl">TriFuse</div>
 <h1>動く資料</h1>
+<section class="lane"><h2>情報セキュリティ<small>資産を守る技術</small></h2>
+<p class="soon">準備中</p>
+</section>
+<section class="lane"><h2>真贋<small>嘘と罠を看破する</small></h2>
+<p class="soon">準備中</p>
+</section>
+<section class="lane"><h2>金融<small>お金の仕組みを知る</small></h2>
+<h3>L1 基礎</h3>
 <ul>
-<li><a href="e0-01/"><b>E0-01</b><span>経済ニュースの登場人物を知る</span><i>ひらく ›</i></a></li>
-<li><a href="e0-02/"><b>E0-02</b><span>ニュースの数字を読み分ける</span><i>ひらく ›</i></a></li>
 <li><a href="f1-07/"><b>F1-07</b><span>ETFと投資信託の違い</span><i>ひらく ›</i></a></li>
 <li><a href="f1-08/"><b>F1-08</b><span>リスクとリターンの関係</span><i>ひらく ›</i></a></li>
 </ul>
-<footer>押して確かめる資料です。開くと最初に目次が出ます。<br>make_site v1.1（e0-01 535e488a・e0-02 a2e7ce51・f1-07 9c82f71e・f1-08 ecdb4cc7）</footer>
+</section>
+<section class="lane"><h2>経済<small>世界が動く理由を読む</small></h2>
+<h3>L0 入口</h3>
+<ul>
+<li><a href="e0-01/"><b>E0-01</b><span>経済ニュースの登場人物を知る</span><i>ひらく ›</i></a></li>
+<li><a href="e0-02/"><b>E0-02</b><span>ニュースの数字を読み分ける</span><i>ひらく ›</i></a></li>
+</ul>
+</section>
+<footer>押して確かめる資料です。開くと最初に目次が出ます。<br>make_site v1.2（e0-01 535e488a・e0-02 a2e7ce51・f1-07 9c82f71e・f1-08 ecdb4cc7）</footer>
 </main>
 </body></html>
