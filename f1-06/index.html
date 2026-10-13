@@ -205,6 +205,40 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 .f10x{position:absolute;left:418px;top:430px;width:44px;height:44px;border-radius:50%;background:var(--risk);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:opacity .3s 1.5s,transform .4s var(--ez) 1.5s}
 .f10qr{left:490px;top:436px;font-weight:700;color:var(--riskT);opacity:0;transition:opacity .4s 1.7s}
 .gfig.b .f10q,.gfig.b .f10qr{opacity:1}.gfig.b .f10qa{width:356px;opacity:1}.gfig.b .f10x{opacity:1;transform:none}
+/* ---- 縦向きのスマホ（幅 700 未満で縦長）：1枚を縮めて置くのをやめ、見出し → 図 → 切り替えの札 → 右の枠 → 注 の順に縦へ並べる ---- */
+#stage.pt{overflow-x:hidden;overflow-y:auto}
+/* ページの幅は 1920px のままにする（幅を画面に合わせると、幅を決めていない部品が中で折り返して形が変わる） */
+#stage.pt .page{inset:auto;left:0;top:0;width:1920px;min-height:100%;overflow:visible}
+#stage.pt .page:not(.on){display:none}
+#stage.pt .strip,#stage.pt .band8{right:auto;width:100vw}
+#stage.pt .prog,#stage.pt .ring{display:none}
+#stage.pt .rv{transition:opacity .5s var(--ez)}
+#stage.pt .sec{left:12px;top:12px;font-size:15px;gap:8px}
+#stage.pt .sec b{min-width:26px;height:22px;font-size:13px}
+#stage.pt .seclogo{height:26px}
+#stage.pt .head{left:12px;right:auto;width:calc(100vw - 24px);top:42px;font-size:21px;line-height:1.35;white-space:normal}
+#stage.pt .ctitle:not([style*="left"]){left:12px;right:auto;width:calc(100vw - 24px);font-size:14px;line-height:1.45}
+#stage.pt .note,#stage.pt .foot,#stage.pt .pno{left:12px;right:auto;width:calc(100vw - 24px);bottom:auto;font-size:11px;line-height:1.45;white-space:normal;overflow:visible}
+#stage.pt #navb{position:fixed;right:8px;top:6px;gap:6px}
+#stage.pt #navb button{font-size:13px;padding:4px 10px}
+.ptbar{position:absolute;left:12px;width:calc(100vw - 24px);display:none;flex-wrap:wrap;gap:6px}
+#stage.pt .ptbar{display:flex}
+.ptbar button{font:700 14px 'Noto Sans JP',sans-serif;padding:8px 12px;border-radius:999px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;text-align:left}
+.ptbar button.on{background:var(--ink);color:#fff}
+#stage.pt #scrim{position:fixed}
+#stage.pt #drawer{position:fixed;width:100%;height:100%;padding:44px 16px 20px}
+#stage.pt #drawer h2{font-size:19px!important;margin:10px 0 16px!important}
+#stage.pt #tabBody,#stage.pt #drawer table{font-size:14px!important}
+#stage.pt #drawer th{font-size:12px}
+#stage.pt .tabs button{font-size:14px;margin-right:16px}
+#stage.pt .x{top:6px;right:10px}
+#stage.pt #ov{position:fixed;padding:16px;overflow:auto}
+#stage.pt #ov h2{font-size:15px}#stage.pt #ov .it{gap:10px}#stage.pt #ov .it b{font-size:13px;width:36px}#stage.pt #ov .it span{font-size:15px}
+#stage.pt #ov .hint{position:static;margin-top:10px;font-size:11px}
+/* 表紙（F1-06）：章のカードを2列にして、幅を図の枠と同じにする */
+#stage.pt #p1 .main:has(.cards){width:1070px;height:1140px}
+#stage.pt #p1 .goals,#stage.pt #p1 .cards{width:1070px}
+#stage.pt #p1 .cards{grid-template-columns:repeat(2,1fr)}
 /* 共通：吹き出し・根拠パネル・一覧・知らせる輪・デモの矢印 */
 #navb{position:absolute;right:86px;top:40px;display:flex;gap:10px;z-index:3}
 #navb button{font:700 20px 'Noto Sans JP',sans-serif;padding:8px 18px;border:1.5px solid var(--main);background:#fff;color:var(--main);cursor:pointer}
@@ -531,17 +565,61 @@ function replay(id) {   // ページを開くたびに、いまの状態の図�
   f.classList.add('nt'); o.reset(s); void f.offsetWidth;
   requestAnimationFrame(() => requestAnimationFrame(() => { f.classList.remove('nt'); draw(id, o.cur); }));
 }
+// ---- 縦向きのスマホ（幅 700 未満で縦長）：1枚を縮めて黒い帯の中に置くのをやめ、見出し → 図 → 切り替えの札 → 右の枠 → 注 の順に縦へ並べる ----
+// 見出し・小見出し・注は字の大きさを変えて折り返す。図の側と右の枠は、形を変えずに幅いっぱいへ縮めて置く（図の中の字は小さいまま。指で広げて読む）。
+const PT = () => innerWidth < 700 && innerHeight > innerWidth;
+const PT_FLOW = '.strip,.band8,.prog,.sec,.head,.note,.foot,.pno,.ring,.ptbar';
+const ptLabel = (b, all) => b.classList.contains('sw') ? `${b.querySelector('b').textContent.trim()}：${b.querySelector('span').textContent}`
+  : b.closest('.qa') ? `問${all.filter(x => x.closest('.qa')).indexOf(b) + 1} ${b.textContent.trim()}` : b.textContent.trim();
+function ptSync(p) {   // 図の下に並べた札を、図の中の札の今の形に合わせる
+  const bar = p && p.querySelector(':scope > .ptbar'); if (!bar) return;
+  [...bar.children].forEach((m, i) => { const b = bar._src[i]; m.textContent = ptLabel(b, bar._src); m.classList.toggle('on', b.classList.contains('sw') ? !b.classList.contains('off') : b.classList.contains('on')); });
+}
+function ptReset() { $$('[data-pt]').forEach(e => { if (e.dataset.pt === 't') e.style.transform = e.style.transformOrigin = ''; else e.style.top = ''; delete e.dataset.pt; }); pages.forEach(q => { q.style.height = ''; }); }
+function portrait(top) {
+  if (!PT()) { if (stage.classList.contains('pt')) { stage.classList.remove('pt'); stage.style.width = stage.style.height = ''; ptReset(); fit(); } return; }
+  const p = pages[cur]; if (!p) return;
+  const W = innerWidth, pad = 12;
+  stage.classList.add('pt'); stage.style.transform = 'none'; stage.style.width = W + 'px'; stage.style.height = innerHeight + 'px'; ptReset();
+  const kids = [...p.children], side = kids.find(e => e.classList.contains('side')), head = kids.find(e => e.classList.contains('head')), ct = kids.find(e => e.classList.contains('ctitle') && !e.style.left);
+  const put = (e, y) => { e.style.top = y + 'px'; e.dataset.pt = 'y'; return y + e.offsetHeight; };
+  const L = e => e.offsetLeft !== undefined ? e.offsetLeft : parseFloat(e.style.left), T = e => e.offsetTop !== undefined ? e.offsetTop : parseFloat(e.style.top);
+  const H = e => e.offsetHeight !== undefined ? e.offsetHeight : +e.getAttribute('height') || 0;
+  let y = head.offsetTop + head.offsetHeight + 8;
+  if (ct) y = put(ct, y) + 8;
+  const rest = kids.filter(e => !e.matches(PT_FLOW) && e !== side && e !== ct && e !== head && H(e) > 0);
+  const cols = !side && rest.some(e => L(e) >= 800) ? [[86, 700, rest.filter(e => L(e) < 800)], [830, 1004, rest.filter(e => L(e) >= 800)]] : [[86, 1070, rest]];
+  cols.forEach(([x0, w, els]) => { if (!els.length) return;
+    const s = (W - pad * 2) / w, y0 = Math.min(...els.map(T)), y1 = Math.max(...els.map(e => T(e) + H(e)));
+    els.forEach(e => { e.style.transformOrigin = '0 0'; e.style.transform = `translate(${pad + (L(e) - x0) * s - L(e)}px,${y + (T(e) - y0) * s - T(e)}px) scale(${s})`; e.dataset.pt = 't'; });
+    y += (y1 - y0) * s + 10; });
+  const src = [...p.querySelectorAll('[data-pick],.seg button,.sws .sw,.qa button')];
+  if (src.length) {
+    let bar = kids.find(e => e.classList.contains('ptbar'));
+    if (!bar) { bar = document.createElement('div'); bar.className = 'ptbar'; bar._src = src; p.appendChild(bar);
+      src.forEach(b => { const m = document.createElement('button'); m.onclick = () => { b.click(); setTimeout(ptSync, 40, p); }; bar.appendChild(m); }); }
+    ptSync(p); y = put(bar, y) + 10;
+  }
+  if (side) { const s = (W - pad * 2) / side.offsetWidth; side.style.transformOrigin = '0 0'; side.style.transform = `translate(${pad - side.offsetLeft}px,${y - side.offsetTop}px) scale(${s})`; side.dataset.pt = 't'; y += side.offsetHeight * s + 10; }
+  ['note', 'foot', 'pno'].forEach(c => { const e = kids.find(k => k.classList.contains(c)); if (e) y = put(e, y) + 4; });
+  p.style.height = Math.max(y + 12, innerHeight) + 'px';
+  if (top) stage.scrollTop = 0;
+}
+addEventListener('resize', () => portrait());
+stage.addEventListener('scroll', () => { if (stage.classList.contains('pt') && stage.scrollLeft) stage.scrollLeft = 0; });
+stage.addEventListener('click', () => { if (stage.classList.contains('pt')) setTimeout(() => ptSync(pages[cur]), 40); }, true);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => portrait());
 function go(i, from) {
   if (i < 0 || i >= pages.length || i === cur) return;
   closeDrawer(); $('#ov').classList.remove('on'); tipOff();
   const p = pages[i];
   pages.forEach(x => { x.classList.remove('on', 'built'); x.style.transform = ''; });
-  if (from && !STATIC) {   // 押した場所からズームして入る
+  if (from && !STATIC && !PT()) {   // 押した場所からズームして入る（縦向きのスマホでは使わない）
     const a = from.getBoundingClientRect(), b = stage.getBoundingClientRect(), s = b.width / 1920;
     p.style.transition = 'none'; p.style.transformOrigin = `${(a.left - b.left + a.width / 2) / s}px ${(a.top - b.top + a.height / 2) / s}px`; p.style.transform = 'scale(.12)';
     requestAnimationFrame(() => requestAnimationFrame(() => { p.style.transition = ''; p.style.transform = 'scale(1)'; }));
   }
-  p.classList.add('on'); cur = i; replay(p.id);
+  p.classList.add('on'); cur = i; replay(p.id); portrait(true);
   $('#prevb').disabled = i === 0; $('#nextb').disabled = i === pages.length - 1;
   if (STATIC) p.classList.add('built'); else { let done = false; const b = () => { if (!done) { done = true; p.classList.add('built'); } }; requestAnimationFrame(() => setTimeout(b, 60)); setTimeout(b, 50 + 60); }
   ringOnce(p);
