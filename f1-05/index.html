@@ -331,6 +331,7 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 .g10bv{position:absolute;left:560px;top:132px;width:5px;height:28px;background:var(--orange);opacity:.3;transition:opacity .4s}
 .g10bx{position:absolute;left:476px;top:160px;width:554px;height:50px;box-sizing:border-box;border:2.5px solid var(--orange);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--orange-t);opacity:.3;transition:opacity .4s,background .4s}
 .gfig.why .g10bv{opacity:1}.gfig.why .g10bx{opacity:1;background:var(--orange-l)}
+.g10gl,.g10g{left:var(--gx)}
 .g10gl{position:absolute;top:240px;transform:translateX(-50%);font-size:20px;font-weight:700;white-space:nowrap}
 .g10g{position:absolute;top:306px;width:48px;height:48px;margin-left:-24px;border-radius:50%;box-sizing:border-box;border:3px solid var(--main);background:#fff;color:var(--main);font-size:24px;font-weight:700;transition:background .3s 1.2s,border-color .3s 1.2s,color .3s 1.2s,transform .4s var(--ez) 1.2s}
 .g10g i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;transition:opacity .2s 1.2s}
@@ -357,6 +358,8 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 #stage.pt .note,#stage.pt .foot,#stage.pt .pno{left:12px;right:auto;width:calc(100vw - 24px);bottom:auto;font-size:11px;line-height:1.45;white-space:normal;overflow:visible}
 #stage.pt #navb{position:fixed;right:8px;top:6px;gap:6px}
 #stage.pt #navb button{font-size:13px;padding:4px 10px}
+.ptcap{display:none}
+#stage.pt .ptcap{display:block;position:absolute;left:12px;width:calc(100vw - 24px);font-size:11.5px;line-height:1.45;color:var(--note)}
 .ptbar{position:absolute;left:12px;width:calc(100vw - 24px);display:none;flex-wrap:wrap;gap:6px}
 #stage.pt .ptbar{display:flex}
 .ptbar button{font:700 14px 'Noto Sans JP',sans-serif;padding:8px 12px;border-radius:999px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;text-align:left}
@@ -375,6 +378,81 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 #stage.pt #p1 .main:has(.cards){width:1070px;height:1140px}
 #stage.pt #p1 .goals,#stage.pt #p1 .cards{width:1070px}
 #stage.pt #p1 .cards{grid-template-columns:repeat(2,1fr)}
+/* ---- 縦向きのスマホ：図を縦長に描き直す（幅 660 の箱に置き直す。字は 20px のまま → 幅 390 の画面で約 11px） ---- */
+#stage.pt .seg,#stage.pt .sws,#stage.pt .g-sw,#stage.pt .g-st,#stage.pt .g-ft,#stage.pt .g-hint{display:none}
+#stage.pt .gwrap,#stage.pt .gfig{width:660px}
+/* p.1 表紙：章のカードを1列に */
+#stage.pt .toc{width:500px;grid-template-columns:1fr}
+/* p.2 棒を寄せる */
+#stage.pt #f2 [style*="left:285px"]{left:175px!important}
+#stage.pt #f2 [style*="left:755px"]{left:485px!important}
+#stage.pt #g2a{left:60px!important}#stage.pt #g2b{left:370px!important}
+#stage.pt #g2ta{left:175px!important}#stage.pt #g2tb{left:485px!important}
+#stage.pt .g2t{width:290px}
+#stage.pt .g2line{left:350px;width:270px}
+#stage.pt .g2ll{display:none}
+#stage.pt .g2base{left:30px;width:600px}
+/* p.3・p.4・p.9 のグラフ（間隔と長さは JS が描き直す） */
+#stage.pt .tl,#stage.pt .stk{width:660px}
+#stage.pt .tl .ax,#stage.pt .tl .axOn{left:70px}#stage.pt .tl .ax{width:530px}
+#stage.pt .stk .row{grid-template-columns:170px 1fr}
+#stage.pt .ax3{left:256px;width:490px}
+#stage.pt .say{width:660px;height:auto;padding:14px 20px}
+#stage.pt .fx{width:660px}
+#stage.pt .fxr{grid-template-columns:205px 1fr}
+#stage.pt .axis4{left:291px;width:455px}
+#stage.pt .res{width:660px;height:auto}
+/* p.5 棒を寄せて、値札を幅いっぱいに */
+#stage.pt #g5a{left:80px!important}#stage.pt #g5va,#stage.pt #g5na{left:140px!important}
+#stage.pt #g5b{left:460px!important}#stage.pt #g5vb,#stage.pt #g5nb{left:520px!important}
+#stage.pt .g5base{left:20px;width:620px}
+#stage.pt #g5buy{left:200px}
+#stage.pt .gfig.up #g5buy{transform:translateX(56px)!important}
+#stage.pt .g5tag{left:20px;width:620px}
+#stage.pt #g5cap{left:30px!important;top:24px!important}
+/* p.6 あなたと相手を寄せる */
+#stage.pt .g6you{left:8px;width:178px;padding:14px 10px}
+#stage.pt .g6you span{white-space:nowrap}
+#stage.pt .g6doc{left:192px}
+#stage.pt .g6ll{left:206px}
+#stage.pt .g6go{left:192px}#stage.pt .gfig.go .g6go{width:186px}
+#stage.pt .g6back{right:278px}#stage.pt .gfig.go .g6back{width:186px}#stage.pt .gfig.go.bad .g6back{width:96px}
+#stage.pt #g6bl{left:40px!important;top:402px}
+#stage.pt .g6who{left:386px}
+/* p.7 貸し手を上に、因果の2行を下に */
+#stage.pt .gwrap:has(#f7),#stage.pt #f7{height:740px}
+#stage.pt #f7 .g-l[style*="left:600px"]{left:200px!important;top:34px!important}
+#stage.pt .g7p{top:14px}
+#stage.pt .g7p[style*="left:600px"]{left:290px!important}#stage.pt .g7p[style*="left:710px"]{left:370px!important}#stage.pt .g7p[style*="left:820px"]{left:450px!important}#stage.pt .g7p[style*="left:930px"]{left:530px!important}
+#stage.pt .g7ls{left:200px;top:88px}
+#stage.pt .g7bar{bottom:270px}
+#stage.pt .g7c{left:20px;width:620px}
+#stage.pt .g7c1{top:516px}#stage.pt .g7c2{top:578px}
+#stage.pt #g7cap{top:646px!important}
+/* p.8 柱を寄せる */
+#stage.pt #g8cap{top:20px!important}
+#stage.pt .g8u[data-u="0"]{--cx:115px!important}#stage.pt .g8u[data-u="1"]{--cx:330px!important}#stage.pt .g8u[data-u="2"]{--cx:545px!important}
+#stage.pt .g8top{width:200px;margin-left:20px}
+#stage.pt .g8n{width:200px}
+#stage.pt .g8ground{left:10px;width:640px}
+/* p.10 道を縦にして、関門を上から3つ */
+#stage.pt .gwrap:has(#f10),#stage.pt #f10{height:720px}
+#stage.pt .g10q{left:20px;top:20px;width:620px;height:64px;font-size:28px;padding:0 14px}
+#stage.pt .g10v{display:none}
+#stage.pt .g10bv{top:84px;height:20px}
+#stage.pt .g10bx{left:150px;top:104px;width:490px;font-size:19px}
+#stage.pt .g10hd{left:68px;top:84px;width:0;height:456px;border-top:0;border-left:5px dashed var(--gray)}
+#stage.pt .g10h{left:68px;top:84px;width:5px;height:0;transition:height 1.1s var(--ez) .2s}
+#stage.pt .g10dot{left:70px;top:72px;transition:top 1.1s var(--ez) .2s}
+#stage.pt .g10g{left:70px;top:calc(var(--gy) - 24px)}
+#stage.pt .g10gl{left:110px;top:calc(var(--gy) - 32px);transform:none}
+#stage.pt .g10note{left:110px;width:520px!important;text-align:left}
+#stage.pt .g10goal{left:20px;top:540px;width:300px;height:70px}
+#stage.pt #g10cap{top:630px!important}
+/* p.11 まとめと問いを縦に */
+#stage.pt .two{width:660px;grid-template-columns:1fr}
+#stage.pt .two .col{height:auto}
+#stage.pt .qa{width:660px;grid-template-columns:1fr;top:824px}
 /* 共通：吹き出し・根拠パネル・一覧・知らせる輪・デモの矢印 */
 #tip{position:absolute;display:none;background:#fff;border:1px solid var(--rule);box-shadow:0 8px 24px rgba(0,0,0,.14);padding:10px 16px;font-size:18px;line-height:1.5;pointer-events:none;z-index:5}
 #scrim{position:absolute;inset:0;background:rgba(10,16,24,.35);opacity:0;pointer-events:none;transition:opacity .3s;z-index:6}
@@ -422,7 +500,7 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
   <div class="sec" data-sec="2"></div>
   <h1 class="head" data-head="2">同じ100万円でも、出資は業績しだいで、貸付は受け取る額が先に決まる</h1>
   <div class="ctitle" data-t="c2"></div>
-  <div class="gwrap rv" style="transition-delay:.3s"><div class="gfig" id="f2">
+  <div class="gwrap rv" style="transition-delay:.3s"><div class="gfig" id="f2" data-ptnote="点線は、契約で決めた額">
     <div class="g-sw"><button data-pick="0" data-demo="f2s0" data-ring="1">大繁盛したとき</button><button data-pick="1" data-demo="f2s1">閉店したとき</button></div>
     <div class="g-hint">模式図：棒の高さは金額ではありません</div>
     <div class="g2t" id="g2ta" style="left:285px"></div><div class="g2t" id="g2tb" style="left:755px"></div>
@@ -762,6 +840,7 @@ function replay(n) {
   f.classList.add('nt'); o.reset(); void f.offsetWidth;
   requestAnimationFrame(() => requestAnimationFrame(() => { f.classList.remove('nt'); pick(n, o.cur); }));
 }
+function ptRedraw() { buildP3(); drawP3(YR); buildP4(); drawP4(HOLD); p9Axis(); drawP9(); const o = FIG[cur + 1]; if (o) pick(cur + 1, o.cur); }   // 縦向きと横向きで置き方が変わる図を、向きが変わったときに描き直す
 const side = (n, big, line, sub, cmp) => { $('#b' + n).innerHTML = big; $('#b' + n + 'l').textContent = line; $('#b' + n + 's').textContent = sub; $('#cmp' + n).innerHTML = cmp.map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join(''); };
 const bigN = (v, u, c) => `<span style="color:${c || 'var(--main)'}">${v}<small>${u}</small></span>`;
 const bigW = (t, c) => `<span class="bigw" style="color:${c || 'var(--main)'}">${t}</span>`;
@@ -792,18 +871,22 @@ fig(2, {
       [['出資の戻り', '1円も戻らない'], ['貸付の戻り', '先に弁済（額は xx）']]); }});
 
 
-// ---- p3 5年の受け取り ----
-const X3 = y => 60 + y * 190;
-$('#tl').innerHTML = '<div class="ax"></div><div class="axOn" id="axOn"></div>' + [...Array(DATA.years + 1)].map((_, y) =>
-  `<div class="nd" id="nd${y}" style="left:${X3(y)}px"></div><div class="yl" style="left:${X3(y)}px">${y === DATA.years ? `${y}年（満期）` : y + '年'}</div>` +
-  `<div class="ch" id="ch${y}" style="left:${X3(y)}px;${y === DATA.years ? 'top:4px;text-align:center;' : ''}${y === 0 ? 'background:var(--gray-l)' : y === DATA.years ? 'background:var(--green-l);color:var(--green-t)' : 'background:var(--sky-l);color:var(--deep)'}">${y === 0 ? `貸す ${fm(-DATA.principal)}` : y === DATA.years ? `+${man(DATA.coupon)}<br>＋ 元本 ${man(DATA.principal)}` : `+${man(DATA.coupon)}`}</div>`).join('');
-const PX3 = 840 / TOTAL, CW3 = DATA.coupon * PX3;
-$('#stk3').innerHTML = `<div class="row"><div><b>貸した額</b><small>最初に出したお金</small></div><div class="bar"><i style="left:0;width:${DATA.principal * PX3}px;background:var(--gray-l);border:2px solid var(--gray);box-sizing:border-box"></i><em style="left:20px">${man(DATA.principal)}</em></div></div>` +
-  `<div class="row"><div><b>受け取った合計</b><small>利息と元本</small></div><div class="bar" id="rcv">${[...Array(DATA.years)].map((_, k) => `<i class="cp" data-y="${k + 1}" style="left:${k * (CW3 + 3)}px;width:${CW3}px;background:var(--sky)"></i>`).join('')}` +
-  `<i class="pr" style="left:${DATA.years * (CW3 + 3) + 3}px;width:${DATA.principal * PX3}px;background:var(--green)"></i><em id="rcvT"></em></div></div>`;
-$('#ax3').innerHTML = [0, .5, 1].map(f => `<span style="left:${DATA.principal * f * PX3}px">${DATA.principal * f / 10000}</span>`).join('') + `<span style="left:${TOTAL * PX3}px">${TOTAL / 10000}</span><span style="left:${TOTAL * PX3 + 50}px">万円</span>`;
-$$('#rcv i.cp').forEach(b => hover(b, () => tipHtml(man(DATA.coupon), `${b.dataset.y}年目の利息（年${DATA.rate}%）`, '1節'), 'total'));
-hover($('#rcv i.pr'), () => tipHtml(man(DATA.principal), '満期に返される元本', '1節'), 'total');
+// ---- p3 5年の受け取り（縦向きのスマホでは、年の間隔と棒の長さを詰めて描き直す） ----
+let X3, PX3, CW3;
+function buildP3() {
+  const V = stage.classList.contains('pt');
+  X3 = y => V ? 70 + y * 106 : 60 + y * 190; PX3 = (V ? 300 : 840) / TOTAL; CW3 = DATA.coupon * PX3;
+  $('#tl').innerHTML = '<div class="ax"></div><div class="axOn" id="axOn"></div>' + [...Array(DATA.years + 1)].map((_, y) =>
+    `<div class="nd" id="nd${y}" style="left:${X3(y)}px"></div><div class="yl" style="left:${X3(y)}px">${y === DATA.years ? `${y}年（満期）` : y + '年'}</div>` +
+    `<div class="ch" id="ch${y}" style="left:${X3(y)}px;${y === DATA.years ? 'top:4px;text-align:center;' : ''}${y === 0 ? 'background:var(--gray-l)' : y === DATA.years ? 'background:var(--green-l);color:var(--green-t)' : 'background:var(--sky-l);color:var(--deep)'}">${y === 0 ? `貸す${V ? '<br>' : ' '}${fm(-DATA.principal)}` : y === DATA.years ? `+${man(DATA.coupon)}<br>＋ 元本${V ? '<br>' : ' '}${man(DATA.principal)}` : `+${man(DATA.coupon)}`}</div>`).join('');
+  $('#stk3').innerHTML = `<div class="row"><div><b>貸した額</b><small>最初に出したお金</small></div><div class="bar"><i style="left:0;width:${DATA.principal * PX3}px;background:var(--gray-l);border:2px solid var(--gray);box-sizing:border-box"></i><em style="left:20px">${man(DATA.principal)}</em></div></div>` +
+    `<div class="row"><div><b>受け取った合計</b><small>利息と元本</small></div><div class="bar" id="rcv">${[...Array(DATA.years)].map((_, k) => `<i class="cp" data-y="${k + 1}" style="left:${k * (CW3 + 3)}px;width:${CW3}px;background:var(--sky)"></i>`).join('')}` +
+    `<i class="pr" style="left:${DATA.years * (CW3 + 3) + 3}px;width:${DATA.principal * PX3}px;background:var(--green)"></i><em id="rcvT"></em></div></div>`;
+  $('#ax3').innerHTML = [0, .5, 1].map(f => `<span style="left:${DATA.principal * f * PX3}px">${DATA.principal * f / 10000}</span>`).join('') + `<span style="left:${TOTAL * PX3}px">${TOTAL / 10000}</span><span style="left:${TOTAL * PX3 + 50}px">万円</span>`;
+  $$('#rcv i.cp').forEach(b => hover(b, () => tipHtml(man(DATA.coupon), `${b.dataset.y}年目の利息（年${DATA.rate}%）`, '1節'), 'total'));
+  hover($('#rcv i.pr'), () => tipHtml(man(DATA.principal), '満期に返される元本', '1節'), 'total');
+}
+buildP3();
 let YR = 0;
 function drawP3(y) {
   YR = Math.max(0, Math.min(DATA.years, y));
@@ -824,21 +907,26 @@ function drawP3(y) {
 $('#yrNext').onclick = () => drawP3(YR + 1); $('#yrReset').onclick = () => drawP3(0);
 
 // ---- p4 3年目に売るか、満期まで持つか ----
-const XY = y => 110 + y * 168, VY = v => 520 - v / DATA.principal * 440;
+// ---- p4 3年目に売るか、満期まで持つか（縦向きのスマホでは、年の間隔と棒の幅を詰めて描き直す） ----
+let XY = y => 110 + y * 168;
+const VY = v => 520 - v / DATA.principal * 440;
 const svg4 = $('#chart4'); let barSell, barHold, lblSell, lblHold, rem, remT, per, mk;
-(function buildP4() {
+function buildP4() {
+  const V = stage.classList.contains('pt'), bw = V ? 90 : 120;
+  XY = y => V ? 110 + y * 100 : 110 + y * 168;
+  svg4.innerHTML = ''; svg4.setAttribute('width', V ? 660 : 1060);
   el('text', {x: 0, y: 40, 'font-size': 18, fill: 'var(--note)'}, svg4).textContent = '単位：万円';
   [0, .25, .5, .75, 1].forEach(f => { el('text', {x: 80, y: VY(DATA.principal * f) + 6, 'font-size': 18, 'text-anchor': 'end', fill: 'var(--note)'}, svg4).textContent = DATA.principal * f / 10000; });
-  el('line', {x1: 96, y1: 520, x2: XY(DATA.years) + 70, y2: 520, stroke: 'var(--ink)', 'stroke-width': 2}, svg4);
+  el('line', {x1: 96, y1: 520, x2: XY(DATA.years) + bw / 2 + 10, y2: 520, stroke: 'var(--ink)', 'stroke-width': 2}, svg4);
   for (let y = 0; y <= DATA.years; y++) el('text', {x: XY(y), y: 566, 'font-size': 18, 'text-anchor': 'middle', fill: 'var(--note)'}, svg4).textContent = y === DATA.years ? `${y}年（満期）` : `${y}年`;
-  el('line', {x1: 96, y1: VY(DATA.principal), x2: XY(DATA.years) + 70, y2: VY(DATA.principal), stroke: 'var(--main)', 'stroke-width': 2, 'stroke-dasharray': '8 6'}, svg4);
+  el('line', {x1: 96, y1: VY(DATA.principal), x2: XY(DATA.years) + bw / 2 + 10, y2: VY(DATA.principal), stroke: 'var(--main)', 'stroke-width': 2, 'stroke-dasharray': '8 6'}, svg4);
   el('text', {x: 110, y: VY(DATA.principal) - 14, 'font-size': 18, fill: 'var(--main)', 'font-weight': 700}, svg4).textContent = `発行体の約束：満期に${man(DATA.principal)}`;
   el('line', {x1: XY(DATA.sell_year), y1: 56, x2: XY(DATA.sell_year), y2: 520, stroke: 'var(--note)', 'stroke-width': 1.5, 'stroke-dasharray': '3 5'}, svg4);
   el('text', {x: XY(DATA.sell_year), y: 34, 'font-size': 20, 'font-weight': 700, 'text-anchor': 'middle'}, svg4).textContent = `${DATA.sell_year}年目：世の中の金利 年${DATA.rate}%→年${DATA.market_rate}%`;
-  const bar = (y, v, d) => el('rect', {x: XY(y) - 60, y: VY(v), width: 120, height: 520 - VY(v), class: 'barv', style: `transition-delay:${d}ms`}, svg4);
+  const bar = (y, v, d) => el('rect', {x: XY(y) - bw / 2, y: VY(v), width: bw, height: 520 - VY(v), class: 'barv', style: `transition-delay:${d}ms`}, svg4);
   barSell = bar(DATA.sell_year, DATA.sell_price, 300); barHold = bar(DATA.years, DATA.principal, 360);
-  rem = el('rect', {x: XY(DATA.sell_year) - 60, y: VY(DATA.principal), width: 120, height: VY(DATA.sell_price) - VY(DATA.principal), fill: 'none', stroke: 'var(--orange)', 'stroke-width': 2, 'stroke-dasharray': '3 3', class: 'fade'}, svg4);
-  remT = el('text', {x: XY(DATA.sell_year) + 74, y: VY(DATA.principal) + 34, 'font-size': 22, 'font-weight': 700, fill: 'var(--orange-t)', class: 'fade'}, svg4);
+  rem = el('rect', {x: XY(DATA.sell_year) - bw / 2, y: VY(DATA.principal), width: bw, height: VY(DATA.sell_price) - VY(DATA.principal), fill: 'none', stroke: 'var(--orange)', 'stroke-width': 2, 'stroke-dasharray': '3 3', class: 'fade'}, svg4);
+  remT = el('text', {x: XY(DATA.sell_year) + bw / 2 + 14, y: VY(DATA.principal) + 34, 'font-size': 22, 'font-weight': 700, fill: 'var(--orange-t)', class: 'fade'}, svg4);
   remT.textContent = `差 ${fm(SELL_GAP)}`;
   lblSell = el('text', {x: XY(DATA.sell_year), y: 500, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, svg4); lblSell.textContent = man(DATA.sell_price);
   lblHold = el('text', {x: XY(DATA.years), y: 500, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, svg4); lblHold.textContent = man(DATA.principal);
@@ -848,7 +936,8 @@ const svg4 = $('#chart4'); let barSell, barHold, lblSell, lblHold, rem, remT, pe
   hover(barSell, () => tipHtml(man(DATA.sell_price), `${DATA.sell_year}年目に売った値段（世の中の金利 年${DATA.market_rate}%）`, '2節'), 'sell');
   hover(barHold, () => tipHtml(man(DATA.principal), '満期まで持ったときに戻る額', '2節'), 'sell');
   hover(mk.firstChild, () => `<b>持っていた期間</b><br>${HOLD === 0 ? DATA.sell_year : DATA.years}年`);
-})();
+}
+buildP4();
 const HOLDS = [
   {name: `${DATA.sell_year}年目に売る`, y: DATA.sell_year, v: DATA.sell_price, line: `${DATA.sell_year}年目に売った値段（世の中の金利 年${DATA.market_rate}%）`,
     sub: `途中で他人に売ると、元本を下回る値段でしか<br>換金できない局面がある（p.5 で理由を見る）`},
@@ -942,12 +1031,13 @@ const ISS = [
   {k: '社債', c: 'var(--orange)', t: 'var(--orange-t)', who: '民間企業', back: '企業の事業環境と収益力', note: '業績が悪化すれば、｜利息や元本の支払いが｜滞る危険を直接抱える', y: '高め', x: 870, w: 64, yh: 140, cap: '業績しだいで支払いが滞る危険を抱えるので、利回りは高めになる'},
 ];
 $('#g8sw').innerHTML = ISS.map((s, i) => `<button data-pick="${i}" data-demo="f8s${i}"${i ? '' : ' data-ring="1"'}>${s.k}</button>`).join('');
-$('#g8units').innerHTML = ISS.map((s, i) => `<div class="g8u" data-u="${i}">` +
-  `<div class="g8y" style="left:${s.x}px;bottom:${383 + s.yh + 8}px;color:${s.t}">利回り：${s.y}</div>` +
-  `<div class="g8blk" data-yh="${s.yh}" style="left:${s.x - 60}px;${s.dash ? `border:3px dashed ${s.c};border-bottom:0;color:${s.t}` : `background:${s.c}`}">${s.dash ? '？' : ''}</div>` +
-  `<div class="g8top" style="left:${s.x - 120}px"></div>` +
-  `<div class="g8pil" style="left:${s.x - s.w / 2}px;width:${s.w}px;${s.dash ? `border:3px dashed ${s.c};border-bottom:0` : `background:${s.c}`}"></div>` +
-  `<div class="g8n" style="left:${s.x}px"><b style="color:${s.t}">${s.k}</b><span>${nb(s.back)}</span></div></div>`).join('');
+// 横の位置は --cx（柱のまん中）から決める。縦向きのスマホでは CSS が --cx を置き直す
+$('#g8units').innerHTML = ISS.map((s, i) => `<div class="g8u" data-u="${i}" style="--cx:${s.x}px">` +
+  `<div class="g8y" style="left:var(--cx);bottom:${383 + s.yh + 8}px;color:${s.t}">利回り：${s.y}</div>` +
+  `<div class="g8blk" data-yh="${s.yh}" style="left:calc(var(--cx) - 60px);${s.dash ? `border:3px dashed ${s.c};border-bottom:0;color:${s.t}` : `background:${s.c}`}">${s.dash ? '？' : ''}</div>` +
+  `<div class="g8top" style="left:calc(var(--cx) - 120px)"></div>` +
+  `<div class="g8pil" style="left:calc(var(--cx) - ${s.w / 2}px);width:${s.w}px;${s.dash ? `border:3px dashed ${s.c};border-bottom:0` : `background:${s.c}`}"></div>` +
+  `<div class="g8n" style="left:var(--cx)"><b style="color:${s.t}">${s.k}</b><span>${nb(s.back)}</span></div></div>`).join('');
 $('#k8').textContent = '利回りの差は、発行体の信用力の差がそのまま映ったもの。個別の利回り・格付けは扱わない';
 fig(8, {
   reset: () => { $$('#f8 .g8u').forEach(u => u.classList.remove('up')); $$('#f8 .g8blk').forEach(b => { b.style.height = '0px'; }); },
@@ -958,7 +1048,7 @@ fig(8, {
 
 
 // ---- p9 前提のスイッチ ----
-const PX9 = 740 / YEN_BUY;
+let PX9 = 740 / YEN_BUY;
 const PREM = [
   {k: 'hold', t: '満期まで持つ', on: '途中で売らない', off: '途中で売る'},
   {k: 'alive', t: '発行体が存続する', on: '満期まで払い続ける', off: '発行体が倒産する'},
@@ -967,8 +1057,9 @@ const PREM = [
 const P = {hold: true, alive: true, fx: true};
 $('#sws').innerHTML = PREM.map((p, i) => `<button class="sw" data-k="${p.k}" data-demo="t${i}"${i === 2 ? ' data-ring="1"' : ''}><b>${i + 1}　${p.t}</b><span></span><em></em></button>`).join('');
 $$('.sw').forEach(b => b.onclick = () => { P[b.dataset.k] = !P[b.dataset.k]; drawP9(); });
-$('#axis4').innerHTML = [0, .5, 1].map(f => `<span style="left:${YEN_BUY * f * PX9}px">${YEN_BUY * f / 10000}</span>`).join('') + '<span style="left:790px;color:var(--note)">万円</span>';
-$('#fxA').style.width = YEN_BUY * PX9 + 'px'; $('#fxAl').textContent = man(YEN_BUY);
+function p9Axis() { PX9 = (stage.classList.contains('pt') ? 400 : 740) / YEN_BUY; $('#axis4').innerHTML = [0, .5, 1].map(f => `<span style="left:${YEN_BUY * f * PX9}px">${YEN_BUY * f / 10000}</span>`).join('') + `<span style="left:${YEN_BUY * PX9 + 50}px;color:var(--note)">万円</span>`;
+$('#fxA').style.width = YEN_BUY * PX9 + 'px'; }
+p9Axis(); $('#fxAl').textContent = man(YEN_BUY);
 hover($('#fxA'), () => tipHtml(man(YEN_BUY), `買ったときの円換算（${usdT(DATA.usd)}×${DATA.fx_buy}円）`, '6節'), 'fx');
 hover($('#fxB'), () => { const r = P.fx ? DATA.fx_buy : DATA.fx_end; return P.hold && P.alive ? tipHtml(man(DATA.usd * r), `満期に円で戻る元本（${usdT(DATA.usd)}×${r}円）`, '6節') : '<b>xx</b><br>額は原稿に無い'; }, 'fx');
 function drawP9() {
@@ -1002,18 +1093,22 @@ const CHK = [
   {t: '為替で目減りしないか', d: '外貨建てなら、円高で円で見た元本が減る', dn: '外貨建てなら、<br>円高で円で見た元本が減る', g: 8, w: '通貨', x: 740, goal: '円で見た元本が減る', cap: '「元本が確実に返ってくる」には、発行された通貨の単位で戻るという前提が隠れている'},
   {t: 'なぜ高利回りなのか', d: '高い利回りは、貸し倒れの危険を引き受ける対価（危険料）', g: 6, w: '危険料', x: 880, goal: '円で元本が戻る', cap: '「高利回り」は商品の優れた性能ではなく、貸し倒れの危険を引き受ける対価'},
 ];
-$('#g10gates').innerHTML = CHK.slice(0, 3).map((c, k) => `<div class="g10gl" style="left:${c.x}px">${c.t}</div><div class="g10g" data-g="${k}" style="left:${c.x}px"><i class="o">○</i><i class="x">×</i></div>`).join('');
+// 関門の位置は --gx（横の道）と --gy（縦の道）で持つ。縦向きのスマホでは道を縦にする
+[230, 350, 470, 540].forEach((v, k) => { CHK[k].y = v; });
+$('#g10gates').innerHTML = CHK.slice(0, 3).map((c, k) => `<div class="g10gl" style="--gx:${c.x}px;--gy:${c.y}px">${c.t}</div><div class="g10g" data-g="${k}" style="--gx:${c.x}px;--gy:${c.y}px"><i class="o">○</i><i class="x">×</i></div>`).join('');
 $('#g10st').innerHTML = CHK.map((c, k) => `<button data-pick="${k}" data-demo="f10s${k}"${k ? '' : ' data-ring="1"'}>${c.t}</button>`).join('');
 $('#k10').textContent = '個別の商品の良し悪しは、ここでは判断しない。確かめるのは、言葉に隠れた前提と、利回りの理由だけ';
 $('#j10').onclick = () => go(CHK[FIG[10].cur].g);
 fig(10, {
-  reset: () => { $('#f10').classList.remove('why'); $('#g10h').style.width = '0px'; $('#g10dot').style.left = '120px'; $$('#f10 .g10g').forEach(g => g.classList.remove('shut')); $('#g10goal').classList.remove('lost'); $('#g10note').classList.remove('on'); },
-  draw: i => { const c = CHK[i], gate = i < 3, a = $('#g10a'), b = $('#g10b');
-    $('#g10v').style.left = 40 + a.offsetLeft + 20 + 'px'; $('#g10bv').style.left = 40 + b.offsetLeft + b.offsetWidth / 2 - 2 + 'px';
-    $('#f10').classList.toggle('why', !gate); $('#g10h').style.width = c.x - 120 + 'px'; $('#g10dot').style.left = c.x - 44 + 'px';
+  reset: () => { const h = $('#g10h'), d = $('#g10dot'); $('#f10').classList.remove('why'); h.style.width = h.style.height = d.style.left = d.style.top = ''; $$('#f10 .g10g').forEach(g => g.classList.remove('shut')); $('#g10goal').classList.remove('lost'); $('#g10note').classList.remove('on'); },
+  draw: i => { const c = CHK[i], gate = i < 3, a = $('#g10a'), b = $('#g10b'), q0 = a.offsetParent.offsetLeft, V = stage.classList.contains('pt'), h = $('#g10h'), d = $('#g10dot');
+    $('#g10v').style.left = q0 + a.offsetLeft + 20 + 'px'; $('#g10bv').style.left = q0 + b.offsetLeft + b.offsetWidth / 2 - 2 + 'px';
+    $('#f10').classList.toggle('why', !gate);
+    if (V) { h.style.width = d.style.left = ''; h.style.height = c.y - 84 + 'px'; d.style.top = c.y - 56 + 'px'; }
+    else { h.style.height = d.style.top = ''; h.style.width = c.x - 120 + 'px'; d.style.left = c.x - 44 + 'px'; }
     $$('#f10 .g10g').forEach(g => g.classList.toggle('shut', +g.dataset.g === i));
     $('#g10goal').classList.toggle('lost', gate); $('#g10goal').textContent = c.goal;
-    const n = $('#g10note'); n.classList.toggle('on', gate); if (gate) { n.innerHTML = c.dn; n.style.left = Math.min(c.x - 180, 510) + 'px'; }
+    const n = $('#g10note'); n.classList.toggle('on', gate); if (gate) { n.innerHTML = V ? c.d : c.dn; n.style.left = V ? '' : Math.min(c.x - 180, 510) + 'px'; n.style.top = V ? c.y - 2 + 'px' : ''; }
     $('#g10cap').textContent = c.cap; $('#j10').textContent = `p.${c.g + 1} で確かめる ›`;
     side(10, bigW(c.w, gate ? 'var(--main)' : 'var(--orange-t)'), c.t, c.d, [['勧誘の言葉のどこ', gate ? '「元本が確実に返ってくる」' : '「高利回り」'], ['確かめるページ', `p.${c.g + 1}`]]); }});
 
@@ -1104,42 +1199,48 @@ function ringOnce(p) {
     const r = document.createElement('div'); r.className = 'ring'; Object.assign(r.style, {left: (a.left - b.left) / s + a.width / s / 2 - d / 2 + 'px', top: (a.top - b.top) / s + a.height / s / 2 - d / 2 + 'px', width: d + 'px', height: d + 'px'}); p.appendChild(r); setTimeout(() => r.remove(), 1400); }, 2600);
 }
 // ---- 縦向きのスマホ（幅 700 未満で縦長）：1枚を縮めて黒い帯の中に置くのをやめ、見出し → 図 → 切り替えの札 → 右の枠 → 注 の順に縦へ並べる ----
-// 見出し・小見出し・注は字の大きさを変えて折り返す。図の側と右の枠は、形を変えずに幅いっぱいへ縮めて置く（図の中の字は小さいまま。指で広げて読む）。
+// 見出し・小見出し・図の題・注は字の大きさを変えて折り返す。図の側と右の枠は、その幅を画面の幅いっぱいへ縮めて置く。
+// 図の中の置き方は CSS（#stage.pt …）が縦長の箱（幅 660）へ置き直す。図の中の札は隠し、同じ札を図の下に指で押せる大きさで並べる。
 const PT = () => innerWidth < 700 && innerHeight > innerWidth;
-const PT_FLOW = '.strip,.band8,.prog,.sec,.head,.note,.foot,.pno,.ring,.ptbar';
-const ptLabel = (b, all) => b.classList.contains('sw') ? `${b.querySelector('b').textContent.trim()}：${b.querySelector('span').textContent}`
-  : b.closest('.qa') ? `問${all.filter(x => x.closest('.qa')).indexOf(b) + 1} ${b.textContent.trim()}` : b.textContent.trim();
+const PT_FLOW = '.strip,.band8,.prog,.sec,.head,.note,.foot,.pno,.ring,.ptbar,.ptcap';
+const ptLabel = b => b.classList.contains('sw') ? `${b.querySelector('b').textContent.trim()}：${b.querySelector('span').textContent}` : b.textContent.trim();
 function ptSync(p) {   // 図の下に並べた札を、図の中の札の今の形に合わせる
-  const bar = p && p.querySelector(':scope > .ptbar'); if (!bar) return;
-  [...bar.children].forEach((m, i) => { const b = bar._src[i]; m.textContent = ptLabel(b, bar._src); m.classList.toggle('on', b.classList.contains('sw') ? !b.classList.contains('off') : b.classList.contains('on')); });
+  const bar = p && [...p.children].find(e => e.classList.contains('ptbar')); if (!bar) return;
+  [...bar.children].forEach((m, i) => { const b = bar._src[i]; m.textContent = ptLabel(b); m.classList.toggle('on', b.classList.contains('sw') ? !b.classList.contains('off') : b.classList.contains('on')); });
 }
 function ptReset() { $$('[data-pt]').forEach(e => { if (e.dataset.pt === 't') e.style.transform = e.style.transformOrigin = ''; else e.style.top = ''; delete e.dataset.pt; }); pages.forEach(q => { q.style.height = ''; }); }
+const ptAgain = () => { if (typeof ptRedraw === 'function') ptRedraw(); };
 function portrait(top) {
-  if (!PT()) { if (stage.classList.contains('pt')) { stage.classList.remove('pt'); stage.style.width = stage.style.height = ''; ptReset(); fit(); } return; }
+  const was = stage.classList.contains('pt');
+  if (!PT()) { if (was) { stage.classList.remove('pt'); stage.style.width = stage.style.height = ''; ptReset(); fit(); ptAgain(); } return; }
   const p = pages[cur]; if (!p) return;
   const W = innerWidth, pad = 12;
   stage.classList.add('pt'); stage.style.transform = 'none'; stage.style.width = W + 'px'; stage.style.height = innerHeight + 'px'; ptReset();
-  const kids = [...p.children], side = kids.find(e => e.classList.contains('side')), head = kids.find(e => e.classList.contains('head')), ct = kids.find(e => e.classList.contains('ctitle') && !e.style.left);
+  if (!was || STATIC) ptAgain();
+  if (!was && !STATIC) setTimeout(() => portrait(), 1000);   // 縦向きへ入ったときだけ、描き直した棒の伸び縮みが終わってから、幅を測り直して置き直す（動きの無い設定では要らない）
+  const kids = [...p.children], pickc = c => kids.find(e => e.classList.contains(c)), side = pickc('side'), head = pickc('head'), ct = kids.find(e => e.classList.contains('ctitle') && !e.style.left);
   const put = (e, y) => { e.style.top = y + 'px'; e.dataset.pt = 'y'; return y + e.offsetHeight; };
   const L = e => e.offsetLeft !== undefined ? e.offsetLeft : parseFloat(e.style.left), T = e => e.offsetTop !== undefined ? e.offsetTop : parseFloat(e.style.top);
-  const H = e => e.offsetHeight !== undefined ? e.offsetHeight : +e.getAttribute('height') || 0;
+  const H = e => e.offsetHeight !== undefined ? e.offsetHeight : +e.getAttribute('height') || 0, Wd = e => e.offsetWidth !== undefined ? Math.max(e.offsetWidth, e.scrollWidth || 0) : +e.getAttribute('width') || 0;   // はみ出して置いた中身（軸の単位など）も幅に数える
   let y = head.offsetTop + head.offsetHeight + 8;
-  if (ct) y = put(ct, y) + 8;
+  if (ct) y = put(ct, y) + 6;
+  const fg = p.querySelector('.gfig'), capText = fg ? [...fg.querySelectorAll('.g-ft,.g-hint')].map(e => e.textContent.trim()).concat(fg.dataset.ptnote || []).join('。') : '';
+  if (capText) { let cap = pickc('ptcap'); if (!cap) { cap = document.createElement('div'); cap.className = 'ptcap'; p.appendChild(cap); } cap.textContent = capText; y = put(cap, y) + 6; }
   const rest = kids.filter(e => !e.matches(PT_FLOW) && e !== side && e !== ct && e !== head && H(e) > 0);
-  const cols = !side && rest.some(e => L(e) >= 800) ? [[86, 700, rest.filter(e => L(e) < 800)], [830, 1004, rest.filter(e => L(e) >= 800)]] : [[86, 1070, rest]];
-  cols.forEach(([x0, w, els]) => { if (!els.length) return;
-    const s = (W - pad * 2) / w, y0 = Math.min(...els.map(T)), y1 = Math.max(...els.map(e => T(e) + H(e)));
+  const cols = !side && rest.some(e => L(e) >= 800) ? [rest.filter(e => L(e) < 800), rest.filter(e => L(e) >= 800)] : [rest];
+  cols.forEach(els => { if (!els.length) return;
+    const x0 = Math.min(...els.map(L)), w = Math.max(...els.map(e => L(e) + Wd(e))) - x0, s = (W - pad * 2) / w, y0 = Math.min(...els.map(T)), y1 = Math.max(...els.map(e => T(e) + H(e)));
     els.forEach(e => { e.style.transformOrigin = '0 0'; e.style.transform = `translate(${pad + (L(e) - x0) * s - L(e)}px,${y + (T(e) - y0) * s - T(e)}px) scale(${s})`; e.dataset.pt = 't'; });
     y += (y1 - y0) * s + 10; });
-  const src = [...p.querySelectorAll('[data-pick],.seg button,.sws .sw,.qa button')];
+  const src = [...p.querySelectorAll('[data-pick],.seg button,.sws .sw')];
   if (src.length) {
-    let bar = kids.find(e => e.classList.contains('ptbar'));
+    let bar = pickc('ptbar');
     if (!bar) { bar = document.createElement('div'); bar.className = 'ptbar'; bar._src = src; p.appendChild(bar);
       src.forEach(b => { const m = document.createElement('button'); m.onclick = () => { b.click(); setTimeout(ptSync, 40, p); }; bar.appendChild(m); }); }
     ptSync(p); y = put(bar, y) + 10;
   }
   if (side) { const s = (W - pad * 2) / side.offsetWidth; side.style.transformOrigin = '0 0'; side.style.transform = `translate(${pad - side.offsetLeft}px,${y - side.offsetTop}px) scale(${s})`; side.dataset.pt = 't'; y += side.offsetHeight * s + 10; }
-  ['note', 'foot', 'pno'].forEach(c => { const e = kids.find(k => k.classList.contains(c)); if (e) y = put(e, y) + 4; });
+  ['note', 'foot', 'pno'].forEach(c => { const e = pickc(c); if (e) y = put(e, y) + 4; });
   p.style.height = Math.max(y + 12, innerHeight) + 'px';
   if (top) stage.scrollTop = 0;
 }

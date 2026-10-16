@@ -221,6 +221,8 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 #stage.pt .note,#stage.pt .foot,#stage.pt .pno{left:12px;right:auto;width:calc(100vw - 24px);bottom:auto;font-size:11px;line-height:1.45;white-space:normal;overflow:visible}
 #stage.pt #navb{position:fixed;right:8px;top:6px;gap:6px}
 #stage.pt #navb button{font-size:13px;padding:4px 10px}
+.ptcap{display:none}
+#stage.pt .ptcap{display:block;position:absolute;left:12px;width:calc(100vw - 24px);font-size:11.5px;line-height:1.45;color:var(--note)}
 .ptbar{position:absolute;left:12px;width:calc(100vw - 24px);display:none;flex-wrap:wrap;gap:6px}
 #stage.pt .ptbar{display:flex}
 .ptbar button{font:700 14px 'Noto Sans JP',sans-serif;padding:8px 12px;border-radius:999px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;text-align:left}
@@ -239,6 +241,96 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 #stage.pt #p1 .main:has(.cards){width:1070px;height:1140px}
 #stage.pt #p1 .goals,#stage.pt #p1 .cards{width:1070px}
 #stage.pt #p1 .cards{grid-template-columns:repeat(2,1fr)}
+/* ---- 縦向きのスマホ：図を縦長に描き直す（幅 660 の箱に置き直す。字は 20px のまま → 幅 390 の画面で約 11px） ---- */
+#stage.pt .seg,#stage.pt .g-sw,#stage.pt .g-st,#stage.pt .g-ft,#stage.pt .g-hint{display:none}
+#stage.pt .figp .main,#stage.pt .gfig{width:660px}
+/* p.1 表紙：章のカードを2列に */
+#stage.pt #p1 .main:has(.cards){width:660px;height:1230px}
+#stage.pt #p1 .goals,#stage.pt #p1 .cards{width:660px}
+#stage.pt #p1 .cards{top:380px;grid-template-columns:repeat(2,1fr)}
+/* p.2 升目の下に説明 */
+#stage.pt #p2 .main{width:660px;height:770px}
+#stage.pt #p2 .g100,#stage.pt #p2 .g100c{left:80px}
+#stage.pt #p2 .txt{left:0;top:560px;width:660px}
+/* p.3 箱を寄せる */
+#stage.pt #p3 .main{width:660px}
+#stage.pt #p3 .bx{width:250px;font-size:24px;padding:16px 14px}
+#stage.pt #p3 .bx[style*="left:700px"]{left:410px!important}
+#stage.pt #p3 .ar.h{left:250px!important;width:156px!important}
+#stage.pt #p3 .ar.v{left:533px!important}
+#stage.pt #p3 .ar.v span{left:auto;right:16px}
+#stage.pt #p3 .dn{width:660px}
+/* p.4 金庫を狭く */
+#stage.pt #p4 .main{width:660px;height:560px}
+#stage.pt #p4 .vault{width:660px}
+#stage.pt #p4 .own{left:16px;width:270px}
+#stage.pt #p4 .wall{left:300px}
+#stage.pt #p4 .trust{left:358px;width:286px}
+#stage.pt #p4 .own,#stage.pt #p4 .trust{font-size:22px;padding:18px 16px}
+#stage.pt #p4 .walll{width:660px}
+/* p.5 会社を縦に3段、引き継ぎ先を右に、金庫を下に */
+#stage.pt #p5 .main,#stage.pt #f5{height:700px}
+#stage.pt .f5co{left:20px!important}
+#stage.pt .f5co[data-co="0"]{top:20px}#stage.pt .f5co[data-co="1"]{top:152px}#stage.pt .f5co[data-co="2"]{top:284px}
+#stage.pt .f5nx{left:346px!important;width:294px;transform:translateX(-14px)}
+#stage.pt .f5nx.on{transform:none}
+#stage.pt .f5nx[data-nx="0"]{top:43px}#stage.pt .f5nx[data-nx="1"]{top:175px}#stage.pt .f5nx[data-nx="2"]{top:307px}
+#stage.pt .f5ar{left:322px!important;width:0;height:5px;transition:width .6s var(--ez) .3s}
+#stage.pt .f5ar.on{width:22px;height:5px}
+#stage.pt .f5ar[data-ar="0"]{top:74px}#stage.pt .f5ar[data-ar="1"]{top:206px}#stage.pt .f5ar[data-ar="2"]{top:338px}
+#stage.pt .f5vault{left:20px;top:426px;width:620px;height:254px}
+/* p.6 壁と棒を寄せる */
+#stage.pt #p6 .main,#stage.pt #f6{height:620px}
+#stage.pt .f6wall{left:170px}#stage.pt .f6wl{left:130px}
+#stage.pt .f6ta,#stage.pt .f6aa{left:14px}
+#stage.pt .gfig.a .f6aa{width:148px}
+#stage.pt .f6stop{left:26px}
+#stage.pt .f6tb{left:236px}#stage.pt .f6ab{left:566px}
+#stage.pt #f6 .f6bar{left:230px;width:400px}
+#stage.pt .f6fill{font-size:22px;padding-left:12px}
+/* p.7 線を短く */
+#stage.pt #p7 .main,#stage.pt #f7{height:600px}
+#stage.pt #f7 [style*="left:130px"]{left:80px!important}
+#stage.pt #f7 [style*="left:535px"]{left:330px!important}
+#stage.pt #f7 [style*="left:940px"]{left:572px!important}
+#stage.pt #f7 .f7m[data-f7="0"]{left:55px!important}#stage.pt #f7 .f7m[data-f7="2"]{left:547px!important}
+#stage.pt .f7band{left:120px;width:412px}
+#stage.pt .f7line{left:80px;width:492px}
+#stage.pt .f7ar[data-ar="0"]{left:78px!important}#stage.pt .f7ar[data-ar="1"]{left:328px!important}#stage.pt .f7ar[data-ar="2"]{left:570px!important}
+#stage.pt .f7d[data-d="0"]{left:6px!important;width:150px!important}#stage.pt .f7d[data-d="1"]{left:176px!important;width:300px!important}#stage.pt .f7d[data-d="2"]{left:496px!important;width:158px!important}
+/* p.8 棒と式を狭く */
+#stage.pt #p8 .main{width:660px}
+#stage.pt #p8 .sb{width:660px}
+#stage.pt #p8 .fx{font-size:22px;width:660px}
+#stage.pt #p8 .fx2{width:660px}
+/* p.9 費用の棒を狭く（描き直しは JS） */
+#stage.pt #p9 .main{width:660px}
+/* p.10 境目を横の線にして、上に運用会社・下に投資家 */
+#stage.pt #p10 .main,#stage.pt #f10{height:500px}
+#stage.pt .f10zl{left:20px;top:10px}
+#stage.pt .f10c{width:300px}
+#stage.pt .f10c[style*="top:180px"]{left:20px;top:46px!important}
+#stage.pt .f10c[style*="top:262px"]{left:340px;top:46px!important}
+#stage.pt .f10bd{left:20px;top:182px;width:620px;height:0;border-left:0;border-top:3px dashed var(--ink)}
+#stage.pt .f10bl{left:570px;top:150px}
+#stage.pt .f10ar{left:470px;top:112px;width:5px;height:0;transition:height .7s var(--ez) .2s}
+#stage.pt .gfig.go .f10ar{width:5px;height:84px}
+#stage.pt .f10ar::after{right:auto;left:-8px;top:auto;bottom:-4px;border:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:16px solid var(--flow)}
+#stage.pt .f10al{left:484px;top:116px}
+#stage.pt .f10zr{left:20px;top:196px}
+#stage.pt #f10 .f10bar{left:20px;top:232px;width:620px}
+#stage.pt .f10fl{left:20px;top:326px}
+#stage.pt .f10fee{left:20px;top:362px;width:620px}
+#stage.pt .f10q{left:20px;top:118px}
+#stage.pt .f10qa{left:150px;top:118px;width:0;height:0;border-top:0;border-left:5px dashed var(--risk);transition:height .8s var(--ez) .8s}
+#stage.pt .gfig.b .f10qa{width:0;height:44px}
+#stage.pt .f10x{left:130px;top:160px}
+#stage.pt .f10qr{left:186px;top:148px}
+#stage.pt #f10 .g-cap{top:410px!important}
+/* p.11 問いを縦に */
+#stage.pt #p11 .main{width:660px;height:790px}
+#stage.pt #p11 .qc{width:660px;height:250px}
+#stage.pt #p11 .qc[data-q="1"]{top:266px!important}#stage.pt #p11 .qc[data-q="2"]{top:532px!important}
 /* 共通：吹き出し・根拠パネル・一覧・知らせる輪・デモの矢印 */
 #navb{position:absolute;right:86px;top:40px;display:flex;gap:10px;z-index:3}
 #navb button{font:700 20px 'Noto Sans JP',sans-serif;padding:8px 18px;border:1.5px solid var(--main);background:#fff;color:var(--main);cursor:pointer}
@@ -475,23 +567,31 @@ page('p9', {ctitle: `${man(DATA.hold)}を年${DATA.fee_rate}%の商品で持っ�
     fb.setAttribute('y', 430 - h); fb.setAttribute('height', h); fl.setAttribute('y', 430 - h - 14); fl.textContent = jp(total); q(s, 'ml').style.display = y === MAXY ? 'none' : '';
     return {big: total >= 10000 ? big(total / 10000, '万円') : big(total.toLocaleString('ja-JP'), '円'), line: `${y}年で引かれる信託報酬の累計（試算）`, sub: '請求書も引き落としも無く、基準価額から毎日引かれる。値下がりしている間も止まらない',
       cmp: [[`1年あたり（計算：${bare(man(DATA.hold))}×${DATA.fee_rate}%）`, yen(PER_YEAR)], [`1日あたり（計算：${PER_YEAR.toLocaleString('ja-JP')}÷${DATA.days}）`, `約${PER_DAY}円`], [`${y}年の累計（計算：${PER_YEAR.toLocaleString('ja-JP')}×${y}）`, jp(total)]]}; }});
-(function buildP9() {
-  const svg = q($('#p9'), 'svg'), B = 430, H = 380, W = 240, XS = [40, 390, 740], hOf = v => v / FEE_MAX * H;
-  el('line', {x1: 0, y1: B, x2: 1060, y2: B, stroke: 'var(--ink)', 'stroke-width': 2}, svg);
+// 費用の棒（縦向きのスマホでは、棒の幅と間隔を詰め、下の説明を2行に分けて描き直す）
+function buildP9() {
+  const V = stage.classList.contains('pt'), svg = q($('#p9'), 'svg'), B = 430, H = 380, W = V ? 200 : 240, XS = V ? [10, 230, 450] : [40, 390, 740], hOf = v => v / FEE_MAX * H;
+  svg.innerHTML = ''; svg.setAttribute('width', V ? 660 : 1060);
+  const txt = (a, s) => { const t = el('text', a, svg); t.textContent = s; return t; };
+  const two = (x, y, s, a) => { const t = el('text', Object.assign({x, y}, a), svg); s.forEach((line, k) => { const sp = el('tspan', {x, dy: k ? 26 : 0}, t); sp.textContent = line; }); return t; };
+  el('line', {x1: 0, y1: B, x2: V ? 660 : 1060, y2: B, stroke: 'var(--ink)', 'stroke-width': 2}, svg);
   el('rect', {x: XS[1], y: B - H, width: W, height: H, fill: 'none', stroke: 'var(--flow)', 'stroke-width': 2, 'stroke-dasharray': '3 5'}, svg);
-  el('text', {x: XS[1] + W + 16, y: B - H + 8, 'font-size': 20, fill: 'var(--note)', 'data-k': 'ml'}, svg).textContent = `${MAXY}年なら${jp(FEE_MAX)}（点線）`;
+  txt(V ? {x: XS[1] + W / 2, y: B - H - 12, 'font-size': 20, fill: 'var(--note)', 'text-anchor': 'middle', 'data-k': 'ml'} : {x: XS[1] + W + 16, y: B - H + 8, 'font-size': 20, fill: 'var(--note)', 'data-k': 'ml'}, `${MAXY}年なら${jp(FEE_MAX)}（点線）`);
   el('rect', {x: XS[0], y: B - hOf(BUY_FEE), width: W, height: hOf(BUY_FEE), fill: 'var(--flow)', class: 'bar'}, svg);
-  el('text', {x: XS[0] + W / 2, y: B - hOf(BUY_FEE) - 14, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, svg).textContent = man(BUY_FEE);
+  txt({x: XS[0] + W / 2, y: B - hOf(BUY_FEE) - 14, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, man(BUY_FEE));
   const fb = el('rect', {x: XS[1], width: W, fill: 'var(--main)', class: 'bar', 'data-k': 'fb'}, svg);
   el('text', {x: XS[1] + W / 2, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle', fill: 'var(--main)', class: 'bar', 'data-k': 'fl'}, svg);
   el('rect', {x: XS[2], y: B - 60, width: W, height: 60, fill: 'none', stroke: 'var(--note)', 'stroke-width': 2, 'stroke-dasharray': '6 5'}, svg);
-  el('text', {x: XS[2] + W / 2, y: B - 22, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle', fill: 'var(--note)'}, svg).textContent = 'xx';
-  el('text', {x: XS[2] + W / 2, y: B - 76, 'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'}, svg).textContent = '率は商品ごと（原稿に数字なし）';
+  txt({x: XS[2] + W / 2, y: B - 22, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle', fill: 'var(--note)'}, 'xx');
+  if (V) two(XS[2] + W / 2, B - 102, ['率は商品ごと', '（原稿に数字なし）'], {'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'});
+  else txt({x: XS[2] + W / 2, y: B - 76, 'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'}, '率は商品ごと（原稿に数字なし）');
   [['購入時手数料', `販売会社へ・買うとき（${DATA.buy_rate}%の例）`], ['信託報酬（累計）', '三者で分ける・持つ間は毎日'], ['信託財産留保額', 'ファンドに残る・売るとき']].forEach(([n, t], i) => {
-    el('text', {x: XS[i] + W / 2, y: B + 40, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, svg).textContent = n;
-    el('text', {x: XS[i] + W / 2, y: B + 76, 'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'}, svg).textContent = t; });
+    txt({x: XS[i] + W / 2, y: B + 40, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, n);
+    if (V) two(XS[i] + W / 2, B + 72, t.split('・'), {'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'});
+    else txt({x: XS[i] + W / 2, y: B + 76, 'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'}, t); });
   hover(fb, () => '<b>信託報酬の累計</b><br>基準価額から毎日天引き<br><span style="color:var(--note)">原稿4節の例による試算</span>');
-})();
+}
+buildP9();
+function ptRedraw() { buildP9(); if (P.p9.cur !== undefined) draw('p9', P.p9.cur); }   // 縦向きと横向きが変わったら、費用の棒を描き直す
 // ---- p.10 専門家の境目（絵が動く版：引き受けの境目の線。指図は境目を越え、損の穴埋めは越えない。模式） ----
 page('p10', {ctitle: '運用会社が引き受けることと、投資家の側に残ること（原稿5節）', more: 'expert', fig: true,
   keep: '信託報酬は、成果の良し悪しに関係なく毎日引かれる',
@@ -566,42 +666,48 @@ function replay(id) {   // ページを開くたびに、いまの状態の図�
   requestAnimationFrame(() => requestAnimationFrame(() => { f.classList.remove('nt'); draw(id, o.cur); }));
 }
 // ---- 縦向きのスマホ（幅 700 未満で縦長）：1枚を縮めて黒い帯の中に置くのをやめ、見出し → 図 → 切り替えの札 → 右の枠 → 注 の順に縦へ並べる ----
-// 見出し・小見出し・注は字の大きさを変えて折り返す。図の側と右の枠は、形を変えずに幅いっぱいへ縮めて置く（図の中の字は小さいまま。指で広げて読む）。
+// 見出し・小見出し・図の題・注は字の大きさを変えて折り返す。図の側と右の枠は、その幅を画面の幅いっぱいへ縮めて置く。
+// 図の中の置き方は CSS（#stage.pt …）が縦長の箱（幅 660）へ置き直す。図の中の札は隠し、同じ札を図の下に指で押せる大きさで並べる。
 const PT = () => innerWidth < 700 && innerHeight > innerWidth;
-const PT_FLOW = '.strip,.band8,.prog,.sec,.head,.note,.foot,.pno,.ring,.ptbar';
-const ptLabel = (b, all) => b.classList.contains('sw') ? `${b.querySelector('b').textContent.trim()}：${b.querySelector('span').textContent}`
-  : b.closest('.qa') ? `問${all.filter(x => x.closest('.qa')).indexOf(b) + 1} ${b.textContent.trim()}` : b.textContent.trim();
+const PT_FLOW = '.strip,.band8,.prog,.sec,.head,.note,.foot,.pno,.ring,.ptbar,.ptcap';
+const ptLabel = b => b.classList.contains('sw') ? `${b.querySelector('b').textContent.trim()}：${b.querySelector('span').textContent}` : b.textContent.trim();
 function ptSync(p) {   // 図の下に並べた札を、図の中の札の今の形に合わせる
-  const bar = p && p.querySelector(':scope > .ptbar'); if (!bar) return;
-  [...bar.children].forEach((m, i) => { const b = bar._src[i]; m.textContent = ptLabel(b, bar._src); m.classList.toggle('on', b.classList.contains('sw') ? !b.classList.contains('off') : b.classList.contains('on')); });
+  const bar = p && [...p.children].find(e => e.classList.contains('ptbar')); if (!bar) return;
+  [...bar.children].forEach((m, i) => { const b = bar._src[i]; m.textContent = ptLabel(b); m.classList.toggle('on', b.classList.contains('sw') ? !b.classList.contains('off') : b.classList.contains('on')); });
 }
 function ptReset() { $$('[data-pt]').forEach(e => { if (e.dataset.pt === 't') e.style.transform = e.style.transformOrigin = ''; else e.style.top = ''; delete e.dataset.pt; }); pages.forEach(q => { q.style.height = ''; }); }
+const ptAgain = () => { if (typeof ptRedraw === 'function') ptRedraw(); };
 function portrait(top) {
-  if (!PT()) { if (stage.classList.contains('pt')) { stage.classList.remove('pt'); stage.style.width = stage.style.height = ''; ptReset(); fit(); } return; }
+  const was = stage.classList.contains('pt');
+  if (!PT()) { if (was) { stage.classList.remove('pt'); stage.style.width = stage.style.height = ''; ptReset(); fit(); ptAgain(); } return; }
   const p = pages[cur]; if (!p) return;
   const W = innerWidth, pad = 12;
   stage.classList.add('pt'); stage.style.transform = 'none'; stage.style.width = W + 'px'; stage.style.height = innerHeight + 'px'; ptReset();
-  const kids = [...p.children], side = kids.find(e => e.classList.contains('side')), head = kids.find(e => e.classList.contains('head')), ct = kids.find(e => e.classList.contains('ctitle') && !e.style.left);
+  if (!was || STATIC) ptAgain();
+  if (!was && !STATIC) setTimeout(() => portrait(), 1000);   // 縦向きへ入ったときだけ、描き直した棒の伸び縮みが終わってから、幅を測り直して置き直す（動きの無い設定では要らない）
+  const kids = [...p.children], pickc = c => kids.find(e => e.classList.contains(c)), side = pickc('side'), head = pickc('head'), ct = kids.find(e => e.classList.contains('ctitle') && !e.style.left);
   const put = (e, y) => { e.style.top = y + 'px'; e.dataset.pt = 'y'; return y + e.offsetHeight; };
   const L = e => e.offsetLeft !== undefined ? e.offsetLeft : parseFloat(e.style.left), T = e => e.offsetTop !== undefined ? e.offsetTop : parseFloat(e.style.top);
-  const H = e => e.offsetHeight !== undefined ? e.offsetHeight : +e.getAttribute('height') || 0;
+  const H = e => e.offsetHeight !== undefined ? e.offsetHeight : +e.getAttribute('height') || 0, Wd = e => e.offsetWidth !== undefined ? Math.max(e.offsetWidth, e.scrollWidth || 0) : +e.getAttribute('width') || 0;   // はみ出して置いた中身（軸の単位など）も幅に数える
   let y = head.offsetTop + head.offsetHeight + 8;
-  if (ct) y = put(ct, y) + 8;
+  if (ct) y = put(ct, y) + 6;
+  const fg = p.querySelector('.gfig'), capText = fg ? [...fg.querySelectorAll('.g-ft,.g-hint')].map(e => e.textContent.trim()).concat(fg.dataset.ptnote || []).join('。') : '';
+  if (capText) { let cap = pickc('ptcap'); if (!cap) { cap = document.createElement('div'); cap.className = 'ptcap'; p.appendChild(cap); } cap.textContent = capText; y = put(cap, y) + 6; }
   const rest = kids.filter(e => !e.matches(PT_FLOW) && e !== side && e !== ct && e !== head && H(e) > 0);
-  const cols = !side && rest.some(e => L(e) >= 800) ? [[86, 700, rest.filter(e => L(e) < 800)], [830, 1004, rest.filter(e => L(e) >= 800)]] : [[86, 1070, rest]];
-  cols.forEach(([x0, w, els]) => { if (!els.length) return;
-    const s = (W - pad * 2) / w, y0 = Math.min(...els.map(T)), y1 = Math.max(...els.map(e => T(e) + H(e)));
+  const cols = !side && rest.some(e => L(e) >= 800) ? [rest.filter(e => L(e) < 800), rest.filter(e => L(e) >= 800)] : [rest];
+  cols.forEach(els => { if (!els.length) return;
+    const x0 = Math.min(...els.map(L)), w = Math.max(...els.map(e => L(e) + Wd(e))) - x0, s = (W - pad * 2) / w, y0 = Math.min(...els.map(T)), y1 = Math.max(...els.map(e => T(e) + H(e)));
     els.forEach(e => { e.style.transformOrigin = '0 0'; e.style.transform = `translate(${pad + (L(e) - x0) * s - L(e)}px,${y + (T(e) - y0) * s - T(e)}px) scale(${s})`; e.dataset.pt = 't'; });
     y += (y1 - y0) * s + 10; });
-  const src = [...p.querySelectorAll('[data-pick],.seg button,.sws .sw,.qa button')];
+  const src = [...p.querySelectorAll('[data-pick],.seg button,.sws .sw')];
   if (src.length) {
-    let bar = kids.find(e => e.classList.contains('ptbar'));
+    let bar = pickc('ptbar');
     if (!bar) { bar = document.createElement('div'); bar.className = 'ptbar'; bar._src = src; p.appendChild(bar);
       src.forEach(b => { const m = document.createElement('button'); m.onclick = () => { b.click(); setTimeout(ptSync, 40, p); }; bar.appendChild(m); }); }
     ptSync(p); y = put(bar, y) + 10;
   }
   if (side) { const s = (W - pad * 2) / side.offsetWidth; side.style.transformOrigin = '0 0'; side.style.transform = `translate(${pad - side.offsetLeft}px,${y - side.offsetTop}px) scale(${s})`; side.dataset.pt = 't'; y += side.offsetHeight * s + 10; }
-  ['note', 'foot', 'pno'].forEach(c => { const e = kids.find(k => k.classList.contains(c)); if (e) y = put(e, y) + 4; });
+  ['note', 'foot', 'pno'].forEach(c => { const e = pickc(c); if (e) y = put(e, y) + 4; });
   p.style.height = Math.max(y + 12, innerHeight) + 'px';
   if (top) stage.scrollTop = 0;
 }
