@@ -377,13 +377,14 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 </div>
 <script>
 // ---- 数字台帳（画面の数字はすべてここから描く。値は原稿 F1-06 v1.4 の架空の計算例） ----
-const SRC = 'TriFuse 原稿 F1-06「投資信託の構造」v1.4（2026年9月17日）';
+const SRC = 'TriFuse 原稿 F1-06「投資信託の構造」v1.5（2026年10月16日）';
 const DATA = {
   each: 10000, people: 10000,  // 1人が出す額（円）と持ち寄る人数（人）（1節）
   companies: 100,              // 個人で買い集める会社の数の例（社・1節）
   hold: 1000000,               // 保有額の例（円・1節・3節〜5節）
   after: 700000, wari: 3,      // 値下がり後の額（円・5節）と目減りの割合（割・3節）
   buy_rate: 2,                 // 購入時手数料の率（%・4節）
+  kept_rate: 0.3,              // 信託財産留保額の率（%・4節・説明のための例・2026-10-16 補足）
   fee_rate: 0.5, days: 365,    // 信託報酬の率（年%・4節）と1年の日数
   years: [1, 10, 20],          // 持つ年数の例（4節「10年、20年と長期に」・1年は年率の1年分）
   read_min: 8,                 // 読了目安（分・冒頭）
@@ -393,7 +394,7 @@ const jp = n => n >= 10000 && n % 10000 === 0 ? man(n) : yen(n), bare = s => s.r
 const POOL = DATA.each * DATA.people, OKU = POOL / 100000000 + '億円', NIN = DATA.people / 10000 + '万人';
 const PER_YEAR = DATA.hold * DATA.fee_rate / 100, PER_DAY = (PER_YEAR / DATA.days).toFixed(1);
 const LOSS = DATA.after - DATA.hold, BUY_FEE = DATA.hold * DATA.buy_rate / 100, INVESTED = DATA.hold - BUY_FEE;
-const MAXY = DATA.years[DATA.years.length - 1], FEE_MAX = PER_YEAR * MAXY;
+const MAXY = DATA.years[DATA.years.length - 1], FEE_MAX = PER_YEAR * MAXY, KEPT_FEE = DATA.hold * DATA.kept_rate / 100;
 // ---- 共通部品 ----
 const stage = document.getElementById('stage'), tip = document.getElementById('tip'), $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const STATIC = location.hash.includes('static') || matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -527,7 +528,7 @@ page('p6', {ctitle: `あなたの${man(DATA.hold)}に向かってくる2つの�
 const COSTS = [
   {k: 'buy', t: '購入時手数料', when: '買い付けの契約時', to: '販売会社', how: '購入代金から即座に差し引かれる', big: () => big(DATA.buy_rate, '%'), line: '購入時手数料の率（原稿の例）', sub: '買い付け手続きの対価として窓口へ払う。ゼロとする「ノーロード」の商品も広く普及している', cap: '買うときに1度だけ引かれ、販売会社へ行く'},
   {k: 'keep', t: '信託報酬', when: '持っている全期間（毎日）', to: '販売会社・運用会社・信託銀行', how: '資産総額から日割りで天引き', big: () => big(DATA.fee_rate, '%／年'), line: '信託報酬の率（原稿の例）', sub: '運用と管理の費用を三者で分け合う。請求書は届かず、基準価額から毎日少しずつ引かれる', cap: '持つ間は、売るまで毎日引かれ続け、三者で分ける'},
-  {k: 'sell', t: '信託財産留保額', when: '解約・売却の手続き時', to: '投資信託の財産そのもの', how: '売却代金から清算費用として差し引かれる', big: () => 'xx', line: '信託財産留保額の率（原稿に数字なし）', sub: '途中で抜ける人が、残る人のために置いていく清算費用', cap: '売るときに1度だけ引かれ、投資信託の財産に残る'},
+  {k: 'sell', t: '信託財産留保額', when: '解約・売却の手続き時', to: '投資信託の財産そのもの', how: '売却代金から清算費用として差し引かれる', big: () => big(DATA.kept_rate, '%'), line: `信託財産留保額の率の例（${man(DATA.hold)}を解約すると${jp(KEPT_FEE)}）`, sub: '途中で抜ける人が、残る人のために置いていく清算費用。率は商品ごとに違い、かからない商品もある', cap: '売るときに1度だけ引かれ、投資信託の財産に残る'},
 ];
 page('p7', {ctitle: '投資信託の費用が引かれる場面と行き先（原稿4節の表）', more: 'costs', fig: true,
   keep: '費用が引かれる場面は、買うとき・持つ間・売るときの3つ（原稿4節）',
@@ -580,10 +581,11 @@ function buildP9() {
   txt({x: XS[0] + W / 2, y: B - hOf(BUY_FEE) - 14, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, man(BUY_FEE));
   const fb = el('rect', {x: XS[1], width: W, fill: 'var(--main)', class: 'bar', 'data-k': 'fb'}, svg);
   el('text', {x: XS[1] + W / 2, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle', fill: 'var(--main)', class: 'bar', 'data-k': 'fl'}, svg);
-  el('rect', {x: XS[2], y: B - 60, width: W, height: 60, fill: 'none', stroke: 'var(--note)', 'stroke-width': 2, 'stroke-dasharray': '6 5'}, svg);
-  txt({x: XS[2] + W / 2, y: B - 22, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle', fill: 'var(--note)'}, 'xx');
-  if (V) two(XS[2] + W / 2, B - 102, ['率は商品ごと', '（原稿に数字なし）'], {'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'});
-  else txt({x: XS[2] + W / 2, y: B - 76, 'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'}, '率は商品ごと（原稿に数字なし）');
+  const hk = Math.max(hOf(KEPT_FEE), 4);   // 信託財産留保額（0.3%の例）。細すぎて見えなくならないよう、最低 4px で描く
+  el('rect', {x: XS[2], y: B - hk, width: W, height: hk, fill: 'var(--note)', class: 'bar'}, svg);
+  txt({x: XS[2] + W / 2, y: B - hk - 14, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, `${jp(KEPT_FEE)}（例）`);
+  if (V) two(XS[2] + W / 2, B - hk - 72, [`${DATA.kept_rate}%の例`, '率は商品ごと'], {'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'});
+  else txt({x: XS[2] + W / 2, y: B - hk - 50, 'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'}, `${DATA.kept_rate}%の例。率は商品ごと`);
   [['購入時手数料', `販売会社へ・買うとき（${DATA.buy_rate}%の例）`], ['信託報酬（累計）', '三者で分ける・持つ間は毎日'], ['信託財産留保額', 'ファンドに残る・売るとき']].forEach(([n, t], i) => {
     txt({x: XS[i] + W / 2, y: B + 40, 'font-size': 24, 'font-weight': 700, 'text-anchor': 'middle'}, n);
     if (V) two(XS[i] + W / 2, B + 72, t.split('・'), {'font-size': 20, 'text-anchor': 'middle', fill: 'var(--note)'});

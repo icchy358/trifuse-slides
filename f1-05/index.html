@@ -604,7 +604,7 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
     <div class="g-keep"><b>変わらないこと</b><span id="k6"></span></div>
     <button class="more" data-demo="m6" data-open="credit">内訳を見る ›</button>
   </aside>
-  <div class="note">注：A君の利率は原稿に無いため置いていない。水位は順序だけを示し、数値ではない</div>
+  <div class="note">注：利率の年1%は説明のための例。水位は順序だけを示し、数値ではない</div>
   <div class="foot" data-src="3節"></div><div class="pno" data-pno="6"></div>
 </section>
 
@@ -655,7 +655,7 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
     <div class="g-keep"><b>変わらないこと</b><span id="k8"></span></div>
     <button class="more" data-demo="m8" data-open="issuer">内訳を見る ›</button>
   </aside>
-  <div class="note">注：個別の利回り・格付けは扱わない。地方債の利回りの位置と柱の太さは、原稿に記述が無い</div>
+  <div class="note">注：利回りの数字は2012年7月ごろ発行の5年ものの一例で、今の水準ではない（川崎市債投資セミナー資料）。柱の太さは模式。格付けは扱わない</div>
   <div class="foot" data-src="5節"></div><div class="pno" data-pno="8"></div>
 </section>
 
@@ -676,7 +676,7 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
     <div class="cmp" id="cmp9"></div>
     <button class="more" data-demo="m9" data-open="premise">内訳を見る ›</button>
   </aside>
-  <div class="note">注：前提1か2が崩れたときの額は原稿に無いため xx とした。スイッチを押すと前提が崩れる／戻る</div>
+  <div class="note">注：前提1か2が崩れたときの割合は、原稿2節・6節の100万円の例から出した（説明のための例）。スイッチを押すと前提が崩れる／戻る</div>
   <div class="foot" data-src="6節"></div><div class="pno" data-pno="9"></div>
 </section>
 
@@ -737,8 +737,8 @@ body{margin:0;background:#161C20;overflow:hidden;font-family:'Noto Sans JP',sans
 <div id="cur"></div>
 </div>
 <script>
-// ---- 数字台帳（画面の数字はすべてここから描く。値は原稿 F1-05 v1.3 の例） ----
-const SRC = 'TriFuse 原稿 F1-05「債券とは何か」v1.3（2026年9月28日）';
+// ---- 数字台帳（画面の数字はすべてここから描く。値は原稿 F1-05 v1.4 の例） ----
+const SRC = 'TriFuse 原稿 F1-05「債券とは何か」v1.4（2026年10月16日）';
 const DATA = {
   principal: 1000000,     // カフェに貸す元本（円・1節）
   coupon: 30000,          // 毎年の利息（円・1節）
@@ -754,6 +754,11 @@ const DATA = {
   fx_buy: 150, fx_end: 120, // 為替（円／ドル・6節）
   read_min: 8,            // 読了目安（分・冒頭）
   shut_back: 0,           // 閉店したときの出資の戻り（円・1節「1円も返ってこない」）
+  boom_div: 100000,       // 大繁盛した年の配当（円／年・1節・説明のための例・2026-10-16 補足）
+  shut_left: 400000,      // 閉店して残ったお金＝貸主へ戻る額（円・1節・同）
+  rate_a: 1,              // A君への利率（年%・3節・同）
+  bust_back: 300000,      // 倒産したときに戻る額（円・6節・同）
+  y_jgb: 0.19, y_muni: 0.22, y_corp: 0.72,   // 2012年7月ごろの5年ものの利回り（年%・5節・出典6）
 };
 const man = n => (n / 10000).toLocaleString('ja-JP') + '万円';
 const fm = n => (n < 0 ? '▲' : '') + man(Math.abs(n));
@@ -847,8 +852,8 @@ const bigW = (t, c) => `<span class="bigw" style="color:${c || 'var(--main)'}">$
 
 // ---- p2 絵が動く版：出資の棒は業績で伸び縮みし、貸付の棒は契約の線で止まる（模式） ----
 const SC2 = [
-  {name: '大繁盛したとき', ha: 330, ta: '↑ 配当が増える（額は原稿に無い＝xx）', tb: `年${man(DATA.coupon)}のまま。上振れの取り分は無い`},
-  {name: '閉店したとき', ha: 0, ta: '1円も戻らない', tb: '全額戻るかは相手しだい（額は原稿に無い＝xx）'},
+  {name: '大繁盛したとき', ha: 330, ta: `↑ 配当が年${man(DATA.boom_div)}に（例）`, tb: `年${man(DATA.coupon)}のまま。上振れの取り分は無い`},
+  {name: '閉店したとき', ha: 0, ta: '1円も戻らない', tb: `残ったお金${man(DATA.shut_left)}が先に戻る（例）`},
 ];
 const ROWS2 = [
   ['立場', '共同経営者', '貸主'],
@@ -866,9 +871,9 @@ fig(2, {
     $('#g2a').style.height = s.ha + 'px'; $('#g2b').style.height = HB2 + 'px'; $('#g2b').classList.toggle('unsure', i === 1);
     $('#g2ta').textContent = s.ta; $('#g2tb').textContent = s.tb; $('#g2ta').style.bottom = 172 + s.ha + 'px'; $('#g2tb').style.bottom = 172 + HB2 + 'px';
     if (i === 0) side(2, bigN(DATA.coupon / 10000, '万円／年'), '大繁盛しても変わらない、貸付の毎年の利息', 'お店が大成功しても、債券の保有者の取り分は増えない。増えるのは出資の配当だけ',
-      [['出資の取り分', '配当が増える（額は xx）'], ['貸付の取り分', `年${man(DATA.coupon)}のまま`]]);
-    else side(2, bigN(DATA.shut_back, '円', 'var(--orange-t)'), '閉店したときの、出資の戻り（原稿1節）', '出資は分配の一番最後。貸付は株主より先に弁済を受けるが、全額戻るかは相手しだい（p.6）',
-      [['出資の戻り', '1円も戻らない'], ['貸付の戻り', '先に弁済（額は xx）']]); }});
+      [['出資の取り分', `配当が年${man(DATA.boom_div)}に（例）`], ['貸付の取り分', `年${man(DATA.coupon)}のまま`]]);
+    else side(2, bigN(DATA.shut_back, '円', 'var(--orange-t)'), '閉店したときの、出資の戻り（原稿1節）', `出資は分配の一番最後。貸付は株主より先に弁済を受けるが、残ったお金が${man(DATA.shut_left)}なら戻るのは${man(DATA.shut_left)}まで（例）`,
+      [['出資の戻り', '1円も戻らない'], ['貸付の戻り', `残ったお金の${man(DATA.shut_left)}（例）`]]); }});
 
 
 // ---- p3 5年の受け取り（縦向きのスマホでは、年の間隔と棒の長さを詰めて描き直す） ----
@@ -972,12 +977,12 @@ fig(5, {
     $('#g5nb').textContent = up ? `年${DATA.market_rate}%の新しい募集` : '新しい募集は、まだ無い'; $('#g5nb').style.color = up ? 'var(--orange-t)' : 'var(--note)';
     $('#g5buy').style.transform = up ? 'translateX(150px)' : 'none'; $('#g5say').textContent = R5[i].say;
     $('#g5p').innerHTML = up ? `${man(DATA.sell_price)}<em>${fm(SELL_GAP)}</em>` : man(DATA.principal);
-    $('#g5ps').textContent = up ? '引き受けると言われる値段（原稿の例）' : '額面のまま（途中の値段は原稿に無い）';
+    $('#g5ps').textContent = up ? '引き受けると言われる値段（原稿の例）' : `年${DATA.rate}%のままなら、ほぼ額面（例）`;
     $('#g5cap').innerHTML = up ? `${man(DATA.principal)}のままでは買い手がつかず、<br>値引きを求められる` : '比べる相手がいないので、<br>値引きの理由がない';
     if (up) side(5, bigN(INT_GAP / 10000, '万円', 'var(--orange-t)'), `毎年の利息の差（年${DATA.market_rate}%−年${DATA.rate}%・計算）`, `年${DATA.market_rate}%で貸せる相手がいるのに、年${DATA.rate}%の債券を${man(DATA.principal)}で買う人はいない。だから値引きが要る`,
       [[`年${DATA.market_rate}%の利息（計算）`, man(NEW_INT)], [`差（計算：${NEW_INT / 10000}−${DATA.coupon / 10000}）`, `${man(INT_GAP)}／年`], ['原稿の例の値段', man(DATA.sell_price)]]);
     else side(5, bigN(DATA.coupon / 10000, '万円'), `年${DATA.rate}%の債券の毎年の利息`, '世の中の金利が上がる前は、同じ条件で比べる相手がいない。値引きの理由がない',
-      [['新しい募集', 'まだ無い'], ['あなたの債券の値段', '額面のまま']]); }});
+      [['新しい募集', 'まだ無い'], ['売るときの値段', `ほぼ${man(DATA.principal)}`]]); }});
 
 
 // ---- p6 絵が動く版：借用書は同じ。返すための元手の水位がちがうと、戻る矢印が途中で止まる（模式） ----
@@ -995,7 +1000,8 @@ fig(6, {
     $('#g6nm').textContent = w.name; $('#g6nm').style.color = w.ct; $('#g6ds').innerHTML = w.who; $('#g6lv').textContent = `信用力：${w.lvl}`; $('#g6lv').style.color = w.ct;
     $('#g6fill').style.height = w.fill + '%'; $('#g6fill').style.background = w.c;
     $('#g6bl').textContent = w.bl; $('#g6bl').style.color = w.ct; $('#g6bl').style.left = i ? '300px' : '420px'; $('#g6cap').textContent = w.cap;
-    side(6, bigW(w.lvl, w.ct), `${w.name}の信用力（原稿3節の例）`, w.sub, [['貸す相手', w.kind], ['返済不能になる不安', w.fear]]); }});
+    side(6, bigW(w.lvl, w.ct), `${w.name}の信用力（原稿3節の例）`, w.sub, [['貸す相手', w.kind], ['返済不能になる不安', w.fear],
+      i ? ['利息の条件', `年${DATA.ask_low}%では誰も貸さない（p.7）`] : ['利息の条件', `年${DATA.rate_a}%でも貸す人がすぐ見つかる（例）`]]); }});
 
 
 // ---- p7 絵が動く版：利率の棒が年1%から年10%へ伸びると、貸し手が現れる（棒の高さは利率。貸し手の印は模式） ----
@@ -1023,12 +1029,12 @@ fig(7, {
     side(7, ...s.side()); }});
 
 
-// ---- p8 絵が動く版：発行体ごとの支える柱と、その上の利回り（模式。地方債の柱と利回りは原稿に記述が無いため点線） ----
+// ---- p8 絵が動く版：発行体ごとの支える柱と、その上の利回り（模式。2026-10-16 に原稿5節へ地方債の位置と2012年の実例を足したので、点線をやめた） ----
 const br = t => t.replace(/｜/g, '<br>'), nb = t => t.replace(/｜/g, '');
 const ISS = [
-  {k: '国債', c: 'var(--main)', t: 'var(--deep)', who: '国家', back: '政府が持つ徴税権と｜通貨発行の権能', note: '日本国内の取引では｜最も信用力が高く、｜あらゆる金利の基準になる', y: '一般に最も低い', x: 200, w: 200, yh: 36, cap: '信用力が最も高いので、利回りは一般に最も低い'},
-  {k: '地方債', c: 'var(--green)', t: 'var(--green-t)', who: '地方自治体｜（東京都・大阪市など）', back: '自治体の財政規模と、｜国の制度的な関与', note: '学校や道路などの｜公共インフラを整備する資金。｜発行条件は自治体ごと', y: '原稿に記述なし', x: 535, w: 130, yh: 80, dash: true, cap: '安全性は高いが、利回りの位置は原稿に記述がない'},
-  {k: '社債', c: 'var(--orange)', t: 'var(--orange-t)', who: '民間企業', back: '企業の事業環境と収益力', note: '業績が悪化すれば、｜利息や元本の支払いが｜滞る危険を直接抱える', y: '高め', x: 870, w: 64, yh: 140, cap: '業績しだいで支払いが滞る危険を抱えるので、利回りは高めになる'},
+  {k: '国債', c: 'var(--main)', t: 'var(--deep)', who: '国家', back: '政府が持つ徴税権と｜通貨発行の権能', note: '日本国内の取引では｜最も信用力が高く、｜あらゆる金利の基準になる', y: '一般に最も低い', ex: DATA.y_jgb, ename: '個人向けの復興国債', x: 200, w: 200, yh: 36, cap: '信用力が最も高いので、利回りは一般に最も低い'},
+  {k: '地方債', c: 'var(--green)', t: 'var(--green-t)', who: '地方自治体｜（東京都・大阪市など）', back: '自治体の財政規模と、｜国の制度的な関与', note: '学校や道路などの｜公共インフラを整備する資金。｜発行条件は自治体ごと', y: '国債より少し高い', ex: DATA.y_muni, ename: '川崎市の市債', x: 535, w: 130, yh: 80, cap: '国より信用力が一段下がる分、利回りは国債より少し高く、社債より低い'},
+  {k: '社債', c: 'var(--orange)', t: 'var(--orange-t)', who: '民間企業', back: '企業の事業環境と収益力', note: '業績が悪化すれば、｜利息や元本の支払いが｜滞る危険を直接抱える', y: '高め', ex: DATA.y_corp, ename: '東北電力の個人向け社債', x: 870, w: 64, yh: 140, cap: '業績しだいで支払いが滞る危険を抱えるので、利回りは高めになる'},
 ];
 $('#g8sw').innerHTML = ISS.map((s, i) => `<button data-pick="${i}" data-demo="f8s${i}"${i ? '' : ' data-ring="1"'}>${s.k}</button>`).join('');
 // 横の位置は --cx（柱のまん中）から決める。縦向きのスマホでは CSS が --cx を置き直す
@@ -1038,13 +1044,13 @@ $('#g8units').innerHTML = ISS.map((s, i) => `<div class="g8u" data-u="${i}" styl
   `<div class="g8top" style="left:calc(var(--cx) - 120px)"></div>` +
   `<div class="g8pil" style="left:calc(var(--cx) - ${s.w / 2}px);width:${s.w}px;${s.dash ? `border:3px dashed ${s.c};border-bottom:0` : `background:${s.c}`}"></div>` +
   `<div class="g8n" style="left:var(--cx)"><b style="color:${s.t}">${s.k}</b><span>${nb(s.back)}</span></div></div>`).join('');
-$('#k8').textContent = '利回りの差は、発行体の信用力の差がそのまま映ったもの。個別の利回り・格付けは扱わない';
+$('#k8').textContent = `利回りの差は、発行体の信用力の差がそのまま映ったもの。2012年の5年ものでは年${DATA.y_jgb}%→${DATA.y_muni}%→${DATA.y_corp}%`;
 fig(8, {
   reset: () => { $$('#f8 .g8u').forEach(u => u.classList.remove('up')); $$('#f8 .g8blk').forEach(b => { b.style.height = '0px'; }); },
   draw: i => { const s = ISS[i];
     $$('#f8 .g8u').forEach(u => { u.classList.add('up'); u.classList.toggle('dim', +u.dataset.u !== i); }); $$('#f8 .g8blk').forEach(b => { b.style.height = b.dataset.yh + 'px'; });
     $('#side8').style.borderTopColor = s.c; $('#g8cap').textContent = s.cap;
-    side(8, bigW(s.k, s.t), `返済を支えるもの：${nb(s.back)}`, nb(s.note), [['発行する主体', nb(s.who).replace('（東京都・大阪市など）', '')], ['利回り（一般に）', s.y]]); }});
+    side(8, bigW(s.k, s.t), `返済を支えるもの：${nb(s.back)}`, nb(s.note), [['利回り（一般に）', s.y], ['2012年・5年ものの例', `年${s.ex}%`]]); }});
 
 
 // ---- p9 前提のスイッチ ----
@@ -1061,29 +1067,31 @@ function p9Axis() { PX9 = (stage.classList.contains('pt') ? 400 : 740) / YEN_BUY
 $('#fxA').style.width = YEN_BUY * PX9 + 'px'; }
 p9Axis(); $('#fxAl').textContent = man(YEN_BUY);
 hover($('#fxA'), () => tipHtml(man(YEN_BUY), `買ったときの円換算（${usdT(DATA.usd)}×${DATA.fx_buy}円）`, '6節'), 'fx');
-hover($('#fxB'), () => { const r = P.fx ? DATA.fx_buy : DATA.fx_end; return P.hold && P.alive ? tipHtml(man(DATA.usd * r), `満期に円で戻る元本（${usdT(DATA.usd)}×${r}円）`, '6節') : '<b>xx</b><br>額は原稿に無い'; }, 'fx');
+hover($('#fxB'), () => { const r = P.fx ? DATA.fx_buy : DATA.fx_end; return P.hold && P.alive ? tipHtml(man(DATA.usd * r), `満期に円で戻る元本（${usdT(DATA.usd)}×${r}円）`, '6節') : `<b>元本の${KEEP9()}%</b><br>${KEEP9T()}（例）`; }, 'fx');
+const KEEP9 = () => Math.round((!P.hold ? DATA.sell_price : DATA.bust_back) / DATA.principal * 100);   // 前提が崩れたときに戻る割合（%・原稿の100万円の例から計算）
+const KEEP9T = () => !P.hold ? `${man(DATA.principal)}の債券を3年目に売ると${man(DATA.sell_price)}` : `${man(DATA.principal)}のうち${man(DATA.bust_back)}`;
 function drawP9() {
   $$('.sw').forEach(b => { const p = PREM.find(x => x.k === b.dataset.k), on = P[p.k]; b.classList.toggle('off', !on); b.querySelector('span').textContent = on ? p.on : p.off; b.querySelector('em').textContent = on ? '● そろっている（押すと崩す）' : '○ 崩れた（押すと戻す）'; });
   const r = P.fx ? DATA.fx_buy : DATA.fx_end, yen = DATA.usd * r, sure = P.hold && P.alive, all = sure && P.fx;
   const B = $('#fxB'), R = $('#fxR');
   B.style.width = yen * PX9 + 'px'; B.classList.toggle('weak', !sure); B.style.background = all ? 'var(--green)' : 'var(--orange)';
-  $('#fxBl').textContent = sure ? man(yen) : 'xx（額は原稿に無い）'; $('#fxBl').style.color = sure ? '#fff' : 'var(--orange-t)';
+  $('#fxBl').textContent = sure ? man(yen) : `元本の${KEEP9()}%（例）`; $('#fxBl').style.color = sure ? '#fff' : 'var(--orange-t)';
   R.style.left = yen * PX9 + 'px'; R.style.width = (YEN_BUY - yen) * PX9 + 'px'; R.style.display = P.fx || !sure ? 'none' : 'block';
   const RL = $('#fxRl'); RL.textContent = P.fx || !sure ? '' : `${fm(FX_LOSS)}（${pc(FX_LOSS, YEN_BUY)}）`; RL.style.left = YEN_BUY * PX9 - 190 + 'px';
   $('#fxBs').textContent = `${usdT(DATA.usd)}×${r}円`;
   $('#res9').style.borderLeftColor = all ? 'var(--green)' : 'var(--orange)';
   let b, s;
-  if (!P.hold) { b = '途中で売ると、元本は相場しだいで下回ることがある'; s = '額は原稿に無い（xx）。1の前提（急な病気や物入りで売らずに済むか）が崩れている'; }
-  else if (!P.alive) { b = '発行体が倒産すると、元本は約束どおりには戻らない'; s = '額は原稿に無い（xx）。2の前提（盤石に見える大企業でも起こる）が崩れている'; }
+  if (!P.hold) { b = '途中で売ると、元本は相場しだいで下回ることがある'; s = `例：${KEEP9T()}。元本の${KEEP9()}%しか戻らない。1の前提（急な病気や物入りで売らずに済むか）が崩れている`; }
+  else if (!P.alive) { b = '発行体が倒産すると、元本は約束どおりには戻らない'; s = `例：${KEEP9T()}しか戻らない（元本の${KEEP9()}%）。2の前提（盤石に見える大企業でも起こる）が崩れている`; }
   else if (!P.fx) { b = `${usdT(DATA.usd)}は満額戻っても、円では${man(YEN_END)}に目減りする`; s = `計算：${usdT(DATA.usd)}×${DATA.fx_end}円＝${man(YEN_END)}。買ったときの${man(YEN_BUY)}から${fm(FX_LOSS)}`; }
   else { b = `前提がそろえば、円で${man(YEN_BUY)}が戻る`; s = `計算：${usdT(DATA.usd)}×${DATA.fx_buy}円＝${man(YEN_BUY)}。スイッチを押して前提を崩すと、どう変わるかが分かる`; }
   if (!sure && !P.fx) s += '。さらに為替でも目減りする';
   $('#resB').textContent = b; $('#resS').textContent = s;
-  $('#b9').innerHTML = sure ? `${yen / 10000}<small>万円</small>` : 'xx'; $('#b9').style.color = all ? 'var(--green-t)' : 'var(--orange-t)';
-  $('#b9l').textContent = sure ? `満期に円で戻る元本（1ドル${r}円）` : '満期に円で戻る元本（額は原稿に無い）';
+  $('#b9').innerHTML = sure ? `${yen / 10000}<small>万円</small>` : `${KEEP9()}<small>%</small>`; $('#b9').style.color = all ? 'var(--green-t)' : 'var(--orange-t)';
+  $('#b9l').textContent = sure ? `満期に円で戻る元本（1ドル${r}円）` : '元本のうち戻る割合（例）';
   $('#b9s').innerHTML = !sure ? '前提が崩れると、<br>元本がいくら戻るかは約束されない' : P.fx ? '持ち方・相手・通貨の前提がそろって、<br>はじめて約束どおりの元本が円で戻る' : '約束どおりドルで満額戻っても、<br>為替で円での元本は減る';
-  $('#cmp9').innerHTML = `<div><span>買ったとき（${usdT(DATA.usd)}×${DATA.fx_buy}円）</span><b>${man(YEN_BUY)}</b></div><div><span>満期（${usdT(DATA.usd)}×${r}円）</span><b>${sure ? man(yen) : 'xx'}</b></div>` +
-    (sure ? `<div><span>差（計算：${yen / 10000}−${YEN_BUY / 10000}）</span><b>${yen === YEN_BUY ? '0円' : `${fm(yen - YEN_BUY)}（${pc(yen - YEN_BUY, YEN_BUY)}）`}</b></div>` : '<div><span>差</span><b>原稿に額が無い</b></div>');
+  $('#cmp9').innerHTML = `<div><span>買ったとき（${usdT(DATA.usd)}×${DATA.fx_buy}円）</span><b>${man(YEN_BUY)}</b></div><div><span>満期（${usdT(DATA.usd)}×${r}円）</span><b>${sure ? man(yen) : `元本の${KEEP9()}%（例）`}</b></div>` +
+    (sure ? `<div><span>差（計算：${yen / 10000}−${YEN_BUY / 10000}）</span><b>${yen === YEN_BUY ? '0円' : `${fm(yen - YEN_BUY)}（${pc(yen - YEN_BUY, YEN_BUY)}）`}</b></div>` : `<div><span>差（例）</span><b>−${100 - KEEP9()}%</b></div>`);
 }
 
 // ---- p10 絵が動く版：勧誘の言葉が、円で元本が戻るまでに通る道。押した関門で道が止まる（図解） ----
@@ -1141,13 +1149,13 @@ const DRAWERS = {
       '出所と前提': srcTab('2節', `<p>${man(DATA.sell_price)}は原稿が置いた例の値で、計算で出した値ではない</p><p>発行体が約束しているのは、決めた利息と満期の元本の返済だけ。途中の値段は保証していない（原稿2節）</p>`)}}),
   rate: () => ({where: '値段が下がるしくみ › 買い手の比べ方', say: `年${DATA.market_rate}%で貸せる相手がいると、年${DATA.rate}%の債券を${man(DATA.principal)}で買う人はいない`,
     tabs: {'内訳': table(['比べるもの', '毎年の利息'], [[`あなたの年${DATA.rate}%の債券`, man(DATA.coupon)], [`年${DATA.market_rate}%の新しい募集（${man(DATA.principal)}×${DATA.market_rate}%）`, man(NEW_INT)], [`差（${NEW_INT / 10000}−${DATA.coupon / 10000}）`, man(INT_GAP)]], true) + `<p style="margin-top:18px">原稿の例では「${man(DATA.sell_price)}に値引きしてくれるなら引き受ける」と言われる</p>`,
-      '出所と前提': srcTab('2節', `<p>${man(NEW_INT)}と${man(INT_GAP)}は当社の計算。${man(DATA.sell_price)}は原稿の例の値で、この差から計算した値ではない</p><p>金利が上がる前の途中の値段は、原稿に記述が無い</p>`)}}),
+      '出所と前提': srcTab('2節', `<p>${man(NEW_INT)}と${man(INT_GAP)}は当社の計算。${man(DATA.sell_price)}は原稿の例の値で、この差から計算した値ではない</p><p>金利が上がる前（年${DATA.rate}%のまま）なら、ほぼ${man(DATA.principal)}で売れる（原稿2節・説明のための例）</p>`)}}),
   credit: () => ({where: '返す義務と信用力 › A君とB君', say: '信用力が低い相手ほど、貸す側は多くの見返りを求める。高い利回りは、その見返りの表れ',
     tabs: {'A君とB君': table(['項目', 'A君', 'B君'], [
       ['立場', '公務員。給与が安定し、貯金も豊富', '定職がなく、すでに複数の借金がある'],
       ['返せなくなる不安', 'ほとんどない', '大きい（無一文になれば戻らない）'],
       ['信用力', '極めて高い', '低い'],
-      ['利率', '原稿に無い（xx）', `年${DATA.ask_low}%では誰も貸さず、年${DATA.ask_high}%を出す（p.7）`]]),
+      ['利率', `年${DATA.rate_a}%でも貸す人がすぐ見つかる（例）`, `年${DATA.ask_low}%では誰も貸さず、年${DATA.ask_high}%を出す（p.7）`]]),
       '出所と前提': srcTab('3節・4節', '<p>信用力＝約束どおり利息と元本を払える確からしさ。金利＝貸し借りに対して払われる対価の比率。利回り＝投資した元本に対して1年間で得られる実質的な収益の割合（原稿3節）</p>')}}),
   risk: () => ({where: '高利回りの正体 › B君の例', say: '高い利回りは商品の優れた性能ではなく、貸し倒れのリスクを引き受けている対価としての危険料',
     tabs: {'内訳': table(['段', '利率', '毎年の利息'], [['最初に頼む', `年${DATA.ask_low}%`, `${man(LOW_INT)}（計算）`], ['出さざるを得ない', `年${DATA.ask_high}%`, man(DATA.interest_high)], [`差（${DATA.ask_high}−${DATA.ask_low}）`, `${GAP_PT}ポイント`, man(DATA.interest_high - LOW_INT)]], true),
