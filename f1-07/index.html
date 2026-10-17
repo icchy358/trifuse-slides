@@ -301,7 +301,7 @@ button{font-family:inherit;color:inherit}
 <div class="ctitle">下の時点を押すと、そのときにかかる費用の帯が浮かび上がる</div>
 <button class="more" data-open="p5" data-demo="ev">根拠を見る ›</button>
 <div class="body"><div class="cols"><div class="L"><div class="fig" id="f5"><div class="ft">買ってから売るまでにかかる費用（帯の太さは模式で、金額の大きさではありません）</div><span class="xl" style="left:285px;top:76px">買うとき</span><span class="xl" style="left:615px;top:76px">持っている間</span><span class="xl" style="left:945px;top:76px">売るとき</span><div class="lane c-a" style="top:152px">投資信託</div><div class="lane c-b" style="top:302px">ETF</div><div class="bks"></div><div class="cap"></div><div class="stages"><button data-k="buy" data-demo="k-buy">買うとき</button><button data-k="hold" data-demo="k-hold">持っている間</button><button data-k="sell" data-demo="k-sell">売るとき</button><button data-k="mkt" data-demo="k-mkt">市場ならでは</button></div></div></div><aside class="side pn"></aside></div></div>
-<div class="note">売値と買値の数字は、説明のために作った架空の例です。</div>
+<div class="note">費用の率と金額（100万円分）、売値と買値の数字は、説明のための例です。実際の率は商品と証券会社ごとにちがいます。</div>
 <div class="foot">出所：TriFuse ノード本文 F1-07「ETFと投資信託の違い」 4節</div>
 </section>
 <section class="page" id="p6">
@@ -324,6 +324,9 @@ const DATA = {
   gap: { nav: 10000, low: 9800, high: 10200 },
   spread: { bid: 1000, ask: 1005, tradeMan: 100 },
   feeFloor: 0.1,
+  flat: 10005,                                                  // 平常時の市場の値段の例（円・原稿 v1.5 2節・2026-10-18 補足）
+  fee: { buyPct: 2, fundPct: 0.5, etfPct: 0.1, keepPct: 0.3 },  // 100万円分の費用の例（%・原稿 v1.5 4節・同）
+  wideDiffPct: 0.5,                                             // 信託報酬の差が大きいときの例（年%・原稿 v1.5 5節・同）
   caseA: { monthMan: 3, months: 12, years: 20 },
   caseB: { lumpMan: 1000, diffPct: 0.05, years: 10 },
   demo: [[1, 's-e'], [1, 's-f'], [2, 's-e'], [2, 's-f'], [3, 's-high'], [3, 's-flat'], [3, 's-low'], [4, 'k-how'], [4, 'k-care'], [4, 'k-time'], [5, 'k-hold'], [5, 'k-sell'], [5, 'k-mkt'], [6, 's-b'], [6, 's-a'], [6, 'ev']]
@@ -533,7 +536,7 @@ function setup() {
     const cmp = `<div class="cmp in" style="--d:.2s"><div><span>中身の価値</span><b>${yen(G.nav)}円</b></div><div><span>市場の値段</span><b>${yen(v)}円</b></div></div>`;
     $('#p3 .side').innerHTML = (d
       ? `<h4 class="in">市場の値段 − 中身の価値</h4><div class="big in"><span>${sign}${yen(Math.abs(d))}</span><small>円</small></div><p class="in" style="--d:.1s"><b>中身の価値より${PCT}％${d < 0 ? '安い' : '高い'}値段で取引された</b></p>`
-      : '<h4 class="in">市場の値段 − 中身の価値</h4><div class="big word in">ほぼ一致</div><p class="in" style="--d:.1s"><b>専門の業者の裁定取引が、ずれをならす</b></p>')
+      : `<h4 class="in">市場の値段 − 中身の価値</h4><div class="big word in">ほぼ一致</div><p class="in" style="--d:.1s"><b>専門の業者の裁定取引が、ずれをならす。例：${yen(G.nav)}円に対して${yen(DATA.flat)}円前後（差${((DATA.flat - G.nav) / G.nav * 100).toFixed(2)}％）</b></p>`)
       + cmp + '<p>ETFを売り買いするときは、中身の資産の価値と、市場で実際につく値段の両方を見ます。</p>';
   }, 'low', 'high');
   // p4: 1日の線の上に、2つの買い方の注文と判断を置く。項目を切り替えると、線の上の印と右の枠が入れ替わる（模式図）
@@ -571,15 +574,16 @@ function setup() {
   $('.bks', f5).innerHTML = BK.map(([k, w, h, t]) => `<div class="bk ${cls(w)}" data-k="${k}" style="left:${C5[k][0]}px;top:${Y5[w] - h / 2}px;width:${C5[k][1]}px;height:${h}px">${t}</div>`).join('')
     + ['buy', 'sell'].map(k => `<div class="bk spr c-b" data-k="mkt" style="left:${C5[k][0]}px;top:392px;width:${C5[k][1]}px;height:64px">売値と買値の差</div>`).join('')
     + '<div class="sprl" data-k="mkt">手数料の明細書には表れない</div>';
+  const FE = DATA.fee, Y100 = p => yen(SP.tradeMan * 10000 * p / 100);   // 100万円分の費用（例）
   const K5 = {
     buy: { eb: '買うとき｜購入時', big: '無料が広がる', ld: '投資信託は販売会社へ購入時手数料を、ETFは証券会社へ売買委託手数料を払います。',
-           fm: '投資信託は無料の商品が主流になり、ETFも主なネット証券で無料にする動きが広がっています。', r: ['購入時手数料', '売買委託手数料'],
+           fm: '投資信託は無料の商品が主流になり、ETFも主なネット証券で無料にする動きが広がっています。', r: [`${FE.buyPct}％なら${Y100(FE.buyPct)}円（例）`, '無料の証券会社なら0円（例）'],
            cap: '買うときにかかるのは、投資信託は購入時手数料、ETFは売買委託手数料です。' },
     hold: { eb: '持っている間｜保有期間中', big: '毎日かかる', ld: '信託報酬は、日割りで毎日、自動で差し引かれます。ETFは販売会社を通さないぶん、投資信託より低い傾向です。',
-            fm: `投資信託では、年${DATA.feeFloor}％を切る水準の競争も進んでいます。`, r: ['信託報酬', '信託報酬（低い傾向）'],
+            fm: `投資信託では、年${DATA.feeFloor}％を切る水準の競争も進んでいます。`, r: [`年${FE.fundPct}％なら年${Y100(FE.fundPct)}円（例）`, `年${FE.etfPct}％なら年${Y100(FE.etfPct)}円（例）`],
             cap: '持っている間は、どちらも信託報酬がかかります。ETFのほうが低い傾向です。' },
     sell: { eb: '売るとき｜売却時', big: '売るときにも', ld: '投資信託は解約するときの清算金として信託財産留保額を、ETFは証券会社へ売買委託手数料を払います。',
-            r: ['信託財産留保額', '売買委託手数料'], cap: '売るときにかかるのは、投資信託は信託財産留保額、ETFは売買委託手数料です。' },
+            r: [`${FE.keepPct}％なら${Y100(FE.keepPct)}円（例）`, '無料の証券会社なら0円（例）'], cap: '売るときにかかるのは、投資信託は信託財産留保額、ETFは売買委託手数料です。' },
     mkt: { eb: '市場ならでは｜明細に出ない費用', num: 1, big: `${yen(SCOST)}<small>円</small>`, ld: `${SP.tradeMan}万円分を取引したときの、目に見えない費用です（架空の例）。`,
            fm: `売りたい人の最安値${yen(SP.ask)}円 − 買いたい人の最高値${yen(SP.bid)}円<br>＝ 差は${SPR}円（${SPCT}％）`, r: ['なし', '売値と買値の差'],
            cap: 'ETFには、明細に出ない売値と買値の差があります。取引の少ない銘柄ほど、差が開きやすくなります。' } };
@@ -600,7 +604,7 @@ function setup() {
     b: { t: `${yen(B.lumpMan)}万円を一括で${B.years}年以上持つ`, win: 1, x: [820, 820, 820], kn: [`${yen(B.lumpMan)}万円`, '最初に買うだけ', `${B.years}年以上`],
          li: [['持っている間じゅう、信託報酬の差が毎年かかり続ける'], [`信託報酬が年${B.diffPct}％低ければ、持っている間の費用が減る`, '買うときの手数料が小さければ、その低さが生きる']],
          said: '金額が大きく、期間が長いほど、信託報酬の小さな差が効いてきます。',
-         calc: `${B.years}年の信託報酬の差＝${yen(B.lumpMan)}万円×${B.diffPct}％×${B.years}年＝${SAVE}万円` } };
+         calc: `${B.years}年の信託報酬の差＝${yen(B.lumpMan)}万円×${B.diffPct}％×${B.years}年＝${SAVE}万円<br>差が年${DATA.wideDiffPct}％なら＝${yen(B.lumpMan * DATA.wideDiffPct / 100 * B.years)}万円（例）` } };
   $$('.sw button', f6).forEach(b => b.textContent = C6[b.dataset.k].t);
   ENTER[6] = pills($('.sw', f6), (k, fresh) => {
     const d = C6[k], c = d.win ? 'c-b' : 'c-a', fit = $('.fit', f6);
