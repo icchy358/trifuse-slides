@@ -313,6 +313,7 @@ button{font-family:inherit;color:inherit}
 const DATA = {
   node: 'S0-02',
   src: 'TriFuse ノード本文 S0-02「盗まれるのはお金ではなく本人性」',
+  fraud: { year: 2024, cases: 4369, oku: 86.9 },   // インターネットバンキングに係る不正送金（警察白書 令和7年版・原稿 v1.2 1節・2026-10-18 補足）
   demo: [[1, 'k-net'], [2, 'o-ok'], [2, 'q2'], [2, 'o-ok'], [3, 'k-when'], [3, 'k-wide'], [4, 'k-swap'], [4, 'k-move'], [5, 'k-sell'], [5, 'k-try'], [6, 'leak'], [6, 'k-split'], [6, 'leak'], [6, 'ev']]
 };
 
@@ -470,7 +471,7 @@ function setup() {
             r: [['鍵を取ったあと', '物色して、運び出す'], ['かかるもの', '手間と時間']], cap: '玄関では、鍵を開けてから中身を持ち出すまでに、まだ手間と時間がかかります。' },
     net: { c: 'c-b', key: 'IDと<br>パスワード', box: '口座の<br>資産', dist: '鍵と中身のあいだは、数回のクリックだけ', big: 'ほぼ同じ', eb: 'ネットの口座では',
            ld: 'IDとパスワードが手に入れば、数回クリックするだけで、資産を別の場所へ送金できてしまいます。', fm: '鍵を取ることが、中身を取ることとほぼ同じ意味になります。',
-           r: [['鍵を取ったあと', '数回クリックして送金する'], ['かかるもの', 'ほとんど無い']], cap: 'ネットでは、鍵を手に入れた時点で、中身にほぼ手が届いています。' } };
+           r: [['鍵を取ったあと', '数回クリックして送金する'], ['かかるもの', 'ほとんど無い'], [`${DATA.fraud.year}年の不正送金（全国）`, `${DATA.fraud.cases.toLocaleString('ja-JP')}件・約${DATA.fraud.oku}億円`]], cap: 'ネットでは、鍵を手に入れた時点で、中身にほぼ手が届いています。' } };
   ENTER[1] = pills($('.sw', f1), (k, fresh) => {
     const d = P1[k]; st(f1, 's-' + k + ' ' + d.c, fresh);
     $('.key', f1).innerHTML = d.key; $('.box', f1).innerHTML = d.box; $('.dist', f1).textContent = d.dist; $('.cap', f1).textContent = d.cap;
