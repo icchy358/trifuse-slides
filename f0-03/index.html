@@ -212,7 +212,7 @@ button{font-family:inherit;color:inherit}
 <div class="ctitle">場面を選び、先に答えてから、シーソーがどちらへ傾くかを確かめる</div>
 <button class="more" data-open="p3" data-demo="ev">根拠を見る ›</button>
 <div class="body"><div class="cols"><div class="L"><div class="fig" id="f3"><div class="pcs"></div><svg width="1070" height="660" viewBox="0 0 1070 660" aria-hidden="true"><polygon points="535,372 493,440 577,440" fill="#31364B"/></svg><div class="ab s" style="right:26px;top:142px">重りの大きさと傾きは模式です</div><div class="ly"></div><div class="cap" style="top:510px"></div><div class="ask"></div></div></div><aside class="side pn"></aside></div></div>
-<div class="note">金利と物価の数字は、説明のために作った架空の例です。数字の無い場面は、傾きの向きだけを表します。</div>
+<div class="note">金利と物価の数字は、説明のために作った架空の例です。重りの大きさと傾きは模式で、数字の大きさではありません。</div>
 <div class="foot">出所：TriFuse ノード本文 F0-03「インフレは貯蓄の購買力をどう変えるか」 3節</div>
 </section>
 <section class="page" id="p4">
@@ -243,7 +243,7 @@ const DATA = {
   src: 'TriFuse ノード本文 F0-03「インフレは貯蓄の購買力をどう変えるか」',
   saving: 100, yen: 1, piece: 1, min: 1, sure: 100,
   bread: { was: 100, now: 200 },
-  rate: { nominal: 0.1, cpi: 2 }, two: 2,
+  rate: { nominal: 0.1, cpi: 2, flatPct: 2, upPct: 3, tenYears: 10 }, two: 2,
   back: 10,
   demo: [[1, 's-buy'], [1, 's-num'], [2, 's-power'], [2, 's-price'], [3, 'o-up'], [3, 'o-down'], [3, 'q2'], [3, 'o-flat'], [4, 's-inv'], [4, 's-dep'], [5, 'k-back'], [5, 'k-pair'], [5, 'ev']]
 };
@@ -448,9 +448,9 @@ function setup() {
   const LB3 = { down: '減る', flat: '変わらない', up: '増える' }, C3 = { down: 'c-b', flat: 'c-n', up: 'c-g' };
   const SZ = { down: [[84, 54], [124, 92]], flat: [[100, 72], [100, 72]], up: [[124, 92], [84, 54]] }, DEG = { down: 11, flat: 0, up: -11 };
   const Q3 = [
-    { q: `名目金利が年${R.nominal}％、物価上昇率が年${R.cpi}％`, c: `名目金利が年${R.nominal}％、<br>物価上昇率が年${R.cpi}％`, a: 'down', l: R.nominal, r: R.cpi, res: `マイナス${REAL}％`, fml: `${R.nominal}％ − ${R.cpi}％ ＝ −${REAL}％`, why: `通帳の数字は利息でわずかに増えても、買う力は年${REAL}％ずつ削られる計算です。` },
-    { q: '名目金利と物価上昇率が同じ', a: 'flat', res: 'ゼロ', why: '利息で増える分と、物価の上昇で減る分がつり合います。買う力は変わりません。' },
-    { q: '名目金利が物価上昇率より高い', a: 'up', res: 'プラス', why: '利息で増える分が、物価の上昇で減る分を上回ります。買う力は増えます。' }];
+    { q: `名目金利が年${R.nominal}％、物価上昇率が年${R.cpi}％`, c: `名目金利が年${R.nominal}％、<br>物価上昇率が年${R.cpi}％`, a: 'down', l: R.nominal, r: R.cpi, res: `マイナス${REAL}％`, fml: `${R.nominal}％ − ${R.cpi}％ ＝ −${REAL}％`, why: `通帳の数字は利息でわずかに増えても、買う力は年${REAL}％ずつ削られる計算です。100万円を${R.tenYears}年置くと、通帳は約${Math.round(100 * Math.pow(1 + R.nominal / 100, R.tenYears))}万円でも、買える量は約${Math.round(100 * Math.pow((1 + R.nominal / 100) / (1 + R.cpi / 100), R.tenYears))}万円分です（例）。` },
+    { q: '名目金利と物価上昇率が同じ', a: 'flat', l: R.flatPct, r: R.flatPct, res: `ゼロ（例：${R.flatPct}％ − ${R.flatPct}％）`, why: '利息で増える分と、物価の上昇で減る分がつり合います。買う力は変わりません。' },
+    { q: '名目金利が物価上昇率より高い', a: 'up', l: R.upPct, r: R.flatPct, res: `プラス${R.upPct - R.flatPct}％（例：${R.upPct}％ − ${R.flatPct}％）`, why: '利息で増える分が、物価の上昇で減る分を上回ります。買う力は増えます。' }];   // 2枚目・3枚目の数字は説明のための例（原稿 v1.2 3節・2026-10-18 補足）
   const wt = (side, name, val, sz, c) => `<div class="wt ${c}" style="${side}:10px;width:${sz[0]}px;height:${sz[1]}px"><span>${name}</span>${val != null ? `年${val}％` : ''}</div>`;
   ask(3, Q3, LB3, { ask: '預金の買う力は？', cls: k => C3[k], draw: (it, ok, msg, all) => {
     const f = $('#f3'), c = C3[it.a], sz = ok ? SZ[it.a] : SZ.flat, deg = ok ? DEG[it.a] : 0;
