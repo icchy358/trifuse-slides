@@ -556,7 +556,7 @@ function setup() {
     y1: { n: F.holdPct, t: `${F.holdPct}年持つ`, eb: `${F.holdPct}年持つ｜管理費用`, big: `${YEAR}<small>万円</small>`, ld: `保有している間、年${F.holdPct}％ずつ差し引かれる例です。`,
           fm: `${B.man}万円 × 年${F.holdPct}％ ＝ ${F.holdPct}年で${YEAR}万円`, rows: [['払う回数', '持っている間、毎日少しずつ'], ['見え方', '残高からの天引きで見えにくい']], cap: '管理費用は、別に請求されるのではなく、預けている残高から毎日少しずつ天引きされます。' },
     y10: { n: F.years, t: `${F.years}年持つ`, eb: `${F.years}年持つ｜管理費用の合計`, big: `${TOTAL}<small>万円</small>`, ld: `${F.years}年間持ち続けると、運用成果からこれだけ目減りします。`,
-           fm: `${F.holdPct}年で${YEAR}万円 × ${F.years}年 ＝ ${TOTAL}万円`, rows: [['払う回数', `${F.years}年のあいだ、毎日少しずつ`], ['見え方', '明細に太字では出ない']], cap: '明細に太字で表示されない費用ほど、長い資産形成に大きな影響を及ぼします。' } };
+           fm: `${F.holdPct}年で${YEAR}万円 × ${F.years}年 ＝ ${TOTAL}万円`, rows: [['払う回数', `${F.years}年のあいだ、毎日少しずつ`], [`買うときの${F.buyMan}万円と合わせると`, `${F.years}年で${F.buyMan + TOTAL}万円（例）`]], cap: '明細に太字で表示されない費用ほど、長い資産形成に大きな影響を及ぼします。' } };
   $$('.stages button', f5).forEach(b => b.textContent = K5[b.dataset.k].t);
   ENTER[5] = pills($('.stages', f5), k => {
     const d = K5[k], n = d.n;

@@ -521,7 +521,8 @@ function setup() {
     f4.className = 'fig nt'; put(false); void f4.offsetWidth; f4.className = 'fig'; put(true);
     $('.boj', f4).classList.toggle('hid', k !== 'bank'); show(f4, k === 'bank' ? ['boj'] : []);
     $('.cap', f4).textContent = d.cap;
-    pn($('#p4 .side'), '', { eb: d.eb, big: d.big, ld: d.ld, fm: d.fm, rows: [['数字が減る口座', d.a], ['数字が増える口座', d.b]], fx: ['どの支払いでも変わらないこと', '現金は動かず、残高の数字だけが書き換わる'] });
+    const ex = { debit: `${yen(500)}円の買い物：残高${yen(100000)}円→${yen(99500)}円`, rent: `家賃${yen(80000)}円が引き落とされる`, pay: `給与${yen(250000)}円が振り込まれる`, bank: '' }[k];   // 金額は説明のための例（原稿 v1.5 4節・2026-10-18 補足）
+    pn($('#p4 .side'), '', { eb: d.eb, big: d.big, ld: d.ld, fm: d.fm, rows: [['数字が減る口座', d.a], ['数字が増える口座', d.b]].concat(ex ? [['例', ex]] : []), fx: ['どの支払いでも変わらないこと', '現金は動かず、残高の数字だけが書き換わる'] });
   }, ST ? 'bank' : 'debit');
   // p5: 持っている資産からレジまでの道のり。預金はまっすぐ、株式や投資信託は回り道（模式図）
   const f5 = $('#f5');
