@@ -85,6 +85,26 @@ button{font-family:inherit;cursor:pointer}
 .fa.on{color:var(--c,var(--safe))}
 .stepbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 
+
+/* ===== 警告ランプ（点滅）とマーケット・ティッカー ===== */
+.metric.alert{border-color:rgba(248,128,57,.55)}
+.metric .alamp{position:absolute;right:58px;top:18px;width:11px;height:11px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 0 rgba(248,128,57,.7);animation:alamp 1.8s infinite}
+@keyframes alamp{0%{box-shadow:0 0 0 0 rgba(248,128,57,.7)}70%{box-shadow:0 0 0 12px rgba(248,128,57,0)}100%{box-shadow:0 0 0 0 rgba(248,128,57,0)}}
+.ticker{position:absolute;left:0;right:0;height:36px;background:var(--navy);color:#fff;overflow:hidden;display:flex;align-items:center;z-index:4}
+.theme-photo .ticker{top:360px}
+.theme-trifuse .ticker{top:0}
+.ticker .tk-lbl{flex:none;height:100%;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--safe);font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.06em;z-index:1}
+.ticker .tk-lbl i{width:8px;height:8px;border-radius:50%;background:var(--warn);animation:tkblink 1.2s steps(2,start) infinite}
+@keyframes tkblink{to{visibility:hidden}}
+.ticker .tk-track{display:flex;flex:none;white-space:nowrap;animation:tk 32s linear infinite}
+.ticker .tk-run{display:flex;gap:34px;padding-right:34px;font-family:var(--mono);font-size:16px;font-weight:700}
+.ticker .tk-run span{display:inline-flex;gap:8px;align-items:center}
+.ticker .tk-run em{font-style:normal;font-family:var(--font);font-weight:500;font-size:14px;color:#B9C7DA}
+.ticker .up{color:var(--warn)}.ticker .dn{color:var(--sky)}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mobile .ticker{position:relative;top:auto;bottom:auto}
+@media (prefers-reduced-motion:reduce){.ticker .tk-track,.metric .alamp{animation:none}}
+
 /* ===== S00 cover ===== */
 .cover{position:absolute;inset:0}
 .theme-trifuse .cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
@@ -94,7 +114,7 @@ button{font-family:inherit;cursor:pointer}
 .cover h1 .hl2{color:var(--safe)}
 .cover .sub{font-size:19px;color:var(--ink2);line-height:1.7;font-weight:500}
 .theme-trifuse .cover-text{position:absolute;left:72px;top:150px;width:720px;display:flex;flex-direction:column;gap:22px}
-.theme-photo .cover-text{position:absolute;left:64px;right:64px;top:392px;display:flex;flex-direction:column;gap:12px}
+.theme-photo .cover-text{position:absolute;left:64px;right:64px;top:416px;display:flex;flex-direction:column;gap:12px}
 .theme-photo .cover h1{font-size:46px}
 .theme-photo .cover .sub{font-size:17px}
 .cover-ill{position:absolute;right:56px;top:120px;width:440px;height:460px}
@@ -553,6 +573,8 @@ input[type=range]{width:100%;accent-color:var(--safe)}
         <use href="#i-wallet" width="52" height="52" x="320" y="0"/>
       </g>
     </svg>
+
+    <div class="ticker" aria-label="主要指標（10月16日時点）と過去の下落率"><div class="tk-lbl"><i></i>MARKET WATCH 10/16</div><div class="tk-track"><div class="tk-run"><span><em>WTI原油</em>101.41ドル<b class="up">▲</b></span><span><em>北海ブレント</em>109.86ドル<b class="up">▲</b></span><span><em>米9月CPI</em>+3.7%<b class="up">▲</b></span><span><em>米10年国債利回り</em>約5.12%<b class="up">▲</b></span><span><em>過去の下落率 S&amp;P500</em>1973-74 <b class="dn">−48.2%</b></span><span>2000-02 <b class="dn">−49.1%</b></span><span>2007-09 <b class="dn">−56.8%</b></span><span>2020 <b class="dn">−33.9%</b></span></div><div class="tk-run" aria-hidden="true"><span><em>WTI原油</em>101.41ドル<b class="up">▲</b></span><span><em>北海ブレント</em>109.86ドル<b class="up">▲</b></span><span><em>米9月CPI</em>+3.7%<b class="up">▲</b></span><span><em>米10年国債利回り</em>約5.12%<b class="up">▲</b></span><span><em>過去の下落率 S&amp;P500</em>1973-74 <b class="dn">−48.2%</b></span><span>2000-02 <b class="dn">−49.1%</b></span><span>2007-09 <b class="dn">−56.8%</b></span><span>2020 <b class="dn">−33.9%</b></span></div></div></div>
     <div class="brandbar"></div>
   </div>
 </section>
@@ -595,10 +617,10 @@ input[type=range]{width:100%;accent-color:var(--safe)}
   <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1678984240126-70bcddd7a228?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第1章</span><h2>すでに市場で起きている異変</h2><span class="credit only-b">Photo: Jakub Pabis / Unsplash</span></header>
   <div class="body">
     <div class="g4">
-      <div class="card metric fade d1"><svg class="ico"><use href="#i-barrel"/></svg><div class="lb">WTI原油<small>アメリカ基準の原油価格</small></div><div class="val"><span class="count" data-to="101.41" data-dec="2">0</span><small>ドル</small></div><div class="mb"><i style="--w:84%"></i></div><div class="dt">1バレル・10月16日 終値</div></div>
-      <div class="card metric fade d2"><svg class="ico"><use href="#i-ship"/></svg><div class="lb">北海ブレント原油<small>ヨーロッパ・世界基準</small></div><div class="val"><span class="count" data-to="109.86" data-dec="2">0</span><small>ドル</small></div><div class="mb"><i style="--w:91%"></i></div><div class="dt">まで急上昇</div></div>
+      <div class="card metric alert fade d1"><span class="alamp" title="警戒"></span><svg class="ico"><use href="#i-barrel"/></svg><div class="lb">WTI原油<small>アメリカ基準の原油価格</small></div><div class="val"><span class="count" data-to="101.41" data-dec="2">0</span><small>ドル</small></div><div class="mb"><i style="--w:84%"></i></div><div class="dt">1バレル・10月16日 終値</div></div>
+      <div class="card metric alert fade d2"><span class="alamp" title="警戒"></span><svg class="ico"><use href="#i-ship"/></svg><div class="lb">北海ブレント原油<small>ヨーロッパ・世界基準</small></div><div class="val"><span class="count" data-to="109.86" data-dec="2">0</span><small>ドル</small></div><div class="mb"><i style="--w:91%"></i></div><div class="dt">まで急上昇</div></div>
       <div class="card metric fade d3"><svg class="ico"><use href="#i-cart"/></svg><div class="lb">米国9月CPI<small>モノの値段の上がり幅</small></div><div class="val"><span class="count" data-to="3.7" data-dec="1">0</span><small>%上昇</small></div><div class="mb"><i style="--w:62%"></i></div><div class="dt">前年同月比</div></div>
-      <div class="card metric fade d4"><svg class="ico"><use href="#i-percent"/></svg><div class="lb">米国10年国債利回り<small>世界中の金利の基準</small></div><div class="val">約<span class="count" data-to="5.12" data-dec="2">0</span><small>%</small></div><div class="mb"><i style="--w:78%"></i></div><div class="dt">非常に高い水準</div></div>
+      <div class="card metric alert fade d4"><span class="alamp" title="警戒"></span><svg class="ico"><use href="#i-percent"/></svg><div class="lb">米国10年国債利回り<small>世界中の金利の基準</small></div><div class="val">約<span class="count" data-to="5.12" data-dec="2">0</span><small>%</small></div><div class="mb"><i style="--w:78%"></i></div><div class="dt">非常に高い水準</div></div>
     </div>
     <div class="g2" style="margin-top:16px;grid-template-columns:1.25fr 1fr">
       <div class="card fade d5">
