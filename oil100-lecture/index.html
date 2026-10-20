@@ -396,7 +396,7 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 #notes p{margin-bottom:8px}
 #notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
 #notes ul,#notes ol{margin:4px 0 10px 1.6em}
-#help{position:fixed;left:16px;bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
 #help.hide{opacity:0;pointer-events:none}
 .notes-src{display:none}
 /* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
@@ -1172,7 +1172,7 @@ input[type=range]{width:100%;accent-color:var(--safe)}
   slides.forEach((s,i)=>{
     if(i===0)return;
     const f=document.createElement('div');f.className='ft';
-    f.innerHTML='<span>未来塾 ｜ 原油100ドル突破！世界経済に迫る重大な分岐点</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    f.innerHTML='<span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
     s.appendChild(f);
   });
 
