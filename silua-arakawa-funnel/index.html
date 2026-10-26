@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silua 12月販売動線（アラカワさん提案）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 10px 50px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(26px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-26px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:104px;background:var(--navy);color:#fff;padding:0 56px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--brand)}
+.hd .chap{font-size:15px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:4px}
+.hd h2{font-size:31px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:14px;bottom:10px;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:56px;right:56px;top:128px;bottom:58px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:44px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 56px;font-size:12px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1px solid var(--cardline);border-radius:14px;padding:18px 20px}
+.theme-trifuse .card{box-shadow:0 2px 10px rgba(15,27,45,.05)}
+.lead{font-size:17px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:19px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fade{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--rule);border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:12px;color:var(--muted)}
+.quote{border-left:5px solid var(--safe);background:var(--card);border-radius:0 12px 12px 0;padding:14px 20px;font-size:18px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:1.5px solid var(--cardline);border-radius:12px;padding:12px 10px;text-align:center;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:132px}
+.fs .n{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:4px}
+.fs .ico{width:34px;height:34px;color:var(--muted);margin-bottom:6px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 8px 24px -12px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:28px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:20px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+
+/* ===== S00 cover ===== */
+.cover{position:absolute;inset:0}
+.theme-trifuse .cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:14px;background:var(--brand)}
+.cover .kicker{font-size:16px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:50px;font-weight:900;line-height:1.22;color:var(--ink);letter-spacing:.01em}
+.cover h1 .hl2{color:var(--safe)}
+.cover .sub{font-size:19px;color:var(--ink2);line-height:1.7;font-weight:500}
+.cover-ill{position:absolute;right:56px;top:120px;width:440px;height:460px}
+.noimg .credit{display:none}
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.6s ease .4s}
+.slide.active .drawline{stroke-dashoffset:0}
+.slide.active .drawline.sd{stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.slide.active.s1 .drawline.sd{stroke-dashoffset:0}
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:4px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:92px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:16px 16px 18px}
+.mobile .hd h2{font-size:21px}
+.mobile .hd .chap{font-size:12px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:16px 14px 8px;display:flex!important;flex-direction:column;gap:14px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:12px 14px;font-size:11px;gap:8px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:14px}
+.mobile .lead,.mobile p{font-size:15px!important}
+.mobile .quote{font-size:16px!important}
+.mobile .t3{font-size:17px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:2px}
+.mobile .fs{min-height:0;flex-direction:row;gap:10px;text-align:left;justify-content:flex-start;padding:10px 12px;font-size:15px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:30px;height:30px}
+.mobile .fs .n{margin:0;min-width:48px}
+.mobile .fa{width:auto;height:16px;transform:rotate(90deg);font-size:14px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:22px 18px 10px;gap:12px!important}
+.mobile .cover h1{font-size:30px!important}
+.mobile .cover .sub{font-size:15px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 36px);height:auto;margin:6px 18px 0}
+.mobile .cover .brandbar{position:relative;margin-top:18px}
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+/* ===== Silua 販売動線（live-slides） ===== */
+.cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.theme-photo .cover-text{position:absolute;left:72px;top:150px;width:640px;right:auto;display:flex;flex-direction:column;gap:22px}
+.theme-photo .cover h1{font-size:48px}
+.theme-photo .cover .sub{font-size:18px}
+.cover .who{font-size:14px;color:var(--ink2);line-height:1.8}
+.cover .loopline{stroke-dasharray:10 8;animation:dash 1.4s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-36}}
+.label{font-size:13px;font-weight:700;color:var(--ink2);letter-spacing:.06em}
+.small{font-size:13px;color:var(--ink2);line-height:1.6}
+.note{font-size:13px;color:var(--ink2)}
+/* goal */
+.shieldcard{display:flex;align-items:center;gap:18px;padding:18px 24px;border-radius:14px;border:2px solid var(--rule);background:#fff;opacity:.3;transition:all .5s}
+.shieldcard.on{opacity:1;border-color:var(--ok);background:#E7F6F1}
+.shieldcard .ico{width:54px;height:54px;color:var(--okT)}
+.shieldcard b{font-size:22px}
+/* summary */
+.pt{display:flex;flex-direction:column;gap:12px;padding:22px 22px}
+.pt .num{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--safe)}
+.pt .ico{width:46px;height:46px;color:var(--safe)}
+.pt h3{font-size:20px;font-weight:900;line-height:1.45}
+.pt p{font-size:14.5px;color:var(--ink2);line-height:1.75}
+.chipflow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chipflow span{font-size:13px;font-weight:700;padding:4px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.chipflow i{font-style:normal;color:var(--muted);font-size:12px}
+/* funnel */
+.flow.f7 .fs{min-height:150px;font-size:14px;padding:10px 6px}
+.flow.f7 .fs .st{font-size:16px;font-weight:900;margin-bottom:4px}
+.flow.f7 .fs .tl{font-size:12.5px;font-weight:500;color:var(--ink2);line-height:1.45}
+.flow.f7 .fa{width:16px;font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;margin-top:10px}
+.kpi{font-size:12.5px;line-height:1.5;color:var(--ink2);background:var(--paper);border-radius:10px;padding:8px 10px;border-top:3px solid var(--rule);opacity:.3;transition:all .45s}
+.kpi.on{opacity:1;border-top-color:var(--c,var(--safe));color:var(--ink)}
+.kpi b{display:block;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.kpis.blue .kpi.on{--c:var(--b1)}
+.fs.after{--c:#40B69A}
+/* tools */
+.tool{display:flex;flex-direction:column;gap:8px;padding:16px 18px}
+.tool .t3{margin-bottom:0}
+.tool .ico{width:30px;height:30px;color:var(--safe)}
+.tool .what{font-size:14px;line-height:1.65}
+.tool .pt2{font-size:13px;color:var(--ink2);line-height:1.6;border-top:1px dashed var(--rule);padding-top:8px}
+/* line accounts */
+.acct .node{transition:opacity .5s}
+.acct .s2only,.acct .s3only{opacity:0;transition:opacity .5s}
+.slide.s1 .acct .s1only{opacity:1}
+.slide.s2 .acct .s2only{opacity:1}
+.slide.s3 .acct .s3only{opacity:1}
+.acct .s1only{opacity:.15;transition:opacity .5s}
+.acct .cross{transform-origin:330px 120px;transform:scale(0);transition:transform .45s cubic-bezier(.3,1.6,.6,1) .2s}
+.slide.s2 .acct .cross{transform:scale(1)}
+.slide.s3 .acct .s2only{opacity:.25}
+.ftab{display:grid;grid-template-columns:130px 1fr;font-size:13px;line-height:1.5}
+.ftab div{padding:5px 0;border-bottom:1px solid var(--rule)}
+.ftab div:nth-child(odd){font-weight:900;color:var(--safe)}
+.vs2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vs2 .card{padding:12px 14px}
+.vs2 b{font-size:16px}
+.vs2 p{font-size:13px;color:var(--ink2);line-height:1.6;margin-top:4px}
+/* ban */
+.bans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ban{display:flex;flex-direction:column;gap:6px;padding:14px 16px;transition:all .4s;position:relative}
+.ban h4{font-size:16px;font-weight:900;line-height:1.4;padding-right:30px}
+.ban p{font-size:13px;color:var(--ink2);line-height:1.6}
+.ban .box{position:absolute;right:12px;top:12px;width:26px;height:26px;border-radius:7px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;color:transparent;font-size:15px;transition:all .3s}
+.ban.on{border-color:var(--ok);background:#F2FBF8}
+.ban.on .box{border-color:var(--ok);background:var(--ok);color:#fff}
+.ban .why{font-size:12.5px;color:var(--okT);font-weight:700}
+.bmeter{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:14px 16px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.bmeter .mt{height:12px;border-radius:6px;background:#fff;overflow:hidden}
+.bmeter .mt i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A);transition:width .4s}
+.slide.s1 .bmeter .mt i{width:14%}.slide.s2 .bmeter .mt i{width:28%}.slide.s3 .bmeter .mt i{width:43%}.slide.s4 .bmeter .mt i{width:57%}.slide.s5 .bmeter .mt i{width:71%}.slide.s6 .bmeter .mt i{width:86%}.slide.s7 .bmeter .mt i{width:100%}
+.bmeter b{font-size:18px}
+.bmeter .big{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--safe)}
+/* legal */
+.laws{display:flex;flex-direction:column;gap:10px}
+.law{display:grid;grid-template-columns:40px 230px 1fr 270px;gap:16px;align-items:center;padding:12px 18px}
+.law .ico{width:34px;height:34px;color:var(--safe)}
+.law h4{font-size:16px;font-weight:900;line-height:1.4}
+.law p{font-size:13.5px;line-height:1.6}
+.law .why{color:var(--ink2);font-size:13px}
+.law.top{border:2px solid var(--warn);background:#FFF5EC}
+.law.top .ico{color:var(--warnT)}
+/* cases */
+.case{display:flex;flex-direction:column;gap:12px;padding:18px 20px}
+.case h3{font-size:20px;font-weight:900;display:flex;align-items:center;gap:10px}
+.case .take{font-size:14px;line-height:1.7;background:#EAF4FF;border-radius:10px;padding:10px 14px}
+.case .take b{color:var(--safe)}
+.diff{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.diff .card{font-size:14px;line-height:1.65;padding:14px 16px;border-top:4px solid var(--warn)}
+.diff .card b{color:var(--warnT)}
+/* timeline */
+.gantt{position:relative}
+.grow{display:grid;grid-template-columns:240px 1fr;align-items:center;height:52px}
+.grow .lb{font-size:15px;font-weight:900}
+.grow .lb small{display:block;font-size:12px;font-weight:500;color:var(--ink2)}
+.gtrack{position:relative;height:36px;background:repeating-linear-gradient(90deg,#F2F5F9 0,#F2F5F9 calc(100%/7 - 2px),#fff calc(100%/7 - 2px),#fff calc(100%/7))}
+.gbar{position:absolute;top:4px;height:28px;border-radius:7px;color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;padding:0 10px;white-space:nowrap;transform:scaleX(0);transform-origin:left;transition:transform .55s ease}
+.gbar.on{transform:none}
+.ghead{display:grid;grid-template-columns:240px 1fr;margin-bottom:4px}
+.ghead .wk{display:grid;grid-template-columns:repeat(7,1fr)}
+.ghead .wk span{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-left:6px}
+.mstones{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.ms{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.ms .d{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--safe);white-space:nowrap}
+.ms p{font-size:14px;font-weight:700;line-height:1.5}
+.ms.go{background:#0F1B2D;color:#fff;border-color:#0F1B2D}
+.ms.go .d{color:var(--sky)}
+.ms.msdl{border:2px solid var(--warn);background:#FFF5EC}
+.ms.msdl .d{color:var(--warnT)}
+/* phase lists */
+.ph{display:flex;flex-direction:column;gap:6px;padding:16px 18px}
+.ph .phh{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;padding-bottom:8px;border-bottom:3px solid var(--c,var(--safe))}
+.ph .phh b{font-size:19px;font-weight:900}
+.ph .phh span{font-family:var(--mono);font-size:13px;color:var(--ink2)}
+.tk{display:grid;grid-template-columns:38px 1fr;gap:8px;padding:5px 0;border-bottom:1px solid #EEF2F7;font-size:14px;line-height:1.55}
+.tk .no{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:2px}
+.tk .p{display:block;font-size:12.5px;color:var(--ink2)}
+.tk.key{background:#FFF5EC;border-radius:6px;padding:5px 6px;margin:0 -6px}
+.tk.key b{color:var(--warnT)}
+/* december calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .dw{font-size:12.5px;font-weight:700;color:var(--ink2);text-align:center}
+.cal .dw.sat{color:#2B5FA8}.cal .dw.sun{color:#B5500F}
+.day{min-height:112px;background:#fff;border:1px solid var(--rule);border-radius:9px;padding:6px 8px;display:flex;flex-direction:column;gap:4px;transition:all .4s}
+.day .dt{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted)}
+.day .ev{font-size:12px;line-height:1.45;display:flex;gap:4px;align-items:flex-start;opacity:.25;transition:opacity .4s}
+.day .ev .ico{width:14px;height:14px;flex:none;margin-top:2px;stroke-width:4}
+.day .ev.ig .ico{color:#2B5FA8}.day .ev.ln .ico{color:#2E9A7F}
+.day.on{border-color:var(--safe);box-shadow:0 6px 18px -10px var(--safe)}
+.day.on .ev{opacity:1}
+.day.go.on{border:2px solid var(--warn);background:#FFF5EC}
+.day.go .dt{color:var(--warnT)}
+.wkbar{grid-column:1 / -1;display:flex;gap:12px;align-items:center;font-size:13px;padding:8px 12px;border-radius:9px;background:var(--paper);border:1px dashed var(--rule);opacity:.3;transition:all .4s}
+.wkbar.on{opacity:1;border-style:solid;border-color:var(--safe)}
+.wkbar .mono{font-weight:700;color:var(--safe)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--ink2);align-items:center}
+.legend span{display:flex;gap:5px;align-items:center}
+.legend .ico{width:14px;height:14px;stroke-width:4}
+/* decide */
+.dls{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:16px}
+.dl{display:flex;flex-direction:column;gap:10px;padding:18px 18px;opacity:.3;transform:translateY(8px);transition:all .5s}
+.dl.on{opacity:1;transform:none}
+.dl .when{display:flex;align-items:baseline;justify-content:space-between}
+.dl .when b{font-family:var(--mono);font-size:24px;color:var(--safe)}
+.dl .when span{font-size:13px;font-weight:700;color:var(--ink2)}
+.dl .it{display:flex;gap:10px;font-size:15px;font-weight:700;line-height:1.5;padding:8px 0;border-top:1px solid var(--rule)}
+.dl .it .n{font-family:var(--mono);color:var(--muted)}
+.dl.first{border:2px solid var(--warn);background:#FFF5EC}
+.dl.first .when b{color:var(--warnT)}
+.dl.first .it{font-size:17px}
+/* deliverables */
+.lad{display:flex;flex-direction:column;gap:7px}
+.ld{display:grid;grid-template-columns:42px 34px 200px 250px 1fr;gap:14px;align-items:center;padding:9px 16px}
+.ld .n{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--safe)}
+.ld .ico{width:28px;height:28px;color:var(--safe)}
+.ld h4{font-size:15px;font-weight:900}
+.ld .mk{font-size:14px;font-weight:700;color:var(--safe)}
+.ld p{font-size:13px;color:var(--ink2);line-height:1.55}
+/* appendix */
+.hd.memo{background:linear-gradient(100deg,#2B4A3F,#2E9A7F)!important}
+.ap{display:flex;flex-direction:column;gap:6px;padding:14px 18px}
+.ap h4{font-size:16px;font-weight:900;display:flex;gap:8px;align-items:center}
+.ap h4 .n{font-family:var(--mono);color:var(--okT)}
+.ap p{font-size:13.5px;color:var(--ink2);line-height:1.65}
+.ap .gs{font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:20px;background:#FFF1E6;color:var(--warnT)}
+.ap.match{background:#E7F6F1;border-color:#A9DCCB}
+/* notes */
+#notes table{border-collapse:collapse;margin:6px 0 10px;font-size:14px;line-height:1.6}
+#notes th,#notes td{border:1px solid var(--rule);padding:4px 8px;vertical-align:top;text-align:left}
+#notes th{background:#EAF4FF}
+#notes pre{font-family:var(--font);font-size:14px;line-height:1.7;background:var(--paper);padding:8px 12px;border-radius:8px;white-space:pre-wrap}
+#notes blockquote{border-left:4px solid var(--sky);padding-left:10px;margin:6px 0}
+#notes h5{font-size:15px;margin:10px 0 4px}
+/* mobile for this deck */
+.mobile .flow.f7 .fs .tl{display:inline}
+.mobile .kpis,.mobile .bans,.mobile .diff,.mobile .dls,.mobile .mstones,.mobile .vs2{grid-template-columns:1fr}
+.mobile .kpis{display:none}
+.mobile .law{grid-template-columns:30px 1fr;gap:8px}
+.mobile .law .why{grid-column:2}
+.mobile .law p{grid-column:2}
+.mobile .ld{grid-template-columns:30px 1fr;gap:6px 10px}
+.mobile .ld .ico{display:none}
+.mobile .ld h4,.mobile .ld .mk,.mobile .ld p{grid-column:2}
+.mobile .gantt{zoom:.36}
+.mobile .ghead,.mobile .grow{grid-template-columns:240px 1fr}
+.mobile .cal{grid-template-columns:1fr}
+.mobile .cal .dw,.mobile .day.empty{display:none}
+.mobile .day{min-height:0}
+.mobile .day .ev{font-size:13px!important}
+.mobile .acct{zoom:.55}
+.mobile .ftab{grid-template-columns:110px 1fr}
+.mobile .shieldcard b{font-size:17px}
+.mobile .pt h3{font-size:17px}
+.mobile .theme-photo .cover-text,.mobile.theme-photo .cover-text{width:auto}
+
+/* ===== size tuning after screenshot review ===== */
+.slide[data-n="goal"] .fs{font-size:21px;min-height:170px}
+.slide[data-n="goal"] .fs .ico{width:44px;height:44px}
+.shieldcard b{font-size:24px}.shieldcard .small{font-size:15px}
+.pt{gap:16px;padding:26px 24px}.pt h3{font-size:24px}.pt p{font-size:17px;line-height:1.85}
+.pt .chipflow span{font-size:15px}
+.tool{gap:12px;padding:22px 22px}.tool .t3{font-size:20px}.tool .what{font-size:16px;line-height:1.75}.tool .pt2{font-size:14.5px;line-height:1.7}
+.case{gap:16px;padding:24px 24px}.case h3{font-size:22px}.case .chipflow span{font-size:15px}.case .take{font-size:16px;line-height:1.8}
+.diff .card{font-size:16px;line-height:1.75;padding:18px 20px}
+.tk{font-size:15px;padding:7px 0}.tk .p{font-size:13.5px}
+.slide[data-n="ph45"] .tk{font-size:16.5px;padding:12px 0}.slide[data-n="ph45"] .tk .p{font-size:14.5px}
+.day{min-height:150px;padding:8px 10px}.day .ev{font-size:13.5px}.day .dt{font-size:14px}.wkbar{font-size:15px;padding:12px 14px}
+.slide[data-n="decide"] .quote{font-size:17px}
+.dl{padding:24px 24px;gap:14px}.dl .it{font-size:18px;padding:12px 0}.dl.first .it{font-size:20px}.dl .when b{font-size:28px}
+.ld{padding:14px 18px}.ld h4{font-size:17px}.ld .mk{font-size:15.5px}.ld p{font-size:14.5px}.lad{gap:10px}
+.ap{gap:10px;padding:22px 22px}.ap h4{font-size:19px}.ap p{font-size:16px;line-height:1.8}
+.law p{font-size:14.5px}.law .why{font-size:13.5px}.law h4{font-size:17px}
+.mobile .slide[data-n="goal"] .fs{font-size:16px;min-height:0}
+.mobile .pt h3,.mobile .case h3,.mobile .ap h4{font-size:18px}
+.mobile .dl .it,.mobile .dl.first .it{font-size:16px}
+.mobile .day{min-height:0}
+.mobile .flow.f7 .fs{min-height:0}
+.mobile .gantt{zoom:.42}
+
+</style>
+</head>
+<body class="theme-photo">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-insta" viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="14"/><circle cx="32" cy="32" r="11"/><circle cx="46" cy="18" r="2" fill="currentColor"/></symbol>
+<symbol id="i-dm" viewBox="0 0 64 64"><path d="M6 30 58 8 42 58 30 36z"/><path d="M30 36 58 8"/></symbol>
+<symbol id="i-line" viewBox="0 0 64 64"><path d="M32 8C17 8 6 17 6 29c0 10 8 18 19 20l-2 9 12-8c14-1 23-10 23-21C58 17 47 8 32 8z"/><circle cx="21" cy="29" r="2.5" fill="currentColor"/><circle cx="32" cy="29" r="2.5" fill="currentColor"/><circle cx="43" cy="29" r="2.5" fill="currentColor"/></symbol>
+<symbol id="i-step" viewBox="0 0 64 64"><path d="M8 52h14V40h14V28h14V14h8"/><path d="M48 8l8 6-8 6"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 12h8l7 28h28l7-20H15"/><circle cx="23" cy="50" r="4"/><circle cx="43" cy="50" r="4"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 64 64"><path d="M12 30a20 20 0 0 1 34-14l6 6"/><path d="M52 10v12H40"/><path d="M52 34a20 20 0 0 1-34 14l-6-6"/><path d="M12 54V42h12"/></symbol>
+<symbol id="i-mail" viewBox="0 0 64 64"><rect x="6" y="14" width="52" height="38" rx="5"/><path d="M8 18l24 18 24-18"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-cal" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="44" rx="5"/><path d="M8 24h48M20 6v12M44 6v12"/><path d="M18 34h8M30 34h8M42 34h4M18 44h8M30 44h8"/></symbol>
+<symbol id="i-check" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 33l8 8 16-17"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-plug" viewBox="0 0 64 64"><path d="M22 6v14M42 6v14"/><path d="M14 20h36v10a18 18 0 0 1-36 0z"/><path d="M32 48v10"/></symbol>
+<symbol id="i-doc" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10M22 30h20M22 40h20M22 50h12"/></symbol>
+<symbol id="i-tag" viewBox="0 0 64 64"><path d="M6 32 32 6h24v24L30 56z"/><circle cx="44" cy="18" r="4"/></symbol>
+<symbol id="i-gift" viewBox="0 0 64 64"><rect x="8" y="24" width="48" height="12"/><path d="M12 36v20h40V36M32 24v32"/><path d="M32 24c-4-10-16-12-16-4s12 4 16 4c4 0 16 4 16-4s-12-6-16 4z"/></symbol>
+<symbol id="i-video" viewBox="0 0 64 64"><rect x="6" y="16" width="38" height="32" rx="5"/><path d="M44 28l14-8v24l-14-8z"/></symbol>
+<symbol id="i-chart" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-box" viewBox="0 0 64 64"><path d="M32 6 56 18v28L32 58 8 46V18z"/><path d="M8 18l24 12 24-12M32 30v28"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 64 64"><path d="M36 4 12 36h18l-4 24 24-32H32z"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-chat" viewBox="0 0 64 64"><path d="M8 12h48v32H28L16 54V44H8z"/><path d="M18 24h28M18 32h18"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+<symbol id="i-pen" viewBox="0 0 64 64"><path d="M44 8l12 12L22 54H10V42z"/><path d="M38 14l12 12"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-save" viewBox="0 0 64 64"><path d="M10 8h36l8 8v40H10z"/><path d="M20 8v14h22V8M20 56V38h24v18"/></symbol>
+<symbol id="i-stop" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><path d="M15 15l34 34"/></symbol>
+<symbol id="i-star" viewBox="0 0 64 64"><path d="M32 6l8 17 18 2-13 12 4 18-17-9-17 9 4-18L6 25l18-2z"/></symbol>
+<symbol id="i-store" viewBox="0 0 64 64"><path d="M6 24 12 8h40l6 16"/><path d="M6 24c0 5 4 8 9 8s9-3 9-8c0 5 4 8 8 8s8-3 8-8c0 5 4 8 9 8s9-3 9-8"/><path d="M10 32v24h44V32M26 56V42h12v14"/></symbol>
+</defs></svg>
+
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<!-- ================= 表紙 ================= -->
+<section class="slide" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">Silua ｜ 外部コンサル提案の資料化</div>
+      <h1 class="fade d2">12月販売開始に向けた<br><span class="hl2">販売動線・配信動線</span></h1>
+      <p class="sub fade d3">インスタで知る → LINEに入る → 買う → また買う。<br>人の手をほぼ使わずに回り、LINEが止まっても売上が止まらない形へ。</p>
+      <p class="who fade d4">提案：アラカワヒロミさん（v1.0・2026-10-25）　資料化：2026-10-26<br>この資料は案です。GO日・使う道具はSilua側で決めます。</p>
+    </div>
+    <svg class="cover-ill" viewBox="0 0 440 460" aria-label="インスタからLINE、購入、リピートへ回る流れのイメージ図">
+      <rect x="0" y="0" width="440" height="460" rx="22" fill="#fff" opacity=".8"/>
+      <text x="28" y="44" font-size="15" font-weight="700" fill="#5A6B82" font-family="Noto Sans JP">お客様が回る流れ（イメージ）</text>
+      <path class="loopline" d="M110 120 C220 90 330 120 330 200 S300 330 220 350 S90 330 90 240 S100 140 110 120" fill="none" stroke="#65CCFE" stroke-width="4"/>
+      <g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="translate(78 82)"><circle cx="32" cy="32" r="40" fill="#EAF4FF" stroke="none"/><use href="#i-insta" width="64" height="64" stroke="#2B5FA8"/></g>
+        <g transform="translate(298 160)"><circle cx="32" cy="32" r="40" fill="#E7F6F1" stroke="none"/><use href="#i-line" width="64" height="64" stroke="#2E9A7F"/></g>
+        <g transform="translate(188 318)"><circle cx="32" cy="32" r="40" fill="#FFF1E6" stroke="none"/><use href="#i-cart" width="64" height="64" stroke="#B5500F"/></g>
+        <g transform="translate(58 222)"><circle cx="32" cy="32" r="40" fill="#F2F5F9" stroke="none"/><use href="#i-repeat" width="64" height="64" stroke="#16233A"/></g>
+      </g>
+      <g font-family="Noto Sans JP" font-size="14" font-weight="700" fill="#16233A" text-anchor="middle">
+        <text x="110" y="200">知る</text><text x="330" y="278">LINEに入る</text><text x="220" y="436">買う</text><text x="90" y="340">また買う</text>
+      </g>
+      <g transform="translate(176 196)"><rect width="96" height="68" rx="14" fill="#16233A"/><use href="#i-shield" x="12" y="10" width="28" height="28" fill="none" stroke="#65CCFE" stroke-width="3"/><text x="62" y="31" text-anchor="middle" font-size="12" fill="#fff" font-weight="700" font-family="Noto Sans JP">BAN</text><text x="48" y="56" text-anchor="middle" font-size="12" fill="#fff" font-family="Noto Sans JP">でも止まらない</text></g>
+    </svg>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<!-- ================= ゴール ================= -->
+<section class="slide" data-n="goal" data-steps="5">
+  <header class="hd"><span class="chap">この資料のゴール</span><h2>12月の販売開始日から、手をかけずに回る流れを作る</h2></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:22px">
+    <div class="stepbar"><b style="font-size:16px">お客様が進む4つの段</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">→キーでも進みます</span></div>
+    <div class="flow" style="--c:var(--b1)">
+      <div class="fs" data-s="1"><svg class="ico"><use href="#i-insta"/></svg><span class="n">STEP 1</span>インスタで知る</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><svg class="ico"><use href="#i-line"/></svg><span class="n">STEP 2</span>LINEに入る</div><div class="fa" data-s="3">▶</div>
+      <div class="fs" data-s="3"><svg class="ico"><use href="#i-cart"/></svg><span class="n">STEP 3</span>買う</div><div class="fa" data-s="4">▶</div>
+      <div class="fs last" data-s="4"><svg class="ico"><use href="#i-repeat"/></svg><span class="n">STEP 4</span>また買う</div>
+    </div>
+    <div class="shieldcard" data-s="5"><svg class="ico"><use href="#i-shield"/></svg><div><b>あわせて、LINEが止まっても売上が止まらない状態にする</b><p class="small">LINE登録の直後にメールも取る、LINEを2つに分ける、インスタの投稿を保存する（BAN対策）</p></div></div>
+    <div class="quote" style="font-size:15px;font-weight:500">この資料は案です。GO日・使う道具は、Silua側（本人）が決めます。事例は、実際に運用している2つの事業（A社・B社）の形を、名前を伏せて載せています。</div>
+  </div>
+</section>
+
+<!-- ================= 結論 ================= -->
+<section class="slide" data-n="summary">
+  <header class="hd"><span class="chap">0. 結論（先に3つ）</span><h2>道具の分担・BAN対策・11月前半の決め切り</h2></header>
+  <div class="body">
+    <div class="g3" style="height:100%">
+      <div class="card pt fade d1"><div style="display:flex;justify-content:space-between;align-items:center"><span class="num">01</span><svg class="ico"><use href="#i-plug"/></svg></div><h3>道具の役割分担</h3>
+        <div class="chipflow"><span>インスタ（集客）</span><i>→</i><span>iステップ（DM自動送信）</span><i>→</i><span>LINE公式＋Lステップ（教育・配信・振り分け）</span><i>→</i><span>UTAGE（販売ページ・決済・メール・会員ページ）</span></div>
+        <p>UTAGEは「LINEの外の避難所」の役目も持つ。</p></div>
+      <div class="card pt fade d2"><div style="display:flex;justify-content:space-between;align-items:center"><span class="num">02</span><svg class="ico"><use href="#i-shield"/></svg></div><h3>BAN対策の本体は<br>「LINEだけに頼らない」</h3>
+        <p>・LINE登録の直後にメールアドレスももらう<br>・LINEアカウントを2つに分ける<br>・インスタの投稿を保存しておく</p></div>
+      <div class="card pt fade d3"><div style="display:flex;justify-content:space-between;align-items:center"><span class="num">03</span><svg class="ico"><use href="#i-cal"/></svg></div><h3>12月GOの分かれ目は<br>11月前半の2週間</h3>
+        <p>・11/2（月）の週：<b>商品・価格・法律表示</b>を決め切る<br>・11/9（月）の週：<b>配信の設計</b>を決め切る<br>・構築は11/16（月）〜、テストは11/30（月）の週</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 全体の動線 ================= -->
+<section class="slide" data-n="funnel" data-steps="7">
+  <header class="hd"><span class="chap">1. 全体の動線（お客様が通る道）</span><h2>7つの段と、各段で見る数字</h2></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:12px">
+    <div class="stepbar"><b style="font-size:16px">お客様の動き</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">→キーでも進みます。下の段は「ここで取る数字」</span></div>
+    <div class="flow f7" style="--c:var(--b1)">
+      <div class="fs" data-s="1"><svg class="ico"><use href="#i-insta"/></svg><span class="st">知る</span><span class="tl">Instagram<br>「〇〇とコメントしてね」</span></div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><svg class="ico"><use href="#i-dm"/></svg><span class="st">受け取る</span><span class="tl">iステップ<br>自動DMでLINEのリンク</span></div><div class="fa" data-s="3">▶</div>
+      <div class="fs" data-s="3"><svg class="ico"><use href="#i-line"/></svg><span class="st">つながる</span><span class="tl">LINE公式①＋Lステップ<br>特典・メール登録・配信5〜10通</span></div><div class="fa" data-s="4">▶</div>
+      <div class="fs" data-s="4"><svg class="ico"><use href="#i-video"/></svg><span class="st">決める</span><span class="tl">体験会・LIVE・使い方動画・個別相談</span></div><div class="fa" data-s="5">▶</div>
+      <div class="fs" data-s="5"><svg class="ico"><use href="#i-cart"/></svg><span class="st">買う</span><span class="tl">UTAGE（販売ページ＋決済）<br>増えたらECカート</span></div><div class="fa" data-s="6">▶</div>
+      <div class="fs after" data-s="6"><svg class="ico"><use href="#i-box"/></svg><span class="st">使い続ける</span><span class="tl">使い方動画・お手入れ・レビュー依頼・替えブラシ</span></div><div class="fa" data-s="7" style="--c:#40B69A">▶</div>
+      <div class="fs after last" data-s="7"><svg class="ico"><use href="#i-repeat"/></svg><span class="st">また買う</span><span class="tl">購入者限定配信・紹介特典・新商品の先行案内</span></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi" data-s="1"><b>数字</b>リール再生数・プロフィール訪問数</div>
+      <div class="kpi" data-s="2"><b>数字</b>コメント数・DM送信数・リンクのタップ数</div>
+      <div class="kpi" data-s="3"><b>数字</b>友だち追加数（どの投稿から）・ブロック率</div>
+      <div class="kpi" data-s="4"><b>数字</b>開封率・タップ率・体験会の申込数</div>
+      <div class="kpi" data-s="5"><b>数字</b>販売ページ訪問数・購入数（成約率）</div>
+      <div class="kpi" data-s="6" style="--c:#40B69A"><b>運用</b>購入者タグで未購入者向け配信から外す</div>
+      <div class="kpi" data-s="7" style="--c:#40B69A"><b>数字</b>リピート率・レビュー数</div>
+    </div>
+    <div class="g2" style="margin-top:4px">
+      <div class="card" style="padding:12px 16px"><div class="t3" style="font-size:15px"><svg class="ico" style="width:22px;height:22px;color:var(--safe)"><use href="#i-mail"/></svg>LINE登録の直後にメールも取る</div><p class="small">UTAGEのメール登録フォーム＝BAN時の避難先。特典（例：髪質タイプ診断・アイロンの温度表）と同時に。</p></div>
+      <div class="card" style="padding:12px 16px"><div class="t3" style="font-size:15px"><svg class="ico" style="width:22px;height:22px;color:var(--safe)"><use href="#i-step"/></svg>ステップ配信（5〜10通）の流れ</div><div class="chipflow"><span>悩み</span><i>→</i><span>原因</span><i>→</i><span>正しい道具</span><i>→</i><span>お客様の声</span><i>→</i><span>体験/LIVE案内</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 道具 ================= -->
+<section class="slide" data-n="tools">
+  <header class="hd"><span class="chap">2. 道具の説明</span><h2>6つの道具は、それぞれ何に使い、なぜ要るか</h2></header>
+  <div class="body">
+    <div class="g3" style="gap:14px">
+      <div class="card tool fade d1"><div class="t3"><svg class="ico"><use href="#i-line"/></svg>LINE公式アカウント <span class="tag g">保有済み</span></div><p class="what">お客様と1対1でつながる"箱"。配信・チャット・リッチメニュー（画面下のボタン）。</p><p class="pt2">単体では全員に同じ文しか送れず、誰がどの投稿から来て何に興味があるか分からない。料金は配信通数で変わる。</p></div>
+      <div class="card tool fade d2"><div class="t3"><svg class="ico"><use href="#i-step"/></svg>Lステップ <span class="tag">推奨</span></div><p class="what">LINE公式を高機能にする外付けツール。ステップ配信・タグ・流入経路分析・診断フォームなど。</p><p class="pt2">無料で始めたいなら「エルメ」。くわしくは次のスライド。</p></div>
+      <div class="card tool fade d3"><div class="t3"><svg class="ico"><use href="#i-store"/></svg>UTAGE（ウタゲ）</div><p class="what">販売ページ・決済・メール配信・LINE配信・会員サイト・予約を1つにまとめた道具。</p><p class="pt2"><b>メール配信＝BANの避難所</b>。物販は在庫・発送・送料・返品の管理が要る。注文が増えたらECカート（BASE・STORES・Shopify等）も（案）。</p></div>
+      <div class="card tool fade d4"><div class="t3"><svg class="ico"><use href="#i-dm"/></svg>iステップ</div><p class="what">インスタで特定の言葉をコメント・DMした人に、自動でDMを返す（似た道具＝エルグラム）。</p><p class="pt2"><b>インスタ→LINEの橋渡し</b>。設定後、別アカウントからコメントしてDMが届くか必ず試す（A社で届かない事例あり）。</p></div>
+      <div class="card tool fade d5"><div class="t3"><svg class="ico"><use href="#i-users"/></svg>オープンチャット <span class="tag w">任意</span></div><p class="what">匿名で入れるLINEのグループ。販売前の"盛り上げ"（質問会・ビフォーアフター共有）。</p><p class="pt2">B社では一番売れる場所。ただし12月GOでは必須ではなく、ファンが増えてから追加でよい（案）。</p></div>
+      <div class="card tool fade d6"><div class="t3"><svg class="ico"><use href="#i-insta"/></svg>Instagram <span class="tag">配信の主役</span></div><p class="what">リール（新しい人に届く）／ストーリーズ（LINE誘導）／LIVE（実演で一気に売る）／ハイライト（使い方・お客様の声）。</p><p class="pt2">投稿したリールはGoogleドライブ等に保存しておく（BAN対策）。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LINEのつなぎ方 ================= -->
+<section class="slide" data-n="lineacct" data-steps="3">
+  <header class="hd"><span class="chap">2-2. Lステップ ｜ 注意点</span><h2>1つのLINE公式につなげる配信ツールは1つだけ</h2></header>
+  <div class="body">
+    <div class="g2" style="grid-template-columns:1.25fr 1fr;height:100%">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">①つなぐ ②同時は不可 ③アカウントを分ける</span></div>
+        <div class="card" style="padding:10px">
+        <svg class="acct" viewBox="0 0 640 300" style="width:100%;height:auto;display:block" aria-label="LINE公式1つに配信ツールは1つ。A社はLINEを2つに分けている">
+          <g font-family="Noto Sans JP" font-weight="700" text-anchor="middle">
+            <g class="s1only"><rect x="30" y="40" width="200" height="90" rx="16" fill="#E7F6F1" stroke="#2E9A7F" stroke-width="2"/><text x="130" y="78" font-size="17" fill="#1F7A63">LINE公式①</text><text x="130" y="104" font-size="13" fill="#1F7A63" font-weight="500">入口・配信用</text>
+              <path d="M230 85H330" stroke="#2B5FA8" stroke-width="4"/>
+              <rect x="330" y="50" width="160" height="70" rx="14" fill="#2B5FA8"/><text x="410" y="92" font-size="17" fill="#fff">Lステップ</text></g>
+            <g class="s2only"><path d="M410 120 V150 H130 V130" fill="none" stroke="#F88039" stroke-width="3" stroke-dasharray="7 6"/>
+              <rect x="520" y="50" width="110" height="70" rx="14" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/><text x="575" y="92" font-size="15" fill="#B5500F">UTAGE</text>
+              <path d="M520 85 H492" stroke="#F88039" stroke-width="3" stroke-dasharray="7 6"/>
+              <g class="cross"><circle cx="330" cy="150" r="20" fill="#fff" stroke="#B5500F" stroke-width="3"/><path d="M320 140l20 20M340 140l-20 20" stroke="#B5500F" stroke-width="4"/></g>
+              <text x="330" y="196" font-size="14" fill="#B5500F">同じアカウントに2つ同時はつなげない</text></g>
+            <g class="s3only"><rect x="30" y="200" width="200" height="90" rx="16" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><text x="130" y="238" font-size="17" fill="#2B5FA8">LINE公式②</text><text x="130" y="264" font-size="13" fill="#2B5FA8" font-weight="500">購入者・予備用</text>
+              <path d="M230 245H330" stroke="#2B5FA8" stroke-width="4"/>
+              <rect x="330" y="210" width="160" height="70" rx="14" fill="#16233A"/><text x="410" y="252" font-size="17" fill="#fff">UTAGE</text>
+              <text x="570" y="240" font-size="13" fill="#1F7A63">1つ止まっても</text><text x="570" y="260" font-size="13" fill="#1F7A63">もう1つは生きる</text></g>
+          </g>
+        </svg></div>
+        <div class="vs2">
+          <div class="card"><b>Lステップ（推奨）</b><p>機能と分析をしっかり使いたい場合。A社で使用。</p></div>
+          <div class="card"><b>エルメ</b><p>無料プランから始められる。最初はお金をかけたくない場合。B社で使用。</p></div>
+        </div>
+      </div>
+      <div class="card" style="padding:14px 18px">
+        <div class="t3" style="font-size:16px"><svg class="ico" style="width:24px;height:24px;color:var(--safe)"><use href="#i-step"/></svg>Lステップでできること（美容物販の例）</div>
+        <div class="ftab">
+          <div>ステップ配信</div><div>登録日から1日目・2日目…と自動配信。誰がいつ登録しても同じ教育</div>
+          <div>タグ</div><div>「ブラシ購入」「くせ毛」等。買った人に売り込まない・悩み別に送り分け</div>
+          <div>流入経路分析</div><div>どのリール・広告から何人入ったか＝伸びる投稿が分かる</div>
+          <div>回答フォーム</div><div>髪質診断。答えでおすすめ商品を出し分け</div>
+          <div>リッチメニュー切替</div><div>未購入者は「診断」、購入者は「使い方・お手入れ」に自動で変える</div>
+          <div>リマインド配信</div><div>体験会・LIVE・締切の前日/当日に自動送信</div>
+          <div>予約機能</div><div>サロンでの体験・個別相談の予約</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BAN対策 ================= -->
+<section class="slide" data-n="ban" data-steps="7">
+  <header class="hd"><span class="chap">3. BAN（アカウント停止）の考え方と対策</span><h2>止まっても売上が止まらない、7つの備え</h2></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:12px">
+    <div class="stepbar"><span class="small"><b>前提：</b>美容物販は「稼げる系」の商材よりBANリスクは低め。ただしゼロではない。</span><button class="btn pr" data-next>次の備え ▶</button><button class="btn" data-reset>リセット</button></div>
+    <div class="bans">
+      <div class="card ban" data-s="1"><span class="box">✓</span><h4>① 連絡先を2本持つ</h4><p>LINE登録直後にメールも登録してもらう（UTAGEフォーム・特典と引き換え）</p><span class="why">LINEが止まってもメールで全員に連絡できる</span></div>
+      <div class="card ban" data-s="2"><span class="box">✓</span><h4>② LINEを分ける</h4><p>入口・配信用（Lステップ）と、購入者・予備用を別アカウントに</p><span class="why">1つ止まっても、もう1つは生きる</span></div>
+      <div class="card ban" data-s="3"><span class="box">✓</span><h4>③ 友だちリストを書き出す</h4><p>Lステップから毎月CSVで書き出して保存</p><span class="why">「誰がお客様だったか」を失わない</span></div>
+      <div class="card ban" data-s="4"><span class="box">✓</span><h4>④ 送りすぎない・煽りすぎない</h4><p>配信は週2〜3通が目安。ブロック率・通報が増えたら止める</p><span class="why">通報が多いと停止の原因になる</span></div>
+      <div class="card ban" data-s="5"><span class="box">✓</span><h4>⑤ 規約違反の表現をしない</h4><p>「絶対」「髪が治る」等の言い切りを避ける（4章）</p><span class="why">法律違反は通報・停止の理由になる</span></div>
+      <div class="card ban" data-s="6"><span class="box">✓</span><h4>⑥ インスタもバックアップ</h4><p>リール・ストーリーの元データを保存／サブアカウントを用意</p><span class="why">集客口が全部消えるのを防ぐ</span></div>
+      <div class="card ban" data-s="7"><span class="box">✓</span><h4>⑦ 非正規ツールをつながない</h4><p>正規の連携ツール（Lステップ等）以外でLINEを操作しない</p><span class="why">非正規ツールで止まった例が他社で出ている</span></div>
+      <div class="card bmeter"><span class="label">備えの進み具合</span><div><span class="big" data-meter>0</span><b> / 7</b></div><div class="mt"><i></i></div><b style="font-size:15px">本体は「LINEだけに頼らない」</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 法律・表示 ================= -->
+<section class="slide" data-n="legal">
+  <header class="hd"><span class="chap">4. 販売する前に必ず確かめる法律・表示（物販特有）</span><h2>最優先は、アイロンのPSEマークの書面確認</h2></header>
+  <div class="body">
+    <div class="laws">
+      <div class="card law top fade d1"><svg class="ico"><use href="#i-bolt"/></svg><h4>PSEマーク<br><span class="tag w">最優先</span></h4><p>ヘアアイロンは電気用品＝<b>PSEマークが無いものは販売できない</b>。仕入れ・OEMなら、メーカー（輸入者）が手続きしているか書面で確認</p><p class="why">違反すると販売停止・回収・罰則</p></div>
+      <div class="card law fade d2"><svg class="ico"><use href="#i-doc"/></svg><h4>特定商取引法の表記</h4><p>販売者・住所・電話・価格・送料・支払方法・発送時期・返品条件を販売ページに載せる</p><p class="why">通販の義務。無いと決済サービスの審査も通らない</p></div>
+      <div class="card law fade d3"><svg class="ico"><use href="#i-box"/></svg><h4>返品・交換の条件</h4><p>「初期不良は交換」「開封後の返品は不可」等を決めて表記</p><p class="why">書かないと、届いて8日以内は返品を受けることになる</p></div>
+      <div class="card law fade d4"><svg class="ico"><use href="#i-warning"/></svg><h4>薬機法・景品表示法</h4><p>「髪が修復する」「くせ毛が治る」「No.1」等の言い切りを使わない。効果は「個人の感想です」</p><p class="why">医薬品・化粧品ではないので"効き目"は言えない</p></div>
+      <div class="card law fade d5"><svg class="ico"><use href="#i-tag"/></svg><h4>ステマ規制</h4><p>インフルエンサーに紹介してもらうときは「PR」「広告」を表示してもらう</p><p class="why">2023年10月から違反になった</p></div>
+      <div class="card law fade d6"><svg class="ico"><use href="#i-chat"/></svg><h4>お客様の声の掲載</h4><p>掲載してよいか・名前の出し方を書面（フォーム）で確認</p><p class="why">無断掲載は信頼を失い、トラブルにもなる</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 参考事例 ================= -->
+<section class="slide" data-n="cases">
+  <header class="hd"><span class="chap">5. 参考事例</span><h2>運用中の2つの事業（講座ビジネス）から持ってくるもの</h2></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:14px">
+    <div class="g2">
+      <div class="card case fade d1"><h3><span class="tag">A社</span>ほぼこの形をそのまま使える</h3>
+        <div class="chipflow"><span>インスタでコメント</span><i>→</i><span>iステップでDM</span><i>→</i><span>入口LINE（Lステップ）</span><i>→</i><span>特典＋無料セミナー</span><i>→</i><span>受講生LINE（UTAGE）</span></div>
+        <p class="take"><b>持ってくる：</b>入口＝Lステップ、購入者側＝UTAGEの2アカウント構成／ステップ配信は10通以上・リマインドを強く／iステップは別アカウントで動作確認</p></div>
+      <div class="card case fade d2"><h3><span class="tag g">B社</span>BAN対策とプリローンチの型</h3>
+        <div class="chipflow"><span>YouTube・インスタ</span><i>→</i><span>公式LINE（エルメ・役割ごとに複数）</span><i>→</i><span>オプチャ</span><i>→</i><span>セミナー</span><i>→</i><span>個別相談</span><i>→</i><span>講座</span></div>
+        <p class="take"><b>持ってくる：</b>アカウント分散・リール保存・非正規ツール禁止／販売前約25日・配信ネタ9本のプリローンチ／毎週見る数字の一覧。LP・会員サイト・メールはUTAGE</p></div>
+    </div>
+    <div class="fade d3"><div style="font-size:16px;font-weight:900;margin-bottom:8px">違うところ（そのまま写さない）：2社は「情報」を売り、Siluaは<span class="wt">モノ</span>を売る</div>
+      <div class="diff">
+        <div class="card"><b>① 売り方</b><br>セミナー→個別相談より、「使い方の実演（LIVE・動画）→そのまま購入」が中心</div>
+        <div class="card"><b>② 追加の準備</b><br>在庫・発送・PSE・返品の準備が追加で要る</div>
+        <div class="card"><b>③ リピート</b><br>買った後の使い方フォローと「2本目・ギフト」でリピートを作れる</div>
+      </div></div>
+  </div>
+</section>
+
+<!-- ================= 時系列 ================= -->
+<section class="slide" data-n="timeline" data-steps="6">
+  <header class="hd"><span class="chap">6. 時系列のやること（10/26〜12月GO）</span><h2>6つのフェーズで、12/7（月）の販売開始へ</h2></header>
+  <div class="body">
+    <div class="stepbar"><button class="btn pr" data-next>次のフェーズ ▶</button><button class="btn" data-reset>リセット</button><span class="hint">GO日の置き方は案（クリスマス・年末ギフト需要に乗せる）</span></div>
+    <div class="gantt">
+      <div class="ghead"><span></span><div class="wk"><span>10/26週</span><span>11/2週</span><span>11/9週</span><span>11/16週</span><span>11/23週</span><span>11/30週</span><span>12/7週〜</span></div></div>
+      <div class="grow"><div class="lb">Phase 0｜方針を決める<small>GO日・目標・商品・PSE・ツール</small></div><div class="gtrack"><div class="gbar" data-s="1" style="left:0;width:14.28%;background:#F88039">10/26〜11/1</div></div></div>
+      <div class="grow"><div class="lb">Phase 1｜商品と"言葉"<small>コンセプト・特典・特商法・決済申込</small></div><div class="gtrack"><div class="gbar" data-s="2" style="left:14.28%;width:14.28%;background:#F88039">11/2〜11/8</div></div></div>
+      <div class="grow"><div class="lb">Phase 2｜配信の設計<small>動線図・タグ・ステップ配信・投稿計画</small></div><div class="gtrack"><div class="gbar" data-s="3" style="left:28.57%;width:14.28%;background:#F88039">11/9〜11/15</div></div></div>
+      <div class="grow"><div class="lb">Phase 3｜構築<small>Lステップ・UTAGE・iステップ</small></div><div class="gtrack"><div class="gbar" data-s="4" style="left:42.86%;width:28.57%;background:#2B5FA8">11/16〜11/29</div></div></div>
+      <div class="grow"><div class="lb">Phase 4｜テストと仕込み<small>全部通す・表記チェック・12/1オープン</small></div><div class="gtrack"><div class="gbar" data-s="5" style="left:71.43%;width:14.28%;background:#2B5FA8">11/30〜12/6</div></div></div>
+      <div class="grow"><div class="lb">Phase 5｜GO<small>販売開始・毎日/毎週/毎月の運用</small></div><div class="gtrack"><div class="gbar" data-s="6" style="left:85.71%;width:14.29%;background:#0F1B2D">12/7〜</div></div></div>
+    </div>
+    <div class="mstones">
+      <div class="card ms msdl"><span class="d">10/31</span><p>（土）GO日と<br>12月の目標を決める</p></div>
+      <div class="card ms"><span class="d">12/1</span><p>（火）動線オープン<br>LINE登録・特典配布開始</p></div>
+      <div class="card ms go"><span class="d">12/7</span><p>（月）販売開始<br>年末ギフト需要に乗せる</p></div>
+    </div>
+    <p class="note" style="margin-top:8px">オレンジ＝決める・設計する／青＝作る・試す／紺＝販売</p>
+  </div>
+</section>
+
+<!-- ================= Phase 0-1 ================= -->
+<section class="slide" data-n="ph01">
+  <header class="hd"><span class="chap">6. Phase 0〜1</span><h2>まず方針を決め、商品と"言葉"を固める</h2></header>
+  <div class="body">
+    <div class="g2" style="height:100%">
+      <div class="card ph fade d1" style="--c:var(--warn)"><div class="phh"><b>Phase 0｜方針を決める</b><span>10/26（月）〜11/1（日）</span></div>
+        <div class="tk key"><span class="no">0-1</span><div><b>販売開始日（GO日）と12月の目標（販売数・売上）を決める</b><span class="p">逆算の起点。目標が無いと何人LINEに集めるかが決まらない</span></div></div>
+        <div class="tk"><span class="no">0-2</span><div>売る商品・価格・セット（ブラシ単品／アイロン単品／セット・ギフト）<span class="p">販売ページと配信の中身がここで決まる</span></div></div>
+        <div class="tk"><span class="no">0-3</span><div>仕入れ先・在庫数・発送方法（自分で／倉庫）・送料<span class="p">売れたのに届けられない、を防ぐ</span></div></div>
+        <div class="tk key"><span class="no">0-4</span><div><b>PSE（アイロン）を仕入れ先に書面で確認</b><span class="p">確認できないと販売できない＝一番最初にやる</span></div></div>
+        <div class="tk"><span class="no">0-5</span><div>配信ツール＝Lステップ（推奨）かエルメか／UTAGEを契約するか<span class="p">構築の担当・費用・作業量が決まる</span></div></div>
+        <div class="tk"><span class="no">0-6</span><div>オプチャをやるか・いつやるか<span class="p">12月GOに入れるか、1月以降に回すか</span></div></div>
+      </div>
+      <div class="card ph fade d2" style="--c:var(--warn)"><div class="phh"><b>Phase 1｜商品と"言葉"を決める</b><span>11/2（月）〜11/8（日）</span></div>
+        <div class="tk"><span class="no">1-1</span><div>コンセプト・ターゲット（誰の・どんな髪の悩みを・どう変えるか）を1枚に<span class="p">インスタ・LINE・販売ページで言うことを揃える</span></div></div>
+        <div class="tk"><span class="no">1-2</span><div>登録特典を決めて作る（髪質タイプ診断・アイロン温度早見表・ブラシの選び方PDF）<span class="p">LINEに入る理由。コメント誘導の"エサ"</span></div></div>
+        <div class="tk"><span class="no">1-3</span><div>特商法表記・返品条件・プライバシーポリシーの文面<span class="p">販売ページと決済審査に必須</span></div></div>
+        <div class="tk key"><span class="no">1-4</span><div><b>決済サービスの申込（UTAGEに連携する決済会社）</b><span class="p">審査に日数がかかる。早めに出す</span></div></div>
+        <div class="tk"><span class="no">1-5</span><div>商品写真・使用動画の撮影日を押さえる<span class="p">販売ページ・リール・LINE配信すべての素材になる</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Phase 2-3 ================= -->
+<section class="slide" data-n="ph23">
+  <header class="hd"><span class="chap">6. Phase 2〜3</span><h2>配信を設計してから、2週間で作る</h2></header>
+  <div class="body">
+    <div class="g2" style="height:100%;grid-template-columns:1fr 1.1fr">
+      <div class="card ph fade d1" style="--c:var(--warn)"><div class="phh"><b>Phase 2｜配信の設計</b><span>11/9（月）〜11/15（日）</span></div>
+        <div class="tk"><span class="no">2-1</span><div>動線図の確定（1章の図を自分の言葉で）<span class="p">構築する人・書く人が同じ絵を見て動ける</span></div></div>
+        <div class="tk"><span class="no">2-2</span><div>タグ設計（流入元・悩み・購入商品・購入回数）<span class="p">後から足すと過去分が空になる</span></div></div>
+        <div class="tk"><span class="no">2-3</span><div>ステップ配信の設計（5〜10通の役割・日数）<span class="p">①特典 ②悩みの原因 ③道具で変わる理由 ④お客様の声 ⑤実演LIVE案内 ⑥販売開始 ⑦締切</span></div></div>
+        <div class="tk"><span class="no">2-4</span><div>リッチメニュー設計（未購入者用・購入者用の2種類）<span class="p">迷わず「診断・商品・使い方」に行ける</span></div></div>
+        <div class="tk"><span class="no">2-5</span><div>インスタの投稿計画（11月後半〜12月）<span class="p">販売開始日に向けて"見る人"を増やす</span></div></div>
+        <div class="tk"><span class="no">2-6</span><div>12月の配信スケジュール（7章）<span class="p">販売期間に何をいつ送るかを先に決める</span></div></div>
+      </div>
+      <div class="card ph fade d2" style="--c:var(--b1)"><div class="phh"><b>Phase 3｜構築</b><span>11/16（月）〜11/29（日）</span></div>
+        <div class="tk"><span class="no">3-1</span><div>LINE公式の設定確認（プロフィール・あいさつ）＝お店の顔</div></div>
+        <div class="tk"><span class="no">3-2</span><div>Lステップを契約し、LINE公式と連携</div></div>
+        <div class="tk"><span class="no">3-3</span><div>流入経路のQR/URL（インスタ・ストーリー・プロフィール用）</div></div>
+        <div class="tk key"><span class="no">3-4</span><div><b>登録直後のあいさつ＋特典配布＋メール登録フォーム</b>（BAN対策の要）</div></div>
+        <div class="tk"><span class="no">3-5</span><div>ステップ配信・リッチメニューを入れる</div></div>
+        <div class="tk"><span class="no">3-6</span><div>UTAGEで販売ページ・決済・購入完了ページ・購入者メール</div></div>
+        <div class="tk"><span class="no">3-7</span><div>購入者フォロー（使い方動画・お手入れ・レビュー依頼）の自動配信</div></div>
+        <div class="tk"><span class="no">3-8</span><div>iステップ設定（コメント「ブラシ」→自動DM→LINEリンク）</div></div>
+        <div class="tk"><span class="no">3-9</span><div>2つ目のLINE（購入者・予備）を用意するか決める（作っておくだけでも可）</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Phase 4-5 ================= -->
+<section class="slide" data-n="ph45">
+  <header class="hd"><span class="chap">6. Phase 4〜5</span><h2>本番前に全部通してから、販売を始める</h2></header>
+  <div class="body">
+    <div class="g2" style="height:100%">
+      <div class="card ph fade d1" style="--c:var(--b1)"><div class="phh"><b>Phase 4｜テストと仕込み</b><span>11/30（月）〜12/6（日）</span></div>
+        <div class="tk key"><span class="no">4-1</span><div><b>自分のスマホと別アカウントで、コメント→DM→LINE登録→特典→メール登録→購入→購入後メールまで全部通す</b><span class="p">1か所でも切れていたら売上ゼロ</span></div></div>
+        <div class="tk"><span class="no">4-2</span><div>テスト購入→返金まで試す<span class="p">決済・購入者タグ・発送連絡の流れを確認</span></div></div>
+        <div class="tk"><span class="no">4-3</span><div>表記チェック（価格・送料・締切・特典名がインスタ・LINE・販売ページで一致しているか）<span class="p">食い違いはクレームと不信の原因</span></div></div>
+        <div class="tk"><span class="no">4-4</span><div>12/1（火）動線オープン：インスタで告知開始・LINE登録を集める<span class="p">販売開始前にリストを貯める</span></div></div>
+      </div>
+      <div class="card ph fade d2" style="--c:var(--navy)"><div class="phh"><b>Phase 5｜GO</b><span>12/7（月）〜</span></div>
+        <div class="tk"><span class="no">5-1</span><div>販売開始の配信＋インスタLIVE（実演）<span class="p">一番売れる瞬間を作る</span></div></div>
+        <div class="tk"><span class="no">毎日</span><div>注文確認・発送・問い合わせ対応<span class="p">物販は"届くまで"が商品</span></div></div>
+        <div class="tk"><span class="no">毎週</span><div>数字を見る（1章の表）→ 弱い段を1つだけ直す<span class="p">改善を回す</span></div></div>
+        <div class="tk"><span class="no">毎月</span><div>友だちリストのCSV書き出し・リールの保存<span class="p">BAN対策③⑥</span></div></div>
+        <div class="tk"><span class="no">月末</span><div>12月末に振り返り → 1月の通常販売（エバー）の形を決める<span class="p">単発で終わらせず毎月売れる形へ</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 12月の配信 ================= -->
+<section class="slide" data-n="december" data-steps="9">
+  <header class="hd"><span class="chap">7. 12月の配信スケジュール例（案）</span><h2>インスタで呼び込み、LINEで背中を押す</h2></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:8px">
+    <div class="stepbar" style="margin-bottom:0"><button class="btn pr" data-next>次の日 ▶</button><button class="btn" data-reset>リセット</button><div class="legend"><span><svg class="ico" style="color:#2B5FA8"><use href="#i-insta"/></svg>インスタ</span><span><svg class="ico" style="color:#2E9A7F"><use href="#i-line"/></svg>LINE（Lステップ）</span></div></div>
+    <div class="cal">
+      <div class="wkbar" data-s="1"><span class="mono">11/23（月）〜</span><svg class="ico" style="width:16px;height:16px;color:#2B5FA8"><use href="#i-insta"/></svg>リールで悩み系の発信を増やす（くせ毛・広がり・時短）</div>
+      <span class="dw">月</span><span class="dw">火</span><span class="dw">水</span><span class="dw">木</span><span class="dw">金</span><span class="dw sat">土</span><span class="dw sun">日</span>
+      <div class="day empty"><span class="dt">11/30</span></div>
+      <div class="day go" data-s="2"><span class="dt">12/1 火</span><div class="ev ig"><svg class="ico"><use href="#i-insta"/></svg>「LINEで髪質診断プレゼント」告知開始</div><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>登録→特典→ステップ配信が自動で開始</div></div>
+      <div class="day empty"><span class="dt">12/2</span></div>
+      <div class="day" data-s="3"><span class="dt">12/3 木</span><div class="ev ig"><svg class="ico"><use href="#i-insta"/></svg>ストーリーでビフォーアフター</div><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>一斉：お客様の声</div></div>
+      <div class="day empty"><span class="dt">12/4</span></div>
+      <div class="day" data-s="4"><span class="dt">12/5 土</span><div class="ev ig"><svg class="ico"><use href="#i-insta"/></svg>「来週販売開始」予告</div><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>一斉：販売開始の予告＋LIVE日の案内</div></div>
+      <div class="day empty"><span class="dt">12/6</span></div>
+      <div class="day go" data-s="5"><span class="dt">12/7 月</span><div class="ev ig"><svg class="ico"><use href="#i-insta"/></svg>販売開始ストーリー</div><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>一斉：販売開始（先行特典つき）</div></div>
+      <div class="day" data-s="6"><span class="dt">12/8 火 夜</span><div class="ev ig"><svg class="ico"><use href="#i-insta"/></svg>インスタLIVE（実演・質問に答える）</div><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>前日・当日リマインド</div></div>
+      <div class="day empty"><span class="dt">12/9</span></div>
+      <div class="day" data-s="7"><span class="dt">12/10 木</span><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>一斉：よくある質問</div></div>
+      <div class="day empty"><span class="dt">12/11</span></div>
+      <div class="day empty"><span class="dt">12/12</span></div>
+      <div class="day" data-s="8"><span class="dt">12/13 日</span><div class="ev ig"><svg class="ico"><use href="#i-insta"/></svg>先行特典の締切</div><div class="ev ln"><svg class="ico"><use href="#i-line"/></svg>一斉：締切リマインド</div></div>
+      <div class="wkbar" data-s="9"><span class="mono">12/14（月）〜</span><svg class="ico" style="width:16px;height:16px;color:#2B5FA8"><use href="#i-gift"/></svg>ギフト訴求（クリスマス）　<svg class="ico" style="width:16px;height:16px;color:#2E9A7F"><use href="#i-line"/></svg>未購入者のみ：ギフト配信（購入者は除外）</div>
+    </div>
+    <p class="note">※ 配信は週2〜3通が目安（BAN対策④）。購入者タグが付いた人には販売の配信を送らない。</p>
+  </div>
+</section>
+
+<!-- ================= まだ決まっていないこと ================= -->
+<section class="slide" data-n="decide" data-steps="3">
+  <header class="hd"><span class="chap">8. まだ決まっていないこと（決めるのはSilua側）</span><h2>最初の期限は10/31（土）。決めることは8つ</h2></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:14px">
+    <div class="quote" style="font-size:15px">アラカワさんより：まず「販売開始日」と「12月の目標（販売数）」を10/31（土）までに決めてもらえれば、そこから必要なLINE登録数や配信の量を逆算できる。</div>
+    <div class="stepbar" style="margin-bottom:0"><button class="btn pr" data-next>次の期限 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">日数は10/26（月）から数えた残り</span></div>
+    <div class="dls">
+      <div class="card dl first" data-s="1"><div class="when"><b>10/31（土）</b><span>あと5日</span></div>
+        <div class="it"><span class="n">1</span>GO日（12/1オープン・12/7販売開始でよいか）</div>
+        <div class="it"><span class="n">2</span>12月の目標（販売数・売上）→ 必要なLINE登録数を逆算</div></div>
+      <div class="card dl" data-s="2"><div class="when"><b>11/1（日）</b><span>あと6日</span></div>
+        <div class="it"><span class="n">3</span>商品・価格・セット・在庫・発送方法</div>
+        <div class="it"><span class="n">4</span>アイロンのPSE確認（仕入れ先の書面）</div>
+        <div class="it"><span class="n">5</span>Lステップかエルメか／UTAGEを使うか</div></div>
+      <div class="card dl" data-s="3"><div class="when"><b>11/8（日）</b><span>あと13日</span></div>
+        <div class="it"><span class="n">6</span>誰が構築するか（自分／スタッフ／外注）</div>
+        <div class="it"><span class="n">7</span>オプチャを12月に入れるか</div>
+        <div class="it"><span class="n">8</span>登録特典の中身</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 作るもの ================= -->
+<section class="slide" data-n="deliver">
+  <header class="hd"><span class="chap">9. 段階ごとに作るもの</span><h2>7つがそろえば、次の段階へ進める</h2></header>
+  <div class="body">
+    <div class="lad">
+      <div class="card ld fade d1"><span class="n">1</span><svg class="ico"><use href="#i-pen"/></svg><h4>コンセプト・ターゲット</h4><span class="mk">コンセプト設計書（1枚）</span><p>誰の・どんな髪の悩みを・どう変えるかと、使う言葉・使わない言葉が1枚に</p></div>
+      <div class="card ld fade d2"><span class="n">2</span><svg class="ico"><use href="#i-chart"/></svg><h4>目標の逆算・特典設計</h4><span class="mk">企画書（逆算＋特典一覧）</span><p>「◯個売る→販売ページに◯人→LINE登録◯人→リール再生◯回」が数字で出ている</p></div>
+      <div class="card ld fade d3"><span class="n">3</span><svg class="ico"><use href="#i-line"/></svg><h4>LINEの設計・構築</h4><span class="mk">LINE設計書＋構築チェックリスト</span><p>タグ・ステップ配信・リッチメニューが図と表になり、見ながら作れる</p></div>
+      <div class="card ld fade d4"><span class="n">4</span><svg class="ico"><use href="#i-insta"/></svg><h4>インスタの設計</h4><span class="mk">投稿計画表＋リール台本＋自動DM設定メモ</span><p>いつ何を投稿し、どの言葉のコメントで何が届くかが決まっている</p></div>
+      <div class="card ld fade d5"><span class="n">5</span><svg class="ico"><use href="#i-doc"/></svg><h4>配信文・販売ページ</h4><span class="mk">配信文一式＋販売ページ原稿</span><p>送る順番・日付・本文がそろい、そのまま入力できる</p></div>
+      <div class="card ld fade d6"><span class="n">6</span><svg class="ico"><use href="#i-cal"/></svg><h4>進行管理</h4><span class="mk">進行管理シート</span><p>全部の作業に「誰が・いつまでに」が入っている</p></div>
+      <div class="card ld fade d6"><span class="n">7</span><svg class="ico"><use href="#i-check"/></svg><h4>販売開始前の最終確認</h4><span class="mk">表記の照合表</span><p>価格・送料・締切・特典名がインスタ・LINE・販売ページで一致した記録</p></div>
+    </div>
+  </div>
+</section>
+
+
+</div></div>
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bNotes" title="台本（N）">台本</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">台本</h4><div id="notesBody"></div></div>
+<div id="help">← → でスライド移動・N で台本・F で全画面</div>
+<div class="notes-src" id="notes-title"><h5>美容物販サロン（ブラシ・ヘアアイロン）｜販売動線と配信動線・12月GOまでの全工程</h5>
+<p>v1.0／最終更新：2026-10-25（日）</p>
+<p><b>この資料のゴール</b>：12月に販売を始めた日から「インスタで知る → LINEに入る → 買う → また買う」が人の手をほぼ使わずに回り、LINEが止まっても売上が止まらない状態を作る。</p>
+<p>この資料は案です。GO日・使う道具は、ご本人が決めてください。事例は、実際に運用している2つの事業（A社・B社）の形を、名前を伏せて載せています。</p></div>
+<div class="notes-src" id="notes-goal"><h5>美容物販サロン（ブラシ・ヘアアイロン）｜販売動線と配信動線・12月GOまでの全工程</h5>
+<p>v1.0／最終更新：2026-10-25（日）</p>
+<p><b>この資料のゴール</b>：12月に販売を始めた日から「インスタで知る → LINEに入る → 買う → また買う」が人の手をほぼ使わずに回り、LINEが止まっても売上が止まらない状態を作る。</p>
+<p>この資料は案です。GO日・使う道具は、ご本人が決めてください。事例は、実際に運用している2つの事業（A社・B社）の形を、名前を伏せて載せています。</p></div>
+<div class="notes-src" id="notes-summary"><h5>0. 結論（先に3行）</h5>
+<ol><li><b>道具の役割分担＝インスタ（集客）→ iステップ（DM自動送信）→ LINE公式＋Lステップ（教育・配信・顧客の振り分け）→ UTAGE（販売ページ・決済・メール・会員ページ＝LINEの外の避難所）</b></li><li><b>BAN対策の本体は「LINEだけに頼らない」こと</b>＝LINE登録の直後にメールアドレスももらう／LINEアカウントを2つに分ける／インスタの投稿を保存しておく</li><li><b>12月GOに間に合わせるには、11/2（月）の週に「商品・価格・法律表示」、11/9（月）の週に「配信の設計」を決め切る</b>ことが分かれ目。構築は11/16（月）〜、テストは11/30（月）の週</li></ol></div>
+<div class="notes-src" id="notes-funnel"><h5>1. 全体の動線（お客様が通る道）</h5>
+<pre>【知る】Instagram（リール・ストーリーズ・LIVE）
+ │ リール/ストーリーで「〇〇とコメントしてね」
+ ▼
+【受け取る】iステップ（インスタのDM自動送信）
+ │ コメントした人に自動でDM →「LINEで受け取れます」のリンク
+ ▼
+【つながる】LINE公式アカウント①＝入口・配信用（Lステップで動かす）
+ │ 登録直後：特典（例：髪質タイプ診断・アイロンの温度表）
+ │ 同時に：メールアドレス登録フォーム（UTAGE）＝BAN時の避難先
+ │ ステップ配信（5〜10通）：悩み → 原因 → 正しい道具 → お客様の声 → 体験/LIVE案内
+ ▼
+【決める】体験会・インスタLIVE・使い方動画・個別相談（サロン来店も可）
+ ▼
+【買う】販売ページ＋決済（UTAGE ／ 物販が増えたらECカート）
+ ▼
+【使い続ける】購入者フォロー（使い方動画・お手入れ・レビュー依頼・替えブラシ・2本目）
+ │ 購入者タグ → 未購入者への配信から外す
+ ▼
+【また買う・紹介する】購入者限定の配信・紹介特典・新商品の先行案内</pre>
+<table><tr><th>段</th><th>使う道具</th><th>ここで取る数字</th></tr><tr><td>知る</td><td>Instagram</td><td>リール再生数・プロフィール訪問数</td></tr><tr><td>受け取る</td><td>iステップ</td><td>コメント数・DM送信数・リンクのタップ数</td></tr><tr><td>つながる</td><td>LINE公式＋Lステップ</td><td>友だち追加数（どの投稿から来たか）・ブロック率</td></tr><tr><td>決める</td><td>Lステップ（配信）・インスタLIVE</td><td>開封率・タップ率・体験会の申込数</td></tr><tr><td>買う</td><td>UTAGE（LP・決済）</td><td>販売ページ訪問数・購入数（成約率）</td></tr><tr><td>また買う</td><td>Lステップ・UTAGEメール</td><td>リピート率・レビュー数</td></tr></table></div>
+<div class="notes-src" id="notes-tools"><h5>2. 道具の説明（何に使うか・なぜ要るか）</h5>
+<h5>2-1. LINE公式アカウント（もう持っている）</h5>
+<ul><li><b>何か</b>：LINEの「お店用アカウント」。お客様と1対1でつながる"箱"</li><li><b>何に使うか</b>：配信の送り先・チャット対応・リッチメニュー（画面下のボタン）</li><li><b>これだけで足りない理由</b>：全員に同じ文しか送れない。「誰が・どの投稿から来て・何に興味があって・買ったか」が分からない</li><li><b>料金</b>：配信通数で月額が変わる（最新の料金は公式サイトで確認）</li></ul>
+<h5>2-3. UTAGE（ウタゲ）</h5>
+<ul><li><b>何か</b>：販売ページ・決済・メール配信・LINE配信・会員サイト・予約を1つにまとめた道具</li><li><b>この動線で何に使うか</b></li></ul>
+<table><tr><th>用途</th><th>なぜUTAGEでやるか</th></tr><tr><td>販売ページ（LP）</td><td>作る・直すが自社でできる（B社の事例では運営側がUTAGEで販売ページを作っている）</td></tr><tr><td>決済（カード・分割）</td><td>申込から決済まで同じ画面で完結。購入した人に自動で印（ラベル）が付く</td></tr><tr><td><b>メール配信＝BANの避難所</b></td><td>LINEが止まっても、メールで同じお客様に連絡できる。<b>LINE登録直後にメールも取っておくのがBAN対策の要</b></td></tr><tr><td>会員ページ</td><td>購入者だけが見られる「使い方動画・お手入れ方法」の置き場所</td></tr><tr><td>2つ目のLINE（必要になったら）</td><td>購入者専用LINEをUTAGEで運用する形もできる（A社の事例がこの形）</td></tr></table>
+<ul><li><b>物販で気をつけること</b>：ブラシ・アイロンは"モノ"なので、<b>在庫・発送・送料・返品</b>の管理が要る。月の注文が少ないうちはUTAGE決済＋手作業の発送でよいが、商品数・注文数が増えたらECカート（BASE・STORES・Shopify 等）を販売ページの行き先にする方が楽（案）</li></ul>
+<h5>2-4. iステップ（インスタのDM自動化）</h5>
+<ul><li><b>何か</b>：インスタで「特定の言葉をコメント・DM」した人に、自動でDMを返す道具（似た道具＝エルグラム）</li><li><b>何に使うか</b>：リールに「ブラシ」とコメント → 自動DMで「LINEで〇〇をプレゼント」とLINEのリンクを送る。<b>インスタ→LINEの橋渡し</b></li><li><b>A社の事例での教訓</b>：設定後、<b>別のアカウントからコメントしてDMが本当に届くか</b>を必ず試す（「他のアカウントからコメントしてもDMが来ない」ことが実際に起きた）</li></ul>
+<h5>2-5. オープンチャット（オプチャ）</h5>
+<ul><li><b>何か</b>：LINEのグループ機能。匿名で入れる</li><li><b>何に使うか</b>：販売開始前の"盛り上げ"（使い方の質問会・ビフォーアフター共有）。B社の事例では<b>一番売れる場所</b>。公式LINEの一斉配信より気軽に読まれる</li><li><b>注意</b>：12月GOでは必須ではない。立ち上げ後、ファンが増えてきたら追加でよい（案）</li></ul>
+<h5>2-6. Instagram（配信の主役）</h5>
+<ul><li><b>何に使うか</b>：リール（新しい人に届く）／ストーリーズ（フォロワーと距離を縮める・LINE誘導）／LIVE（実演・質疑で一気に売る）／ハイライト（使い方・お客様の声の常設）</li><li><b>BAN対策</b>：投稿したリールを<b>別の場所（Googleドライブ等）に保存</b>しておく（B社の事例では過去のリールを全部保存している）</li></ul></div>
+<div class="notes-src" id="notes-lineacct"><h5>2-2. Lステップ（LINE公式に"つなぐ"拡張ツール）</h5>
+<ul><li><b>何か</b>：LINE公式アカウントを高機能にする外付けの道具</li><li><b>何に使うか（＝なぜ要るか）</b></li></ul>
+<table><tr><th>機能</th><th>何に使うか（美容物販の例）</th></tr><tr><td>ステップ配信</td><td>登録した日から「1日目・2日目…」と自動で順番に配信。誰がいつ登録しても同じ教育を受けられる</td></tr><tr><td>タグ（お客様の印）</td><td>「ブラシ購入」「アイロン検討中」「くせ毛」「ブリーチ毛」など。買った人に売り込みを送らない・悩み別に送り分ける</td></tr><tr><td>流入経路分析</td><td>どのリール・どのストーリー・どの広告から何人入ったか分かる＝伸びる投稿が分かる</td></tr><tr><td>アンケート・回答フォーム</td><td>髪質診断。答えでおすすめ商品を出し分ける</td></tr><tr><td>リッチメニューの切り替え</td><td>未購入者には「おすすめ診断」、購入者には「使い方動画・お手入れ」のメニューに自動で変える</td></tr><tr><td>リマインド配信</td><td>体験会・LIVE・セール締切の前日/当日に自動で送る</td></tr><tr><td>予約機能</td><td>サロンでの体験・個別相談の予約</td></tr></table>
+<ul><li><b>注意</b>：LINE公式1アカウントに"つなげる"配信ツールは<b>1つだけ</b>（Lステップとエルメ・UTAGEを同じアカウントに同時につなぐことはできない）。だから、A社の事例では<b>入口のLINE＝Lステップ／講座のLINE＝UTAGE</b>とアカウントを分けている</li><li><b>似た道具</b>：エルメ（無料プランから始められる・B社の事例で使用）。「最初はお金をかけずに始めたい」ならエルメ、「機能と分析をしっかり」ならLステップ</li></ul></div>
+<div class="notes-src" id="notes-ban"><h5>3. BAN（アカウント停止）の考え方と対策</h5>
+<p><b>前提</b>：美容物販は「稼げる系」の商材に比べてLINEのBAN（停止）リスクは低め。ただし<b>ゼロではない</b>ので、止まっても売上が止まらない形にしておく。</p>
+<table><tr><th>対策</th><th>何をするか</th><th>なぜ</th></tr><tr><td>① 連絡先を2本持つ</td><td>LINE登録直後にメールアドレスも登録してもらう（UTAGEフォーム・登録特典と引き換え）</td><td>LINEが止まってもメールで全員に連絡できる</td></tr><tr><td>② LINEアカウントを分ける</td><td>入口・配信用（Lステップ）と、購入者・予備用を別アカウントにする</td><td>1つ止まっても、もう1つは生きる（B社の事例は役割ごとに複数アカウント）</td></tr><tr><td>③ 友だちリストを定期的に書き出す</td><td>Lステップから毎月CSVで書き出して保存</td><td>止まったときに「誰がお客様だったか」を失わない</td></tr><tr><td>④ 送りすぎない・煽りすぎない</td><td>配信は週2〜3通が目安。ブロック率・通報が増えたら止める</td><td>通報が多いと停止の原因になる</td></tr><tr><td>⑤ 規約違反の表現をしない</td><td>「絶対」「髪が治る」等の言い切りを避ける（4章）</td><td>法律違反は通報・停止の理由になる</td></tr><tr><td>⑥ インスタもバックアップ</td><td>リール・ストーリーの元データを保存／サブアカウントを用意</td><td>インスタ停止で集客口が全部消えるのを防ぐ</td></tr><tr><td>⑦ 外部の自動化ツールをLINEに勝手につながない</td><td>正規の連携ツール（Lステップ等）以外でLINEを操作しない</td><td>正規でない自動化ツールをつないで止まった例が他社で出ている</td></tr></table></div>
+<div class="notes-src" id="notes-legal"><h5>4. 販売する前に必ず確かめる法律・表示（物販特有）</h5>
+<table><tr><th>項目</th><th>何を確かめるか</th><th>何のためか</th></tr><tr><td><b>PSEマーク（電気用品安全法）</b></td><td>ヘアアイロンは電気用品＝<b>PSEマークが無いものは販売できない</b>。仕入れ・OEMの場合、メーカー（輸入者）がPSEの手続きをしているか書面で確認</td><td>違反すると販売停止・回収・罰則。最優先</td></tr><tr><td>特定商取引法の表記</td><td>販売ページに「販売者・住所・電話・価格・送料・支払方法・発送時期・返品の条件」を載せる</td><td>通販の義務。無いと決済サービスの審査も通らない</td></tr><tr><td>返品・交換の条件</td><td>「初期不良は交換」「開封後の返品は不可」等を決めて表記</td><td>書かないと、届いて8日以内は返品を受けることになる</td></tr><tr><td>薬機法・景品表示法</td><td>「髪が修復する」「くせ毛が治る」「No.1」等の言い切りを使わない。効果は「個人の感想です」</td><td>ブラシ・アイロンは医薬品・化粧品ではないので"効き目"は言えない</td></tr><tr><td>ステマ規制</td><td>インフルエンサーに紹介してもらうときは「PR」「広告」を表示してもらう</td><td>2023年10月から違反になった</td></tr><tr><td>お客様の声の掲載</td><td>「掲載してよいか」「お名前の出し方」を書面（フォーム）で確認</td><td>無断で載せると信頼を失い、トラブルにもなる</td></tr></table></div>
+<div class="notes-src" id="notes-cases"><h5>5. 参考事例：すでに運用している2つの事業から持ってくるもの</h5>
+<table><tr><th>事例</th><th>実際の動線</th><th>このサロンに持ってくること</th></tr><tr><td><b>A社（講座ビジネス）</b></td><td>インスタ（リールに決まった言葉をコメント）→ <b>iステップ</b>でDM → 入口の公式LINE（<b>Lステップ</b>）→ 特典＋無料セミナー案内 → 受講生向けの公式LINE（<b>UTAGE</b>）→ 毎週の無料セミナー</td><td><b>ほぼこの形をそのまま使える</b>。入口＝Lステップ、購入者側＝UTAGEの2アカウント構成／ステップ配信は10通以上・リマインドを強く／iステップは別アカウントから動作確認</td></tr><tr><td><b>B社（講座ビジネス）</b></td><td>YouTube・インスタ → 公式LINE（<b>エルメ</b>・役割ごとに複数アカウント＝配信用・BAN対策用 等）→ オプチャで盛り上げ → セミナー → 個別相談 → 講座。LP・会員サイト・メールは<b>UTAGE</b></td><td>BAN対策（アカウント分散・リール保存・正規でないツールをLINEにつながない）／プリローンチ（販売前約25日・配信ネタ9本）の型／「どの数字を毎週見るか」の一覧</td></tr></table>
+<p><b>違うところ（そのまま写さない）</b>：両社は「講座（情報）」を売る形。今回は<b>モノ（ブラシ・アイロン）</b>なので、①セミナー→個別相談より「<b>使い方の実演（LIVE・動画）→ そのまま購入</b>」が中心 ②在庫・発送・PSE・返品の準備が追加で要る ③買った後の「使い方フォロー」と「2本目・ギフト」でリピートを作れる。</p></div>
+<div class="notes-src" id="notes-timeline"><h5>6. 時系列のやること（10/26（月）〜12月GO）</h5>
+<blockquote>GO日の置き方（案）：<b>12/1（火）＝動線オープン（LINE登録・特典の配布開始）／12/7（月）〜＝販売開始</b>。クリスマス・年末ギフト需要に乗せる。</blockquote></div>
+<div class="notes-src" id="notes-ph01"><h5>Phase 0｜方針を決める（10/26（月）〜11/1（日））</h5>
+<table><tr><th>#</th><th>やること</th><th>何のためか</th></tr><tr><td>0-1</td><td>販売開始日（GO日）と12月の目標（販売数・売上）を決める</td><td>逆算の起点。目標が無いと何人LINEに集めるかが決まらない</td></tr><tr><td>0-2</td><td>売る商品・価格・セット（ブラシ単品／アイロン単品／セット・ギフト）を決める</td><td>販売ページと配信の中身がここで決まる</td></tr><tr><td>0-3</td><td>仕入れ先・在庫数・発送方法（自分で発送／倉庫）・送料を決める</td><td>売れたのに届けられない、を防ぐ</td></tr><tr><td>0-4</td><td><b>PSE（アイロン）を仕入れ先に書面で確認</b></td><td>確認できないと販売できない＝一番最初にやる</td></tr><tr><td>0-5</td><td>配信ツールを決める＝Lステップ（推奨）かエルメか／UTAGEを契約するか</td><td>構築の担当・費用・作業量が決まる</td></tr><tr><td>0-6</td><td>「オプチャ」をやるか・いつやるかを決める</td><td>12月GOに入れるか、1月以降に回すか</td></tr></table>
+<h5>Phase 1｜商品と"言葉"を決める（11/2（月）〜11/8（日））</h5>
+<table><tr><th>#</th><th>やること</th><th>何のためか</th></tr><tr><td>1-1</td><td>コンセプト・ターゲット（誰の・どんな髪の悩みを・どう変えるか）を1枚に</td><td>インスタ・LINE・販売ページで言うことを揃える</td></tr><tr><td>1-2</td><td>登録特典を決めて作る（例：髪質タイプ診断・アイロン温度早見表・ブラシの選び方PDF）</td><td>LINEに入る理由を作る。インスタのコメント誘導の"エサ"</td></tr><tr><td>1-3</td><td>特商法表記・返品条件・プライバシーポリシーの文面</td><td>販売ページと決済審査に必須</td></tr><tr><td>1-4</td><td>決済サービスの申込（UTAGEに連携する決済会社）</td><td><b>審査に日数がかかる</b>。早めに出す</td></tr><tr><td>1-5</td><td>商品写真・使用動画の撮影日を押さえる</td><td>販売ページ・リール・LINE配信すべての素材になる</td></tr></table></div>
+<div class="notes-src" id="notes-ph23"><h5>Phase 2｜配信の設計（11/9（月）〜11/15（日））</h5>
+<table><tr><th>#</th><th>やること</th><th>何のためか</th></tr><tr><td>2-1</td><td>動線図の確定（1章の図を自分の言葉で）</td><td>構築する人・書く人が同じ絵を見て動ける</td></tr><tr><td>2-2</td><td>タグ設計（流入元・悩み・購入商品・購入回数）</td><td>送り分けと分析の土台。後から足すと過去分が空になる</td></tr><tr><td>2-3</td><td>ステップ配信の設計（5〜10通の役割・日数）</td><td>例：①特典 ②悩みの原因 ③道具で変わる理由 ④お客様の声 ⑤実演LIVE案内 ⑥販売開始 ⑦締切</td></tr><tr><td>2-4</td><td>リッチメニュー設計（未購入者用・購入者用の2種類）</td><td>来た人が迷わず「診断・商品・使い方」に行ける</td></tr><tr><td>2-5</td><td>インスタの投稿計画（11月後半〜12月のリール・ストーリー・LIVE日）</td><td>販売開始日に向けて"見る人"を増やしておく</td></tr><tr><td>2-6</td><td>12月の配信スケジュール（7章）</td><td>販売期間に何をいつ送るかを先に決める</td></tr></table>
+<h5>Phase 3｜構築（11/16（月）〜11/29（日））</h5>
+<table><tr><th>#</th><th>やること</th><th>何のためか</th></tr><tr><td>3-1</td><td>LINE公式アカウントの設定確認（プロフィール・あいさつ）</td><td>お店の顔</td></tr><tr><td>3-2</td><td>Lステップを契約・LINE公式と連携</td><td>配信・タグ・分析を使えるようにする</td></tr><tr><td>3-3</td><td>流入経路（インスタ用・ストーリー用・プロフィール用のQR/URL）を作る</td><td>どこから来たかを数える</td></tr><tr><td>3-4</td><td>登録直後のあいさつ＋特典配布＋メール登録フォーム</td><td><b>BAN対策の要</b>（メールも取る）</td></tr><tr><td>3-5</td><td>ステップ配信を入れる・リッチメニューを入れる</td><td>自動で教育が流れるようにする</td></tr><tr><td>3-6</td><td>UTAGEで販売ページ・決済・購入完了ページ・購入者へのメールを作る</td><td>買える状態にする。購入者に自動で印を付ける</td></tr><tr><td>3-7</td><td>購入者フォロー（使い方動画・お手入れ・レビュー依頼）の自動配信</td><td>返品・不満を減らし、リピートと口コミを作る</td></tr><tr><td>3-8</td><td>iステップの設定（コメント「ブラシ」→ 自動DM → LINEリンク）</td><td>インスタ→LINEの橋</td></tr><tr><td>3-9</td><td>2つ目のLINE（購入者・予備）を用意するか決めて準備</td><td>BAN対策②（12月時点は「作っておくだけ」でも可）</td></tr></table></div>
+<div class="notes-src" id="notes-ph45"><h5>Phase 4｜テストと仕込み（11/30（月）〜12/6（日））</h5>
+<table><tr><th>#</th><th>やること</th><th>何のためか</th></tr><tr><td>4-1</td><td><b>自分のスマホと別アカウントで、インスタのコメント→DM→LINE登録→特典→メール登録→購入→購入後メールまで全部通す</b></td><td>1か所でも切れていたら売上ゼロ。本番前に必ず通す</td></tr><tr><td>4-2</td><td>テスト購入→返金まで試す</td><td>決済・購入者タグ・発送連絡の流れを確認</td></tr><tr><td>4-3</td><td>表記チェック（価格・送料・締切・特典名がインスタ・LINE・販売ページで一致しているか）</td><td>食い違いはクレームと不信の原因</td></tr><tr><td>4-4</td><td>12/1（火）動線オープン＝インスタで告知開始・LINE登録を集める</td><td>販売開始前にリストを貯める</td></tr></table>
+<h5>Phase 5｜GO（12/7（月）〜）</h5>
+<table><tr><th>#</th><th>やること</th><th>何のためか</th></tr><tr><td>5-1</td><td>販売開始の配信＋インスタLIVE（実演）</td><td>一番売れる瞬間を作る</td></tr><tr><td>5-2</td><td>毎日：注文確認・発送・問い合わせ対応</td><td>物販は"届くまで"が商品</td></tr><tr><td>5-3</td><td>毎週：数字を見る（1章の表）→ 弱い段を1つだけ直す</td><td>改善を回す</td></tr><tr><td>5-4</td><td>毎月：友だちリストのCSV書き出し・リールの保存</td><td>BAN対策③⑥</td></tr><tr><td>5-5</td><td>12月末：振り返り → 1月の通常販売（エバー）の形を決める</td><td>単発で終わらせず毎月売れる形へ</td></tr></table></div>
+<div class="notes-src" id="notes-december"><h5>7. 12月の配信スケジュール例（案）</h5>
+<table><tr><th>日付</th><th>インスタ</th><th>LINE（Lステップ）</th></tr><tr><td>11/23（月）〜</td><td>リールで悩み系の発信を増やす（くせ毛・広がり・時短）</td><td>—</td></tr><tr><td>12/1（火）</td><td>「LINEで髪質診断プレゼント」告知開始（コメント誘導）</td><td>登録→特典→ステップ配信が自動で開始</td></tr><tr><td>12/3（木）</td><td>ストーリーでビフォーアフター</td><td>一斉：お客様の声</td></tr><tr><td>12/5（土）</td><td>ストーリーで「来週販売開始」予告</td><td>一斉：販売開始の予告＋LIVE日の案内</td></tr><tr><td>12/7（月）</td><td>販売開始ストーリー</td><td>一斉：販売開始（先行特典つき）</td></tr><tr><td>12/8（火）夜</td><td>インスタLIVE（実演・質問に答える）</td><td>前日・当日リマインド</td></tr><tr><td>12/10（木）</td><td>—</td><td>一斉：よくある質問</td></tr><tr><td>12/13（日）</td><td>ストーリーで先行特典の締切</td><td>一斉：先行特典の締切リマインド</td></tr><tr><td>12/14（月）〜</td><td>ギフト訴求（クリスマス）</td><td>未購入者のみ：ギフト配信（購入者は除外）</td></tr></table>
+<p>※ 配信は週2〜3通を目安（BAN対策④）。購入者タグが付いた人には販売の配信を送らない。</p></div>
+<div class="notes-src" id="notes-decide"><h5>8. まだ決まっていないこと（決める人＝本人）</h5>
+<table><tr><th>#</th><th>決めること</th><th>期限の目安</th></tr><tr><td>1</td><td>GO日（12/1オープン・12/7販売開始でよいか）</td><td>10/31（土）</td></tr><tr><td>2</td><td>12月の目標（販売数・売上）→ 必要なLINE登録数の逆算</td><td>10/31（土）</td></tr><tr><td>3</td><td>商品・価格・セット・在庫・発送方法</td><td>11/1（日）</td></tr><tr><td>4</td><td>アイロンのPSE確認（仕入れ先の書面）</td><td>11/1（日）</td></tr><tr><td>5</td><td>Lステップかエルメか／UTAGEを使うか</td><td>11/1（日）</td></tr><tr><td>6</td><td>誰が構築するか（自分／スタッフ／外注）</td><td>11/8（日）</td></tr><tr><td>7</td><td>オプチャを12月に入れるか</td><td>11/8（日）</td></tr><tr><td>8</td><td>登録特典の中身</td><td>11/8（日）</td></tr></table></div>
+<div class="notes-src" id="notes-deliver"><h5>9. 段階ごとに作るもの（これがそろえば次へ進める）</h5>
+<table><tr><th>段階</th><th>作るもの</th><th>できあがりの目安</th></tr><tr><td>コンセプト・ターゲット</td><td>コンセプト設計書（1枚）</td><td>「誰の・どんな髪の悩みを・どう変えるか」と、使う言葉・使わない言葉が1枚に書いてある</td></tr><tr><td>目標の逆算・特典設計</td><td>企画書（数字の逆算＋特典の一覧）</td><td>「◯個売る → 販売ページに◯人 → LINE登録◯人 → リール再生◯回」が数字で出ている</td></tr><tr><td>LINEの設計・構築</td><td>LINE設計書＋構築チェックリスト</td><td>タグ・ステップ配信・リッチメニューが図と表になっていて、構築する人がそれを見ながら作れる</td></tr><tr><td>インスタの設計</td><td>投稿計画表＋リール台本＋自動DMの設定メモ</td><td>いつ・何を投稿し、どの言葉のコメントで何が届くかが決まっている</td></tr><tr><td>配信文・販売ページ</td><td>配信文一式＋販売ページの原稿</td><td>送る順番・日付・本文がそろっていて、そのまま入力できる</td></tr><tr><td>進行管理</td><td>進行管理シート</td><td>全部の作業に「誰が・いつまでに」が入っている</td></tr><tr><td>販売開始前の最終確認</td><td>表記の照合表</td><td>価格・送料・締切・特典名が、インスタ・LINE・販売ページで一致していることを確かめた記録</td></tr></table></div>
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  // footer with page number on every slide except the cover
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='台本　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  // step-by-step builds: elements with data-s light up as the step counter grows
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=9;k++)s.classList.toggle('s'+k,k<=n);
+    s.querySelectorAll('[data-meter]').forEach(el=>el.textContent=n);
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  // swipe left/right on phones
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>step(b.closest('.slide')));
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>setStep(b.closest('.slide'),0));
+  document.querySelectorAll('.fs,.ban,.day[data-s],.dl,.gbar').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  window.__go=go;window.__step=(n)=>setStep(slides[cur],n);
+  const h=parseInt(location.hash.slice(1));go(h>0?h-1:0);
+})();
+
+</script>
+</body>
+</html>
