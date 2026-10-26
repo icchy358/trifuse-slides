@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>複利の数理｜同じ5％でも、30年後に182万円の差（TriFuse F1-10）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 10px 50px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(26px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-26px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:104px;background:var(--navy);color:#fff;padding:0 56px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--brand)}
+.hd .chap{font-size:15px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:4px}
+.hd h2{font-size:31px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:14px;bottom:10px;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:56px;right:56px;top:128px;bottom:58px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:44px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 56px;font-size:12px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1px solid var(--cardline);border-radius:14px;padding:18px 20px}
+.theme-trifuse .card{box-shadow:0 2px 10px rgba(15,27,45,.05)}
+.lead{font-size:17px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:19px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fade{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--rule);border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:12px;color:var(--muted)}
+.quote{border-left:5px solid var(--safe);background:var(--card);border-radius:0 12px 12px 0;padding:14px 20px;font-size:18px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:1.5px solid var(--cardline);border-radius:12px;padding:12px 10px;text-align:center;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:132px}
+.fs .n{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:4px}
+.fs .ico{width:34px;height:34px;color:var(--muted);margin-bottom:6px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 8px 24px -12px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:28px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:20px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:4px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:92px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:16px 16px 18px}
+.mobile .hd h2{font-size:21px}
+.mobile .hd .chap{font-size:12px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:16px 14px 8px;display:flex!important;flex-direction:column;gap:14px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:12px 14px;font-size:11px;gap:8px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:14px}
+.mobile .lead,.mobile p{font-size:15px!important}
+.mobile .quote{font-size:16px!important}
+.mobile .t3{font-size:17px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:2px}
+.mobile .fs{min-height:0;flex-direction:row;gap:10px;text-align:left;justify-content:flex-start;padding:10px 12px;font-size:15px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:30px;height:30px}
+.mobile .fs .n{margin:0;min-width:48px}
+.mobile .fa{width:auto;height:16px;transform:rotate(90deg);font-size:14px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:4px 0 0;height:60px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:20px}
+.mobile .cover-photos{position:relative;height:200px}
+.mobile .cover-vs{top:70px;width:46px;height:46px;font-size:15px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:22px 18px 10px;gap:12px!important}
+.mobile .cover h1{font-size:30px!important}
+.mobile .cover .sub{font-size:15px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 36px);height:auto;margin:6px 18px 0}
+.mobile .cover .brandbar{position:relative;margin-top:18px}
+.mobile .cph .lbl{font-size:13px;left:10px;bottom:10px}
+
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== F1 live-slides 共通（oil100 の部品に足した分） ===== */
+.hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.hd .num{position:absolute;right:56px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:44px;font-weight:700;color:rgba(255,255,255,.14)}
+.ft{justify-content:space-between}
+.ex{font-size:12px;font-weight:700;color:var(--ink2);background:#EEF2F7;border-radius:4px;padding:1px 6px;margin-left:4px;vertical-align:middle;white-space:nowrap}
+svg .ex-t{font-size:12px;fill:#5A6B82;font-family:var(--font)}
+.big{font-family:var(--mono);font-weight:700;color:var(--safe);font-size:46px;line-height:1.1}
+.big small{font-family:var(--font);font-size:18px;color:var(--ink2);margin-left:4px}
+.big.w{color:var(--warnT)}.big.g{color:var(--okT)}
+.kp{display:flex;flex-direction:column;gap:12px}
+.kp .card h4{font-size:17px;margin-bottom:4px}
+.kp .card p{font-size:15px;color:var(--ink2);line-height:1.65}
+.stepbar{display:flex;align-items:center;gap:10px}
+.swap{position:relative}
+.swap>*{transition:opacity .45s ease}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+.grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.grow.on,.slide.active .grow.g0{transform:scaleY(1)}
+.slide.active .grow.g0{transition-delay:.3s}
+svg .sv{transition:opacity .5s ease}
+.gone{transition:opacity .5s ease}
+.note{font-size:13px;color:var(--ink2);line-height:1.6}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:900;padding:5px 12px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.pill.w{background:#FFF1E6;color:var(--warnT)}
+.pill.g{background:#E7F6F1;color:var(--okT)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.keymsg{text-align:center;font-size:26px;font-weight:900;line-height:1.5;padding:18px;border-radius:14px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.keymsg::after{content:"";display:block;width:220px;height:6px;margin:10px auto 0;border-radius:3px;background:var(--brand)}
+
+/* ===== 表紙（目次つき） ===== */
+.cover{position:absolute;inset:0;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:14px;background:var(--brand)}
+.cover-text{position:absolute;left:64px;top:64px;width:640px;display:flex;flex-direction:column;gap:16px}
+.cover .kicker{font-size:15px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:46px;font-weight:900;line-height:1.25;color:var(--ink)}
+.cover h1 .hl2{color:var(--safe)}
+.cover h1 small{display:block;font-size:22px;color:var(--ink2);font-weight:700;margin-bottom:6px}
+.cover .sub{font-size:17px;color:var(--ink2);line-height:1.75;font-weight:500}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:4px}
+.toc button{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:1px solid var(--rule);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.4}
+.toc button:hover{border-color:var(--safe)}
+.toc button .n{font-family:var(--mono);color:var(--safe);font-size:13px;min-width:20px}
+.cover .start{align-self:flex-start;margin-top:6px;font-size:16px;padding:10px 22px}
+.cover-ill{position:absolute;right:56px;top:96px;width:460px;height:500px}
+
+/* ===== スマホ縦向き ===== */
+.mobile .cover{position:relative;inset:auto;padding-bottom:24px}
+.mobile .cover-text{position:relative;left:auto;top:auto;width:auto;padding:22px 16px 6px}
+.mobile .cover h1{font-size:28px}
+.mobile .cover h1 small{font-size:16px}
+.mobile .cover .sub{font-size:15px}
+.mobile .toc{grid-template-columns:1fr}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 32px);height:auto;margin:8px 16px 0}
+.mobile .cover .brandbar{position:relative;margin-top:18px}
+.mobile .hd .num{display:none}
+.mobile .big{font-size:34px}
+.mobile .vs-row{grid-template-columns:1fr}
+.mobile .keymsg{font-size:19px;padding:14px}
+.mobile .g2,.mobile .g3{grid-template-columns:1fr!important}
+.mobile .row{flex-direction:column}
+.mobile .card{padding:14px}
+.mobile .lead,.mobile p{font-size:15px!important}
+.mobile .t3{font-size:17px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .flow{flex-direction:column;gap:2px}
+.mobile .fs{min-height:0;flex-direction:row;gap:10px;text-align:left;justify-content:flex-start;padding:10px 12px;font-size:15px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:30px;height:30px}
+.mobile .fs .n{margin:0;min-width:48px}
+.mobile .fa{width:auto;height:16px;transform:rotate(90deg);font-size:14px}
+.mobile .ft span:first-child{display:none}
+.sv{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.sv.on{opacity:1;transform:none}
+svg .sv{transform:none}
+.swap{display:grid}
+.swap>*{grid-area:1/1}
+.ft{padding-right:340px}
+.mobile .ft{padding-right:14px}
+#notes:not(.show){visibility:hidden}
+
+
+</style>
+</head>
+<body class="theme-photo noimg">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<section class="slide" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-10</div>
+      <h1 class="fade d2"><small>複利の数理</small>同じ5％でも、<br>30年後に<span class="hl2">182万円の差</span></h1>
+      <p class="sub fade d3">利益を使うか、元本に組み入れるか。それだけで将来の到達点は大きく変わります。増え方の形、72の法則、借金に働く逆回転までを数字で確かめます。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>単利と複利：増え方の形</button><button data-go="2"><span class="n">03</span>足し算と掛け算</button><button data-go="3"><span class="n">04</span>72の法則で倍になる年を暗算</button><button data-go="4"><span class="n">05</span>「3年で2倍」を逆算する</button><button data-go="5"><span class="n">06</span>利率より期間が効く</button><button data-go="6"><span class="n">07</span>借金に働く逆回転</button><button data-go="7"><span class="n">08</span>ポンジ・スキームの破綻</button><button data-go="8"><span class="n">09</span>まとめと出典</button></div>
+      <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
+    </div>
+    <svg class="cover-ill" viewBox="0 0 460 500" aria-label="直線と曲線が離れていく絵">
+      <rect width="460" height="500" rx="22" fill="#fff" opacity=".8"/>
+      <text x="30" y="46" font-size="15" font-weight="700" fill="#5A6B82">100万円・年5％（例）</text>
+      <path d="M40 440H430M40 440V80" stroke="#D8DFE8" stroke-width="2"/>
+      <polyline class="drawline" points="40,365 53,361 66,358 79,354 92,350 105,346 118,342 131,339 144,335 157,331 170,328 183,324 196,320 209,316 222,312 235,309 248,305 261,301 274,298 287,294 300,290 313,286 326,282 339,279 352,275 365,271 378,268 391,264 404,260 417,256 430,252" fill="none" stroke="#8A9AB0" stroke-width="5"/>
+      <polyline class="drawline" points="40,365 53,361 66,357 79,353 92,349 105,344 118,339 131,334 144,329 157,324 170,318 183,312 196,305 209,299 222,292 235,284 248,276 261,268 274,260 287,250 300,241 313,231 326,221 339,210 352,198 365,186 378,173 391,160 404,146 417,131 430,116" fill="none" stroke="#2B5FA8" stroke-width="6"/>
+      <text x="420" y="104" text-anchor="end" font-size="20" font-weight="700" fill="#2B5FA8" class="mono">432万円</text>
+      <text x="420" y="280" text-anchor="end" font-size="18" font-weight="700" fill="#5A6B82" class="mono">250万円</text>
+      <text x="40" y="470" font-size="13" fill="#5A6B82">いま</text><text x="430" y="470" text-anchor="end" font-size="13" fill="#5A6B82">30年後</text>
+    </svg>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<section class="slide" data-n="s1" data-steps="4">
+  <header class="hd"><span class="chap">1. 増え方の形を決定づける2つの力学</span><h2>利益を使い切るか、元本に組み入れるか。30年で182万円の差</h2><span class="num">02</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">年数を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 440" style="width:100%;height:430px" aria-label="単利と複利の残高の線グラフ">
+<path d="M64 390.0H580" stroke="#E3E8EF"/><text x="56" y="394.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">0</text>
+<path d="M64 312.2H580" stroke="#E3E8EF"/><text x="56" y="316.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">100</text>
+<path d="M64 234.4H580" stroke="#E3E8EF"/><text x="56" y="238.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">200</text>
+<path d="M64 156.7H580" stroke="#E3E8EF"/><text x="56" y="160.7" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">300</text>
+<path d="M64 78.9H580" stroke="#E3E8EF"/><text x="56" y="82.9" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">400</text>
+<text x="56" y="24" text-anchor="end" font-size="12" fill="#8A9AB0">万円</text>
+<text x="64.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">0年</text>
+<text x="150.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">5年</text>
+<text x="236.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">10年</text>
+<text x="408.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">20年</text>
+<text x="580.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">30年</text>
+<polyline class="drawline" points="64.0,312.2 81.2,308.3 98.4,304.4 115.6,300.6 132.8,296.7 150.0,292.8 167.2,288.9 184.4,285.0 201.6,281.1 218.8,277.2 236.0,273.3 253.2,269.4 270.4,265.6 287.6,261.7 304.8,257.8 322.0,253.9 339.2,250.0 356.4,246.1 373.6,242.2 390.8,238.3 408.0,234.4 425.2,230.6 442.4,226.7 459.6,222.8 476.8,218.9 494.0,215.0 511.2,211.1 528.4,207.2 545.6,203.3 562.8,199.4 580.0,195.6" fill="none" stroke="#8A9AB0" stroke-width="4"/>
+<polyline class="drawline" points="64.0,312.2 81.2,308.3 98.4,304.2 115.6,300.0 132.8,295.5 150.0,290.7 167.2,285.8 184.4,280.6 201.6,275.1 218.8,269.3 236.0,263.3 253.2,257.0 270.4,250.3 287.6,243.3 304.8,236.0 322.0,228.3 339.2,220.2 356.4,211.7 373.6,202.8 390.8,193.5 408.0,183.6 425.2,173.3 442.4,162.5 459.6,151.1 476.8,139.2 494.0,126.6 511.2,113.4 528.4,99.6 545.6,85.1 562.8,69.9 580.0,53.8" fill="none" stroke="#2B5FA8" stroke-width="5"/>
+<g class="sv" data-s="1"><path d="M150.0 290.8V292.8" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="150.0" cy="290.8" r="6" fill="#2B5FA8"/><circle cx="150.0" cy="292.8" r="5" fill="#8A9AB0"/><text x="142.0" y="278.8" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">127.6</text><text x="158.0" y="296.8" font-size="13" font-weight="700" fill="#B5500F">差 2.6</text></g>
+<g class="sv" data-s="2"><path d="M236.0 263.3V273.3" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="236.0" cy="263.3" r="6" fill="#2B5FA8"/><circle cx="236.0" cy="273.3" r="5" fill="#8A9AB0"/><text x="228.0" y="251.3" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">162.9</text><text x="244.0" y="273.3" font-size="13" font-weight="700" fill="#B5500F">差 12.9</text></g>
+<g class="sv" data-s="3"><path d="M408.0 183.7V234.4" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="408.0" cy="183.7" r="6" fill="#2B5FA8"/><circle cx="408.0" cy="234.4" r="5" fill="#8A9AB0"/><text x="400.0" y="171.7" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">265.3</text><text x="416.0" y="214.1" font-size="13" font-weight="700" fill="#B5500F">差 65.3</text></g>
+<g class="sv" data-s="4"><path d="M580.0 53.8V195.6" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="580.0" cy="53.8" r="6" fill="#2B5FA8"/><circle cx="580.0" cy="195.6" r="5" fill="#8A9AB0"/><text x="572.0" y="41.8" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">432.2</text><text x="568.0" y="129.7" text-anchor="end" font-size="15" font-weight="900" fill="#B5500F">差 182.2</text></g>
+<g transform="translate(74 46)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">複利（全額を再投資）</text><rect x="170" width="16" height="5" y="5" fill="#8A9AB0"/><text x="192" y="12" font-size="13" fill="#16233A">単利（毎年5万円を使う）</text></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>町のベーカリー<span class="ex">（例）</span></h4><p>元手100万円、毎年5％（5万円）の利益。<br><b style="color:#5A6B82">単利</b>：利益を生活費に使い切る → 毎年5万円ずつ。<br><b style="color:var(--safe)">複利</b>：オーブンや看板に再投資 → 2年目は105万円が元手になり、利益は5万2,500円。</p></div>
+      <div class="card sv" data-s="2"><h4>最初の数年は、差はわずか</h4><p>5年後の差は2.6万円、10年後でも12.9万円。</p></div>
+      <div class="card sv" data-s="4" style="text-align:center"><p>30年後：単利は2.5倍、複利は4.3倍超</p><div class="big w">182.2<small>万円の差</small></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-n="s2" data-steps="3">
+  <header class="hd"><span class="chap">2. 足し算と掛け算を分ける指数関数</span><h2>同じ5％のまま、1年分の増え方が30年目には4倍になる</h2><span class="num">03</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 420" style="width:100%;height:410px" aria-label="1年ごとの増え方の棒グラフ">
+<path d="M40 360H580" stroke="#D8DFE8" stroke-width="2"/>
+<rect x="62" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="82" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow g0" x="114" y="295.0" width="44" height="65.0" rx="3" fill="#2B5FA8"/>
+<text class="" x="136" y="285.0" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">5.0</text>
+<text x="110" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">1年目</text>
+<rect x="192" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="212" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow" data-s="1" x="244" y="258.6" width="44" height="101.4" rx="3" fill="#2B5FA8"/>
+<text class="sv" data-s="1" x="266" y="248.6" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">7.8</text>
+<text x="240" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">10年目</text>
+<rect x="322" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="342" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow" data-s="2" x="374" y="196.2" width="44" height="163.8" rx="3" fill="#2B5FA8"/>
+<text class="sv" data-s="2" x="396" y="186.2" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">12.6</text>
+<text x="370" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">20年目</text>
+<rect x="452" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="472" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow" data-s="3" x="504" y="92.2" width="44" height="267.8" rx="3" fill="#2B5FA8"/>
+<text class="sv" data-s="3" x="526" y="82.2" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">20.6</text>
+<text x="500" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">30年目</text>
+<text x="40" y="24" font-size="12" fill="#8A9AB0">その1年で増える金額（万円）（例）</text>
+<g transform="translate(330 14)"><rect width="14" height="14" fill="#8A9AB0" rx="2"/><text x="20" y="12" font-size="12" fill="#5A6B82">単利：足し算</text><rect x="110" width="14" height="14" fill="#2B5FA8" rx="2"/><text x="130" y="12" font-size="12" fill="#5A6B82">複利：掛け算</text></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>単利は足し算</h4><p>毎年5万円ずつ足すだけ。グラフは一定の傾きの<b>直線</b>になる。</p></div>
+      <div class="card sv" data-s="1"><h4>複利は掛け算</h4><p>毎年、元本に1.05を掛け続ける。掛け算の繰り返しが生む増え方を<b>指数関数</b>と呼ぶ。</p></div>
+      <div class="card sv" data-s="3" style="border-left:5px solid var(--safe)"><p style="color:var(--ink);font-weight:700">回を重ねるほど、1回の歩幅そのものが長くなる。最初は緩やかで、ある所から急に加速する。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-n="s3a" data-steps="2">
+  <header class="hd"><span class="chap">3. 暗算で倍化年数を掴む72の法則</span><h2>72を年利で割ると、お金が2倍になるまでの年数がわかる</h2><span class="num">04</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="stepbar"><b style="font-size:15px">年利を上げる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px"><div class="card fade d1" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px"><div class="big" style="font-size:36px">3<small>％</small></div><div><div style="height:26px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 3 ＝ 24</p></div><div class="big g" style="font-size:36px;text-align:right">24<small>年</small></div></div><div class="card sv" data-s="1" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px"><div class="big" style="font-size:36px">6<small>％</small></div><div><div style="height:26px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:50%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 6 ＝ 12</p></div><div class="big g" style="font-size:36px;text-align:right">12<small>年</small></div></div><div class="card sv" data-s="2" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px"><div class="big" style="font-size:36px">12<small>％</small></div><div><div style="height:26px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:25%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 12 ＝ 6</p></div><div class="big g" style="font-size:36px;text-align:right">6<small>年</small></div></div></div>
+    </div>
+    <div class="kp fade d2">
+      <div class="card" style="text-align:center"><p style="font-size:15px;color:var(--ink2)">72の法則</p><div class="big" style="font-size:40px">72 ÷ 年利(％)<br>≒ 2倍になる年数</div></div>
+      <div class="card"><p>厳密な計算をしなくても、提示された金利が持つ時間の力を、その場でつかめる。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-n="s3b" data-steps="3">
+  <header class="hd"><span class="chap">3. 72の法則で勧誘を逆算する</span><h2>「3年で2倍」は年24％。安全をうたうなら、話の筋が通らない</h2><span class="num">05</span></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:18px">
+    <div class="quote fade d1">「この商品を契約すれば、手元の100万円はわずか3年で2倍の200万円になります」</div>
+    <div class="stepbar"><b style="font-size:15px">逆算する</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="flow" style="--c:var(--warn)">
+      <div class="fs on tap"><svg class="ico"><use href="#i-search"/></svg><span class="n">STEP 0</span>3年で2倍、と言われた</div><div class="fa" data-s="1">▶</div>
+      <div class="fs tap" data-s="1"><svg class="ico"><use href="#i-percent"/></svg><span class="n">STEP 1</span>72 ÷ 3 ＝ 年24％<br><small style="font-weight:500;color:var(--ink2)">正確に計算すると年約26％</small></div><div class="fa" data-s="2">▶</div>
+      <div class="fs tap" data-s="2"><svg class="ico"><use href="#i-warning"/></svg><span class="n">STEP 2</span>年24％には、相応の<br>大きなリスクがあるはず（F1-08）</div><div class="fa" data-s="3">▶</div>
+      <div class="fs last tap" data-s="3"><svg class="ico"><use href="#i-shield"/></svg><span class="n">STEP 3</span>「元本保証」「安全」と<br>並べた時点で筋が通らない</div>
+    </div>
+    <p class="note sv" data-s="1">72の法則はあくまで目安です。答えが少しずれても、「警戒すべき高い利回り」という結論は変わりません。</p>
+  </div>
+</section>
+
+<section class="slide" data-n="s4" data-steps="2">
+  <header class="hd"><span class="chap">4. 利率と期間がもたらす結果の支配</span><h2>利率を上げるより、期間を延ばす方が効く。時間は後から買えない</h2><span class="num">06</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">期間を比べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 420" style="width:100%;height:410px" aria-label="利率と期間の組み合わせで残高を比べる棒グラフ">
+<path d="M40 360H580" stroke="#D8DFE8" stroke-width="2"/>
+<rect class="grow g0" x="60" y="251.1" width="80" height="108.9" rx="4" fill="#65CCFE"/>
+<text class="" x="100" y="241.1" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約242</text>
+<text class="" x="100" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％×30年</text>
+<rect class="grow g0" x="190" y="240.8" width="80" height="119.2" rx="4" fill="#2B5FA8"/>
+<text class="" x="230" y="230.8" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約265</text>
+<text class="" x="230" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％×20年</text>
+<rect class="grow " data-s="1" x="320" y="165.6" width="80" height="194.4" rx="4" fill="#8A9AB0"/>
+<text class="sv" data-s="1" x="360" y="155.6" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約432</text>
+<text class="sv" data-s="1" x="360" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％×30年</text>
+<rect class="grow " data-s="1" x="450" y="43.2" width="80" height="316.8" rx="4" fill="#40B69A"/>
+<text class="sv" data-s="1" x="490" y="33.2" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約704</text>
+<text class="sv" data-s="1" x="490" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％×40年</text>
+<g class="sv" data-s="2"><path d="M404 165.6H446" stroke="#F88039" stroke-width="2" stroke-dasharray="4 4"/><path d="M440 165.6V43.2" stroke="#F88039" stroke-width="3"/><text x="432" y="109.4" text-anchor="end" font-size="15" font-weight="900" fill="#B5500F">差 約272</text></g>
+<text x="40" y="24" font-size="12" fill="#8A9AB0">100万円を運用した残高（万円）（例）</text>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>年3％で30年 ≒ 年5％で20年</h4><p>約242万円と約265万円。利率を2％上げるには、値下がりや倒産の危険を抱えることになる。期間を10年延ばすのに、追加のリスクは要らない。</p></div>
+      <div class="card sv" data-s="1"><h4>始めるのが10年遅れると</h4><p>年5％で40年なら約704万円、30年なら約432万円。<span class="ex">（例）</span></p></div>
+      <div class="card sv" data-s="2" style="text-align:center"><div class="big w">約272<small>万円の差</small></div><p style="margin-top:6px">先延ばしは、指数関数が急に伸びる後半を自分で切り捨てること。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-n="s5" data-steps="2">
+  <header class="hd"><span class="chap">5. 損失と負債に牙を剥く逆回転の脅威</span><h2>同じ掛け算は、借金にも働く。放置すると5年で約2倍</h2><span class="num">07</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 420" style="width:100%;height:410px" aria-label="借金を放置したときの残高の棒グラフ">
+<path d="M40 360H580" stroke="#D8DFE8" stroke-width="2"/>
+<path d="M40 100.0H580" stroke="#B5500F" stroke-width="1.5" stroke-dasharray="6 6"/><text x="44" y="92.0" font-size="12" font-weight="700" fill="#B5500F">借りた額の2倍（100万円）</text>
+<rect class="grow g0" x="90" y="230.0" width="100" height="130.0" rx="4" fill="#FDBA8C"/>
+<text class="" x="140" y="220.0" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F" class="mono">50</text>
+<text x="140" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">借りた日</text>
+<rect class="grow" data-s="1" x="250" y="162.4" width="100" height="197.6" rx="4" fill="#F88039"/>
+<text class="sv" data-s="1" x="300" y="152.4" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F" class="mono">約76</text>
+<text x="300" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">3年後</text>
+<rect class="grow" data-s="2" x="410" y="97.4" width="100" height="262.6" rx="4" fill="#F88039"/>
+<text class="sv" data-s="2" x="460" y="87.4" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F" class="mono">約101</text>
+<text x="460" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">5年後</text>
+<text x="40" y="24" font-size="12" fill="#8A9AB0">年15％で返済せずに放置した残高（万円）（例）</text>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>リボ払い・消費者金融<span class="ex">（例）</span></h4><p>50万円を年15％で借り、返済も利息の支払いもせずに放置する。</p></div>
+      <div class="card sv" data-s="2"><h4>72の法則でも同じ答え</h4><p>72 ÷ 15 ＝ 約4.8年で2倍。毎年の運用手数料も、同じように複利で資産を削る（次の回 F1-11）。</p></div>
+      <div class="card sv" data-s="2" style="border-left:5px solid var(--warn)"><p style="color:var(--ink);font-weight:700">複利は味方でも敵でもない。掛け算の連鎖という、向きを持たない法則。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-n="s6" data-steps="3">
+  <header class="hd"><span class="chap">6. ポンジ・スキームの破綻を暴く数理の基礎</span><h2>1人が2人を誘い続ける話は、30世代で10億人を超えて必ず止まる</h2><span class="num">08</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="stepbar"><b style="font-size:15px">世代を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div class="card fade d1" style="display:flex;align-items:flex-end;gap:18px;justify-content:center;padding:14px"><div style="text-align:center"><div style="width:32px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">2人</b></p></div><div style="text-align:center"><div style="width:64px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">4人</b></p></div><div style="text-align:center"><div style="width:128px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">8人</b></p></div><div style="text-align:center"><div style="width:128px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">16人</b></p></div><div style="font-size:28px;color:var(--muted);padding-bottom:20px">…</div></div><div class="card sv" data-s="1" style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;padding:12px 18px"><span class="pill">10世代目</span><div class="big" style="font-size:30px">1,024<small>人</small></div></div><div class="card sv" data-s="2" style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;padding:12px 18px"><span class="pill">20世代目</span><div class="big" style="font-size:30px">1,048,576<small>人</small></div></div><div class="card sv" data-s="3" style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;padding:12px 18px"><span class="pill w">30世代目</span><div class="big w" style="font-size:38px">1,073,741,824<small>人</small></div></div></div>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>ポンジ・スキーム</h4><p>運用の実態がなく、後から入った人のお金を、前からいる人への配当に回す仕組み。</p></div>
+      <div class="card sv" data-s="2"><h4>人数も指数関数で増える</h4><p>2人、4人、8人、16人……。日本や地球全体の人口を、すぐに突き抜けてしまう。</p></div>
+      <div class="card sv" data-s="3" style="border-left:5px solid var(--warn)"><p style="color:var(--ink);font-weight:700">新しい参加者が途絶えた瞬間に、配当の元手が消えて崩れる。どんな約束も、この限界は覆せない（A2-01で計算する）。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-n="sum">
+  <header class="hd"><span class="chap">まとめと出典</span><h2>複利は時間の道具。増やす側でも、減る側でも、同じ力で働く</h2><span class="num">09</span></header>
+  <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+    <div class="kp">
+      <div class="card fade d1"><h4>1. 単利は直線、複利は曲線</h4><p>足し算か掛け算か。同じ5％でも30年で182.2万円の差になる。</p></div>
+      <div class="card fade d2"><h4>2. 72 ÷ 年利 ＝ 2倍になる年数</h4><p>「3年で2倍」と言われたら、年24％の高い利回りだと逆算して警戒する。</p></div>
+      <div class="card fade d3"><h4>3. 期間が効き、借金にも効く</h4><p>時間はリスクなしで成果を高める唯一の資源。同じ掛け算が借金も膨らませる。</p></div>
+    </div>
+    <div class="card fade d4" style="display:flex;flex-direction:column;gap:8px">
+      <h4 style="font-size:16px">出典（一次資料）</h4>
+      <p class="note"><b style="color:var(--ink)">日本取引所グループ なるほど！東証経済教室「7-2.ライフプランとお金②」</b><br>1〜3節のうち、複利の説明</p><p class="note"><b style="color:var(--ink)">金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子14・22ページ）</b><br>4節：期間と金利の比べ方</p>
+      <p class="note" style="margin-top:4px">この資料の数字は、どれも仕組みを説明するための計算例です。72の法則が出典のページに無いことなど、出典が支える範囲は台本に書いてあります。</p>
+      <p class="note" style="border-top:1px dashed var(--rule);padding-top:8px">この資料は事実と構造の説明であり、どの商品を選ぶか、いつ始めるか、いくら出すかを勧めるものではありません。判断はご自身でお願いします。</p>
+    </div>
+  </div>
+</section>
+</div></div>
+
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bToc" title="目次（O）">目次</button><button class="wide" id="bNotes" title="解説（N）">解説</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">解説</h4><div id="notesBody"></div></div>
+<div id="help">← → でページ移動・N で解説・O で目次・F で全画面</div>
+<div class="notes-src" id="notes-title"><pre style="white-space:pre-wrap;font-size:13px;line-height:1.7">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ノードID】 F1-10 ／ 複利の数理
+【レーン】   F 金融（お金の道具を知る）
+【レベル】   L1 基礎
+【前提知識】 F1-08 リスクとリターンの関係
+【この先へ】 F1-11 コストの複利 ／ A2-01 ポンジ・スキームの数理
+【到達目標】 単利と複利の違いを、増え方の形の違いとして説明できる。
+             72の法則で「何年で2倍になるか」を暗算できる。
+             指数関数という増え方が、時間に対して何をするのかを言える。
+【読了目安】 9分
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 増え方の形を決定づける2つの力学</h5>
+<p>資産運用において生み出された収益をどのように扱うかによって、将来のお金の増え方は根本から異なる軌跡を描きます。</p>
+<p>町のベーカリーの経営を例に取ります。店主が元手100万円で開業し、毎年5パーセントに相当する5万円の純利益を出している場面を想定します。毎年生まれた5万円の利益をすべて店主が引き出して生活費として使い切ってしまえば、翌年も元手は100万円のままであり、毎年決まって5万円ずつしか増えません。一方で、生まれた5万円を生活費に使わず、より高性能なオーブンや新しい看板の購入に再投資した場合、2年目の元手は105万円に拡大します。2年目は105万円に対して5パーセントの利益が生まれるため利益は5万2,500円となり、3年目は110万2,500円を元手に運用が加速していきます。前者のように当初の元本にのみ利息がつく仕組みを<b>単利</b>と呼び、後者のように得られた利息を新たな元本に組み入れて雪だるま式に利息を生み出す仕組みを<b>複利</b>と呼びます。</p>
+<p>この2つの力学の違いは、時間の経過とともに劇的な格差となって現れます。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">経過年数</th><th style="border:1px solid #D8DFE8;padding:3px 8px">単利（毎年5万円を消費）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">複利（毎年5%を全額再投資）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">差額の大きさ</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">1年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">0.0万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">5年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">125.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">127.6万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">2.6万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">10年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">150.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">162.9万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">12.9万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">20年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">200.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">265.3万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">65.3万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">30年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">250.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">432.2万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">182.2万円</td></tr></table>
+<p>表が明確に示す通り、最初の数年間における両者の差はわずかな端数にすぎません。</p>
+<p>しかし、20年、30年と時間が経過するにつれて格差は爆発的に拡大し、30年後には単利が2.5倍にとどまるのに対し、複利は4.3倍を超えて元本の4倍以上の富を築きます。同じ年利5パーセントという条件であっても、利益を外へ逃がすか、内部で回転させ続けるかという増え方の構造の違いだけで、将来の到達点に180万円以上の開きが生じます。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 足し算と掛け算を分ける指数関数</h5>
+<p>単利と複利の間に生じる圧倒的な格差の根源は、計算の形式が足し算であるか掛け算であるかという点にあります。</p>
+<p>単利の計算は、毎年一定の金額を足し続ける足し算の繰り返しです。毎年5万円ずつ足されるため、グラフを描くと一定の傾きを持った直線として真っ直ぐに伸びていきます。これに対して複利の計算は、毎年元本に1.05という同一の倍率を掛け続ける掛け算の繰り返しです。この掛け算が累積することによって生じる爆発的な増加傾向を数学の世界では<b>指数関数</b>と呼びます。足し算が一定のペースで歩みを進めるのに対し、掛け算の繰り返しは回数を重ねるごとに1回あたりの歩幅そのものが長くなり、急激な曲線を描いて垂直に近い上昇カーブを描きます。</p>
+<p>最初は緩やかでありながら、ある分岐点を越えた瞬間に急加速するという幾何学的な性質を理解することが重要です。1節のベーカリーで1年ごとの増え方を比べると、単利は何年たっても毎年5万円のままです。複利は1年目が5万円、10年目が約7.8万円、20年目が約12.6万円、30年目には約20.6万円と、同じ5パーセントのまま1年分の増え方が4倍になります（説明のための例）。</p></div>
+<div class="notes-src" id="notes-s3a"><h5 style="font-size:15px;margin:8px 0 6px">3. 暗算で倍化年数を掴む72の法則</h5>
+<p>複利の効果を日常生活の実務で即座に概算するための強力な計算ツールが存在します。</p>
+<p>それが<b>72の法則</b>と呼ばれる数学的な経験則です。72という定数を年利回りのパーセント数値で割ることによって、元本が約2倍に達するまでに必要な年数をおおむね正確に暗算できます。たとえば、年利3パーセントで運用できるとすれば、72を3で割った約24年で元本が2倍になります。年利6パーセントであれば72を6で割って約12年、年利12パーセントであれば約6年で元の資金が2倍に倍増する計算になります。厳密な対数計算を電卓で行わなくても、この法則を知っているだけで、提示された金利が持つ時間の破壊力を瞬時に直感できます。</p>
+<p>この法則の威力は、投資勧誘の真偽を検証する逆算の場面で遺憾なく発揮されます。</p>
+<p>怪しい投資話の勧誘において「この商品を契約すれば、手元の100万円はわずか3年で2倍の200万円になります」と囁かれた場面を想定します。ここで72の法則を逆向きに適用し、72を期間である3年で割ると年利24パーセントという極めて高い利回りが算出されます（正確に計算すると年約26パーセント。72の法則はあくまで目安です）。前章（F1-08）で学んだ通り、年利24パーセントという途方もない利回りには、相応の壊滅的なリスクプレミアムが宿っていなければ理屈が合いません。元本保証や安全性を謳いながら3年で2倍を約束する話は、その瞬間に論理的な破綻を証明されたことになり、甘言に惑わされることなく即座に警戒のシャッターを下ろすことが可能になります。</p></div>
+<div class="notes-src" id="notes-s3b"><h5 style="font-size:15px;margin:8px 0 6px">3. 暗算で倍化年数を掴む72の法則</h5>
+<p>複利の効果を日常生活の実務で即座に概算するための強力な計算ツールが存在します。</p>
+<p>それが<b>72の法則</b>と呼ばれる数学的な経験則です。72という定数を年利回りのパーセント数値で割ることによって、元本が約2倍に達するまでに必要な年数をおおむね正確に暗算できます。たとえば、年利3パーセントで運用できるとすれば、72を3で割った約24年で元本が2倍になります。年利6パーセントであれば72を6で割って約12年、年利12パーセントであれば約6年で元の資金が2倍に倍増する計算になります。厳密な対数計算を電卓で行わなくても、この法則を知っているだけで、提示された金利が持つ時間の破壊力を瞬時に直感できます。</p>
+<p>この法則の威力は、投資勧誘の真偽を検証する逆算の場面で遺憾なく発揮されます。</p>
+<p>怪しい投資話の勧誘において「この商品を契約すれば、手元の100万円はわずか3年で2倍の200万円になります」と囁かれた場面を想定します。ここで72の法則を逆向きに適用し、72を期間である3年で割ると年利24パーセントという極めて高い利回りが算出されます（正確に計算すると年約26パーセント。72の法則はあくまで目安です）。前章（F1-08）で学んだ通り、年利24パーセントという途方もない利回りには、相応の壊滅的なリスクプレミアムが宿っていなければ理屈が合いません。元本保証や安全性を謳いながら3年で2倍を約束する話は、その瞬間に論理的な破綻を証明されたことになり、甘言に惑わされることなく即座に警戒のシャッターを下ろすことが可能になります。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 利率と期間がもたらす結果の支配</h5>
+<p>複利の数理において最終的な成果を決定づける要素は、利回りの高さと運用の期間の2点に限られます。</p>
+<p>さらに驚くべきことに、長期になればなるほど、利率の高さよりも期間の長さが結果を圧倒するようになります。100万円を運用する際、年利3パーセントで30年間じっくり運用を続けると約242万円に達しますが、これはリスクを取って年利5パーセントで20年間運用した成果（約265万円）に匹敵します。利率を2パーセント引き上げるためには、前章で確認した通り激しい価格下落やデフォルトの危険を抱え込まなければなりません。しかし、運用期間を10年長く確保することに対しては、いかなる追加リスクの対価も要求されません。</p>
+<p>余計な危険を引き受けることなく成果を高められる唯一の資源が時間です。同じ100万円を年5パーセントで運用する場合、40年続ければ約704万円、始めるのが10年遅れて30年になると約432万円で、遅れた10年の分だけ約272万円の差がつきます（説明のための例）。</p>
+<p>ただし、時間という資源には、後からお金で買い戻すことが絶対にできないという厳しい制約が存在します。運用を先延ばしにすることは、指数関数が急上昇する後半のボーナス期間を自ら切り捨ててしまう行為に他なりません。人間がなぜ将来の大きな利益よりも目先の安心を優先して先延ばしを選んでしまうのかという心理の罠については、後の章（A2-05）で行動経済学の観点から掘り下げます。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 損失と負債に牙を剥く逆回転の脅威</h5>
+<p>複利は資産を増やすときだけに都合よく働いてくれる魔法の味方ではありません。</p>
+<p>掛け算が積み重なるという数理構造は、借金の利息や運用コストといった減る側に対しても、まったく同一の獰猛さをもって容赦なく作用します。クレジットカードのリボルビング払いや消費者金融の借入において、年利15パーセントといった高金利が設定されている場合を考えます。利息の支払いを先送りにして元本に組み込まれる状態を放置すると、今度は借金そのものが指数関数を描いて雪だるま式に膨張し、わずか数年で返済不能な債務超過へと転落します。たとえば50万円を年15パーセントで借り、返済も利息の支払いもせずに放置すると、3年後には約76万円、5年後には約101万円と、およそ2倍に膨らみます。72の法則で72を15で割ると約4.8年で、ほぼ同じ答えが出ます（説明のための例）。また、投資商品に課される毎年の運用手数料も、複利で引かれ続けることによって将来の資産を恐ろしい勢いで削り取っていきます。</p>
+<p>複利とは増やすための道具ではなく、掛け算の連鎖という中立的な自然法則にすぎません。</p>
+<p>向きを持たない物理法則であるからこそ、資産を増やす側で味方につければ強力な防壁となる一方で、負債や高コストの側で敵に回せば個人の家計を瞬時に破滅へと追い込みます。減る側に働く複利の破壊力とその防衛策については、続く次章（F1-11）で詳細に解剖します。</p></div>
+<div class="notes-src" id="notes-s6"><h5 style="font-size:15px;margin:8px 0 6px">6. ポンジ・スキームの破綻を暴く数理の基礎</h5>
+<p>本章で学んだ指数関数という増え方の性質は、金融詐欺の構造を看破する決定的な検証ツールへと直結します。</p>
+<p>運用実態のない架空の投資話において、後から参加した出資者の資金を既存の出資者への配当として横流しする<b>ポンジ・スキーム</b>を想定します。もし1人の出資者が配当を受け取る条件として、毎月2人の新規参加者を勧誘し続けるネズミ講のような構造が組み込まれていたとします。参加者の人数は、2人、4人、8人、16人と、まさに指数関数を描いて掛け算で激増していきます。2の累乗で増え続ける連鎖は、わずか30世代ほど進んだだけで10億人を超え、瞬く間に日本や地球全体の総人口を突破して物理的な限界に突き当たります。</p>
+<p>新しい参加者の流入が途絶えた瞬間に配当の原資が蒸発し、システム全体が爆発して無残に瓦解します。</p>
+<p>詐欺グループがどれほど巧みな弁舌で将来の安全を誓ったとしても、数学が示す幾何級数的な膨張の限界を覆すことはできません。この破綻の必然性を厳密な数式と人口データを用いて計算する手法は、真贋レーンの重要講義（A2-01）で実践します。道具としての指数関数の性質を腹に落としておくことが、あらゆる虚飾を見破るための普遍的な武器となります。</p></div>
+<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
+<p>引き受けたのは、次の一点だけです。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px">単利と複利の違いを、増え方の形の違いとして説明できる。72の法則で「何年で2倍になるか」を暗算できる。指数関数という増え方が、時間に対して何をするのかを言える。</p>
+<p>そこから先——どの商品を選ぶか、いつ投資を開始するか、いくら拠出するか——は、このノートの外にあります。</p>
+<p>同じ材料を見ても、手元資金の量も、将来の生活設計も、許容できる不確実性の大きさも、人によってまったく異なります。</p>
+<p>それはあなた自身が決める領域に属します。</p>
+<p>出典に挙げた資料は、説明を鵜呑みにするためではなく、<b>説明の正確性を批判的に検証するために</b>置いてあります。</p>
+<p>疑問が生じた際は、原典となる公的資料を直接確認してください。</p></div>
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  const FOOT="TriFuse 金融 L1 基礎 ｜ F1-10 複利の数理";
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>'+FOOT+'</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='解説　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    onEnter(slides[i]);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  // 段階表示：data-s の要素は段階の数が届くと .on になり、スライドに s1..sN が付く
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+    const max=+s.dataset.steps||0;
+    s.querySelectorAll('[data-next]').forEach(b=>{b.textContent=n>=max?'もう一度見る ↺':'次の段階 ▶'});
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  document.getElementById('bToc').onclick=()=>go(0);
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='o'||e.key==='O')go(0);
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=b.closest('.slide');if(!step(s))setStep(s,0)});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=e=>{e.stopPropagation();setStep(b.closest('.slide'),0)});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  document.querySelectorAll('.tap').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  function onEnter(s){
+    s.querySelectorAll('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to),dec=+el.dataset.dec||0,t0=performance.now(),d=1300;
+      (function tick(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=(to*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});if(p<1)requestAnimationFrame(tick)})(t0);
+    });
+  }
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  const h=parseInt(location.hash.slice(1));go(h>0?h-1:0);
+})();
+
+</script>
+</body>
+</html>
