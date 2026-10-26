@@ -236,6 +236,27 @@ svg .sv{transform:none}
 .mobile .ft{padding-right:14px}
 #notes:not(.show){visibility:hidden}
 
+/* ===== F1-10 だけの部品 ===== */
+/* 線を段階ごとに描く（長さ1400まで描き切る） */
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.drawline.on,.slide.active .drawline.g0{stroke-dashoffset:0}
+.slide.active .drawline.g0{transition:stroke-dashoffset 2.2s ease .4s}
+/* 横向きに伸びる棒 */
+.growx{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.growx.on,.slide.active .growx.g0{transform:scaleX(1)}
+/* 流れ図は、まだの段階を薄く見せずに隠す（段階ごとにフェードイン） */
+.fs:not(.on),.fa:not(.on){opacity:0}
+.fa.on{opacity:1}
+/* 72の法則：答えが出たら「？」を消す */
+.q6{transition:opacity .4s ease}
+.slide.s3 .q6{opacity:0}
+.mobile .keymsg{font-size:17px!important}
+.sumb .kp .card h4{font-size:20px}
+.sumb .kp .card p{font-size:17px;line-height:1.8}
+.sumb .note{font-size:14px;line-height:1.75}
+.sumb>.card h4{font-size:18px!important}
+.mobile .r72{grid-template-columns:62px 1fr 76px!important;gap:10px!important;padding:16px 14px!important}
+.mobile .r72 .big{font-size:28px!important}
 
 </style>
 </head>
@@ -286,18 +307,18 @@ svg .sv{transform:none}
     <div class="cover-text">
       <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-10</div>
       <h1 class="fade d2"><small>複利の数理</small>同じ5％でも、<br>30年後に<span class="hl2">182万円の差</span></h1>
-      <p class="sub fade d3">利益を使うか、元本に組み入れるか。それだけで将来の到達点は大きく変わります。増え方の形、72の法則、借金に働く逆回転までを数字で確かめます。</p>
-      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>単利と複利：増え方の形</button><button data-go="2"><span class="n">03</span>足し算と掛け算</button><button data-go="3"><span class="n">04</span>72の法則で倍になる年を暗算</button><button data-go="4"><span class="n">05</span>「3年で2倍」を逆算する</button><button data-go="5"><span class="n">06</span>利率より期間が効く</button><button data-go="6"><span class="n">07</span>借金に働く逆回転</button><button data-go="7"><span class="n">08</span>ポンジ・スキームの破綻</button><button data-go="8"><span class="n">09</span>まとめと出典</button></div>
+      <p class="sub fade d3">利益を使うか、元手に足すか。増え方の形、72の法則、期間と利率、借金、値動きのある場合までを数字で確かめます。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>利益を使うか、元手に足すか</button><button data-go="2"><span class="n">03</span>掛け算を繰り返すと何が起きるか</button><button data-go="3"><span class="n">04</span>72の法則で2倍になる年数</button><button data-go="4"><span class="n">05</span>72の法則を逆向きに使う</button><button data-go="5"><span class="n">06</span>期間と利率はどちらも効く</button><button data-go="6"><span class="n">07</span>借金にも同じ掛け算が働く</button><button data-go="7"><span class="n">08</span>毎年同じ率で増えるとは限らない</button><button data-go="8"><span class="n">09</span>足して2で割る平均の落とし穴</button><button data-go="9"><span class="n">10</span>まとめと出典</button></div>
       <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
     </div>
     <svg class="cover-ill" viewBox="0 0 460 500" aria-label="直線と曲線が離れていく絵">
       <rect width="460" height="500" rx="22" fill="#fff" opacity=".8"/>
       <text x="30" y="46" font-size="15" font-weight="700" fill="#5A6B82">100万円・年5％（例）</text>
       <path d="M40 440H430M40 440V80" stroke="#D8DFE8" stroke-width="2"/>
-      <polyline class="drawline" points="40,365 53,361 66,358 79,354 92,350 105,346 118,342 131,339 144,335 157,331 170,328 183,324 196,320 209,316 222,312 235,309 248,305 261,301 274,298 287,294 300,290 313,286 326,282 339,279 352,275 365,271 378,268 391,264 404,260 417,256 430,252" fill="none" stroke="#8A9AB0" stroke-width="5"/>
-      <polyline class="drawline" points="40,365 53,361 66,357 79,353 92,349 105,344 118,339 131,334 144,329 157,324 170,318 183,312 196,305 209,299 222,292 235,284 248,276 261,268 274,260 287,250 300,241 313,231 326,221 339,210 352,198 365,186 378,173 391,160 404,146 417,131 430,116" fill="none" stroke="#2B5FA8" stroke-width="6"/>
-      <text x="420" y="104" text-anchor="end" font-size="20" font-weight="700" fill="#2B5FA8" class="mono">432万円</text>
-      <text x="420" y="280" text-anchor="end" font-size="18" font-weight="700" fill="#5A6B82" class="mono">250万円</text>
+      <polyline class="drawline g0" points="40,365 53,361 66,358 79,354 92,350 105,346 118,342 131,339 144,335 157,331 170,328 183,324 196,320 209,316 222,312 235,309 248,305 261,301 274,298 287,294 300,290 313,286 326,282 339,279 352,275 365,271 378,268 391,264 404,260 417,256 430,252" fill="none" stroke="#8A9AB0" stroke-width="5"/>
+      <polyline class="drawline g0" points="40,365 53,361 66,357 79,353 92,349 105,344 118,339 131,334 144,329 157,324 170,318 183,312 196,305 209,299 222,292 235,284 248,276 261,268 274,260 287,250 300,241 313,231 326,221 339,210 352,198 365,186 378,173 391,160 404,146 417,131 430,116" fill="none" stroke="#2B5FA8" stroke-width="6"/>
+      <text x="420" y="104" text-anchor="end" font-size="20" font-weight="700" fill="#2B5FA8" ><tspan font-size="15">複利 </tspan><tspan class="mono">432万円</tspan></text>
+      <text x="420" y="292" text-anchor="end" font-size="18" font-weight="700" fill="#5A6B82" ><tspan font-size="15">単利 </tspan><tspan class="mono">250万円</tspan></text>
       <text x="40" y="470" font-size="13" fill="#5A6B82">いま</text><text x="430" y="470" text-anchor="end" font-size="13" fill="#5A6B82">30年後</text>
     </svg>
     <div class="brandbar"></div>
@@ -305,190 +326,275 @@ svg .sv{transform:none}
 </section>
 
 <section class="slide" data-n="s1" data-steps="4">
-  <header class="hd"><span class="chap">1. 増え方の形を決定づける2つの力学</span><h2>利益を使い切るか、元本に組み入れるか。30年で182万円の差</h2><span class="num">02</span></header>
+  <header class="hd"><span class="chap">1. 利益を使うか、元手に足すか</span><h2>利率はどちらも5％。違うのは、利益を元手に足したかどうかだけ</h2><span class="num">02</span></header>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">年数を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 440" style="width:100%;height:430px" aria-label="単利と複利の残高の線グラフ">
-<path d="M64 390.0H580" stroke="#E3E8EF"/><text x="56" y="394.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">0</text>
-<path d="M64 312.2H580" stroke="#E3E8EF"/><text x="56" y="316.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">100</text>
-<path d="M64 234.4H580" stroke="#E3E8EF"/><text x="56" y="238.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">200</text>
-<path d="M64 156.7H580" stroke="#E3E8EF"/><text x="56" y="160.7" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">300</text>
-<path d="M64 78.9H580" stroke="#E3E8EF"/><text x="56" y="82.9" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">400</text>
-<text x="56" y="24" text-anchor="end" font-size="12" fill="#8A9AB0">万円</text>
-<text x="64.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">0年</text>
-<text x="150.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">5年</text>
-<text x="236.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">10年</text>
-<text x="408.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">20年</text>
-<text x="580.0" y="412" text-anchor="middle" font-size="12" fill="#5A6B82">30年</text>
-<polyline class="drawline" points="64.0,312.2 81.2,308.3 98.4,304.4 115.6,300.6 132.8,296.7 150.0,292.8 167.2,288.9 184.4,285.0 201.6,281.1 218.8,277.2 236.0,273.3 253.2,269.4 270.4,265.6 287.6,261.7 304.8,257.8 322.0,253.9 339.2,250.0 356.4,246.1 373.6,242.2 390.8,238.3 408.0,234.4 425.2,230.6 442.4,226.7 459.6,222.8 476.8,218.9 494.0,215.0 511.2,211.1 528.4,207.2 545.6,203.3 562.8,199.4 580.0,195.6" fill="none" stroke="#8A9AB0" stroke-width="4"/>
-<polyline class="drawline" points="64.0,312.2 81.2,308.3 98.4,304.2 115.6,300.0 132.8,295.5 150.0,290.7 167.2,285.8 184.4,280.6 201.6,275.1 218.8,269.3 236.0,263.3 253.2,257.0 270.4,250.3 287.6,243.3 304.8,236.0 322.0,228.3 339.2,220.2 356.4,211.7 373.6,202.8 390.8,193.5 408.0,183.6 425.2,173.3 442.4,162.5 459.6,151.1 476.8,139.2 494.0,126.6 511.2,113.4 528.4,99.6 545.6,85.1 562.8,69.9 580.0,53.8" fill="none" stroke="#2B5FA8" stroke-width="5"/>
-<g class="sv" data-s="1"><path d="M150.0 290.8V292.8" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="150.0" cy="290.8" r="6" fill="#2B5FA8"/><circle cx="150.0" cy="292.8" r="5" fill="#8A9AB0"/><text x="142.0" y="278.8" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">127.6</text><text x="158.0" y="296.8" font-size="13" font-weight="700" fill="#B5500F">差 2.6</text></g>
-<g class="sv" data-s="2"><path d="M236.0 263.3V273.3" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="236.0" cy="263.3" r="6" fill="#2B5FA8"/><circle cx="236.0" cy="273.3" r="5" fill="#8A9AB0"/><text x="228.0" y="251.3" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">162.9</text><text x="244.0" y="273.3" font-size="13" font-weight="700" fill="#B5500F">差 12.9</text></g>
-<g class="sv" data-s="3"><path d="M408.0 183.7V234.4" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="408.0" cy="183.7" r="6" fill="#2B5FA8"/><circle cx="408.0" cy="234.4" r="5" fill="#8A9AB0"/><text x="400.0" y="171.7" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">265.3</text><text x="416.0" y="214.1" font-size="13" font-weight="700" fill="#B5500F">差 65.3</text></g>
-<g class="sv" data-s="4"><path d="M580.0 53.8V195.6" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="580.0" cy="53.8" r="6" fill="#2B5FA8"/><circle cx="580.0" cy="195.6" r="5" fill="#8A9AB0"/><text x="572.0" y="41.8" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">432.2</text><text x="568.0" y="129.7" text-anchor="end" font-size="15" font-weight="900" fill="#B5500F">差 182.2</text></g>
-<g transform="translate(74 46)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">複利（全額を再投資）</text><rect x="170" width="16" height="5" y="5" fill="#8A9AB0"/><text x="192" y="12" font-size="13" fill="#16233A">単利（毎年5万円を使う）</text></g>
+      <svg viewBox="0 0 600 430" style="width:100%;height:420px" aria-label="単利と複利の残高の線グラフ">
+<path d="M64 318.2H536" stroke="#E3E8EF"/>
+<path d="M64 244.4H536" stroke="#E3E8EF"/>
+<path d="M64 170.7H536" stroke="#E3E8EF"/>
+<path d="M64 96.9H536" stroke="#E3E8EF"/>
+<path d="M64 392H536" stroke="#D8DFE8" stroke-width="2"/>
+<text x="56" y="396.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">0</text>
+<text x="56" y="322.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">100</text>
+<text x="56" y="248.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">200</text>
+<text x="56" y="48" text-anchor="end" font-size="12" fill="#8A9AB0">万円</text>
+<text x="64.0" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">いま</text>
+<text x="142.7" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">5年後</text>
+<text x="221.3" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">10年後</text>
+<text x="378.7" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">20年後</text>
+<text x="536.0" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">30年後</text>
+<circle cx="64.0" cy="318.2" r="5" fill="#2B5FA8"/>
+<polyline class="drawline" data-s="1" points="64.0,318.2 79.7,314.5 95.5,310.8 111.2,307.2 126.9,303.5 142.7,299.8" fill="none" stroke="#8A9AB0" stroke-width="4"/>
+<polyline class="drawline" data-s="1" points="64.0,318.2 79.7,314.5 95.5,310.7 111.2,306.6 126.9,302.3 142.7,297.8" fill="none" stroke="#2B5FA8" stroke-width="5"/>
+<polyline class="drawline" data-s="2" points="142.7,299.8 158.4,296.1 174.1,292.4 189.9,288.7 205.6,285.0 221.3,281.3" fill="none" stroke="#8A9AB0" stroke-width="4"/>
+<polyline class="drawline" data-s="2" points="142.7,297.8 158.4,293.1 174.1,288.2 189.9,283.0 205.6,277.5 221.3,271.8" fill="none" stroke="#2B5FA8" stroke-width="5"/>
+<polyline class="drawline" data-s="3" points="221.3,281.3 237.1,277.6 252.8,274.0 268.5,270.3 284.3,266.6 300.0,262.9 315.7,259.2 331.5,255.5 347.2,251.8 362.9,248.1 378.7,244.4" fill="none" stroke="#8A9AB0" stroke-width="4"/>
+<polyline class="drawline" data-s="3" points="221.3,271.8 237.1,265.8 252.8,259.5 268.5,252.9 284.3,245.9 300.0,238.6 315.7,231.0 331.5,222.9 347.2,214.4 362.9,205.6 378.7,196.2" fill="none" stroke="#2B5FA8" stroke-width="5"/>
+<polyline class="drawline" data-s="4" points="378.7,244.4 394.4,240.8 410.1,237.1 425.9,233.4 441.6,229.7 457.3,226.0 473.1,222.3 488.8,218.6 504.5,214.9 520.3,211.2 536.0,207.6" fill="none" stroke="#8A9AB0" stroke-width="4"/>
+<polyline class="drawline" data-s="4" points="378.7,196.2 394.4,186.5 410.1,176.2 425.9,165.4 441.6,154.1 457.3,142.2 473.1,129.7 488.8,116.6 504.5,102.8 520.3,88.3 536.0,73.1" fill="none" stroke="#2B5FA8" stroke-width="5"/>
+<g class="sv" data-s="1" style="transition-delay:.9s"><path d="M142.7 297.9V299.8" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="142.7" cy="297.9" r="6" fill="#2B5FA8"/><circle cx="142.7" cy="299.8" r="5" fill="#8A9AB0"/><text x="134.7" y="285.9" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">127.6</text><text x="152.7" y="303.8" font-size="13" font-weight="700" fill="#B5500F">差 2.6</text></g>
+<g class="sv" data-s="2" style="transition-delay:.9s"><path d="M221.3 271.8V281.3" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="221.3" cy="271.8" r="6" fill="#2B5FA8"/><circle cx="221.3" cy="281.3" r="5" fill="#8A9AB0"/><text x="213.3" y="259.8" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">162.9</text><text x="231.3" y="281.6" font-size="13" font-weight="700" fill="#B5500F">差 12.9</text></g>
+<g class="sv" data-s="3" style="transition-delay:.9s"><path d="M378.7 196.3V244.4" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="378.7" cy="196.3" r="6" fill="#2B5FA8"/><circle cx="378.7" cy="244.4" r="5" fill="#8A9AB0"/><text x="370.7" y="184.3" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">265.3</text><text x="388.7" y="225.4" font-size="13" font-weight="700" fill="#B5500F">差 65.3</text></g>
+<g class="sv" data-s="4" style="transition-delay:.9s"><path d="M536.0 73.1V207.6" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="536.0" cy="73.1" r="6" fill="#2B5FA8"/><circle cx="536.0" cy="207.6" r="5" fill="#8A9AB0"/><text x="544.0" y="78.1" font-size="15" font-weight="700" fill="#2B5FA8" class="mono">432.2</text><text x="544.0" y="212.6" font-size="15" font-weight="700" fill="#5A6B82" class="mono">250</text><text x="524.0" y="146.3" text-anchor="end" font-size="16" font-weight="900" fill="#B5500F">差 182.2</text></g>
+<g transform="translate(64 14)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">複利（利益を毎年元手に足す）</text><rect x="216" width="16" height="5" y="5" fill="#8A9AB0"/><text x="238" y="12" font-size="13" fill="#16233A">単利（元手100万円＋ためた利益の合計）</text></g>
 </svg>
     </div>
     <div class="kp fade d2">
-      <div class="card"><h4>町のベーカリー<span class="ex">（例）</span></h4><p>元手100万円、毎年5％（5万円）の利益。<br><b style="color:#5A6B82">単利</b>：利益を生活費に使い切る → 毎年5万円ずつ。<br><b style="color:var(--safe)">複利</b>：オーブンや看板に再投資 → 2年目は105万円が元手になり、利益は5万2,500円。</p></div>
-      <div class="card sv" data-s="2"><h4>最初の数年は、差はわずか</h4><p>5年後の差は2.6万円、10年後でも12.9万円。</p></div>
-      <div class="card sv" data-s="4" style="text-align:center"><p>30年後：単利は2.5倍、複利は4.3倍超</p><div class="big w">182.2<small>万円の差</small></div></div>
+      <div class="card"><h4>町のパン屋<span class="ex">（例）</span></h4><p>元手100万円、毎年5％の5万円の利益。<br><b style="color:#5A6B82">単利</b>：5万円を店から出し、別の財布にためる。元手は100万円のまま。<br><b style="color:var(--safe)">複利</b>：5万円を店に使い、元手に足す。2年目の元手は105万円、利益は5万2,500円。</p></div>
+      <div class="card sv" data-s="2"><h4>はじめのうち、差は小さい</h4><p>5年後の差は2.6万円、10年後は約13万円。</p></div>
+      <div class="card sv" data-s="4" style="text-align:center"><p>30年で単利は元手の2.5倍、複利は約4.3倍</p><div class="big w">182.2<small>万円の差</small></div></div>
     </div>
   </div>
 </section>
 
 <section class="slide" data-n="s2" data-steps="3">
-  <header class="hd"><span class="chap">2. 足し算と掛け算を分ける指数関数</span><h2>同じ5％のまま、1年分の増え方が30年目には4倍になる</h2><span class="num">03</span></header>
+  <header class="hd"><span class="chap">2. 掛け算を繰り返すと何が起きるか</span><h2>増える割合は5％のまま。1年に増える金額が少しずつ大きくなる</h2><span class="num">03</span></header>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 420" style="width:100%;height:410px" aria-label="1年ごとの増え方の棒グラフ">
-<path d="M40 360H580" stroke="#D8DFE8" stroke-width="2"/>
-<rect x="62" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="82" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
-<rect class="grow g0" x="114" y="295.0" width="44" height="65.0" rx="3" fill="#2B5FA8"/>
-<text class="" x="136" y="285.0" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">5.0</text>
-<text x="110" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">1年目</text>
-<rect x="192" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="212" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
-<rect class="grow" data-s="1" x="244" y="258.6" width="44" height="101.4" rx="3" fill="#2B5FA8"/>
-<text class="sv" data-s="1" x="266" y="248.6" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">7.8</text>
-<text x="240" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">10年目</text>
-<rect x="322" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="342" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
-<rect class="grow" data-s="2" x="374" y="196.2" width="44" height="163.8" rx="3" fill="#2B5FA8"/>
-<text class="sv" data-s="2" x="396" y="186.2" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">12.6</text>
-<text x="370" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">20年目</text>
-<rect x="452" y="295" width="40" height="65" rx="3" fill="#8A9AB0"/><text x="472" y="287" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
-<rect class="grow" data-s="3" x="504" y="92.2" width="44" height="267.8" rx="3" fill="#2B5FA8"/>
-<text class="sv" data-s="3" x="526" y="82.2" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" class="mono">20.6</text>
-<text x="500" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">30年目</text>
-<text x="40" y="24" font-size="12" fill="#8A9AB0">その1年で増える金額（万円）（例）</text>
-<g transform="translate(330 14)"><rect width="14" height="14" fill="#8A9AB0" rx="2"/><text x="20" y="12" font-size="12" fill="#5A6B82">単利：足し算</text><rect x="110" width="14" height="14" fill="#2B5FA8" rx="2"/><text x="130" y="12" font-size="12" fill="#5A6B82">複利：掛け算</text></g>
+      <svg viewBox="0 0 600 390" style="width:100%;height:370px" aria-label="1年に増える金額の棒グラフ">
+<path d="M40 330H580" stroke="#D8DFE8" stroke-width="2"/>
+<rect x="62" y="270" width="40" height="60" rx="3" fill="#8A9AB0"/><text x="82" y="262" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow g0" x="114" y="270.0" width="44" height="60.0" rx="3" fill="#2B5FA8"/>
+<text class="mono" x="136" y="260.0" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8">5</text>
+<text x="110" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">1年目</text>
+<rect x="192" y="270" width="40" height="60" rx="3" fill="#8A9AB0"/><text x="212" y="262" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow" data-s="1" x="244" y="236.4" width="44" height="93.6" rx="3" fill="#2B5FA8"/>
+<text class="mono sv" data-s="1" x="266" y="226.4" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8">約7.8</text>
+<text x="240" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">10年目</text>
+<rect x="322" y="270" width="40" height="60" rx="3" fill="#8A9AB0"/><text x="342" y="262" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow" data-s="2" x="374" y="178.8" width="44" height="151.2" rx="3" fill="#2B5FA8"/>
+<text class="mono sv" data-s="2" x="396" y="168.8" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8">約12.6</text>
+<text x="370" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">20年目</text>
+<rect x="452" y="270" width="40" height="60" rx="3" fill="#8A9AB0"/><text x="472" y="262" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
+<rect class="grow" data-s="3" x="504" y="82.8" width="44" height="247.2" rx="3" fill="#2B5FA8"/>
+<text class="mono sv" data-s="3" x="526" y="72.8" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8">約20.6</text>
+<text x="500" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">30年目</text>
+<g class="sv" data-s="3" style="transition-delay:.8s"><text x="440" y="112.8" text-anchor="end" font-size="15" font-weight="900" fill="#2B5FA8">1年目の約4倍</text></g>
+<text x="40" y="22" font-size="12" fill="#8A9AB0">その1年で増える金額（万円）（例）</text>
+<g transform="translate(330 10)"><rect width="14" height="14" fill="#8A9AB0" rx="2"/><text x="20" y="12" font-size="12" fill="#5A6B82">単利：足し算</text><rect x="110" width="14" height="14" fill="#2B5FA8" rx="2"/><text x="130" y="12" font-size="12" fill="#5A6B82">複利：掛け算</text></g>
 </svg>
+      <p class="note">前提：利益は1年に1回。税金や手数料は引かず、物価の変化も考えていません（F0-03）。</p>
     </div>
     <div class="kp fade d2">
-      <div class="card"><h4>単利は足し算</h4><p>毎年5万円ずつ足すだけ。グラフは一定の傾きの<b>直線</b>になる。</p></div>
-      <div class="card sv" data-s="1"><h4>複利は掛け算</h4><p>毎年、元本に1.05を掛け続ける。掛け算の繰り返しが生む増え方を<b>指数関数</b>と呼ぶ。</p></div>
-      <div class="card sv" data-s="3" style="border-left:5px solid var(--safe)"><p style="color:var(--ink);font-weight:700">回を重ねるほど、1回の歩幅そのものが長くなる。最初は緩やかで、ある所から急に加速する。</p></div>
+      <div class="card"><h4>単利は足し算</h4><p>毎年同じ5万円を足す。グラフはまっすぐな<b>直線</b>。</p></div>
+      <div class="card sv" data-s="1"><h4>複利は掛け算</h4><p>100万円に1.05を30回掛けると約432万円。同じ倍率を何回も掛ける増え方を<b>指数関数</b>と呼ぶ。</p></div>
+      <div class="card sv" data-s="2"><h4>変わるのは、5％を掛ける元の金額</h4><p>元の金額が毎年少しずつ大きくなるので、1年に増える金額も少しずつ大きくなる。</p></div>
+      <div class="card sv" data-s="3" style="border-left:5px solid var(--safe)"><p style="color:var(--ink);font-weight:700">急に変わるのではなく、毎年少しずつ。30年目の1年分は1年目の約4倍。</p><p class="note" style="margin-top:4px">確かめ方：検索窓に「1.05^30」→ 4.32…</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s3a" data-steps="2">
-  <header class="hd"><span class="chap">3. 暗算で倍化年数を掴む72の法則</span><h2>72を年利で割ると、お金が2倍になるまでの年数がわかる</h2><span class="num">04</span></header>
+<section class="slide" data-n="s3a" data-steps="4">
+  <header class="hd"><span class="chap">3. 72の法則で2倍になる年数を出す</span><h2>72を利率の数字で割ると、2倍になるまでのおおよその年数が出る</h2><span class="num">04</span></header>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="stepbar"><b style="font-size:15px">年利を上げる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <div style="display:flex;flex-direction:column;gap:14px"><div class="card fade d1" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px"><div class="big" style="font-size:36px">3<small>％</small></div><div><div style="height:26px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 3 ＝ 24</p></div><div class="big g" style="font-size:36px;text-align:right">24<small>年</small></div></div><div class="card sv" data-s="1" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px"><div class="big" style="font-size:36px">6<small>％</small></div><div><div style="height:26px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:50%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 6 ＝ 12</p></div><div class="big g" style="font-size:36px;text-align:right">12<small>年</small></div></div><div class="card sv" data-s="2" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px"><div class="big" style="font-size:36px">12<small>％</small></div><div><div style="height:26px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:25%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 12 ＝ 6</p></div><div class="big g" style="font-size:36px;text-align:right">6<small>年</small></div></div></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="stepbar"><b style="font-size:15px">利率を変える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <div style="display:flex;flex-direction:column;gap:18px"><div class="card r72 fade d1" style="display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:14px;padding:26px 22px"><div class="big" style="font-size:34px">3<small>％</small></div><div class=""><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 3 ＝ 24<span class="sv" data-s="4" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約23.4年</span></p></div><div class="swap"><div class="big g" style="font-size:34px;text-align:right">24<small>年</small></div></div></div><div class="card r72 sv" data-s="2" style="display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:14px;padding:26px 22px"><div class="big" style="font-size:34px">6<small>％</small></div><div class="sv" data-s="3"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:50%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 6 ＝ 12</p></div><div class="swap"><div class="q6 big" style="font-size:34px;text-align:right;color:var(--ink2)">？</div><div class="big g sv" data-s="3" style="font-size:34px;text-align:right">12<small>年</small></div></div></div><div class="card r72 sv" data-s="1" style="display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:14px;padding:26px 22px"><div class="big" style="font-size:34px">12<small>％</small></div><div class="sv" data-s="1"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:25%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 12 ＝ 6<span class="sv" data-s="4" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約6.1年</span></p></div><div class="swap"><div class="big g sv" data-s="1" style="font-size:34px;text-align:right">6<small>年</small></div></div></div></div>
     </div>
     <div class="kp fade d2">
-      <div class="card" style="text-align:center"><p style="font-size:15px;color:var(--ink2)">72の法則</p><div class="big" style="font-size:40px">72 ÷ 年利(％)<br>≒ 2倍になる年数</div></div>
-      <div class="card"><p>厳密な計算をしなくても、提示された金利が持つ時間の力を、その場でつかめる。</p></div>
+      <div class="card" style="text-align:center"><p style="font-size:15px;color:var(--ink2)">72の法則</p><div class="big" style="font-size:36px">72 ÷ 利率の数字<br>≒ 2倍になる年数</div></div>
+      <div class="card sv" data-s="2" style="border-left:5px solid var(--safe)"><h4>チャットで答えてください</h4><p style="color:var(--ink);font-weight:700">「年6％なら、何年で2倍になりますか？」</p></div>
+      <div class="card sv" data-s="4"><h4>あくまで、おおよその目安</h4><p>年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれる。</p></div>
     </div>
   </div>
 </section>
 
 <section class="slide" data-n="s3b" data-steps="3">
-  <header class="hd"><span class="chap">3. 72の法則で勧誘を逆算する</span><h2>「3年で2倍」は年24％。安全をうたうなら、話の筋が通らない</h2><span class="num">05</span></header>
-  <div class="body" style="display:flex;flex-direction:column;gap:18px">
-    <div class="quote fade d1">「この商品を契約すれば、手元の100万円はわずか3年で2倍の200万円になります」</div>
+  <header class="hd"><span class="chap">3. 72の法則は逆向きにも使える</span><h2>「3年で2倍」と勧められたら、利回りを逆算してみる</h2><span class="num">05</span></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:14px">
+    <div class="quote fade d1">「手元の100万円が、3年で200万円になります」</div>
     <div class="stepbar"><b style="font-size:15px">逆算する</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-    <div class="flow" style="--c:var(--warn)">
-      <div class="fs on tap"><svg class="ico"><use href="#i-search"/></svg><span class="n">STEP 0</span>3年で2倍、と言われた</div><div class="fa" data-s="1">▶</div>
-      <div class="fs tap" data-s="1"><svg class="ico"><use href="#i-percent"/></svg><span class="n">STEP 1</span>72 ÷ 3 ＝ 年24％<br><small style="font-weight:500;color:var(--ink2)">正確に計算すると年約26％</small></div><div class="fa" data-s="2">▶</div>
-      <div class="fs tap" data-s="2"><svg class="ico"><use href="#i-warning"/></svg><span class="n">STEP 2</span>年24％には、相応の<br>大きなリスクがあるはず（F1-08）</div><div class="fa" data-s="3">▶</div>
-      <div class="fs last tap" data-s="3"><svg class="ico"><use href="#i-shield"/></svg><span class="n">STEP 3</span>「元本保証」「安全」と<br>並べた時点で筋が通らない</div>
+    <div class="flow">
+      <div class="fs on tap"><svg class="ico"><use href="#i-search"/></svg><span class="n">STEP 0</span>3年で2倍、と<br>勧められた</div><div class="fa" data-s="1">▶</div>
+      <div class="fs tap" data-s="1"><svg class="ico"><use href="#i-percent"/></svg><span class="n">STEP 1</span>72 ÷ 3 ＝ 24<br>年およそ24％<br><small style="font-weight:500;color:var(--ink2)">正確には年約26％</small></div><div class="fa" data-s="2">▶</div>
+      <div class="fs tap" data-s="2"><svg class="ico"><use href="#i-chart-up"/></svg><span class="n">STEP 2</span>上場株式でも<br>年5〜8％程度が目安<br><small style="font-weight:500;color:var(--ink2)">F1-08の表</small></div><div class="fa" data-s="3">▶</div>
+      <div class="fs last tap" data-s="3"><svg class="ico"><use href="#i-warning"/></svg><span class="n">STEP 3</span>8％の3倍超。大きなリスクを<br>引き受けていなければ出ない</div>
     </div>
-    <p class="note sv" data-s="1">72の法則はあくまで目安です。答えが少しずれても、「警戒すべき高い利回り」という結論は変わりません。</p>
+    <div class="card sv" data-s="2" style="padding:8px 16px"><svg viewBox="0 0 600 150" style="width:100%;height:150px" aria-label="上場株式の目安と勧められた利回りの比べ">
+<path d="M170 10V134" stroke="#D8DFE8" stroke-width="2"/>
+<g><text x="158" y="44" text-anchor="end" font-size="14" font-weight="700" fill="#16233A">上場株式の目安</text><text x="158" y="62" text-anchor="end" font-size="12" fill="#5A6B82">F1-08の表</text><rect x="170.0" y="30" width="66.7" height="30" fill="#EAF4FF"/><rect x="236.7" y="30" width="40.0" height="30" rx="3" fill="#40B69A"/><text x="286.7" y="51" font-size="17" font-weight="700" fill="#1F7A63">年5〜8％程度</text></g>
+<g class="sv" data-s="3"><text x="158" y="108" text-anchor="end" font-size="14" font-weight="700" fill="#16233A">勧められた話</text><text x="158" y="126" text-anchor="end" font-size="12" fill="#5A6B82">3年で2倍</text><rect x="170.0" y="94" width="346.7" height="30" rx="3" fill="#F88039"/><text x="506.7" y="115" text-anchor="end" font-size="17" font-weight="900" fill="#fff">年約26％</text><text x="524.7" y="115" font-size="13" font-weight="700" fill="#B5500F">8％の</text><text x="524.7" y="132" font-size="13" font-weight="700" fill="#B5500F">3倍超</text></g>
+</svg></div>
+    <p class="note sv" data-s="3">話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかは、卒業課題のF1-EXで考えます。</p>
   </div>
 </section>
 
-<section class="slide" data-n="s4" data-steps="2">
-  <header class="hd"><span class="chap">4. 利率と期間がもたらす結果の支配</span><h2>利率を上げるより、期間を延ばす方が効く。時間は後から買えない</h2><span class="num">06</span></header>
+<section class="slide" data-n="s4" data-steps="3">
+  <header class="hd"><span class="chap">4. 期間と利率はどちらも効く</span><h2>期間だけ変える、利率も変える。100万円の到達額を3つの比べで確かめる</h2><span class="num">06</span></header>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">期間を比べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 420" style="width:100%;height:410px" aria-label="利率と期間の組み合わせで残高を比べる棒グラフ">
-<path d="M40 360H580" stroke="#D8DFE8" stroke-width="2"/>
-<rect class="grow g0" x="60" y="251.1" width="80" height="108.9" rx="4" fill="#65CCFE"/>
-<text class="" x="100" y="241.1" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約242</text>
-<text class="" x="100" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％×30年</text>
-<rect class="grow g0" x="190" y="240.8" width="80" height="119.2" rx="4" fill="#2B5FA8"/>
-<text class="" x="230" y="230.8" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約265</text>
-<text class="" x="230" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％×20年</text>
-<rect class="grow " data-s="1" x="320" y="165.6" width="80" height="194.4" rx="4" fill="#8A9AB0"/>
-<text class="sv" data-s="1" x="360" y="155.6" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約432</text>
-<text class="sv" data-s="1" x="360" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％×30年</text>
-<rect class="grow " data-s="1" x="450" y="43.2" width="80" height="316.8" rx="4" fill="#40B69A"/>
-<text class="sv" data-s="1" x="490" y="33.2" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A" class="mono">約704</text>
-<text class="sv" data-s="1" x="490" y="384" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％×40年</text>
-<g class="sv" data-s="2"><path d="M404 165.6H446" stroke="#F88039" stroke-width="2" stroke-dasharray="4 4"/><path d="M440 165.6V43.2" stroke="#F88039" stroke-width="3"/><text x="432" y="109.4" text-anchor="end" font-size="15" font-weight="900" fill="#B5500F">差 約272</text></g>
-<text x="40" y="24" font-size="12" fill="#8A9AB0">100万円を運用した残高（万円）（例）</text>
+      <div class="stepbar"><b style="font-size:15px">比べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 400" style="width:100%;height:380px" aria-label="期間と利率を変えた残高の棒グラフ">
+<path d="M20 318H580" stroke="#D8DFE8" stroke-width="2"/>
+<g class=""><text x="110" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">同じ5％で</text><text x="110" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">期間だけ変える</text></g>
+<rect class="grow g0" x="48" y="158.5" width="56" height="159.5" rx="4" fill="#2B5FA8"/>
+<g class=""><text class="mono" x="76" y="148.5" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約432</text><text x="76" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="76" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<rect class="grow" data-s="1" x="116" y="58.0" width="56" height="260.0" rx="4" fill="#2B5FA8"/>
+<g class="sv" data-s="1"><text class="mono" x="144" y="48.0" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約704</text><text x="144" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="144" y="355" text-anchor="middle" font-size="13" fill="#16233A">40年</text></g>
+<g class="sv" data-s="2"><text x="300" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">利率と期間を</text><text x="300" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">入れ替える</text></g>
+<rect class="grow" data-s="2" x="238" y="228.3" width="56" height="89.7" rx="4" fill="#40B69A"/>
+<g class="sv" data-s="2"><text class="mono" x="266" y="218.3" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約243</text><text x="266" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％</text><text x="266" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<rect class="grow" data-s="2" x="306" y="220.1" width="56" height="97.9" rx="4" fill="#2B5FA8"/>
+<g class="sv" data-s="2"><text class="mono" x="334" y="210.1" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約265</text><text x="334" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="334" y="355" text-anchor="middle" font-size="13" fill="#16233A">20年</text></g>
+<g class="sv" data-s="3"><text x="490" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">30年で</text><text x="490" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">1％の差</text></g>
+<rect class="grow" data-s="3" x="428" y="251.2" width="56" height="66.8" rx="4" fill="#65CCFE"/>
+<g class="sv" data-s="3"><text class="mono" x="456" y="241.2" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約181</text><text x="456" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年2％</text><text x="456" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<rect class="grow" data-s="3" x="496" y="228.3" width="56" height="89.7" rx="4" fill="#40B69A"/>
+<g class="sv" data-s="3"><text class="mono" x="524" y="218.3" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約243</text><text x="524" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％</text><text x="524" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<g class="sv" data-s="1" style="transition-delay:.8s"><path d="M104 158.5H120" stroke="#F88039" stroke-width="2" stroke-dasharray="4 4"/><text x="178" y="113.2" font-size="15" font-weight="900" fill="#B5500F">差</text><text x="178" y="132.2" font-size="15" font-weight="900" fill="#B5500F" class="mono">約272</text></g>
+<g class="sv" data-s="3" style="transition-delay:.8s"><text x="490" y="188.3" text-anchor="middle" font-size="16" font-weight="900" fill="#B5500F">約1.34倍</text></g>
+<text x="20" y="22" font-size="12" fill="#8A9AB0">100万円を置いた到達額（万円）（例）</text>
 </svg>
     </div>
-    <div class="kp fade d2">
-      <div class="card"><h4>年3％で30年 ≒ 年5％で20年</h4><p>約242万円と約265万円。利率を2％上げるには、値下がりや倒産の危険を抱えることになる。期間を10年延ばすのに、追加のリスクは要らない。</p></div>
-      <div class="card sv" data-s="1"><h4>始めるのが10年遅れると</h4><p>年5％で40年なら約704万円、30年なら約432万円。<span class="ex">（例）</span></p></div>
-      <div class="card sv" data-s="2" style="text-align:center"><div class="big w">約272<small>万円の差</small></div><p style="margin-top:6px">先延ばしは、指数関数が急に伸びる後半を自分で切り捨てること。</p></div>
+    <div class="kp fade d2" style="gap:10px">
+      <div class="card"><h4>同じ年5％で、期間だけ変える</h4><p>100万円を30年置くと約432万円。</p></div>
+      <div class="card sv" data-s="1"><h4>40年なら約704万円、差は約272万円</h4><p>最初の30年で増えた額は約332万円。最後の10年だけで、それに近い額が増える。</p></div>
+      <div class="card sv" data-s="2"><h4>年3％×30年 と 年5％×20年</h4><p>約243万円と約265万円。期間が10年長くても、2％の利率の差は埋まらない。</p></div>
+      <div class="card sv" data-s="3"><h4>30年なら、1％の差で約1.34倍</h4><p>年2％で約181万円、年3％で約243万円。</p></div>
+      <p class="note sv" data-s="3">利率を上げるには、より大きなリスクを引き受けることになる（F1-08）。期間を延ばすには、お金を長いあいだ使わずに置く必要がある。いつ始めるかは、それぞれの事情で決まる（A2-05）。</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s5" data-steps="2">
-  <header class="hd"><span class="chap">5. 損失と負債に牙を剥く逆回転の脅威</span><h2>同じ掛け算は、借金にも働く。放置すると5年で約2倍</h2><span class="num">07</span></header>
+<section class="slide" data-n="s5" data-steps="3">
+  <header class="hd"><span class="chap">5. 借金にも同じ掛け算が働く</span><h2>複利はただの掛け算。増える側にも、借金の側にも同じように働く</h2><span class="num">07</span></header>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 420" style="width:100%;height:410px" aria-label="借金を放置したときの残高の棒グラフ">
-<path d="M40 360H580" stroke="#D8DFE8" stroke-width="2"/>
-<path d="M40 100.0H580" stroke="#B5500F" stroke-width="1.5" stroke-dasharray="6 6"/><text x="44" y="92.0" font-size="12" font-weight="700" fill="#B5500F">借りた額の2倍（100万円）</text>
-<rect class="grow g0" x="90" y="230.0" width="100" height="130.0" rx="4" fill="#FDBA8C"/>
-<text class="" x="140" y="220.0" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F" class="mono">50</text>
-<text x="140" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">借りた日</text>
-<rect class="grow" data-s="1" x="250" y="162.4" width="100" height="197.6" rx="4" fill="#F88039"/>
-<text class="sv" data-s="1" x="300" y="152.4" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F" class="mono">約76</text>
-<text x="300" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">3年後</text>
-<rect class="grow" data-s="2" x="410" y="97.4" width="100" height="262.6" rx="4" fill="#F88039"/>
-<text class="sv" data-s="2" x="460" y="87.4" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F" class="mono">約101</text>
-<text x="460" y="384" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">5年後</text>
-<text x="40" y="24" font-size="12" fill="#8A9AB0">年15％で返済せずに放置した残高（万円）（例）</text>
+      <svg viewBox="0 0 600 390" style="width:100%;height:380px" aria-label="借金を放っておいたときの残高の棒グラフ">
+<path d="M30 332H580" stroke="#D8DFE8" stroke-width="2"/>
+<g class="sv" data-s="2" style="transition-delay:.9s"><path d="M30 82.0H580" stroke="#B5500F" stroke-width="1.5" stroke-dasharray="6 6"/><text x="34" y="74.0" font-size="12" font-weight="700" fill="#B5500F">借りた額の2倍（100万円）</text></g>
+<rect class="grow g0" x="50" y="207.0" width="60" height="125.0" rx="4" fill="#FDBA8C"/>
+<text class="mono" x="80" y="197.0" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">50</text>
+<text x="80" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">借りた日</text>
+<rect class="grow" data-s="1" style="transition-delay:0.00s" x="140" y="188.3" width="60" height="143.7" rx="4" fill="#FBA46A"/>
+<text x="170" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">1年後</text>
+<rect class="grow" data-s="1" style="transition-delay:0.35s" x="230" y="166.7" width="60" height="165.3" rx="4" fill="#FBA46A"/>
+<text x="260" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">2年後</text>
+<rect class="grow" data-s="1" style="transition-delay:0.70s" x="320" y="141.9" width="60" height="190.1" rx="4" fill="#F88039"/>
+<text class="mono sv" data-s="1" x="350" y="131.9" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">約76</text>
+<text x="350" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">3年後</text>
+<rect class="grow" data-s="2" style="transition-delay:0.00s" x="410" y="113.4" width="60" height="218.6" rx="4" fill="#FBA46A"/>
+<text x="440" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">4年後</text>
+<rect class="grow" data-s="2" style="transition-delay:0.35s" x="500" y="80.6" width="60" height="251.4" rx="4" fill="#F88039"/>
+<text class="mono sv" data-s="2" x="530" y="70.6" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">約101</text>
+<text x="530" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">5年後</text>
+<text x="30" y="22" font-size="12" fill="#8A9AB0">50万円を年15％で、返さずに放っておいた残高（万円）（例）</text>
 </svg>
     </div>
     <div class="kp fade d2">
-      <div class="card"><h4>リボ払い・消費者金融<span class="ex">（例）</span></h4><p>50万円を年15％で借り、返済も利息の支払いもせずに放置する。</p></div>
-      <div class="card sv" data-s="2"><h4>72の法則でも同じ答え</h4><p>72 ÷ 15 ＝ 約4.8年で2倍。毎年の運用手数料も、同じように複利で資産を削る（次の回 F1-11）。</p></div>
-      <div class="card sv" data-s="2" style="border-left:5px solid var(--warn)"><p style="color:var(--ink);font-weight:700">複利は味方でも敵でもない。掛け算の連鎖という、向きを持たない法則。</p></div>
+      <div class="card"><h4>極端な例<span class="ex">（例）</span></h4><p>50万円を年15％で借りて、返済も利息の支払いもせずに放っておく。</p></div>
+      <div class="card sv" data-s="2"><h4>5年後には約101万円、およそ2倍</h4><p>72の法則でも、72 ÷ 15 ＝ 約4.8年。ほぼ同じ答え。</p></div>
+      <div class="card sv" data-s="3" style="border-left:5px solid var(--warn)"><h4>リボ払い（リボルビング払い）</h4><p>使った金額が増えても、毎月の返済額はあまり変わらない。多くの場合、返済額から利息が先に引かれ、元本がなかなか減らない。返し終わるまでが長くなり、利息の合計も増える。</p></div>
+      <p class="note sv" data-s="3">投資にかかる手数料にも同じ掛け算が働くことは、次のF1-11で計算します。</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s6" data-steps="3">
-  <header class="hd"><span class="chap">6. ポンジ・スキームの破綻を暴く数理の基礎</span><h2>1人が2人を誘い続ける話は、30世代で10億人を超えて必ず止まる</h2><span class="num">08</span></header>
+<section class="slide" data-n="s6a" data-steps="3">
+  <header class="hd"><span class="chap">6. 毎年同じ率で増えるとは限らない</span><h2>平均が同じ年5％でも、値動きがあると30年後の金額は変わる</h2><span class="num">08</span></header>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="stepbar"><b style="font-size:15px">世代を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <div style="display:flex;flex-direction:column;gap:10px"><div class="card fade d1" style="display:flex;align-items:flex-end;gap:18px;justify-content:center;padding:14px"><div style="text-align:center"><div style="width:32px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">2人</b></p></div><div style="text-align:center"><div style="width:64px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">4人</b></p></div><div style="text-align:center"><div style="width:128px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">8人</b></p></div><div style="text-align:center"><div style="width:128px;display:flex;flex-wrap:wrap;justify-content:center"><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2B5FA8;margin:2px"></i></div><p class="note" style="margin-top:4px"><b class="mono" style="color:var(--ink)">16人</b></p></div><div style="font-size:28px;color:var(--muted);padding-bottom:20px">…</div></div><div class="card sv" data-s="1" style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;padding:12px 18px"><span class="pill">10世代目</span><div class="big" style="font-size:30px">1,024<small>人</small></div></div><div class="card sv" data-s="2" style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;padding:12px 18px"><span class="pill">20世代目</span><div class="big" style="font-size:30px">1,048,576<small>人</small></div></div><div class="card sv" data-s="3" style="display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;padding:12px 18px"><span class="pill w">30世代目</span><div class="big w" style="font-size:38px">1,073,741,824<small>人</small></div></div></div>
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 620 430" style="width:100%;height:420px" aria-label="毎年5％と、+20％と−10％を交互にくり返す場合の線グラフ">
+<path d="M64 318.2H480" stroke="#E3E8EF"/>
+<path d="M64 244.4H480" stroke="#E3E8EF"/>
+<path d="M64 170.7H480" stroke="#E3E8EF"/>
+<path d="M64 96.9H480" stroke="#E3E8EF"/>
+<path d="M64 392H480" stroke="#D8DFE8" stroke-width="2"/>
+<text x="56" y="396.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">0</text>
+<text x="56" y="322.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">100</text>
+<text x="56" y="248.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">200</text>
+<text x="56" y="48" text-anchor="end" font-size="12" fill="#8A9AB0">万円</text>
+<text x="64.0" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">いま</text>
+<text x="133.3" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">5年後</text>
+<text x="202.7" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">10年後</text>
+<text x="341.3" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">20年後</text>
+<text x="480.0" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">30年後</text>
+<circle cx="64.0" cy="318.2" r="5" fill="#2B5FA8"/>
+<polyline class="drawline" data-s="1" points="64.0,318.2 77.9,314.5 91.7,310.7" fill="none" stroke="#2B5FA8" stroke-width="4"/>
+<polyline class="drawline" data-s="1" points="64.0,318.2 77.9,303.5 91.7,312.3" fill="none" stroke="#F88039" stroke-width="3.5" stroke-linejoin="round"/>
+<polyline class="drawline" data-s="2" style="transition-duration:2.6s" points="91.7,310.7 105.6,306.6 119.5,302.3 133.3,297.8 147.2,293.1 161.1,288.2 174.9,283.0 188.8,277.5 202.7,271.8 216.5,265.8 230.4,259.5 244.3,252.9 258.1,245.9 272.0,238.6 285.9,231.0 299.7,222.9 313.6,214.4 327.5,205.6 341.3,196.2 355.2,186.5 369.1,176.2 382.9,165.4 396.8,154.1 410.7,142.2 424.5,129.7 438.4,116.6 452.3,102.8 466.1,88.3 480.0,73.1" fill="none" stroke="#2B5FA8" stroke-width="4"/>
+<polyline class="drawline" data-s="2" style="transition-duration:2.6s" points="91.7,312.3 105.6,296.4 119.5,305.9 133.3,288.7 147.2,299.1 161.1,280.5 174.9,291.6 188.8,271.6 202.7,283.6 216.5,261.9 230.4,274.9 244.3,251.5 258.1,265.6 272.0,240.3 285.9,255.4 299.7,228.1 313.6,244.5 327.5,215.0 341.3,232.7 355.2,200.9 369.1,220.0 382.9,185.6 396.8,206.2 410.7,169.1 424.5,191.4 438.4,151.2 452.3,175.3 466.1,132.0 480.0,158.0" fill="none" stroke="#F88039" stroke-width="3.5" stroke-linejoin="round"/>
+<g class="sv" data-s="1" style="transition-delay:.6s"><circle cx="77.9" cy="303.5" r="4" fill="#F88039"/><text x="75.9" y="293.5" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" class="mono">120</text><circle cx="91.7" cy="312.3" r="4" fill="#F88039"/><text x="97.7" y="332.3" font-size="13" font-weight="700" fill="#B5500F" class="mono">108</text></g>
+<g class="sv" data-s="2" style="transition-delay:1.5s"><circle cx="480" cy="73.1" r="6" fill="#2B5FA8"/><circle cx="480" cy="158.0" r="6" fill="#F88039"/><text x="490" y="78.1" font-size="15" font-weight="700" fill="#2B5FA8" class="mono">約432</text><text x="490" y="163.0" font-size="15" font-weight="700" fill="#B5500F" class="mono">約317</text></g>
+<g class="sv" data-s="3"><path d="M550 73.1V158.0M544 73.1H556M544 158.0H556" stroke="#B5500F" stroke-width="2.5"/><text x="560" y="111.6" font-size="17" font-weight="900" fill="#B5500F">差</text><text x="560" y="131.6" font-size="17" font-weight="900" fill="#B5500F" class="mono">約115</text></g>
+<g transform="translate(64 14)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">毎年5％</text><rect x="96" width="16" height="5" y="5" fill="#F88039"/><text x="118" y="12" font-size="13" fill="#16233A">+20％と−10％を交互に（平均5％）</text></g>
+</svg>
     </div>
     <div class="kp fade d2">
-      <div class="card"><h4>ポンジ・スキーム</h4><p>運用の実態がなく、後から入った人のお金を、前からいる人への配当に回す仕組み。</p></div>
-      <div class="card sv" data-s="2"><h4>人数も指数関数で増える</h4><p>2人、4人、8人、16人……。日本や地球全体の人口を、すぐに突き抜けてしまう。</p></div>
-      <div class="card sv" data-s="3" style="border-left:5px solid var(--warn)"><p style="color:var(--ink);font-weight:700">新しい参加者が途絶えた瞬間に、配当の元手が消えて崩れる。どんな約束も、この限界は覆せない（A2-01で計算する）。</p></div>
+      <div class="card"><h4>F1-09の資産A<span class="ex">（例）</span></h4><p>好況の年は+20％、不況の年は−10％。平均すると年5％。30年後も約432万円になりそうに見える。</p></div>
+      <div class="card sv" data-s="1"><h4>はじめの2年</h4><p>100万円 → 120万円 → 108万円。毎年5％なら2年で110万2,500円。差は2万2,500円。</p></div>
+      <div class="card sv" data-s="3" style="text-align:center"><p>この2年を15回くり返すと、30年後は約317万円</p><div class="big w">約115<small>万円少ない</small></div></div>
     </div>
+  </div>
+</section>
+
+<section class="slide" data-n="s6b" data-steps="3">
+  <header class="hd"><span class="chap">6. 毎年同じ率で増えるとは限らない</span><h2>足して2で割る平均は、掛け算で増えるお金にそのまま当てはまらない</h2><span class="num">09</span></header>
+  <div class="body" style="display:flex;flex-direction:column;gap:14px">
+    <div class="g2" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+      <div class="card fade d1" style="display:flex;flex-direction:column;gap:4px">
+        <div class="stepbar"><b style="font-size:15px">値動きを大きくする</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+        <p class="note">100万円を2年置いたとき（例）</p>
+        <svg viewBox="0 0 600 250" style="width:100%;height:250px" aria-label="2年後の金額の比べ">
+<path d="M190 34V240" stroke="#D8DFE8" stroke-width="2"/><text x="190" y="22" text-anchor="middle" font-size="12" fill="#8A9AB0">100万円</text>
+<text x="176" y="64" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">毎年5％</text><text x="176" y="82" text-anchor="end" font-size="12" fill="#5A6B82">5％ → 5％</text>
+<rect class="growx g0" x="190" y="50" width="242.3" height="34" rx="3" fill="#2B5FA8"/>
+<text class="mono" x="442.3" y="73" font-size="16" font-weight="700" fill="#2B5FA8">110万2,500円</text>
+<text x="176" y="134" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">+20％ → −10％</text><text x="176" y="152" text-anchor="end" font-size="12" fill="#5A6B82">平均5％</text>
+<rect class="growx" data-s="1" x="190" y="120" width="189.1" height="34" rx="3" fill="#F88039"/>
+<text class="mono sv" data-s="1" x="389.1" y="143" font-size="16" font-weight="700" fill="#F88039">108万円（1.08倍）</text>
+<text x="176" y="204" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">+30％ → −20％</text><text x="176" y="222" text-anchor="end" font-size="12" fill="#5A6B82">平均5％</text>
+<rect class="growx" data-s="2" x="190" y="190" width="94.5" height="34" rx="3" fill="#B5500F"/>
+<text class="mono sv" data-s="2" x="294.5" y="213" font-size="16" font-weight="700" fill="#B5500F">1.04倍</text>
+</svg>
+      </div>
+      <div class="kp fade d2">
+        <div class="card"><h4>足して2で割ると</h4><p>+20％と−10％を足して2で割れば、たしかに5％。これは足し算で増える場合の平均。</p></div>
+        <div class="card sv" data-s="1"><h4>掛け算で増えるお金では</h4><p>1.2 × 0.9 で、2年で1.08倍。1年あたりにすると約3.9％。</p></div>
+        <div class="card sv" data-s="2"><h4>値動きの幅が大きいほど、差も大きい</h4><p>+30％と−20％を交互にくり返すと、平均は同じ5％でも2年で1.04倍。</p></div>
+      </div>
+    </div>
+    <div class="keymsg sv" data-s="3" style="font-size:22px;padding:14px">平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなる<p class="note" style="font-weight:500;margin-top:4px">1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p></div>
   </div>
 </section>
 
 <section class="slide" data-n="sum">
-  <header class="hd"><span class="chap">まとめと出典</span><h2>複利は時間の道具。増やす側でも、減る側でも、同じ力で働く</h2><span class="num">09</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+  <header class="hd"><span class="chap">まとめと出典</span><h2>複利は同じ倍率を掛け続ける増え方。期間が長いほど差は大きく開く</h2><span class="num">10</span></header>
+  <div class="body sumb" style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
     <div class="kp">
-      <div class="card fade d1"><h4>1. 単利は直線、複利は曲線</h4><p>足し算か掛け算か。同じ5％でも30年で182.2万円の差になる。</p></div>
-      <div class="card fade d2"><h4>2. 72 ÷ 年利 ＝ 2倍になる年数</h4><p>「3年で2倍」と言われたら、年24％の高い利回りだと逆算して警戒する。</p></div>
-      <div class="card fade d3"><h4>3. 期間が効き、借金にも効く</h4><p>時間はリスクなしで成果を高める唯一の資源。同じ掛け算が借金も膨らませる。</p></div>
+      <div class="card fade d1"><h4>同じ倍率を掛け続ける増え方</h4><p>複利は同じ倍率を掛け続ける増え方で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。</p></div>
+      <div class="card fade d2"><h4>期間が長いほど、差が開く</h4><p>期間が長いほど、利率の小さな差も、値動きによる差も大きく開きます。</p></div>
+      <div class="card fade d3"><p class="note">この資料は事実と構造の説明であって、推奨ではありません。どの商品を選ぶか、いつ投資を始めるか、いくら出すかは、このノートの外にあり、あなた自身が決める領域です。</p></div>
     </div>
-    <div class="card fade d4" style="display:flex;flex-direction:column;gap:8px">
-      <h4 style="font-size:16px">出典（一次資料）</h4>
-      <p class="note"><b style="color:var(--ink)">日本取引所グループ なるほど！東証経済教室「7-2.ライフプランとお金②」</b><br>1〜3節のうち、複利の説明</p><p class="note"><b style="color:var(--ink)">金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子14・22ページ）</b><br>4節：期間と金利の比べ方</p>
-      <p class="note" style="margin-top:4px">この資料の数字は、どれも仕組みを説明するための計算例です。72の法則が出典のページに無いことなど、出典が支える範囲は台本に書いてあります。</p>
-      <p class="note" style="border-top:1px dashed var(--rule);padding-top:8px">この資料は事実と構造の説明であり、どの商品を選ぶか、いつ始めるか、いくら出すかを勧めるものではありません。判断はご自身でお願いします。</p>
+    <div class="card fade d4" style="display:flex;flex-direction:column;gap:8px;align-self:start">
+      <h4 style="font-size:16px">出典</h4>
+      <p class="note"><b style="color:var(--ink)">日本取引所グループ なるほど！東証経済教室「7-2.ライフプランとお金②」</b><br>1〜2節のうち、複利の説明</p><p class="note"><b style="color:var(--ink)">金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子の14・22ページ）</b><br>4節：期間と利率の違いによる差</p><p class="note"><b style="color:var(--ink)">本稿の数値計算モデル</b><br>1節の表・2〜6節の本文の数字（説明のための計算例）</p>
+      <p class="note" style="border-top:1px dashed var(--rule);padding-top:8px">数字はどれも説明のための例で、出典で確かめた事実ではありません。72の法則と単利の定義が出典のページに無いことなど、出典が支える範囲は台本の出典節に書いてあります。疑問があれば、原典の公的資料を直接確かめてください。</p>
     </div>
   </div>
 </section>
@@ -502,48 +608,69 @@ svg .sv{transform:none}
 【レーン】   F 金融（お金の道具を知る）
 【レベル】   L1 基礎
 【前提知識】 F1-08 リスクとリターンの関係
-【この先へ】 F1-11 コストの複利 ／ A2-01 ポンジ・スキームの数理
+【この先へ】 F1-11 コストの複利
 【到達目標】 単利と複利の違いを、増え方の形の違いとして説明できる。
              72の法則で「何年で2倍になるか」を暗算できる。
              指数関数という増え方が、時間に対して何をするのかを言える。
-【読了目安】 9分
+【読了目安】 11分（チャットの問いかけ1回を含む）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
-<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 増え方の形を決定づける2つの力学</h5>
-<p>資産運用において生み出された収益をどのように扱うかによって、将来のお金の増え方は根本から異なる軌跡を描きます。</p>
-<p>町のベーカリーの経営を例に取ります。店主が元手100万円で開業し、毎年5パーセントに相当する5万円の純利益を出している場面を想定します。毎年生まれた5万円の利益をすべて店主が引き出して生活費として使い切ってしまえば、翌年も元手は100万円のままであり、毎年決まって5万円ずつしか増えません。一方で、生まれた5万円を生活費に使わず、より高性能なオーブンや新しい看板の購入に再投資した場合、2年目の元手は105万円に拡大します。2年目は105万円に対して5パーセントの利益が生まれるため利益は5万2,500円となり、3年目は110万2,500円を元手に運用が加速していきます。前者のように当初の元本にのみ利息がつく仕組みを<b>単利</b>と呼び、後者のように得られた利息を新たな元本に組み入れて雪だるま式に利息を生み出す仕組みを<b>複利</b>と呼びます。</p>
-<p>この2つの力学の違いは、時間の経過とともに劇的な格差となって現れます。</p>
-<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">経過年数</th><th style="border:1px solid #D8DFE8;padding:3px 8px">単利（毎年5万円を消費）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">複利（毎年5%を全額再投資）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">差額の大きさ</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">1年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">0.0万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">5年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">125.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">127.6万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">2.6万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">10年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">150.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">162.9万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">12.9万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">20年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">200.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">265.3万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">65.3万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">30年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">250.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">432.2万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">182.2万円</td></tr></table>
-<p>表が明確に示す通り、最初の数年間における両者の差はわずかな端数にすぎません。</p>
-<p>しかし、20年、30年と時間が経過するにつれて格差は爆発的に拡大し、30年後には単利が2.5倍にとどまるのに対し、複利は4.3倍を超えて元本の4倍以上の富を築きます。同じ年利5パーセントという条件であっても、利益を外へ逃がすか、内部で回転させ続けるかという増え方の構造の違いだけで、将来の到達点に180万円以上の開きが生じます。</p></div>
-<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 足し算と掛け算を分ける指数関数</h5>
-<p>単利と複利の間に生じる圧倒的な格差の根源は、計算の形式が足し算であるか掛け算であるかという点にあります。</p>
-<p>単利の計算は、毎年一定の金額を足し続ける足し算の繰り返しです。毎年5万円ずつ足されるため、グラフを描くと一定の傾きを持った直線として真っ直ぐに伸びていきます。これに対して複利の計算は、毎年元本に1.05という同一の倍率を掛け続ける掛け算の繰り返しです。この掛け算が累積することによって生じる爆発的な増加傾向を数学の世界では<b>指数関数</b>と呼びます。足し算が一定のペースで歩みを進めるのに対し、掛け算の繰り返しは回数を重ねるごとに1回あたりの歩幅そのものが長くなり、急激な曲線を描いて垂直に近い上昇カーブを描きます。</p>
-<p>最初は緩やかでありながら、ある分岐点を越えた瞬間に急加速するという幾何学的な性質を理解することが重要です。1節のベーカリーで1年ごとの増え方を比べると、単利は何年たっても毎年5万円のままです。複利は1年目が5万円、10年目が約7.8万円、20年目が約12.6万円、30年目には約20.6万円と、同じ5パーセントのまま1年分の増え方が4倍になります（説明のための例）。</p></div>
-<div class="notes-src" id="notes-s3a"><h5 style="font-size:15px;margin:8px 0 6px">3. 暗算で倍化年数を掴む72の法則</h5>
-<p>複利の効果を日常生活の実務で即座に概算するための強力な計算ツールが存在します。</p>
-<p>それが<b>72の法則</b>と呼ばれる数学的な経験則です。72という定数を年利回りのパーセント数値で割ることによって、元本が約2倍に達するまでに必要な年数をおおむね正確に暗算できます。たとえば、年利3パーセントで運用できるとすれば、72を3で割った約24年で元本が2倍になります。年利6パーセントであれば72を6で割って約12年、年利12パーセントであれば約6年で元の資金が2倍に倍増する計算になります。厳密な対数計算を電卓で行わなくても、この法則を知っているだけで、提示された金利が持つ時間の破壊力を瞬時に直感できます。</p>
-<p>この法則の威力は、投資勧誘の真偽を検証する逆算の場面で遺憾なく発揮されます。</p>
-<p>怪しい投資話の勧誘において「この商品を契約すれば、手元の100万円はわずか3年で2倍の200万円になります」と囁かれた場面を想定します。ここで72の法則を逆向きに適用し、72を期間である3年で割ると年利24パーセントという極めて高い利回りが算出されます（正確に計算すると年約26パーセント。72の法則はあくまで目安です）。前章（F1-08）で学んだ通り、年利24パーセントという途方もない利回りには、相応の壊滅的なリスクプレミアムが宿っていなければ理屈が合いません。元本保証や安全性を謳いながら3年で2倍を約束する話は、その瞬間に論理的な破綻を証明されたことになり、甘言に惑わされることなく即座に警戒のシャッターを下ろすことが可能になります。</p></div>
-<div class="notes-src" id="notes-s3b"><h5 style="font-size:15px;margin:8px 0 6px">3. 暗算で倍化年数を掴む72の法則</h5>
-<p>複利の効果を日常生活の実務で即座に概算するための強力な計算ツールが存在します。</p>
-<p>それが<b>72の法則</b>と呼ばれる数学的な経験則です。72という定数を年利回りのパーセント数値で割ることによって、元本が約2倍に達するまでに必要な年数をおおむね正確に暗算できます。たとえば、年利3パーセントで運用できるとすれば、72を3で割った約24年で元本が2倍になります。年利6パーセントであれば72を6で割って約12年、年利12パーセントであれば約6年で元の資金が2倍に倍増する計算になります。厳密な対数計算を電卓で行わなくても、この法則を知っているだけで、提示された金利が持つ時間の破壊力を瞬時に直感できます。</p>
-<p>この法則の威力は、投資勧誘の真偽を検証する逆算の場面で遺憾なく発揮されます。</p>
-<p>怪しい投資話の勧誘において「この商品を契約すれば、手元の100万円はわずか3年で2倍の200万円になります」と囁かれた場面を想定します。ここで72の法則を逆向きに適用し、72を期間である3年で割ると年利24パーセントという極めて高い利回りが算出されます（正確に計算すると年約26パーセント。72の法則はあくまで目安です）。前章（F1-08）で学んだ通り、年利24パーセントという途方もない利回りには、相応の壊滅的なリスクプレミアムが宿っていなければ理屈が合いません。元本保証や安全性を謳いながら3年で2倍を約束する話は、その瞬間に論理的な破綻を証明されたことになり、甘言に惑わされることなく即座に警戒のシャッターを下ろすことが可能になります。</p></div>
-<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 利率と期間がもたらす結果の支配</h5>
-<p>複利の数理において最終的な成果を決定づける要素は、利回りの高さと運用の期間の2点に限られます。</p>
-<p>さらに驚くべきことに、長期になればなるほど、利率の高さよりも期間の長さが結果を圧倒するようになります。100万円を運用する際、年利3パーセントで30年間じっくり運用を続けると約242万円に達しますが、これはリスクを取って年利5パーセントで20年間運用した成果（約265万円）に匹敵します。利率を2パーセント引き上げるためには、前章で確認した通り激しい価格下落やデフォルトの危険を抱え込まなければなりません。しかし、運用期間を10年長く確保することに対しては、いかなる追加リスクの対価も要求されません。</p>
-<p>余計な危険を引き受けることなく成果を高められる唯一の資源が時間です。同じ100万円を年5パーセントで運用する場合、40年続ければ約704万円、始めるのが10年遅れて30年になると約432万円で、遅れた10年の分だけ約272万円の差がつきます（説明のための例）。</p>
-<p>ただし、時間という資源には、後からお金で買い戻すことが絶対にできないという厳しい制約が存在します。運用を先延ばしにすることは、指数関数が急上昇する後半のボーナス期間を自ら切り捨ててしまう行為に他なりません。人間がなぜ将来の大きな利益よりも目先の安心を優先して先延ばしを選んでしまうのかという心理の罠については、後の章（A2-05）で行動経済学の観点から掘り下げます。</p></div>
-<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 損失と負債に牙を剥く逆回転の脅威</h5>
-<p>複利は資産を増やすときだけに都合よく働いてくれる魔法の味方ではありません。</p>
-<p>掛け算が積み重なるという数理構造は、借金の利息や運用コストといった減る側に対しても、まったく同一の獰猛さをもって容赦なく作用します。クレジットカードのリボルビング払いや消費者金融の借入において、年利15パーセントといった高金利が設定されている場合を考えます。利息の支払いを先送りにして元本に組み込まれる状態を放置すると、今度は借金そのものが指数関数を描いて雪だるま式に膨張し、わずか数年で返済不能な債務超過へと転落します。たとえば50万円を年15パーセントで借り、返済も利息の支払いもせずに放置すると、3年後には約76万円、5年後には約101万円と、およそ2倍に膨らみます。72の法則で72を15で割ると約4.8年で、ほぼ同じ答えが出ます（説明のための例）。また、投資商品に課される毎年の運用手数料も、複利で引かれ続けることによって将来の資産を恐ろしい勢いで削り取っていきます。</p>
-<p>複利とは増やすための道具ではなく、掛け算の連鎖という中立的な自然法則にすぎません。</p>
-<p>向きを持たない物理法則であるからこそ、資産を増やす側で味方につければ強力な防壁となる一方で、負債や高コストの側で敵に回せば個人の家計を瞬時に破滅へと追い込みます。減る側に働く複利の破壊力とその防衛策については、続く次章（F1-11）で詳細に解剖します。</p></div>
-<div class="notes-src" id="notes-s6"><h5 style="font-size:15px;margin:8px 0 6px">6. ポンジ・スキームの破綻を暴く数理の基礎</h5>
-<p>本章で学んだ指数関数という増え方の性質は、金融詐欺の構造を看破する決定的な検証ツールへと直結します。</p>
-<p>運用実態のない架空の投資話において、後から参加した出資者の資金を既存の出資者への配当として横流しする<b>ポンジ・スキーム</b>を想定します。もし1人の出資者が配当を受け取る条件として、毎月2人の新規参加者を勧誘し続けるネズミ講のような構造が組み込まれていたとします。参加者の人数は、2人、4人、8人、16人と、まさに指数関数を描いて掛け算で激増していきます。2の累乗で増え続ける連鎖は、わずか30世代ほど進んだだけで10億人を超え、瞬く間に日本や地球全体の総人口を突破して物理的な限界に突き当たります。</p>
-<p>新しい参加者の流入が途絶えた瞬間に配当の原資が蒸発し、システム全体が爆発して無残に瓦解します。</p>
-<p>詐欺グループがどれほど巧みな弁舌で将来の安全を誓ったとしても、数学が示す幾何級数的な膨張の限界を覆すことはできません。この破綻の必然性を厳密な数式と人口データを用いて計算する手法は、真贋レーンの重要講義（A2-01）で実践します。道具としての指数関数の性質を腹に落としておくことが、あらゆる虚飾を見破るための普遍的な武器となります。</p></div>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 利益を使うか、元手に足すか</h5>
+<p>今日出てくる金額と利率は、すべて説明のための例です。</p>
+<p>町のパン屋で考えます。店主は元手100万円で店を始め、毎年その5％にあたる5万円の利益を出しているとします。ここでは、この利益を、お金を預けたときの利息と同じものとして扱います。</p>
+<p>1つ目のやり方では、店主は毎年の5万円を店から出して、別の財布にしまっておきます。店の元手は100万円のままなので、次の年の利益も5万円です。このように、最初の元手にだけ利息がつく増え方を<b>単利</b>と呼びます。</p>
+<p>2つ目のやり方では、5万円を店から出さずに、新しいオーブンなどに使います。2年目の元手は105万円になり、利益は5万2,500円です。3年目の元手は110万2,500円になります。ついた利息を元手に足し、その分にも利息がつく増え方を<b>複利</b>と呼びます。</p>
+<p>2つのやり方を、手元にあるお金の合計で比べます。単利の側は、店の元手100万円と、別の財布にためた利益を足した金額です。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">経過年数</th><th style="border:1px solid #D8DFE8;padding:3px 8px">単利（元手100万円＋ためた利益の合計）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">複利（利益を毎年元手に足した場合）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">差</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">1年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">0.0万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">5年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">125.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">127.6万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">2.6万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">10年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">150.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">162.9万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">12.9万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">20年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">200.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">265.3万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">65.3万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">30年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">250.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">432.2万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">182.2万円</td></tr></table>
+<p>10年後の差は約13万円です。30年後には、差は約182万円まで開きます。30年で、単利は元手の2.5倍、複利は約4.3倍になります。利率はどちらも同じ5％で、違うのは利益を元手に足したかどうかだけです。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 掛け算を繰り返すと何が起きるか</h5>
+<p>単利は、毎年同じ5万円を足していく足し算です。グラフにすると、まっすぐな直線になります。</p>
+<p>複利は、毎年1.05を掛けていく掛け算です。100万円に1.05を30回掛けると、約432万円になります。これが1節の表の、30年後の数字です。このように同じ倍率を何回も掛けていく増え方を、数学では<b>指数関数</b>と呼びます。</p>
+<p>ここでは、利益は1年に1回つくものとします。税金や手数料は引いていません。物価の変化も考えに入れていないので、物価が上がれば、同じ金額で買えるものは減ります（F0-03）。</p>
+<p>複利で増える割合は、毎年5％のまま変わりません。変わるのは、5％を掛ける元の金額です。元の金額が毎年少しずつ大きくなるので、1年に増える金額も少しずつ大きくなります。</p>
+<p>1年に増える金額で比べてみます。単利は何年たっても5万円です。複利は1年目が5万円、10年目が約7.8万円、20年目が約12.6万円、30年目が約20.6万円です。30年目の1年分は、1年目の約4倍です。増え方はどこかで急に変わるのではなく、毎年少しずつ大きくなります。グラフにすると、右上がりに少しずつ反っていく曲線です。</p>
+<p>表の数字は、自分でも確かめられます。検索窓に「1.05^30」と入れると、4.32…と出ます。これに100万円を掛ければ、30年後の金額です。</p></div>
+<div class="notes-src" id="notes-s3a"><h5 style="font-size:15px;margin:8px 0 6px">3. 72の法則で2倍になる年数を出す</h5>
+<p>お金が何年で2倍になるかは、暗算でおおよそ出せます。72を利率の数字で割るだけです。これを<b>72の法則</b>と呼びます。</p>
+<p>年3％なら、72÷3で24年です。年12％なら、72÷12で6年です。</p>
+<p>*(講師：チャットで問う。「年6％なら、何年で2倍になりますか？」答えは72÷6で12年)*</p>
+<p>72の法則は、あくまでおおよその目安です。年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれます。年3％の24年は、正確に計算すると約23.4年です。年12％の6年は、正確には約6.1年です。</p>
+<p>72の法則は、逆向きにも使えます。「手元の100万円が、3年で200万円になります」と勧められたとします。72を3で割ると24なので、年およそ24％の利回りです。正確に計算すると、年約26％になります。</p>
+<p>F1-08の表では、上場株式でも年5〜8％程度が目安でした。年26％は、目安の高いほうの8％と比べても3倍を超えます。それだけ大きなリスクを引き受けていなければ、この利回りは出ません。話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかどうかは、卒業課題のF1-EXで考えます。</p></div>
+<div class="notes-src" id="notes-s3b"><h5 style="font-size:15px;margin:8px 0 6px">3. 72の法則で2倍になる年数を出す</h5>
+<p>お金が何年で2倍になるかは、暗算でおおよそ出せます。72を利率の数字で割るだけです。これを<b>72の法則</b>と呼びます。</p>
+<p>年3％なら、72÷3で24年です。年12％なら、72÷12で6年です。</p>
+<p>*(講師：チャットで問う。「年6％なら、何年で2倍になりますか？」答えは72÷6で12年)*</p>
+<p>72の法則は、あくまでおおよその目安です。年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれます。年3％の24年は、正確に計算すると約23.4年です。年12％の6年は、正確には約6.1年です。</p>
+<p>72の法則は、逆向きにも使えます。「手元の100万円が、3年で200万円になります」と勧められたとします。72を3で割ると24なので、年およそ24％の利回りです。正確に計算すると、年約26％になります。</p>
+<p>F1-08の表では、上場株式でも年5〜8％程度が目安でした。年26％は、目安の高いほうの8％と比べても3倍を超えます。それだけ大きなリスクを引き受けていなければ、この利回りは出ません。話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかどうかは、卒業課題のF1-EXで考えます。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 期間と利率はどちらも効く</h5>
+<p>まず、同じ年5％で、期間だけを変えてみます。100万円を30年置くと約432万円、40年置くと約704万円です。終わりの年が同じなら、始めるのが10年遅いと期間は30年になります。</p>
+<p>その差は約272万円です。最初の30年で増えた額は約332万円でした。最後の10年だけで、それに近い額が増えています。1年に増える金額が、後の年ほど大きいからです。</p>
+<p>次に、利率も変えてみます。年3％で30年なら約243万円です。年5％で20年なら約265万円です。期間が10年長くても、2％の利率の差は埋まりません。</p>
+<p>期間が長いほど、同じ利率の差も大きく開きます。30年なら、年2％と年3％の1％の差で、到達額は約1.34倍違います。100万円なら、約181万円と約243万円です。</p>
+<p>利率と期間では、伸ばし方が違います。利率を上げるには、F1-08で見たとおり、値動きの大きいものを選ぶなど、より大きなリスクを引き受けることになります。期間を延ばすのは、それとは別の手段です。その代わり、そのお金を長いあいだ使わずに置いておく必要があります。</p>
+<p>いつ始めて、どれだけの期間置くかは、それぞれの事情で決まります。人が始める時期をどう決めがちかという心の動きは、A2-05で扱います。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 借金にも同じ掛け算が働く</h5>
+<p>複利はただの掛け算なので、お金が増える側にも、借金が増える側にも同じように働きます。</p>
+<p>極端な例で見てみます。50万円を年15％で借りて、返済も利息の支払いもせずに放っておいたとします。3年後には約76万円、5年後には約101万円で、およそ2倍です。72の法則でも、72÷15で約4.8年と、ほぼ同じ答えになります。</p>
+<p>ふだんの借金では、毎月少しずつ返していく形のほうが多いです。クレジットカードの<b>リボ払い</b>（リボルビング払い）は、使った金額が増えても、毎月の返済額があまり変わらない払い方です。多くの場合、その返済額の中から利息が先に引かれます。利息の分が大きいうちは元本がなかなか減らず、返し終わるまでが長くなります。そのぶん、払う利息の合計も増えていきます。</p>
+<p>投資にかかる手数料にも同じ掛け算が働くことは、次のF1-11で計算します。</p></div>
+<div class="notes-src" id="notes-s6a"><h5 style="font-size:15px;margin:8px 0 6px">6. 毎年同じ率で増えるとは限らない</h5>
+<p>ここまでの計算は、すべて「毎年きっちり同じ率で増える」という前提つきでした。値動きのあるものでは、この前提が崩れます。</p>
+<p>F1-09で見た資産Aを思い出してください。好況の年は+20％、不況の年は−10％で、平均すると年5％でした。平均が5％なら、30年後も約432万円になりそうに思えます。</p>
+<p>計算してみます。100万円は、好況の年に120万円になります。不況の年には、その10％の12万円が減って108万円です。毎年5％なら、2年で110万2,500円なので、2万2,500円の差がつきます。</p>
+<p>この2年を15回くり返すと、30年後は約317万円です。毎年5％の約432万円より、約115万円少なくなります。</p>
+<p>+20％と−10％を足して2で割れば、たしかに5％です。ただ、この平均は足し算で増える場合の平均で、掛け算で増えるお金にはそのまま当てはまりません。実際の増え方は1.2×0.9で、2年で1.08倍です。1年あたりにすると、約3.9％になります。</p>
+<p>値動きの幅が大きいほど、この差も大きくなります。+30％と−20％を交互にくり返すと、平均は同じ5％でも、2年で1.04倍にしかなりません。<b>平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなります</b>。1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p>
+<p>複利は同じ倍率を掛け続ける増え方で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。期間が長いほど、利率の小さな差も、値動きによる差も大きく開きます。</p></div>
+<div class="notes-src" id="notes-s6b"><h5 style="font-size:15px;margin:8px 0 6px">6. 毎年同じ率で増えるとは限らない</h5>
+<p>ここまでの計算は、すべて「毎年きっちり同じ率で増える」という前提つきでした。値動きのあるものでは、この前提が崩れます。</p>
+<p>F1-09で見た資産Aを思い出してください。好況の年は+20％、不況の年は−10％で、平均すると年5％でした。平均が5％なら、30年後も約432万円になりそうに思えます。</p>
+<p>計算してみます。100万円は、好況の年に120万円になります。不況の年には、その10％の12万円が減って108万円です。毎年5％なら、2年で110万2,500円なので、2万2,500円の差がつきます。</p>
+<p>この2年を15回くり返すと、30年後は約317万円です。毎年5％の約432万円より、約115万円少なくなります。</p>
+<p>+20％と−10％を足して2で割れば、たしかに5％です。ただ、この平均は足し算で増える場合の平均で、掛け算で増えるお金にはそのまま当てはまりません。実際の増え方は1.2×0.9で、2年で1.08倍です。1年あたりにすると、約3.9％になります。</p>
+<p>値動きの幅が大きいほど、この差も大きくなります。+30％と−20％を交互にくり返すと、平均は同じ5％でも、2年で1.04倍にしかなりません。<b>平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなります</b>。1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p>
+<p>複利は同じ倍率を掛け続ける増え方で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。期間が長いほど、利率の小さな差も、値動きによる差も大きく開きます。</p></div>
 <div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
 <p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
 <p>引き受けたのは、次の一点だけです。</p>
