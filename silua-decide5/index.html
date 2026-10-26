@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Silua 全体会資料「決めること5つ」</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 10px 50px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(26px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-26px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:104px;background:var(--navy);color:#fff;padding:0 56px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--brand)}
+.hd .chap{font-size:15px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:4px}
+.hd h2{font-size:31px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:14px;bottom:10px;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:56px;right:56px;top:128px;bottom:58px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:44px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 56px;font-size:12px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1px solid var(--cardline);border-radius:14px;padding:18px 20px}
+.theme-trifuse .card{box-shadow:0 2px 10px rgba(15,27,45,.05)}
+.lead{font-size:17px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:19px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fade{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--rule);border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:12px;color:var(--muted)}
+.quote{border-left:5px solid var(--safe);background:var(--card);border-radius:0 12px 12px 0;padding:14px 20px;font-size:18px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:1.5px solid var(--cardline);border-radius:12px;padding:12px 10px;text-align:center;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:132px}
+.fs .n{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:4px}
+.fs .ico{width:34px;height:34px;color:var(--muted);margin-bottom:6px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 8px 24px -12px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:28px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:20px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+
+/* ===== S00 cover ===== */
+.cover{position:absolute;inset:0}
+.theme-trifuse .cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:14px;background:var(--brand)}
+.cover .kicker{font-size:16px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:50px;font-weight:900;line-height:1.22;color:var(--ink);letter-spacing:.01em}
+.cover h1 .hl2{color:var(--safe)}
+.cover .sub{font-size:19px;color:var(--ink2);line-height:1.7;font-weight:500}
+.cover-ill{position:absolute;right:56px;top:120px;width:440px;height:460px}
+.noimg .credit{display:none}
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.6s ease .4s}
+.slide.active .drawline{stroke-dashoffset:0}
+.slide.active .drawline.sd{stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.slide.active.s1 .drawline.sd{stroke-dashoffset:0}
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:4px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:92px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:16px 16px 18px}
+.mobile .hd h2{font-size:21px}
+.mobile .hd .chap{font-size:12px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:16px 14px 8px;display:flex!important;flex-direction:column;gap:14px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:12px 14px;font-size:11px;gap:8px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:14px}
+.mobile .lead,.mobile p{font-size:15px!important}
+.mobile .quote{font-size:16px!important}
+.mobile .t3{font-size:17px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:2px}
+.mobile .fs{min-height:0;flex-direction:row;gap:10px;text-align:left;justify-content:flex-start;padding:10px 12px;font-size:15px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:30px;height:30px}
+.mobile .fs .n{margin:0;min-width:48px}
+.mobile .fa{width:auto;height:16px;transform:rotate(90deg);font-size:14px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:22px 18px 10px;gap:12px!important}
+.mobile .cover h1{font-size:30px!important}
+.mobile .cover .sub{font-size:15px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 36px);height:auto;margin:6px 18px 0}
+.mobile .cover .brandbar{position:relative;margin-top:18px}
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+/* ===== Silua 販売動線（live-slides） ===== */
+.cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.theme-photo .cover-text{position:absolute;left:72px;top:150px;width:640px;right:auto;display:flex;flex-direction:column;gap:22px}
+.theme-photo .cover h1{font-size:48px}
+.theme-photo .cover .sub{font-size:18px}
+.cover .who{font-size:14px;color:var(--ink2);line-height:1.8}
+.cover .loopline{stroke-dasharray:10 8;animation:dash 1.4s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-36}}
+.label{font-size:13px;font-weight:700;color:var(--ink2);letter-spacing:.06em}
+.small{font-size:13px;color:var(--ink2);line-height:1.6}
+.note{font-size:13px;color:var(--ink2)}
+/* goal */
+.shieldcard{display:flex;align-items:center;gap:18px;padding:18px 24px;border-radius:14px;border:2px solid var(--rule);background:#fff;opacity:.3;transition:all .5s}
+.shieldcard.on{opacity:1;border-color:var(--ok);background:#E7F6F1}
+.shieldcard .ico{width:54px;height:54px;color:var(--okT)}
+.shieldcard b{font-size:22px}
+/* summary */
+.pt{display:flex;flex-direction:column;gap:12px;padding:22px 22px}
+.pt .num{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--safe)}
+.pt .ico{width:46px;height:46px;color:var(--safe)}
+.pt h3{font-size:20px;font-weight:900;line-height:1.45}
+.pt p{font-size:14.5px;color:var(--ink2);line-height:1.75}
+.chipflow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chipflow span{font-size:13px;font-weight:700;padding:4px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.chipflow i{font-style:normal;color:var(--muted);font-size:12px}
+/* funnel */
+.flow.f7 .fs{min-height:150px;font-size:14px;padding:10px 6px}
+.flow.f7 .fs .st{font-size:16px;font-weight:900;margin-bottom:4px}
+.flow.f7 .fs .tl{font-size:12.5px;font-weight:500;color:var(--ink2);line-height:1.45}
+.flow.f7 .fa{width:16px;font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;margin-top:10px}
+.kpi{font-size:12.5px;line-height:1.5;color:var(--ink2);background:var(--paper);border-radius:10px;padding:8px 10px;border-top:3px solid var(--rule);opacity:.3;transition:all .45s}
+.kpi.on{opacity:1;border-top-color:var(--c,var(--safe));color:var(--ink)}
+.kpi b{display:block;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.kpis.blue .kpi.on{--c:var(--b1)}
+.fs.after{--c:#40B69A}
+/* tools */
+.tool{display:flex;flex-direction:column;gap:8px;padding:16px 18px}
+.tool .t3{margin-bottom:0}
+.tool .ico{width:30px;height:30px;color:var(--safe)}
+.tool .what{font-size:14px;line-height:1.65}
+.tool .pt2{font-size:13px;color:var(--ink2);line-height:1.6;border-top:1px dashed var(--rule);padding-top:8px}
+/* line accounts */
+.acct .node{transition:opacity .5s}
+.acct .s2only,.acct .s3only{opacity:0;transition:opacity .5s}
+.slide.s1 .acct .s1only{opacity:1}
+.slide.s2 .acct .s2only{opacity:1}
+.slide.s3 .acct .s3only{opacity:1}
+.acct .s1only{opacity:.15;transition:opacity .5s}
+.acct .cross{transform-origin:330px 120px;transform:scale(0);transition:transform .45s cubic-bezier(.3,1.6,.6,1) .2s}
+.slide.s2 .acct .cross{transform:scale(1)}
+.slide.s3 .acct .s2only{opacity:.25}
+.ftab{display:grid;grid-template-columns:130px 1fr;font-size:13px;line-height:1.5}
+.ftab div{padding:5px 0;border-bottom:1px solid var(--rule)}
+.ftab div:nth-child(odd){font-weight:900;color:var(--safe)}
+.vs2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vs2 .card{padding:12px 14px}
+.vs2 b{font-size:16px}
+.vs2 p{font-size:13px;color:var(--ink2);line-height:1.6;margin-top:4px}
+/* ban */
+.bans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ban{display:flex;flex-direction:column;gap:6px;padding:14px 16px;transition:all .4s;position:relative}
+.ban h4{font-size:16px;font-weight:900;line-height:1.4;padding-right:30px}
+.ban p{font-size:13px;color:var(--ink2);line-height:1.6}
+.ban .box{position:absolute;right:12px;top:12px;width:26px;height:26px;border-radius:7px;border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;color:transparent;font-size:15px;transition:all .3s}
+.ban.on{border-color:var(--ok);background:#F2FBF8}
+.ban.on .box{border-color:var(--ok);background:var(--ok);color:#fff}
+.ban .why{font-size:12.5px;color:var(--okT);font-weight:700}
+.bmeter{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:14px 16px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.bmeter .mt{height:12px;border-radius:6px;background:#fff;overflow:hidden}
+.bmeter .mt i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A);transition:width .4s}
+.slide.s1 .bmeter .mt i{width:14%}.slide.s2 .bmeter .mt i{width:28%}.slide.s3 .bmeter .mt i{width:43%}.slide.s4 .bmeter .mt i{width:57%}.slide.s5 .bmeter .mt i{width:71%}.slide.s6 .bmeter .mt i{width:86%}.slide.s7 .bmeter .mt i{width:100%}
+.bmeter b{font-size:18px}
+.bmeter .big{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--safe)}
+/* legal */
+.laws{display:flex;flex-direction:column;gap:10px}
+.law{display:grid;grid-template-columns:40px 230px 1fr 270px;gap:16px;align-items:center;padding:12px 18px}
+.law .ico{width:34px;height:34px;color:var(--safe)}
+.law h4{font-size:16px;font-weight:900;line-height:1.4}
+.law p{font-size:13.5px;line-height:1.6}
+.law .why{color:var(--ink2);font-size:13px}
+.law.top{border:2px solid var(--warn);background:#FFF5EC}
+.law.top .ico{color:var(--warnT)}
+/* cases */
+.case{display:flex;flex-direction:column;gap:12px;padding:18px 20px}
+.case h3{font-size:20px;font-weight:900;display:flex;align-items:center;gap:10px}
+.case .take{font-size:14px;line-height:1.7;background:#EAF4FF;border-radius:10px;padding:10px 14px}
+.case .take b{color:var(--safe)}
+.diff{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.diff .card{font-size:14px;line-height:1.65;padding:14px 16px;border-top:4px solid var(--warn)}
+.diff .card b{color:var(--warnT)}
+/* timeline */
+.gantt{position:relative}
+.grow{display:grid;grid-template-columns:240px 1fr;align-items:center;height:52px}
+.grow .lb{font-size:15px;font-weight:900}
+.grow .lb small{display:block;font-size:12px;font-weight:500;color:var(--ink2)}
+.gtrack{position:relative;height:36px;background:repeating-linear-gradient(90deg,#F2F5F9 0,#F2F5F9 calc(100%/7 - 2px),#fff calc(100%/7 - 2px),#fff calc(100%/7))}
+.gbar{position:absolute;top:4px;height:28px;border-radius:7px;color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;padding:0 10px;white-space:nowrap;transform:scaleX(0);transform-origin:left;transition:transform .55s ease}
+.gbar.on{transform:none}
+.ghead{display:grid;grid-template-columns:240px 1fr;margin-bottom:4px}
+.ghead .wk{display:grid;grid-template-columns:repeat(7,1fr)}
+.ghead .wk span{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-left:6px}
+.mstones{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.ms{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.ms .d{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--safe);white-space:nowrap}
+.ms p{font-size:14px;font-weight:700;line-height:1.5}
+.ms.go{background:#0F1B2D;color:#fff;border-color:#0F1B2D}
+.ms.go .d{color:var(--sky)}
+.ms.msdl{border:2px solid var(--warn);background:#FFF5EC}
+.ms.msdl .d{color:var(--warnT)}
+/* phase lists */
+.ph{display:flex;flex-direction:column;gap:6px;padding:16px 18px}
+.ph .phh{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;padding-bottom:8px;border-bottom:3px solid var(--c,var(--safe))}
+.ph .phh b{font-size:19px;font-weight:900}
+.ph .phh span{font-family:var(--mono);font-size:13px;color:var(--ink2)}
+.tk{display:grid;grid-template-columns:38px 1fr;gap:8px;padding:5px 0;border-bottom:1px solid #EEF2F7;font-size:14px;line-height:1.55}
+.tk .no{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:2px}
+.tk .p{display:block;font-size:12.5px;color:var(--ink2)}
+.tk.key{background:#FFF5EC;border-radius:6px;padding:5px 6px;margin:0 -6px}
+.tk.key b{color:var(--warnT)}
+/* december calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .dw{font-size:12.5px;font-weight:700;color:var(--ink2);text-align:center}
+.cal .dw.sat{color:#2B5FA8}.cal .dw.sun{color:#B5500F}
+.day{min-height:112px;background:#fff;border:1px solid var(--rule);border-radius:9px;padding:6px 8px;display:flex;flex-direction:column;gap:4px;transition:all .4s}
+.day .dt{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted)}
+.day .ev{font-size:12px;line-height:1.45;display:flex;gap:4px;align-items:flex-start;opacity:.25;transition:opacity .4s}
+.day .ev .ico{width:14px;height:14px;flex:none;margin-top:2px;stroke-width:4}
+.day .ev.ig .ico{color:#2B5FA8}.day .ev.ln .ico{color:#2E9A7F}
+.day.on{border-color:var(--safe);box-shadow:0 6px 18px -10px var(--safe)}
+.day.on .ev{opacity:1}
+.day.go.on{border:2px solid var(--warn);background:#FFF5EC}
+.day.go .dt{color:var(--warnT)}
+.wkbar{grid-column:1 / -1;display:flex;gap:12px;align-items:center;font-size:13px;padding:8px 12px;border-radius:9px;background:var(--paper);border:1px dashed var(--rule);opacity:.3;transition:all .4s}
+.wkbar.on{opacity:1;border-style:solid;border-color:var(--safe)}
+.wkbar .mono{font-weight:700;color:var(--safe)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--ink2);align-items:center}
+.legend span{display:flex;gap:5px;align-items:center}
+.legend .ico{width:14px;height:14px;stroke-width:4}
+/* decide */
+.dls{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:16px}
+.dl{display:flex;flex-direction:column;gap:10px;padding:18px 18px;opacity:.3;transform:translateY(8px);transition:all .5s}
+.dl.on{opacity:1;transform:none}
+.dl .when{display:flex;align-items:baseline;justify-content:space-between}
+.dl .when b{font-family:var(--mono);font-size:24px;color:var(--safe)}
+.dl .when span{font-size:13px;font-weight:700;color:var(--ink2)}
+.dl .it{display:flex;gap:10px;font-size:15px;font-weight:700;line-height:1.5;padding:8px 0;border-top:1px solid var(--rule)}
+.dl .it .n{font-family:var(--mono);color:var(--muted)}
+.dl.first{border:2px solid var(--warn);background:#FFF5EC}
+.dl.first .when b{color:var(--warnT)}
+.dl.first .it{font-size:17px}
+/* deliverables */
+.lad{display:flex;flex-direction:column;gap:7px}
+.ld{display:grid;grid-template-columns:42px 34px 200px 250px 1fr;gap:14px;align-items:center;padding:9px 16px}
+.ld .n{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--safe)}
+.ld .ico{width:28px;height:28px;color:var(--safe)}
+.ld h4{font-size:15px;font-weight:900}
+.ld .mk{font-size:14px;font-weight:700;color:var(--safe)}
+.ld p{font-size:13px;color:var(--ink2);line-height:1.55}
+/* appendix */
+.hd.memo{background:linear-gradient(100deg,#2B4A3F,#2E9A7F)!important}
+.ap{display:flex;flex-direction:column;gap:6px;padding:14px 18px}
+.ap h4{font-size:16px;font-weight:900;display:flex;gap:8px;align-items:center}
+.ap h4 .n{font-family:var(--mono);color:var(--okT)}
+.ap p{font-size:13.5px;color:var(--ink2);line-height:1.65}
+.ap .gs{font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:20px;background:#FFF1E6;color:var(--warnT)}
+.ap.match{background:#E7F6F1;border-color:#A9DCCB}
+/* notes */
+#notes table{border-collapse:collapse;margin:6px 0 10px;font-size:14px;line-height:1.6}
+#notes th,#notes td{border:1px solid var(--rule);padding:4px 8px;vertical-align:top;text-align:left}
+#notes th{background:#EAF4FF}
+#notes pre{font-family:var(--font);font-size:14px;line-height:1.7;background:var(--paper);padding:8px 12px;border-radius:8px;white-space:pre-wrap}
+#notes blockquote{border-left:4px solid var(--sky);padding-left:10px;margin:6px 0}
+#notes h5{font-size:15px;margin:10px 0 4px}
+/* mobile for this deck */
+.mobile .flow.f7 .fs .tl{display:inline}
+.mobile .kpis,.mobile .bans,.mobile .diff,.mobile .dls,.mobile .mstones,.mobile .vs2{grid-template-columns:1fr}
+.mobile .kpis{display:none}
+.mobile .law{grid-template-columns:30px 1fr;gap:8px}
+.mobile .law .why{grid-column:2}
+.mobile .law p{grid-column:2}
+.mobile .ld{grid-template-columns:30px 1fr;gap:6px 10px}
+.mobile .ld .ico{display:none}
+.mobile .ld h4,.mobile .ld .mk,.mobile .ld p{grid-column:2}
+.mobile .gantt{zoom:.36}
+.mobile .ghead,.mobile .grow{grid-template-columns:240px 1fr}
+.mobile .cal{grid-template-columns:1fr}
+.mobile .cal .dw,.mobile .day.empty{display:none}
+.mobile .day{min-height:0}
+.mobile .day .ev{font-size:13px!important}
+.mobile .acct{zoom:.55}
+.mobile .ftab{grid-template-columns:110px 1fr}
+.mobile .shieldcard b{font-size:17px}
+.mobile .pt h3{font-size:17px}
+.mobile .theme-photo .cover-text,.mobile.theme-photo .cover-text{width:auto}
+
+/* ===== size tuning after screenshot review ===== */
+.slide[data-n="goal"] .fs{font-size:21px;min-height:170px}
+.slide[data-n="goal"] .fs .ico{width:44px;height:44px}
+.shieldcard b{font-size:24px}.shieldcard .small{font-size:15px}
+.pt{gap:16px;padding:26px 24px}.pt h3{font-size:24px}.pt p{font-size:17px;line-height:1.85}
+.pt .chipflow span{font-size:15px}
+.tool{gap:12px;padding:22px 22px}.tool .t3{font-size:20px}.tool .what{font-size:16px;line-height:1.75}.tool .pt2{font-size:14.5px;line-height:1.7}
+.case{gap:16px;padding:24px 24px}.case h3{font-size:22px}.case .chipflow span{font-size:15px}.case .take{font-size:16px;line-height:1.8}
+.diff .card{font-size:16px;line-height:1.75;padding:18px 20px}
+.tk{font-size:15px;padding:7px 0}.tk .p{font-size:13.5px}
+.slide[data-n="ph45"] .tk{font-size:16.5px;padding:12px 0}.slide[data-n="ph45"] .tk .p{font-size:14.5px}
+.day{min-height:150px;padding:8px 10px}.day .ev{font-size:13.5px}.day .dt{font-size:14px}.wkbar{font-size:15px;padding:12px 14px}
+.slide[data-n="decide"] .quote{font-size:17px}
+.dl{padding:24px 24px;gap:14px}.dl .it{font-size:18px;padding:12px 0}.dl.first .it{font-size:20px}.dl .when b{font-size:28px}
+.ld{padding:14px 18px}.ld h4{font-size:17px}.ld .mk{font-size:15.5px}.ld p{font-size:14.5px}.lad{gap:10px}
+.ap{gap:10px;padding:22px 22px}.ap h4{font-size:19px}.ap p{font-size:16px;line-height:1.8}
+.law p{font-size:14.5px}.law .why{font-size:13.5px}.law h4{font-size:17px}
+.mobile .slide[data-n="goal"] .fs{font-size:16px;min-height:0}
+.mobile .pt h3,.mobile .case h3,.mobile .ap h4{font-size:18px}
+.mobile .dl .it,.mobile .dl.first .it{font-size:16px}
+.mobile .day{min-height:0}
+.mobile .flow.f7 .fs{min-height:0}
+.mobile .gantt{zoom:.42}
+/* ===== shared parts for Silua strategy decks ===== */
+.rv{opacity:.18;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease}
+.rv.on{opacity:1;transform:none}
+.tb{width:100%;border-collapse:separate;border-spacing:0;font-size:16px;line-height:1.55}
+.tb th{background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:10px 14px;font-size:14.5px}
+.tb th:first-child{border-radius:10px 0 0 0}.tb th:last-child{border-radius:0 10px 0 0}
+.tb td{padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top;background:#fff}
+.tb td:first-child{font-weight:900;white-space:nowrap}
+.tb tr.rv td{transition:opacity .45s ease}
+.tb .old{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(138,154,176,.6)}
+.tb .arrow{color:var(--safe);font-weight:900;padding:0 6px}
+.ask{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:20px;background:#FFF1E6;color:var(--warnT);white-space:nowrap}
+.prop{display:inline-block;font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:20px;background:#EAF4FF;color:var(--safe);white-space:nowrap}
+.callout{display:flex;gap:14px;align-items:flex-start;border-radius:12px;padding:14px 18px;font-size:15.5px;line-height:1.7;background:#FFF5EC;border:1.5px solid #F6C9A8}
+.callout .ico{width:26px;height:26px;color:var(--warnT);margin-top:2px}
+.callout.blue{background:#EAF4FF;border-color:#BFD9F5}.callout.blue .ico{color:var(--safe)}
+.bigpt{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:center;padding:22px 26px;border-radius:16px;background:#fff;border:1.5px solid var(--rule)}
+.bigpt .no{font-family:var(--mono);font-size:40px;font-weight:700;color:var(--safe)}
+.bigpt h3{font-size:24px;font-weight:900;line-height:1.45}
+.bigpt p{font-size:16px;color:var(--ink2);line-height:1.7;margin-top:4px}
+.bigpt.on{border-color:var(--safe);box-shadow:0 10px 28px -16px var(--safe)}
+.bigpt.key{border:2px solid var(--warn);background:#FFF8F1}.bigpt.key .no{color:var(--warnT)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.mx{position:relative;width:520px;height:440px;margin-top:26px}
+.mx .q{position:absolute;width:250px;height:205px;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;color:var(--ink2)}
+.mx .q1{left:262px;top:0;background:#FFF1E6;color:var(--warnT)}.mx .q2{left:0;top:0;background:#F2F5F9}
+.mx .q3{left:262px;top:215px;background:#EAF4FF;color:var(--safe)}.mx .q4{left:0;top:215px;background:#F7F9FC}
+.mx .ax{position:absolute;font-size:13px;font-weight:700;color:var(--ink2)}
+.mx .dot{position:absolute;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900;color:var(--ink);opacity:0;transform:scale(.6);transition:all .45s cubic-bezier(.3,1.5,.6,1)}
+.mx .dot.on{opacity:1;transform:none}
+.mx .dot i{font-style:normal;width:34px;height:34px;border-radius:50%;background:var(--safe);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:16px;flex:none}
+.mx .dot.hot i{background:var(--warn)}
+.olist{display:flex;flex-direction:column;gap:9px}
+.oi{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;padding:11px 14px;border-radius:12px;background:#fff;border:1.5px solid var(--rule);opacity:.25;transition:all .45s}
+.oi.on{opacity:1;border-color:var(--safe)}
+.oi .n{width:30px;height:30px;border-radius:50%;background:var(--safe);color:#fff;font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center}
+.oi.hot .n{background:var(--warn)}
+.oi b{font-size:16px}.oi p{font-size:13.5px;color:var(--ink2);line-height:1.6;margin-top:2px}
+.tl{position:relative;padding-left:26px}
+.tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:3px;background:var(--rule);border-radius:2px}
+.tli{position:relative;display:grid;grid-template-columns:72px 170px 1fr;gap:12px;padding:6px 0;font-size:14.5px;line-height:1.55;opacity:.25;transition:opacity .4s}
+.tli.on{opacity:1}
+.tli::before{content:"";position:absolute;left:-23px;top:11px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--rule);transition:all .4s}
+.tli.on::before{border-color:var(--safe);background:var(--safe)}
+.tli .d{font-family:var(--mono);font-weight:700;color:var(--safe)}
+.tli .m{font-weight:900}
+.chk{display:flex;flex-direction:column;gap:10px}
+.ck{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;padding:12px 16px;border-radius:12px;background:#fff;border:1.5px solid var(--rule);font-size:16px;line-height:1.55}
+.ck .bx{width:24px;height:24px;border-radius:6px;border:2px solid var(--rule)}
+.ck .who{font-size:13px;font-weight:700;color:var(--ink2)}
+.opt{display:flex;flex-direction:column;gap:10px;padding:20px 22px;opacity:.3;transform:translateY(8px);transition:all .45s}
+.opt.on{opacity:1;transform:none}
+.opt h3{font-size:21px;font-weight:900;display:flex;align-items:center;gap:10px}
+.opt .lb{font-family:var(--mono);font-size:26px;color:var(--safe)}
+.opt .pro,.opt .con{font-size:15px;line-height:1.65;padding:8px 12px;border-radius:10px}
+.opt .pro{background:#E7F6F1}.opt .con{background:#FFF5EC}
+.opt.best{border:2px solid var(--safe);box-shadow:0 12px 30px -18px var(--safe)}
+.opt .badge{margin-left:auto;font-size:12.5px;padding:3px 10px;border-radius:20px;background:var(--safe);color:#fff;font-weight:700}
+.mobile .tb{font-size:14px}.mobile .tb td:first-child{white-space:normal}
+.mobile .tb th,.mobile .tb td{padding:8px 9px}
+.mobile .bigpt{grid-template-columns:44px 1fr;padding:14px}.mobile .bigpt .no{font-size:28px}.mobile .bigpt h3{font-size:18px}
+.mobile .mx{zoom:.66;margin:0 auto}
+.mobile .tli{grid-template-columns:60px 1fr;font-size:14px}.mobile .tli .x{grid-column:2}
+.mobile .ck{grid-template-columns:24px 1fr;font-size:15px}.mobile .ck .who{grid-column:2}
+.mobile .opt h3{font-size:18px}
+.mobile .rv,.mobile .oi,.mobile .opt,.mobile .tli{opacity:1;transform:none}
+.mobile .mx .dot{opacity:1;transform:none}
+.slide .tb{font-size:17px}.slide .tb td{padding:13px 14px}.slide .tb th{font-size:15px;padding:11px 14px}
+.mobile .slide .tb{font-size:14px}.mobile .slide .tb td{padding:8px 9px}
+/* mobile: table rows become cards */
+.mobile .slide .tb,.mobile .slide .tb tbody,.mobile .slide .tb tr,.mobile .slide .tb td{display:block;width:auto}
+.mobile .slide .tb tr:first-child:has(th){display:none}
+.mobile .slide .tb tr{border:1.5px solid var(--rule);border-radius:12px;margin-bottom:10px;overflow:hidden;background:#fff}
+.mobile .slide .tb td{border-bottom:none;padding:4px 12px}
+.mobile .slide .tb td:first-child{background:#F2F5F9;padding:8px 12px;font-size:15px}
+.mobile .slide .tb td:not(:first-child)::before{content:attr(data-l);display:block;font-size:11.5px;font-weight:700;color:var(--muted)}
+.mobile .slide .tb td:last-child{padding-bottom:10px}
+.gb{fill:#D8DFE8;transition:fill .4s}
+.slide.s1 .gb{fill:#65CCFE}
+.cyc,.sell{opacity:0;transition:opacity .5s}
+.slide.s2 .sell{opacity:1}
+.slide.s3 .cyc{opacity:1}
+.pipe{stroke-dashoffset:0;transition:stroke-dashoffset .6s}
+.slide.s1 .pipe{stroke-dashoffset:1170}
+.slide.s2 .pipe{stroke-dashoffset:1170}
+.x1,.x2{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.3);transition:all .45s cubic-bezier(.3,1.6,.6,1)}
+.slide.s1 .x1{opacity:1;transform:none}
+.slide.s2 .x2{opacity:1;transform:none}
+.slide.s1 .n1 rect{stroke:#F88039;stroke-width:3}
+.slide.s2 .n2 rect{stroke:#F88039;stroke-width:3}
+.k1,.k2,.k3,.k1l,.k2l,.k3l{opacity:.15;transition:opacity .45s}
+.slide.s1 .k1,.slide.s1 .k1l{opacity:1}
+.slide.s2 .k2,.slide.s2 .k2l{opacity:1}
+.slide.s3 .k3,.slide.s3 .k3l{opacity:1}
+.mobile .slide[data-n="decide"] .body{display:flex!important}
+.mobile .slide[data-n="tobe"] .body{display:flex!important}
+.mobile .slide[data-n="bottleneck"] svg,.mobile .slide[data-n="kpi"] svg{width:100%!important}
+.mobile .gb{fill:#65CCFE}.mobile .cyc,.mobile .sell,.mobile .x1,.mobile .x2,.mobile .k1,.mobile .k2,.mobile .k3,.mobile .k1l,.mobile .k2l,.mobile .k3l{opacity:1;transform:none}
+
+</style>
+</head>
+<body class="theme-photo">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo5NGFjNTA0NC03YTYxLTRjZmQtOGRjMC0xZjRhYTg2OTNhOTQAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaP9Yq9zcymtuGV1vUNHnVc0AAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo2NzVhZjYwOS03NWE2LTRhMjItODBmMy1mM2JkZmU0MTIwMDRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNocPJmFVg5G4WY/ebI70beqQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggzacKJcNrdfrgXhEP6yw+8fNZrkX/i26eHTaCdZ30OhikZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaEUjVSLGERgU/JWcO78mLA4AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCAkzhfyprA8aezuDi+Nom7BNqmEU1uuiT9bBomNj7DDUmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiGZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjk0YWM1MDQ0LTdhNjEtNGNmZC04ZGMwLTFmNGFhODY5M2E5NC9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmY2ZDAyMGY3LTMyNzAtNDZlZi1hNTY3LTkxNWU4M2ZlMDIzYXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDNpwolw2t1+uBeEQ/rLD7x81muRf+Lbp4dNoJ1nfQ6GKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggU1Aw6YrYJUsNoT21mkRQnZiARGVWjyH49vjfqLEYd+WiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggnGSSI7NcpzEQujM+aPVvEyXSRpvyiabutGoPL+yyPiZ0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQEIS+pOSPlo2MVEK66cCiYqhBZ+xeN4cTgiFKqwuEb5DuHiKunk2dXHeu4PLSS66vtSAaQz+EBVV/O5YUf2XTfw=</c2pa:manifest></metadata><defs>
+<symbol id="i-insta" viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="14"/><circle cx="32" cy="32" r="11"/><circle cx="46" cy="18" r="2" fill="currentColor"/></symbol>
+<symbol id="i-dm" viewBox="0 0 64 64"><path d="M6 30 58 8 42 58 30 36z"/><path d="M30 36 58 8"/></symbol>
+<symbol id="i-line" viewBox="0 0 64 64"><path d="M32 8C17 8 6 17 6 29c0 10 8 18 19 20l-2 9 12-8c14-1 23-10 23-21C58 17 47 8 32 8z"/><circle cx="21" cy="29" r="2.5" fill="currentColor"/><circle cx="32" cy="29" r="2.5" fill="currentColor"/><circle cx="43" cy="29" r="2.5" fill="currentColor"/></symbol>
+<symbol id="i-step" viewBox="0 0 64 64"><path d="M8 52h14V40h14V28h14V14h8"/><path d="M48 8l8 6-8 6"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 12h8l7 28h28l7-20H15"/><circle cx="23" cy="50" r="4"/><circle cx="43" cy="50" r="4"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 64 64"><path d="M12 30a20 20 0 0 1 34-14l6 6"/><path d="M52 10v12H40"/><path d="M52 34a20 20 0 0 1-34 14l-6-6"/><path d="M12 54V42h12"/></symbol>
+<symbol id="i-mail" viewBox="0 0 64 64"><rect x="6" y="14" width="52" height="38" rx="5"/><path d="M8 18l24 18 24-18"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-cal" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="44" rx="5"/><path d="M8 24h48M20 6v12M44 6v12"/><path d="M18 34h8M30 34h8M42 34h4M18 44h8M30 44h8"/></symbol>
+<symbol id="i-check" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 33l8 8 16-17"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-plug" viewBox="0 0 64 64"><path d="M22 6v14M42 6v14"/><path d="M14 20h36v10a18 18 0 0 1-36 0z"/><path d="M32 48v10"/></symbol>
+<symbol id="i-doc" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10M22 30h20M22 40h20M22 50h12"/></symbol>
+<symbol id="i-tag" viewBox="0 0 64 64"><path d="M6 32 32 6h24v24L30 56z"/><circle cx="44" cy="18" r="4"/></symbol>
+<symbol id="i-gift" viewBox="0 0 64 64"><rect x="8" y="24" width="48" height="12"/><path d="M12 36v20h40V36M32 24v32"/><path d="M32 24c-4-10-16-12-16-4s12 4 16 4c4 0 16 4 16-4s-12-6-16 4z"/></symbol>
+<symbol id="i-video" viewBox="0 0 64 64"><rect x="6" y="16" width="38" height="32" rx="5"/><path d="M44 28l14-8v24l-14-8z"/></symbol>
+<symbol id="i-chart" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-box" viewBox="0 0 64 64"><path d="M32 6 56 18v28L32 58 8 46V18z"/><path d="M8 18l24 12 24-12M32 30v28"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 64 64"><path d="M36 4 12 36h18l-4 24 24-32H32z"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-chat" viewBox="0 0 64 64"><path d="M8 12h48v32H28L16 54V44H8z"/><path d="M18 24h28M18 32h18"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+<symbol id="i-pen" viewBox="0 0 64 64"><path d="M44 8l12 12L22 54H10V42z"/><path d="M38 14l12 12"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-save" viewBox="0 0 64 64"><path d="M10 8h36l8 8v40H10z"/><path d="M20 8v14h22V8M20 56V38h24v18"/></symbol>
+<symbol id="i-stop" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><path d="M15 15l34 34"/></symbol>
+<symbol id="i-star" viewBox="0 0 64 64"><path d="M32 6l8 17 18 2-13 12 4 18-17-9-17 9 4-18L6 25l18-2z"/></symbol>
+<symbol id="i-store" viewBox="0 0 64 64"><path d="M6 24 12 8h40l6 16"/><path d="M6 24c0 5 4 8 9 8s9-3 9-8c0 5 4 8 8 8s8-3 8-8c0 5 4 8 9 8s9-3 9-8"/><path d="M10 32v24h44V32M26 56V42h12v14"/></symbol>
+</defs></svg>
+
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<!-- ================= 表紙 ================= -->
+<section class="slide" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">Silua ｜ 全体会 資料（台本 v0.1）</div>
+      <h1 class="fade d2">今日決める<br><span class="hl2">「お金」と「報酬」</span></h1>
+      <p class="sub fade d3">売上1億円の鍵は、代理店を増やし続ける仕組み。<br>その手前にある2つの詰まりを、今日ほどきます。</p>
+      <p class="who fade d4">話し手：icchy（CSO）　約15分＋議論<br>根拠：9/23〜10/21の議事録サマリー・WBS（10/23更新）・引き継ぎ書<br><span class="prop">提案</span> まだ誰も決めていない推奨　<span class="ask">要確認</span> 議事録だけでは決められない点</p>
+    </div>
+    <svg class="cover-ill" viewBox="0 0 440 460" aria-label="資金と報酬がそろうと代理店と売上が伸びるイメージ">
+      <rect width="440" height="460" rx="22" fill="#fff" opacity=".85"/>
+      <text x="28" y="44" font-size="15" font-weight="700" fill="#5A6B82" font-family="Noto Sans JP">決める順番（イメージ）</text>
+      <g font-family="Noto Sans JP" font-weight="700">
+        <g transform="translate(40 80)"><rect width="160" height="70" rx="14" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/><use href="#i-box" x="14" y="19" width="32" height="32" fill="none" stroke="#B5500F" stroke-width="3"/><text x="56" y="32" font-size="13" fill="#B5500F">③</text><text x="56" y="52" font-size="17" fill="#16233A">資金</text></g>
+        <g transform="translate(240 80)"><rect width="160" height="70" rx="14" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/><use href="#i-scale" x="14" y="19" width="32" height="32" fill="none" stroke="#B5500F" stroke-width="3"/><text x="56" y="32" font-size="13" fill="#B5500F">②</text><text x="56" y="52" font-size="17" fill="#16233A">報酬</text></g>
+        <path class="drawline" d="M120 150 C120 200 220 190 220 230 M320 150 C320 200 220 190 220 230" fill="none" stroke="#65CCFE" stroke-width="4"/>
+        <g transform="translate(140 232)"><rect width="160" height="60" rx="14" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><text x="80" y="37" text-anchor="middle" font-size="16" fill="#16233A">⑤原価 ・ ④営業</text></g>
+        <path class="drawline" d="M220 292 L220 330" fill="none" stroke="#65CCFE" stroke-width="4"/>
+        <g transform="translate(110 334)"><rect width="220" height="86" rx="16" fill="#0F1B2D"/><use href="#i-chart" x="18" y="24" width="38" height="38" fill="none" stroke="#65CCFE" stroke-width="3"/><text x="70" y="40" font-size="13" fill="#65CCFE">①KGI</text><text x="70" y="66" font-size="20" fill="#fff">24か月で1億円</text></g>
+      </g>
+    </svg>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<!-- ================= 結論 ================= -->
+<section class="slide" data-n="summary" data-steps="3">
+  <header class="hd"><span class="chap">1. 結論</span><h2>1億円の前に、資金と報酬の詰まりをほどく</h2></header>
+  <div class="body stack">
+    <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">→キーでも進みます</span></div>
+    <div class="bigpt rv" data-s="1"><span class="no">01</span><div><h3>売上1億円の鍵は「代理店を増やし続ける仕組み」</h3><p>10/21の収支計画：1億円に届くには、代理店が毎月19名増える必要がある。</p></div></div>
+    <div class="bigpt rv" data-s="2"><span class="no">02</span><div><h3>その手前で詰まっているのは「第1ロットの資金」と「報酬の設計」</h3><p>仕入れる商品がなければ、代理店を集めても売上にならない。</p></div></div>
+    <div class="bigpt key rv" data-s="3"><span class="no">03</span><div><h3>今日決めたい：③資金の集め方 ＋ ②報酬の額・支払いタイミング <span class="prop">提案</span></h3><p>「決めること5つ」のうち、この2つの方向性だけは今日決めて帰る。</p></div></div>
+  </div>
+</section>
+
+<!-- ================= As is ================= -->
+<section class="slide" data-n="asis" data-steps="6">
+  <header class="hd"><span class="chap">2. As is（現在地）</span><h2>4つを同時に進めているが、どれも「待ち」で止まっている</h2></header>
+  <div class="body">
+    <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">1行ずつ表示</span></div>
+    <table class="tb">
+      <tr><th style="width:130px">分野</th><th>今の状態</th><th style="width:330px">次に必要なこと</th></tr>
+      <tr class="rv" data-s="1"><td>法人設立</td><td>定款認証は完了。設立日は11/8で合意</td><td>登記申請日を平日で確定</td></tr>
+      <tr class="rv" data-s="2"><td>融資</td><td>診断士の小笠原さんを、古川さん経由で紹介待ち</td><td>つながり次第、面談と作戦会議</td></tr>
+      <tr class="rv" data-s="3"><td>仕入れ</td><td>第1ロットは古川さんの工場。液剤の代理店は見送り</td><td>仕入れの工程と先払いの扱いを合意</td></tr>
+      <tr class="rv" data-s="4"><td>代理店</td><td>Tony氏（10/25）・大さん（10/23）に提案。あやこさん・杉ちゃんさんにも選択制プラン</td><td>回答の回収 <span class="ask">要確認：提案結果</span></td></tr>
+      <tr class="rv" data-s="5"><td>システム</td><td>在庫管理ボットは仕様確定・本番反映中。UATの準備中</td><td>UATをテストケースに沿って実施</td></tr>
+      <tr class="rv" data-s="6"><td>EC</td><td>Shopify構築は進捗40%。Amazonは登記待ちで未着手</td><td>登記後に新法人アカウント開設</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ================= To be ================= -->
+<section class="slide" data-n="tobe" data-steps="3">
+  <header class="hd"><span class="chap">3. To be（目指す姿）</span><h2>24か月で1億円＝代理店が増えて続く仕組みで決まる</h2></header>
+  <div class="body" style="display:grid;grid-template-columns:560px 1fr;gap:28px">
+    <svg viewBox="0 0 560 470" aria-label="代理店数が毎月19名ずつ増えていく棒グラフのイメージ" style="width:560px;height:470px">
+      <rect width="560" height="470" rx="16" fill="#F7F9FC"/>
+      <text x="24" y="36" font-size="15" font-weight="700" fill="#5A6B82" font-family="Noto Sans JP">代理店の累計人数（毎月＋19名で増えた場合・イメージ）</text>
+      <line x1="50" y1="410" x2="540" y2="410" stroke="#D8DFE8" stroke-width="2"/>
+      <g class="bars">
+        <rect class="gb" x="62"  y="396" width="26" height="14" rx="4"/><rect class="gb" x="102" y="382" width="26" height="28" rx="4"/>
+        <rect class="gb" x="142" y="368" width="26" height="42" rx="4"/><rect class="gb" x="182" y="354" width="26" height="56" rx="4"/>
+        <rect class="gb" x="222" y="340" width="26" height="70" rx="4"/><rect class="gb" x="262" y="326" width="26" height="84" rx="4"/>
+        <rect class="gb" x="302" y="312" width="26" height="98" rx="4"/><rect class="gb" x="342" y="298" width="26" height="112" rx="4"/>
+        <rect class="gb" x="382" y="284" width="26" height="126" rx="4"/><rect class="gb" x="422" y="270" width="26" height="140" rx="4"/>
+        <rect class="gb" x="462" y="256" width="26" height="154" rx="4"/><rect class="gb" x="502" y="242" width="26" height="168" rx="4"/>
+      </g>
+      <g font-family="Roboto Mono" font-size="12" fill="#8A9AB0" text-anchor="middle"><text x="75" y="430">1</text><text x="275" y="430">6</text><text x="515" y="430">12か月</text></g>
+      <g class="cyc" font-family="Noto Sans JP" font-weight="700">
+        <path d="M110 250 a50 50 0 1 1 0 2" fill="none" stroke="#40B69A" stroke-width="5" stroke-dasharray="10 8"/>
+        <text x="110" y="246" text-anchor="middle" font-size="14" fill="#1F7A63">2か月に</text><text x="110" y="266" text-anchor="middle" font-size="14" fill="#1F7A63">1回仕入れ</text>
+      </g>
+      <g class="sell" font-family="Noto Sans JP" font-weight="700"><rect x="190" y="80" width="330" height="96" rx="14" fill="#fff" stroke="#2B5FA8" stroke-width="2"/>
+        <text x="210" y="112" font-size="14" fill="#5A6B82">毎月売れている必要がある本数（10/14試算）</text>
+        <text x="210" y="154" font-size="26" fill="#16233A">ブラシ233本・アイロン88本</text></g>
+    </svg>
+    <div class="stack">
+      <div class="card" style="background:#0F1B2D;color:#fff;border:none"><div class="label" style="color:#65CCFE">KGI</div><div style="font-size:40px;font-weight:900">24か月で売上1億円</div></div>
+      <div class="oi rv" data-s="1"><span class="n">1</span><div><b>代理店が毎月19名ずつ増える</b><p>10/21の収支計画の試算</p></div></div>
+      <div class="oi rv" data-s="2"><span class="n">2</span><div><b>毎月ブラシ233本・アイロン88本が売れる</b><p>10/14定例会の試算</p></div></div>
+      <div class="oi rv" data-s="3"><span class="n">3</span><div><b>2か月に1回、仕入れが回る</b><p>重点エリアは一都三県、主力販路は代理店</p></div></div>
+      <div class="callout"><svg class="ico"><use href="#i-warning"/></svg><div><span class="ask">要確認</span> 1と2は別の日の試算です。同じ前提か、収支計画の元データでそろえる。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 制約理論 ================= -->
+<section class="slide" data-n="bottleneck" data-steps="2">
+  <header class="hd"><span class="chap">4. 制約理論（いちばん詰まっている点）</span><h2>一番の詰まりはお金、二番目は製造の1社依存</h2></header>
+  <div class="body">
+    <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">詰まりの場所が順に光ります</span></div>
+    <svg viewBox="0 0 1168 300" style="width:1168px;height:300px" aria-label="資金、仕入れ、代理店、売上の流れと、その途中の詰まり">
+      <g font-family="Noto Sans JP" font-weight="700">
+        <path d="M60 150 L1110 150" stroke="#D8DFE8" stroke-width="44" stroke-linecap="round"/>
+        <path class="pipe" d="M60 150 L1110 150" stroke="#65CCFE" stroke-width="44" stroke-linecap="round" stroke-dasharray="1400" stroke-dashoffset="0"/>
+        <g class="node n1" transform="translate(40 40)"><rect width="200" height="220" rx="18" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><use href="#i-box" x="74" y="22" width="52" height="52" fill="none" stroke="#B5500F" stroke-width="3"/><text x="100" y="110" text-anchor="middle" font-size="22" fill="#16233A">資金</text><text x="100" y="140" text-anchor="middle" font-size="14" fill="#5A6B82">仕入れ〔社内版〕</text><text x="100" y="162" text-anchor="middle" font-size="14" fill="#5A6B82">準備資金 〔社内版〕</text><text x="100" y="184" text-anchor="middle" font-size="12" fill="#8A9AB0">（概算・10/21）</text></g>
+        <g class="node n2" transform="translate(340 40)"><rect width="200" height="220" rx="18" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><use href="#i-store" x="74" y="22" width="52" height="52" fill="none" stroke="#2B5FA8" stroke-width="3"/><text x="100" y="110" text-anchor="middle" font-size="22" fill="#16233A">仕入れ</text><text x="100" y="140" text-anchor="middle" font-size="14" fill="#5A6B82">古川さん1社</text><text x="100" y="162" text-anchor="middle" font-size="14" fill="#5A6B82">工程・先払いは未合意</text></g>
+        <g transform="translate(640 40)"><rect width="200" height="220" rx="18" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><use href="#i-users" x="74" y="22" width="52" height="52" fill="none" stroke="#2B5FA8" stroke-width="3"/><text x="100" y="110" text-anchor="middle" font-size="22" fill="#16233A">代理店</text><text x="100" y="140" text-anchor="middle" font-size="14" fill="#5A6B82">毎月19名が必要</text></g>
+        <g transform="translate(930 40)"><rect width="200" height="220" rx="18" fill="#0F1B2D"/><use href="#i-chart" x="74" y="22" width="52" height="52" fill="none" stroke="#65CCFE" stroke-width="3"/><text x="100" y="110" text-anchor="middle" font-size="22" fill="#fff">売上</text><text x="100" y="140" text-anchor="middle" font-size="14" fill="#B9C6D8">24か月で1億円</text></g>
+        <g class="x1"><circle cx="290" cy="150" r="30" fill="#F88039"/><text x="290" y="160" text-anchor="middle" font-size="28" fill="#fff">1</text></g>
+        <g class="x2"><circle cx="590" cy="150" r="30" fill="#F88039"/><text x="590" y="160" text-anchor="middle" font-size="28" fill="#fff">2</text></g>
+      </g>
+    </svg>
+    <div class="g2" style="margin-top:14px">
+      <div class="callout rv" data-s="1"><svg class="ico"><use href="#i-warning"/></svg><div><b>1. 第1ロットの資金</b>：仕入れられなければ、代理店に渡す商品がない。報酬を全員に払うと営業利益は長くマイナス（10/21試算）。</div></div>
+      <div class="callout rv" data-s="2"><svg class="ico"><use href="#i-warning"/></svg><div><b>2. 製造が古川さん1社</b>：納期の遅れでローンチが11月末までずれた（10/11）。ただし第1ロットは古川さんでやり切ると決定済み。</div></div>
+    </div>
+    <p class="note" style="margin-top:10px"><span class="prop">提案</span> 資金を1番にしたのは私の判断。議事録では「報酬と第1ロット資金が最大の論点」とだけ書かれている。</p>
+  </div>
+</section>
+
+<!-- ================= ずれ ================= -->
+<section class="slide" data-n="gaps" data-steps="4">
+  <header class="hd"><span class="chap">5. 数字のずれの整理</span><h2>会議ごとに変わった数字が4つ。今日どれが正かを決める</h2></header>
+  <div class="body">
+    <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button></div>
+    <table class="tb">
+      <tr><th style="width:150px">項目</th><th style="width:230px">以前</th><th>今</th><th style="width:250px">決めること</th></tr>
+      <tr class="rv" data-s="1"><td>代理店の割引率</td><td class="old">10/2：33〜37%に下げる</td><td><span class="arrow">→</span>10/7：第1ロット40/42/45%<br><span class="arrow">→</span>10/21：Tony氏・大さんに42%→最大45%</td><td><b>45%でも粗利35%が残るか</b></td></tr>
+      <tr class="rv" data-s="2"><td>設立日</td><td class="old">10/17：11/1予定</td><td><span class="arrow">→</span>10/21：11/8で合意（日曜で法務局は休み）</td><td>登記申請をどの平日にするか</td></tr>
+      <tr class="rv" data-s="3"><td>ローンチ</td><td class="old">10/1：12月第2週が本命</td><td><span class="arrow">→</span>10/11：11月末を死守</td><td>第1ロットの納品日</td></tr>
+      <tr class="rv" data-s="4"><td>古川さんとの条件</td><td class="old">10/2：松竹梅プラン</td><td><span class="arrow">→</span>10/21：加工依頼の関係で進める。松竹梅の結果は記録なし</td><td>今何が合意済みか</td></tr>
+    </table>
+    <div class="callout" style="margin-top:16px"><svg class="ico"><use href="#i-warning"/></svg><div><span class="ask">要確認</span> 古川さんとの松竹梅プランの結果と、第1ロットの仕入れ原価は、icchyさんか雄樹さんの記憶で埋める。</div></div>
+  </div>
+</section>
+
+<!-- ================= 決めること5つ ================= -->
+<section class="slide" data-n="decide" data-steps="5">
+  <header class="hd"><span class="chap">6. 決めること5つ（緊急度×重要度）</span><h2>お金と報酬が決まれば、残り3つが決められる</h2></header>
+  <div class="body" style="display:grid;grid-template-columns:540px 1fr;gap:26px">
+    <div>
+      <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button><span class="hint">決める順に置きます <span class="prop">提案</span></span></div>
+      <div class="mx">
+        <div class="q q2">重要・急がない</div><div class="q q1">重要・急ぐ ＝ 今日</div><div class="q q4">それ以外</div><div class="q q3">急ぐ・中くらい</div>
+        <div class="dot hot" data-s="1" style="left:390px;top:40px"><i>1</i>③資金</div>
+        <div class="dot hot" data-s="2" style="left:300px;top:110px"><i>2</i>②報酬</div>
+        <div class="dot" data-s="3" style="left:330px;top:290px"><i>3</i>⑤原価</div>
+        <div class="dot" data-s="4" style="left:60px;top:70px"><i>4</i>④営業体制</div>
+        <div class="dot" data-s="5" style="left:40px;top:150px"><i>5</i>①売上目標</div>
+        <div class="ax" style="left:0;top:424px">← 緊急度 低</div><div class="ax" style="left:-2px;top:-22px">↑ 重要度 高</div><div class="ax" style="right:0;top:424px">緊急度 高 →</div>
+      </div>
+    </div>
+    <div class="olist">
+      <div class="oi hot rv" data-s="1"><span class="n">1</span><div><b>③第1ロットの資金</b><p>融資を本命にしつつ、代理店の先払いでどこまで賄えるかを試算する</p></div></div>
+      <div class="oi hot rv" data-s="2"><span class="n">2</span><div><b>②報酬の額と支払いタイミング</b><p>粗利35%から逆算して上限を決め、支払いは入金確認後にする <span class="ask">要確認：報酬の範囲</span></p></div></div>
+      <div class="oi rv" data-s="3"><span class="n">3</span><div><b>⑤仕入れ原価</b><p>②③の結果を持って古川さんと詰める</p></div></div>
+      <div class="oi rv" data-s="4"><span class="n">4</span><div><b>④営業体制</b><p>雄樹さんが判断（10/21決定）。②の報酬が決まってから</p></div></div>
+      <div class="oi rv" data-s="5"><span class="n">5</span><div><b>①売上目標</b><p>1億円は維持し、当面の目標を「第1ロット完売」に置く</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KPI ================= -->
+<section class="slide" data-n="kpi" data-steps="3">
+  <header class="hd"><span class="chap">7. KGI・KSF・KPI</span><h2>毎月追う数字は3つ：増えたか・続いたか・残ったか</h2></header>
+  <div class="body">
+    <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button></div>
+    <svg viewBox="0 0 1168 420" style="width:1168px;height:420px" aria-label="KGIからKSF、3つのKPIへ分かれるツリー">
+      <g font-family="Noto Sans JP" font-weight="700">
+        <rect x="434" y="0" width="300" height="84" rx="16" fill="#0F1B2D"/><text x="584" y="32" text-anchor="middle" font-size="14" fill="#65CCFE">KGI（最終目標）</text><text x="584" y="64" text-anchor="middle" font-size="24" fill="#fff">24か月で売上1億円</text>
+        <path d="M584 84 L584 120" stroke="#65CCFE" stroke-width="4"/>
+        <rect x="384" y="120" width="400" height="78" rx="16" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><text x="584" y="150" text-anchor="middle" font-size="14" fill="#2B5FA8">KSF（成功の鍵）</text><text x="584" y="180" text-anchor="middle" font-size="21" fill="#16233A">代理店を増やし、続けてもらう</text>
+        <path class="k1l" d="M584 198 L584 230 L195 230 L195 262" fill="none" stroke="#65CCFE" stroke-width="4"/>
+        <path class="k2l" d="M584 230 L584 262" fill="none" stroke="#65CCFE" stroke-width="4"/>
+        <path class="k3l" d="M584 230 L973 230 L973 262" fill="none" stroke="#65CCFE" stroke-width="4"/>
+        <g class="k1"><rect x="40" y="262" width="310" height="150" rx="16" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><text x="64" y="294" font-size="14" fill="#5A6B82">KPI① 増えたか</text><text x="64" y="330" font-size="19" fill="#16233A">新しく契約した代理店の数</text><text x="64" y="388" font-family="Roboto Mono" font-size="34" fill="#2B5FA8">19名/月</text></g>
+        <g class="k2"><rect x="429" y="262" width="310" height="150" rx="16" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><text x="453" y="294" font-size="14" fill="#5A6B82">KPI② 続いたか</text><text x="453" y="330" font-size="19" fill="#16233A">2回目以降も仕入れた割合</text><text x="453" y="384" font-size="18" fill="#B5500F">目標値は未設定</text></g>
+        <g class="k3"><rect x="818" y="262" width="310" height="150" rx="16" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><text x="842" y="294" font-size="14" fill="#5A6B82">KPI③ 残ったか</text><text x="842" y="330" font-size="19" fill="#16233A">粗利率</text><text x="842" y="388" font-family="Roboto Mono" font-size="34" fill="#2B5FA8">35%以上</text></g>
+      </g>
+    </svg>
+    <p class="note"><span class="prop">提案</span> KPI②は私が加えた指標。10/21に「増やし、続けてもらえるか」が売上の鍵とされたため。　<span class="ask">要確認</span> KPI②の目標値。</p>
+  </div>
+</section>
+
+<!-- ================= アクション ================= -->
+<section class="slide" data-n="actions">
+  <header class="hd"><span class="chap">8. アクション</span><h2>誰が・何を・いつまでに（期日は今日この場で決める）</h2></header>
+  <div class="body">
+    <table class="tb">
+      <tr><th style="width:200px">誰が</th><th>何を</th><th style="width:250px">いつまでに</th></tr>
+      <tr><td>雄樹（CEO）</td><td>登記申請日を平日で確定し、申請する</td><td><span class="prop">提案</span> 11/8の前の平日</td></tr>
+      <tr><td>雄樹（CEO）</td><td>小笠原さんとの面談と融資の作戦会議を設定</td><td>紹介があり次第</td></tr>
+      <tr><td>icchy（CSO）</td><td>報酬の上限を粗利35%から逆算した試算を共有</td><td><span class="prop">提案</span> 次回全体会まで</td></tr>
+      <tr><td>icchy（CSO）</td><td>代理店の先払いで第1ロット資金をどこまで賄えるか試算</td><td><span class="prop">提案</span> 次回全体会まで</td></tr>
+      <tr><td>ゆり姉（CMO）</td><td>Tony氏・大さん・あやこさん・杉ちゃんさんの回答を回収</td><td><span class="prop">提案</span> 今週中</td></tr>
+      <tr><td>雄樹・icchy</td><td>②③の結果を持って、古川さんと仕入れ工程・先払い・原価を詰める</td><td><span class="prop">提案</span> ②③の決定後</td></tr>
+      <tr><td>ギハーン（CTO）・全員</td><td>UATの環境準備と、テストケースに沿った実施</td><td><span class="ask">要確認</span> 期日は未設定</td></tr>
+    </table>
+  </div>
+</section>
+
+</div></div>
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bNotes" title="台本（N）">台本</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">台本</h4><div id="notesBody"></div></div>
+<div id="help">← → でスライド移動・N で台本・F で全画面</div>
+<div class="notes-src" id="notes-title"><h5>台本：Silua全体会「決めること5つ」v0.1</h5>
+<p>次回の全体会で、役員全員が「決めること5つ」のうち資金と報酬の方向性を決めるための台本です。</p>
+<ul><li>話し手：icchy（CSO）。話す時間は約15分、その後に議論</li><li>根拠：9/23〜10/21の議事録サマリー、WBS（10/23更新）、引き継ぎ書</li><li>凡例：【提案】は私（Claude）からの推奨で、まだ誰も決めていないこと。【要確認】は議事録だけでは正解がわからないこと</li></ul></div>
+<div class="notes-src" id="notes-summary"><h5>1枚目：結論</h5>
+<ul><li>売上1億円の鍵は「代理店を増やし続ける仕組み」</li><li>その手前で詰まっているのは「第1ロットの資金」と「報酬の設計」</li><li>今日決めたいこと：③資金の集め方と②報酬の額・支払いタイミングの方向性【提案】</li></ul>
+<p>「最初に結論です。10/21の収支計画で、売上1億円に届くかは代理店を増やし続けられるかで決まる、という話をしました。でもその前に、売る商品を仕入れるお金と、代理店やメンバーに払う報酬の形が決まっていません。今日は『決めること5つ』のうち、この2つの方向性だけは決めて帰りたいです。」</p></div>
+<div class="notes-src" id="notes-asis"><h5>2枚目：As is（現在地）</h5>
+<table><tr><th>分野</th><th>今の状態</th><th>次に必要なこと</th></tr><tr><td>法人設立</td><td>定款認証は完了。設立日は11/8で合意</td><td>登記申請日を平日で確定</td></tr><tr><td>融資</td><td>診断士の小笠原さんを古川さん経由で紹介待ち</td><td>つながり次第、面談と作戦会議</td></tr><tr><td>仕入れ</td><td>第1ロットは古川さんの工場。液剤の代理店は見送り</td><td>仕入れの工程と先払いの扱いを合意</td></tr><tr><td>代理店</td><td>Tony氏（10/25）・大さん（10/23）に提案。あやこさん・杉ちゃんさんにも選択制プラン</td><td>回答の回収【要確認：提案結果】</td></tr><tr><td>システム</td><td>在庫管理ボットは仕様確定・本番反映中。UATの準備中</td><td>UATをテストケースに沿って実施</td></tr><tr><td>EC</td><td>Shopify構築は進捗40%。Amazonは登記待ちで未着手</td><td>登記後に新法人アカウント開設</td></tr></table>
+<p>「今の現在地です。法人・融資・仕入れ・代理店の4つを同時に進めていますが、どれも『相手の回答待ち』か『日付未確定』で止まっています。古川さんの工程を待つ間にも、Silua側で先に片づけられることが多い、というのが10/21の前提でした。」</p></div>
+<div class="notes-src" id="notes-tobe"><h5>3枚目：To be（目指す姿）</h5>
+<ul><li>目標：24か月で売上1億円</li><li>そのために必要な状態</li><li>代理店が毎月19名ずつ増える（10/21試算）</li><li>毎月ブラシ233本・アイロン88本が売れる（10/14試算）</li><li>2か月に1回、仕入れが回る</li><li>重点エリアは一都三県、主力販路は代理店</li></ul>
+<p>「目指す姿は、24か月で売上1億円です。数字に直すと、代理店が毎月19名増え、2か月ごとに仕入れが回っている状態です。営業の気合いではなく、代理店が増えて続く仕組みで決まる目標だということを共有したいです。」</p>
+<p>【要確認】「毎月19名」と「ブラシ233本・アイロン88本」は別の日の試算です。同じ前提で計算したものか、収支計画の元データでそろえてください。</p></div>
+<div class="notes-src" id="notes-bottleneck"><h5>4枚目：制約理論（いちばん詰まっている点）</h5>
+<ol><li><b>最大の詰まり：第1ロットの資金</b></li></ol>
+<ul><li>仕入れ〔社内版〕、準備資金〔社内版〕（概算、10/21）</li><li>報酬を全員に払うと、営業利益は長くマイナス（10/21試算）</li></ul>
+<ol><li><b>2番目の詰まり：製造が古川さん1社だけ</b></li></ol>
+<ul><li>納期の遅れで、ローンチが11月末までずれた経緯がある（10/11）</li><li>仕入れの工程と先払いの扱いは未合意（10/21）</li></ul>
+<p>「何から手をつけるかを決めるために、いちばん詰まっている点を絞りました。一番はお金です。仕入れられなければ代理店に渡す商品がなく、代理店をどれだけ集めても売上になりません。二番目は、製造が古川さん1社に頼っていることです。ただし第1ロットは古川さんでやり切ると決めているので、今日はお金の話を優先します。」</p>
+<p>【提案】この優先順位（資金が1番）は私の判断です。議事録では「報酬と第1ロット資金が最大の論点」とだけ書かれています。</p></div>
+<div class="notes-src" id="notes-gaps"><h5>5枚目：数字のずれの整理</h5>
+<table><tr><th>項目</th><th>以前</th><th>今</th><th>決めること</th></tr><tr><td>代理店の割引率</td><td>10/2：33〜37%に下げる</td><td>10/7：第1ロット40/42/45%、10/21：Tony氏・大さんに42%→最大45%</td><td>45%でも粗利35%が残るか</td></tr><tr><td>設立日</td><td>10/17：11/1予定</td><td>10/21：11/8で合意（日曜で法務局は休み）</td><td>登記申請をどの平日にするか</td></tr><tr><td>ローンチ</td><td>10/1：12月第2週が本命</td><td>10/11：11月末を死守</td><td>第1ロットの納品日</td></tr><tr><td>古川さんとの条件</td><td>10/2：松竹梅プラン</td><td>10/21：加工依頼の関係で進める。松竹梅の結果は記録なし</td><td>今何が合意済みか</td></tr></table>
+<p>「議事録を並べると、会議ごとに数字が変わっている箇所が4つありました。特に割引率は、10/2に粗利35%を守るために下げると決めた後、逆に上がっています。初期の代理店を集めるための判断だと思いますが、利益が残るかは今日確認させてください。」</p>
+<p>【要確認】古川さんとの松竹梅プランの結果と、第1ロットの仕入れ原価は、icchyさんか雄樹さんの記憶で埋めてください。</p></div>
+<div class="notes-src" id="notes-decide"><h5>6枚目：決めること5つ（緊急度×重要度）</h5>
+<table><tr><th>順</th><th>決めること</th><th>緊急度・重要度</th><th>選択肢</th><th>推奨案【提案】</th></tr><tr><td>1</td><td>③第1ロットの資金</td><td>高・高</td><td>融資（公庫・信金）／自己資金・出資／代理店の先払いを充てる</td><td>融資を本命にしつつ、代理店の先払いでどこまで賄えるかを試算する</td></tr><tr><td>2</td><td>②報酬の額と支払いタイミング</td><td>高・高</td><td>今の率を維持／第1ロットだけ維持して以降は下げる／支払いを入金確認後にする</td><td>粗利35%から逆算して上限を決め、支払いは入金確認後にする</td></tr><tr><td>3</td><td>⑤仕入れ原価</td><td>高・中</td><td>古川さんと交渉／先払いを条件に値下げを求める</td><td>②③の結果を持って古川さんと詰める</td></tr><tr><td>4</td><td>④営業体制</td><td>中・高</td><td>空き時間／週1回／協力者を巻き込む</td><td>雄樹さんが判断（10/21決定）。②の報酬が決まってから</td></tr><tr><td>5</td><td>①売上目標</td><td>中・高</td><td>1億円を維持／見直す</td><td>1億円は維持し、当面の目標を「第1ロット完売」に置く</td></tr></table>
+<p>「5つはつながっているので、決める順番が大事です。お金と報酬が決まれば、古川さんとの原価交渉のラインが見え、営業にどこまで力を入れるかも決められます。今日は上の2つだけ方向性を決め、残りは次回に回したいです。」</p>
+<p>【要確認】②の「報酬」が代理店の割引だけを指すのか、アフィリエイトやメンバーの外注報酬も含むのかは、議事録ではわかりませんでした。収支計画の定義に合わせてください。</p></div>
+<div class="notes-src" id="notes-kpi"><h5>7枚目：KGI・KSF・KPI</h5>
+<table><tr><th>区分</th><th>中身</th><th>目安</th></tr><tr><td>KGI（最終目標）</td><td>24か月の売上</td><td>1億円</td></tr><tr><td>KSF（成功の鍵）</td><td>代理店を増やし、続けてもらう</td><td>―</td></tr><tr><td>KPI①</td><td>新しく契約した代理店の数（月ごと）</td><td>19名（10/21試算）</td></tr><tr><td>KPI②</td><td>2回目以降も仕入れた代理店の割合</td><td>【要確認】目標値は未設定</td></tr><tr><td>KPI③</td><td>粗利率</td><td>35%以上（10/2決定）</td></tr></table>
+<p>「毎月追う数字は3つに絞ります。代理店が何名増えたか、続けて仕入れてくれているか、利益が残っているかです。定例会ではこの3つを毎回確認します。」</p>
+<p>【提案】KPI②は私が加えた指標です。10/21に「代理店をどれだけ増やし、続けてもらえるか」が売上の鍵とされたので、続ける側も数字で追います。</p></div>
+<div class="notes-src" id="notes-actions"><h5>8枚目：アクション</h5>
+<table><tr><th>誰が</th><th>何を</th><th>いつまでに</th></tr><tr><td>雄樹（CEO）</td><td>登記申請日を平日で確定し、申請する</td><td>【提案】11/8の前の平日</td></tr><tr><td>雄樹（CEO）</td><td>小笠原さんとの面談と融資の作戦会議を設定</td><td>紹介があり次第</td></tr><tr><td>icchy（CSO）</td><td>報酬の上限を粗利35%から逆算した試算を共有</td><td>【提案】次回全体会まで</td></tr><tr><td>icchy（CSO）</td><td>代理店の先払いで第1ロット資金をどこまで賄えるか試算</td><td>【提案】次回全体会まで</td></tr><tr><td>ゆり姉（CMO）</td><td>Tony氏・大さん・あやこさん・杉ちゃんさんの回答を回収</td><td>【提案】今週中</td></tr><tr><td>雄樹・icchy</td><td>②③の結果を持って、古川さんと仕入れ工程・先払い・原価を詰める</td><td>【提案】②③の決定後</td></tr><tr><td>ギハーン（CTO）・全員</td><td>UATの環境準備と、テストケースに沿った実施</td><td>【要確認】期日は未設定</td></tr></table>
+<p>「最後に、誰がいつまでに何をするかです。10/21のタスクは期日が入っていないものが多いので、今日この場で期日を決めさせてください。」</p></div>
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  // footer with page number on every slide except the cover
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='台本　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  // step-by-step builds: elements with data-s light up as the step counter grows
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=9;k++)s.classList.toggle('s'+k,k<=n);
+    s.querySelectorAll('[data-meter]').forEach(el=>el.textContent=n);
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  // swipe left/right on phones
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>step(b.closest('.slide')));
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>setStep(b.closest('.slide'),0));
+  document.querySelectorAll('.fs,.ban,.day[data-s],.dl,.gbar').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  window.__go=go;window.__step=(n)=>setStep(slides[cur],n);
+  const h=parseInt(location.hash.slice(1));go(h>0?h-1:0);
+})();
+
+document.querySelectorAll('.tb').forEach(t=>{const h=[...t.querySelectorAll('th')].map(x=>x.textContent);t.querySelectorAll('tr').forEach(r=>[...r.children].forEach((c,i)=>{if(c.tagName==='TD'&&h[i])c.dataset.l=h[i]}))});
+</script>
+</body>
+</html>
