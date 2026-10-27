@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>分散はなぜ効くのか｜平均はそのまま、揺れは小さく（TriFuse F1-09）</title>
+<title>分散はなぜ効くのか｜アイス店の売り場の残り半分を、誰に貸すか（TriFuse F1-09）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -290,6 +290,45 @@ svg .sv.dl{transition-delay:.6s}
 .mobile .keybox{font-size:15px}
 .mobile .mid{font-size:26px}
 .mobile .corr{grid-template-columns:1fr!important}
+/* ===== v3.0：ページのつなぎの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:56px;right:56px;top:112px;display:flex;align-items:center;gap:10px;font-size:14px;line-height:1.4;color:var(--ink2);white-space:nowrap;overflow:hidden}
+.bridge .was{color:var(--ink2)}
+.bridge .ar{color:var(--safe);font-weight:900}
+.bridge .now{color:var(--ink);font-weight:700}
+.slide.br .body{top:142px}
+/* 凡例 */
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink2)}
+/* 相関の3つの形 */
+.forms{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.forms>div{display:block;padding:6px 8px 6px 30px;position:relative;border:1px solid var(--rule);border-radius:8px;font-size:14px;line-height:1.45;color:var(--ink)}
+.forms i{position:absolute;left:9px;top:10px;width:13px;height:13px;border-radius:3px}
+.forms span{color:var(--ink2);font-size:13px}
+/* 相関係数の帯（店の色：傘 → 時計修理 → ビール） */
+.cbar{height:14px;border-radius:7px;background:linear-gradient(90deg,#65CCFE,#82D548,#FEDA37);margin-top:6px}
+.cbar-l{display:flex;justify-content:space-between;gap:6px;margin-top:5px;font-size:12px;color:var(--ink2)}
+.cbar-l b{font-size:14px;color:var(--ink)}
+/* 資産Cだけ（青）→ CとD（青緑）に色が変わる */
+svg .cdbar{transition:fill .6s ease .3s}
+.slide.s2 svg .cdbar{fill:#40B69A}
+.mobile .bridge{position:relative;left:auto;right:auto;top:auto;padding:10px 16px 0;white-space:normal;flex-wrap:wrap;gap:4px 8px;font-size:13px}
+.mobile .cbar-l{flex-wrap:wrap}
+.forms.row3{flex-direction:row}
+.forms.row3>div{flex:1}
+.srcs p.note{font-size:13px;line-height:1.55}
+.mobile .forms.row3{flex-direction:column}
+.kp .card p.mini{font-size:13.5px;line-height:1.55}
+.kp .card.tight h4{margin-bottom:2px}
+.out4>div{padding:3px 8px}
+.mobile .toprow{flex-direction:column;align-items:stretch!important;gap:8px!important}
+.mobile .slide.br .body{top:auto}
+/* v3.1 6節：2本の組入上位10銘柄を並べ、両方にある7社に同じ色を付ける（線で結ばない） */
+.flists{display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1}
+.flist h5{font-size:16px;font-weight:900;color:var(--ink);text-align:center;margin:0}
+.flist>p{font-size:12px;color:var(--ink2);text-align:center;margin:0 0 4px}
+.flist ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.flist li{border:1.5px solid var(--rule);border-radius:7px;background:#fff;text-align:center;font-size:15px;font-weight:700;color:var(--ink);padding:3px 0;transition:background .5s ease,border-color .5s ease}
+.slide.s1 .flist li.same{background:#DCEBFF;border-color:#2B5FA8;color:#163D73}
+.mobile .flist li{font-size:14px}
 
 </style>
 </head>
@@ -338,419 +377,271 @@ svg .sv.dl{transition-delay:.6s}
 <section class="slide" data-n="title">
   <div class="cover">
     <div class="cover-text">
-      <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-09</div>
-      <h1 class="fade d2"><small>分散はなぜ効くのか</small>平均はそのまま、<br><span class="hl2">揺れは小さく</span></h1>
-      <p class="sub fade d3">値動きが完全には一致しないものを組み合わせると、平均は変わらないまま、ばらつきが小さくなります。その理由と、分散で消せるもの・消せないものを、店と資産の数字で確かめます。</p>
-      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>売り場を半分ずつ使う</button><button data-go="2"><span class="n">03</span>正反対に動く2つの資産</button><button data-go="4"><span class="n">05</span>無関係に動く2つの資産</button><button data-go="5"><span class="n">06</span>一緒に動く度合いと相関</button><button data-go="6"><span class="n">07</span>消せるリスクと消せないリスク</button><button data-go="8"><span class="n">09</span>見せかけの分散と確かめ方</button><button data-go="10"><span class="n">11</span>まとめと出典</button></div>
+      <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-09 分散はなぜ効くのか</div>
+      <h1 class="fade d2"><small>今日の問い</small>アイス店の売り場の<br>残り半分を、<span class="hl2">誰に貸すか</span></h1>
+      <p class="sub fade d3">この1つの問いを最後まで追いかけて、分散がなぜ効くのかと、分散で消せるもの・消せないものを、数字で確かめます。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>アイス店だけの売り場</button><button data-go="2"><span class="n">03</span>傘の店と半分ずつ</button><button data-go="3"><span class="n">04</span>貸す相手と相関</button><button data-go="4"><span class="n">05</span>店から資産へ</button><button data-go="5"><span class="n">06</span>消せるリスクと消せないリスク</button><button data-go="6"><span class="n">07</span>手元の持ち方の確かめ方</button><button data-go="7"><span class="n">08</span>残り半分を貸す相手</button></div>
       <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
     </div>
-    <svg class="cover-ill" viewBox="0 0 460 500" aria-label="揺れ方の違う2つの波を半分ずつ合わせると、揺れの小さい波になる絵"><rect width="460" height="500" rx="22" fill="#fff" opacity=".85"/><text x="30.0" y="46.0" text-anchor="start" font-size="15" font-weight="700" fill="#5A6B82" >値動きの違う2つを合わせると</text><polyline points="30.0,130.0 36.6,120.4 43.2,111.3 49.8,103.0 56.4,95.8 63.0,90.2 69.6,86.3 76.2,84.3 82.8,84.3 89.4,86.3 96.0,90.2 102.6,95.8 109.2,103.0 115.8,111.3 122.4,120.4 129.0,130.0 135.6,139.6 142.2,148.7 148.8,157.0 155.4,164.2 162.0,169.8 168.6,173.7 175.2,175.7 181.8,175.7 188.4,173.7 195.0,169.8 201.6,164.2 208.2,157.0 214.8,148.7 221.4,139.6 228.0,130.0 234.6,120.4 241.2,111.3 247.8,103.0 254.4,95.8 261.0,90.2 267.6,86.3 274.2,84.3 280.8,84.3 287.4,86.3 294.0,90.2 300.6,95.8 307.2,103.0 313.8,111.3 320.4,120.4 327.0,130.0 333.6,139.6 340.2,148.7 346.8,157.0 353.4,164.2 360.0,169.8 366.6,173.7 373.2,175.7 379.8,175.7 386.4,173.7 393.0,169.8 399.6,164.2 406.2,157.0 412.8,148.7 419.4,139.6 426.0,130.0" fill="none" stroke="#F88039" stroke-width="4" stroke-linecap="round"/><polyline points="30.0,207.5 36.6,214.9 43.2,223.5 49.8,232.8 56.4,242.4 63.0,251.9 69.6,260.9 76.2,268.9 82.8,275.7 89.4,281.0 96.0,284.4 102.6,285.9 109.2,285.4 115.8,282.9 122.4,278.6 129.0,272.5 135.6,265.1 142.2,256.5 148.8,247.2 155.4,237.6 162.0,228.1 168.6,219.1 175.2,211.1 181.8,204.3 188.4,199.0 195.0,195.6 201.6,194.1 208.2,194.6 214.8,197.1 221.4,201.4 228.0,207.5 234.6,214.9 241.2,223.5 247.8,232.8 254.4,242.4 261.0,251.9 267.6,260.9 274.2,268.9 280.8,275.7 287.4,281.0 294.0,284.4 300.6,285.9 307.2,285.4 313.8,282.9 320.4,278.6 327.0,272.5 333.6,265.1 340.2,256.5 346.8,247.2 353.4,237.6 360.0,228.1 366.6,219.1 373.2,211.1 379.8,204.3 386.4,199.0 393.0,195.6 399.6,194.1 406.2,194.6 412.8,197.1 419.4,201.4 426.0,207.5" fill="none" stroke="#65CCFE" stroke-width="4" stroke-linecap="round"/><text x="230.0" y="322.0" text-anchor="middle" font-size="16" font-weight="700" fill="#5A6B82" >↓ 半分ずつ</text><path d="M30 400H426" stroke="#D8DFE8" stroke-width="1.5" stroke-dasharray="5 6"/><polyline points="30.0,383.7 36.6,382.7 43.2,382.4 49.8,382.9 56.4,384.1 63.0,386.0 69.6,388.6 76.2,391.6 82.8,395.0 89.4,398.6 96.0,402.3 102.6,405.9 109.2,409.2 115.8,412.1 122.4,414.5 129.0,416.3 135.6,417.3 142.2,417.6 148.8,417.1 155.4,415.9 162.0,414.0 168.6,411.4 175.2,408.4 181.8,405.0 188.4,401.4 195.0,397.7 201.6,394.1 208.2,390.8 214.8,387.9 221.4,385.5 228.0,383.7 234.6,382.7 241.2,382.4 247.8,382.9 254.4,384.1 261.0,386.0 267.6,388.6 274.2,391.6 280.8,395.0 287.4,398.6 294.0,402.3 300.6,405.9 307.2,409.2 313.8,412.1 320.4,414.5 327.0,416.3 333.6,417.3 340.2,417.6 346.8,417.1 353.4,415.9 360.0,414.0 366.6,411.4 373.2,408.4 379.8,405.0 386.4,401.4 393.0,397.7 399.6,394.1 406.2,390.8 412.8,387.9 419.4,385.5 426.0,383.7" fill="none" stroke="#40B69A" stroke-width="6" stroke-linecap="round"/><text x="230.0" y="470.0" text-anchor="middle" font-size="18" font-weight="900" fill="#1F7A63" >平均はそのまま、揺れは小さく</text></svg>
+    <svg class="cover-ill" viewBox="0 0 460 500" aria-label="アイス店の売り場の半分が空いていて、傘の店・ビール店・時計修理店が貸す相手の候補になっている絵"><rect width="460" height="500" rx="22" fill="#fff" opacity=".85"/><text x="30.0" y="46.0" text-anchor="start" font-size="15" font-weight="700" fill="#5A6B82" >商店街のアイス店の売り場</text><rect x="30" y="70" width="400" height="190" rx="10" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><rect x="42" y="82" width="182" height="166" rx="8" fill="#F88039"/><text x="133.0" y="172.0" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" >アイス</text><rect x="236" y="82" width="182" height="166" rx="8" fill="#F3F6FA" stroke="#8A9AB0" stroke-width="2" stroke-dasharray="7 6"/><text x="327.0" y="160.0" text-anchor="middle" font-size="18" font-weight="700" fill="#5A6B82" >残り半分</text><text x="327.0" y="196.0" text-anchor="middle" font-size="20" font-weight="900" fill="#2B5FA8" >誰に貸す？</text><text x="30.0" y="312.0" text-anchor="start" font-size="14" font-weight="700" fill="#5A6B82" >貸す相手の候補（説明のための例）</text><rect x="30" y="330" width="124" height="54" rx="27" fill="#65CCFE"/><text x="92.0" y="363.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" >傘の店</text><rect x="168" y="330" width="124" height="54" rx="27" fill="#FEDA37"/><text x="230.0" y="363.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" >ビール店</text><rect x="306" y="330" width="124" height="54" rx="27" fill="#82D548"/><text x="368.0" y="363.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" >時計修理店</text><text x="230.0" y="440.0" text-anchor="middle" font-size="17" font-weight="700" fill="#5A6B82" >月ごとの売上の揺れが</text><text x="230.0" y="470.0" text-anchor="middle" font-size="18" font-weight="900" fill="#1F7A63" >いちばん小さくなるのはどこか</text></svg>
     <div class="brandbar"></div>
   </div>
 </section>
 
-<section class="slide" data-n="s1" data-steps="2">
-  <header class="hd"><span class="chap">1. 売り場を半分ずつ使う</span><h2>アイス店の売り場の半分で傘を売ると、月の売上はどう変わるか</h2><span class="num">02</span></header>
+<section class="slide br" data-n="s1" data-steps="2">
+  <header class="hd"><span class="chap">1. アイス店だけの売り場</span><h2>アイスだけを売ると、月の売上はどれだけ揺れるか</h2><span class="num">02</span></header>
+  <p class="bridge"><span class="was">今日の問い：残り半分を誰に貸すか</span><span class="ar">→</span><span class="now">まず、アイスだけで売ったときの月の売上を見る</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.2fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">売り場を分ける</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 560 370" style="width:100%;height:430px" aria-label="暑い月と寒い月の売上。アイスだけのときと、売り場を半分ずつ使ったとき"><path d="M60 300.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="304.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >0</text>
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:4px">
+      <div class="stepbar"><b style="font-size:15px">アイスだけで売る</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 50 560 290" style="width:100%;height:330px" aria-label="暑い月と寒い月のアイスの売上と、毎月の家賃や人件費"><path d="M60 300.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="304.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >0</text>
 <path d="M60 190.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="194.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >100</text>
 <path d="M60 80.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="84.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >200</text>
-<text x="52.0" y="52.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >万円</text>
-<path d="M60 168.0H455" stroke="#2B5FA8" stroke-width="2" stroke-dasharray="3 5"/><text x="460.0" y="164.0" text-anchor="start" font-size="14" font-weight="700" fill="#2B5FA8" >平均 120</text>
-<path d="M60 190.0H455" stroke="#B5500F" stroke-width="2" stroke-dasharray="8 6"/><text x="460.0" y="206.0" text-anchor="start" font-size="13" font-weight="700" fill="#B5500F" >家賃・人件費</text><text x="460.0" y="222.0" text-anchor="start" font-size="13" font-weight="700" fill="#B5500F" >毎月 100</text>
+<text x="52.0" y="64.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >万円</text>
+<path d="M60 190.0H455" stroke="#B5500F" stroke-width="2" stroke-dasharray="8 6"/>
+<rect class="grow g0" x="110" y="80.0" width="120" height="220.0" rx="3" fill="#F88039"/>
+<text class="mono" x="170.0" y="70.0" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >200</text>
+<text x="170.0" y="324.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >暑い月</text>
+<rect class="grow g0" x="300" y="256.0" width="120" height="44.0" rx="3" fill="#F88039"/>
+<text class="mono" x="360.0" y="284.0" text-anchor="middle" font-size="18" font-weight="700" fill="#fff" >40</text>
+<g class="sv dl" data-s="1"><rect x="300" y="190.0" width="120" height="66.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="360.0" y="228.0" text-anchor="middle" font-size="14" font-weight="900" fill="#B5500F" >60万円の赤字</text></g>
+<text x="360.0" y="324.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >寒い月</text>
+<g class="sv" data-s="1"><path d="M60 168.0H455" stroke="#2B5FA8" stroke-width="2" stroke-dasharray="3 5"/><text x="460.0" y="172.0" text-anchor="start" font-size="14" font-weight="700" fill="#2B5FA8" >平均 120</text></g>
+<g class="sv dl" data-s="1"><path d="M250 80.0H262V256.0H250" fill="none" stroke="#B5500F" stroke-width="2"/><text x="268.0" y="124.0" text-anchor="start" font-size="15" font-weight="900" fill="#B5500F" >差 160</text></g>
+<path d="M56 300H455" stroke="#D8DFE8" stroke-width="2"/></svg>
+      <div class="leg"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（売り場全部）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:18px;height:0;border-top:2.5px dashed #B5500F;display:inline-block"></i>家賃・人件費（毎月100）</span><span class="sv" data-s="1" style="display:inline-flex;align-items:center;gap:5px"><i style="width:18px;height:0;border-top:2.5px dashed #2B5FA8;display:inline-block"></i>平均</span></div>
+    </div>
+    <div class="kp fade d2">
+      <div class="card tight"><h4>商店街のアイス店<span class="ex">説明のための例</span></h4>
+        <p>月は2種類だけ。晴れて暑い月と、雨が続いて寒い月。アイスの売上は暑い月に200万円、寒い月に40万円。家賃や人件費は毎月100万円。</p></div>
+      <div class="card tight sv" data-s="1"><div class="row2"><h4>平均では20万円残るが</h4><div class="mid w" style="white-space:nowrap">差 160<small>万円</small></div></div>
+        <p>平均は月120万円。<b style="color:var(--ink)">しかし寒い月は40万円しか売れず、60万円の赤字</b>。平均でやっていけそうでも、月ごとの揺れが大きすぎる。</p></div>
+      <div class="card tight sv" data-s="2" style="border-left:5px solid var(--b1)"><h4>そこで店主は考えた</h4>
+        <p>アイスの売り場を半分にして、<b style="color:var(--ink)">残り半分をほかの店に貸す</b>。貸した店とは売上を合わせて、家賃や人件費を払う<span class="ex">説明のための例</span>。</p>
+        <p style="margin-top:4px"><b style="color:var(--safe)">誰に貸せば、月ごとの差が小さくなるか。</b></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide br" data-n="s2" data-steps="2">
+  <header class="hd"><span class="chap">2. 傘の店と半分ずつ</span><h2>天気と逆に売れる傘の店に貸すと、月の売上はどうなるか</h2><span class="num">03</span></header>
+  <p class="bridge"><span class="was">アイスだけでは、暑い月と寒い月の差が160万円</span><span class="ar">→</span><span class="now">天気と逆に売れる傘の店に、残り半分を貸してみる</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.2fr 1fr;gap:22px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:4px">
+      <div class="stepbar"><b style="font-size:15px">傘の店に貸す</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 50 560 290" style="width:100%;height:330px" aria-label="暑い月と寒い月の売上。アイスだけのときと、傘の店と売り場を半分ずつ使ったとき"><path d="M60 300.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="304.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >0</text>
+<path d="M60 190.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="194.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >100</text>
+<path d="M60 80.0H455" stroke="#E3E8EF"/><text class="mono" x="52.0" y="84.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >200</text>
+<text x="52.0" y="64.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >万円</text>
+<path d="M60 190.0H455" stroke="#B5500F" stroke-width="2" stroke-dasharray="8 6"/>
+<g class="sv" data-s="1"><path d="M60 168.0H455" stroke="#2B5FA8" stroke-width="2" stroke-dasharray="3 5"/><text x="460.0" y="172.0" text-anchor="start" font-size="14" font-weight="700" fill="#2B5FA8" >平均 120</text></g>
 <g class="grow g0"><rect class="shr1" style="--k:.5" x="110" y="80.0" width="120" height="220.0" rx="3" fill="#F88039"/></g>
-<text class="hide1" x="170.0" y="195.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" >アイス 200</text>
+<text class="mono hide1" x="170.0" y="70.0" text-anchor="middle" font-size="16" font-weight="700" fill="#16233A" >200</text>
 <rect class="grow dl" data-s="1" x="110" y="168.0" width="120" height="22.0" rx="3" fill="#65CCFE"/>
 <text class="sv dl" x="170.0" y="250.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" data-s="1">アイス 100</text>
-<text class="sv dl" x="170.0" y="183.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0F1B2D" data-s="1">傘 20</text>
+<text class="sv dl" x="170.0" y="183.0" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" data-s="1">傘 20</text>
 <text class="sv dl mono" x="170.0" y="158.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2B5FA8" data-s="1">120</text>
 <text x="170.0" y="324.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >暑い月</text>
-<g class="hide1"><rect x="330" y="190.0" width="120" height="66.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="390.0" y="228.0" text-anchor="middle" font-size="14" font-weight="900" fill="#B5500F" >60万円の赤字</text></g>
-<g class="grow g0"><rect class="shr1" style="--k:.5" x="330" y="256.0" width="120" height="44.0" rx="3" fill="#F88039"/></g>
-<text class="hide1" x="390.0" y="283.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" >アイス 40</text>
-<rect class="grow dl" data-s="1" x="330" y="168.0" width="120" height="110.0" rx="3" fill="#65CCFE"/>
-<text class="sv dl" x="390.0" y="293.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" data-s="1">アイス 20</text>
-<text class="sv dl" x="390.0" y="228.0" text-anchor="middle" font-size="14" font-weight="700" fill="#0F1B2D" data-s="1">傘 100</text>
-<text class="sv dl mono" x="390.0" y="158.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2B5FA8" data-s="1">120</text>
-<text x="390.0" y="324.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >寒い月</text>
-<path d="M56 300H455" stroke="#D8DFE8" stroke-width="2"/>
-<g transform="translate(120 352)"><rect width="14" height="14" fill="#F88039" rx="2"/><text x="20.0" y="12.0" text-anchor="start" font-size="13" font-weight="400" fill="#5A6B82" >アイス</text><g class="sv" data-s="1"><rect x="80" width="14" height="14" fill="#65CCFE" rx="2"/><text x="100.0" y="12.0" text-anchor="start" font-size="13" font-weight="400" fill="#5A6B82" >傘（売り場は半分ずつ）</text></g></g></svg>
+<g class="hide1"><rect x="300" y="190.0" width="120" height="66.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="360.0" y="228.0" text-anchor="middle" font-size="14" font-weight="900" fill="#B5500F" >60万円の赤字</text></g>
+<g class="grow g0"><rect class="shr1" style="--k:.5" x="300" y="256.0" width="120" height="44.0" rx="3" fill="#F88039"/></g>
+<text class="mono hide1" x="360.0" y="284.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" >40</text>
+<rect class="grow dl" data-s="1" x="300" y="168.0" width="120" height="110.0" rx="3" fill="#65CCFE"/>
+<text class="sv dl" x="360.0" y="293.0" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" data-s="1">アイス 20</text>
+<text class="sv dl" x="360.0" y="228.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" data-s="1">傘 100</text>
+<text class="sv dl mono" x="360.0" y="158.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2B5FA8" data-s="1">120</text>
+<text x="360.0" y="324.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >寒い月</text>
+<path d="M56 300H455" stroke="#D8DFE8" stroke-width="2"/></svg>
+      <div class="leg"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:18px;height:0;border-top:2.5px dashed #B5500F;display:inline-block"></i>家賃・人件費（毎月100）</span><span class="sv" data-s="1" style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#65CCFE;display:inline-block"></i>傘（売り場は半分ずつ）</span><span class="sv" data-s="1" style="display:inline-flex;align-items:center;gap:5px"><i style="width:18px;height:0;border-top:2.5px dashed #2B5FA8;display:inline-block"></i>平均</span></div>
     </div>
     <div class="kp fade d2">
-      <div class="card tight"><h4>アイスだけ<span class="ex">説明のための例</span></h4>
-        <div class="row2"><p>暑い月 200万円、寒い月 40万円。平均は月120万円。寒い月は60万円の赤字。</p><div class="mid w" style="white-space:nowrap">差 160<small>万円</small></div></div></div>
-      <div class="card tight sv" data-s="1"><h4>売り場を半分ずつ（傘はアイスの裏返し）</h4>
-        <div class="row2"><p>暑い月 100＋20＝120万円<br>寒い月 20＋100＝120万円<br>どの月も20万円の黒字。</p><div class="mid g" style="white-space:nowrap">差 0<small>万円</small></div></div>
-        <p style="margin-top:4px"><b style="color:var(--ink)">平均は月120万円のまま</b>、月ごとの差だけが小さくなった。</p></div>
-      <div class="card tight sv" data-s="2" style="border-left:5px solid var(--b3)"><h4>分散投資とは<span class="ex">出典1</span></h4>
-        <p>お金を1つにまとめずに、値動きの違う複数の資産に分けて持つこと。小さくなるのは結果のばらつき、つまり<b>リスク</b>。</p>
-        <p style="margin-top:4px">薄められるのは、1つの店や1つの会社だけに起きる下振れ。街全体に起きる下振れは5節で。</p></div>
+      <div class="card tight"><h4>傘の店<span class="ex">説明のための例</span></h4>
+        <p>傘の売上はアイスの裏返しで、暑い月に40万円、寒い月に200万円。売り場が半分なので、アイスも傘も売上はそれぞれ半分になる。</p></div>
+      <div class="card tight sv" data-s="1"><div class="row2"><h4>半分ずつにすると</h4><div class="mid g" style="white-space:nowrap">差 0<small>万円</small></div></div>
+        <p>暑い月 100＋20＝120万円<br>寒い月 20＋100＝120万円<br><b style="color:var(--ink)">平均は月120万円のまま</b>、どの月も20万円の黒字。</p></div>
+      <div class="card tight sv" data-s="2" style="border-left:5px solid var(--b3)"><h4>打ち消し合いと分散投資<span class="ex">出典1</span></h4>
+        <p>片方が減った分をもう片方が埋める動きを<b>打ち消し合い</b>と呼ぶ。<b>分散投資</b>は、お金を1つにまとめずに、値動きの違う複数の資産に分けて持つこと。売り場を2つの店で分けたのと同じ形。</p>
+        <p class="mini" style="margin-top:4px">小さくなるのは結果のばらつき、つまりリスク。薄められるのは1つの店や1つの会社だけに起きる下振れで、街全体に起きる下振れはあとで扱う。</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s2a" data-steps="2">
-  <header class="hd"><span class="chap">2. 正反対に動く2つの資産</span><h2>逆に動く資産Aと資産Bに50万円ずつ分けると、1年でどうなるか</h2><span class="num">03</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.2fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">100万円の持ち方を変える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 560 366" style="width:100%;height:430px" aria-label="よい年と悪い年の増減。資産Aだけと、AとBに50万円ずつ"><text x="52.0" y="30.0" text-anchor="start" font-size="13" font-weight="400" fill="#8A9AB0" >1年の増減（万円）</text>
-<path d="M56 250.0H540" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="50.0" y="254.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >−10</text>
-<path d="M56 190.0H540" stroke="#C9D3DF" stroke-width="2"/><text class="mono" x="50.0" y="194.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >0</text>
-<path d="M56 130.0H540" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="50.0" y="134.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >+10</text>
-<path d="M56 70.0H540" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="50.0" y="74.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >+20</text>
-<rect class="grow g0" x="70" y="70.0" width="46" height="120.0" rx="3" fill="#2B5FA8"/>
-<text class="mono" x="93.0" y="62.0" text-anchor="middle" font-size="15" font-weight="700" fill="#2B5FA8" >+20</text>
-<text x="93.0" y="300.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" >Aだけ</text>
-<rect class="grow" data-s="1" x="126" y="130.0" width="46" height="60.0" rx="3" fill="#2B5FA8"/>
-<text class="sv mono" x="149.0" y="122.0" text-anchor="middle" font-size="15" font-weight="700" fill="#2B5FA8"  data-s="1">+10</text>
-<text class="sv" x="149.0" y="300.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82"  data-s="1">A</text>
-<rect class="grow top" data-s="1" x="182" y="190.0" width="46" height="30.0" rx="3" fill="#F88039"/>
-<text class="sv mono" x="205.0" y="238.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F88039"  data-s="1">−5</text>
-<text class="sv" x="205.0" y="300.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82"  data-s="1">B</text>
-<rect class="grow" data-s="2" x="238" y="160.0" width="46" height="30.0" rx="3" fill="#40B69A"/>
-<text class="sv mono" x="261.0" y="152.0" text-anchor="middle" font-size="15" font-weight="700" fill="#1F7A63"  data-s="2">+5</text>
-<text class="sv" x="261.0" y="300.0" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82"  data-s="2">合計</text>
-<g class="sv" data-s="1"><path d="M126 312H228" stroke="#5A6B82"/><text x="177.0" y="328.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" >50万円ずつ</text></g>
-<text x="177.0" y="356.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >よい年</text>
-<rect class="grow top g0" x="310" y="190.0" width="46" height="60.0" rx="3" fill="#2B5FA8"/>
-<text class="mono" x="333.0" y="268.0" text-anchor="middle" font-size="15" font-weight="700" fill="#2B5FA8" >−10</text>
-<text x="333.0" y="300.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" >Aだけ</text>
-<rect class="grow top" data-s="1" x="366" y="190.0" width="46" height="30.0" rx="3" fill="#2B5FA8"/>
-<text class="sv mono" x="389.0" y="238.0" text-anchor="middle" font-size="15" font-weight="700" fill="#2B5FA8"  data-s="1">−5</text>
-<text class="sv" x="389.0" y="300.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82"  data-s="1">A</text>
-<rect class="grow" data-s="1" x="422" y="130.0" width="46" height="60.0" rx="3" fill="#F88039"/>
-<text class="sv mono" x="445.0" y="122.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F88039"  data-s="1">+10</text>
-<text class="sv" x="445.0" y="300.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82"  data-s="1">B</text>
-<rect class="grow" data-s="2" x="478" y="160.0" width="46" height="30.0" rx="3" fill="#40B69A"/>
-<text class="sv mono" x="501.0" y="152.0" text-anchor="middle" font-size="15" font-weight="700" fill="#1F7A63"  data-s="2">+5</text>
-<text class="sv" x="501.0" y="300.0" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82"  data-s="2">合計</text>
-<g class="sv" data-s="1"><path d="M366 312H468" stroke="#5A6B82"/><text x="417.0" y="328.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" >50万円ずつ</text></g>
-<text x="417.0" y="356.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >悪い年</text>
-<text x="113.0" y="62.0" text-anchor="start" font-size="13" font-weight="700" fill="#2B5FA8" >→120万円</text>
-<text x="357.0" y="268.0" text-anchor="start" font-size="13" font-weight="700" fill="#2B5FA8" >→90万円</text></svg>
-    </div>
-    <div class="kp fade d2">
-      <div class="card tight"><h4>2つの資産<span class="ex">架空の例</span></h4>
-        <p><b style="color:var(--safe)">資産A</b>：よい年に＋20％、悪い年に−10％<br><b style="color:var(--warnT)">資産B</b>：よい年に−10％、悪い年に＋20％<br>よい年と悪い年が1回ずつなら、どちらも平均は年5％。</p>
-        <p style="margin-top:4px">Aだけに100万円なら、よい年120万円、悪い年90万円。<b style="color:var(--ink)">1年で30万円の差</b>。</p></div>
-      <div class="card tight sv" data-s="1"><h4>50万円ずつに分けると</h4>
-        <p>よい年：Aが10万円増え、Bが5万円減る<br>悪い年：Aが5万円減り、Bが10万円増える</p></div>
-      <div class="card tight sv" data-s="2" style="border-left:5px solid var(--b3)"><div class="row2"><h4>どちらの年も</h4><div class="mid g">＋5<small>万円（5％）</small></div></div>
-        <p>片方が減った分を、もう片方が増えて埋める。この動きを<b>打ち消し合い</b>と呼ぶ。</p></div>
+<section class="slide br" data-n="s3" data-steps="3">
+  <header class="hd"><span class="chap">3. 貸す相手と相関</span><h2>傘の店が見つからなかったら、ビール店と時計修理店のどちらか</h2><span class="num">04</span></header>
+  <p class="bridge"><span class="was">傘の店と組むと差は0。でも、天気と逆に売れる店がいつも見つかるとは限らない</span><span class="ar">→</span><span class="now">ほかの店に貸したらどうなるかを比べる</span></p>
+  <div class="body" style="display:flex;flex-direction:column;gap:10px">
+    <div class="toprow" style="display:flex;gap:16px;align-items:center"><div class="stepbar"><b style="font-size:15px">貸す相手を変える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><div class="ask" style="flex:1"><b>チャットで問いかけ</b>：傘の店が見つからなかったとします。残り半分を<b>①ビール店 ②時計修理店</b>のどちらに貸すと、月ごとの差が小さくなると思いますか。番号をチャットへ。</div></div>
+    <div class="g3" style="align-items:start">
+      <div class="card tight"><span class="pill" style="background:#FFF8D6;color:#7A5B00">①ビール店：同じ向き</span><p class="mini" style="margin-top:6px">ビールも暑い月に売れて、寒い月に売れない。暑い月150万円、寒い月30万円<span class="ex">説明のための例</span></p>
+        <svg viewBox="0 0 300 198" style="width:100%;height:215px" aria-label="暑い月と寒い月の合計の売上。アイスとビール店が半分ずつ"><rect class="grow" data-s="1" x="45" y="107.0" width="80" height="65.0" fill="#F88039"/>
+<text class="sv mono" x="85.0" y="144.5" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" data-s="1">100</text>
+<rect class="grow" data-s="1" x="45" y="58.2" width="80" height="48.8" fill="#FEDA37"/>
+<text class="sv mono" x="85.0" y="87.6" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" data-s="1">75</text>
+<text class="sv mono" x="85.0" y="50.2" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" data-s="1">175</text>
+<text x="85.0" y="192.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >暑い月</text>
+<rect class="grow" data-s="1" x="175" y="159.0" width="80" height="13.0" fill="#F88039"/>
+<text class="sv mono" x="261.0" y="170.0" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" data-s="1">20</text>
+<rect class="grow" data-s="1" x="175" y="149.2" width="80" height="9.8" fill="#FEDA37"/>
+<text class="sv mono" x="261.0" y="155.0" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" data-s="1">15</text>
+<text class="sv mono" x="215.0" y="141.2" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" data-s="1">35</text>
+<text x="215.0" y="192.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >寒い月</text>
+<path d="M30 172H280" stroke="#D8DFE8" stroke-width="2"/></svg><div class="leg"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（半分）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#FEDA37;display:inline-block"></i>ビール（半分）</span></div>
+        <p class="note sv" data-s="1">差は140万円で、アイスだけの160万円とあまり変わらない。寒い月が暑い月の5分の1なのも同じ。<b>打ち消し合いが起きない</b>。</p></div>
+      <div class="card tight"><span class="pill" style="background:#EEF9E4;color:#3F7A16">②時計修理店：無関係</span><p class="mini" style="margin-top:6px">時計の修理は天気と関係なく、月100万円か60万円を半々<span class="ex">説明のための例</span></p>
+        <svg viewBox="0 0 300 212" style="width:100%;height:215px" aria-label="起こりうる4通りの月の売上。アイスと時計修理店が半分ずつ"><rect class="grow" data-s="2" x="18" y="103.0" width="48" height="65.0" fill="#F88039"/>
+<rect class="grow" data-s="2" x="18" y="70.5" width="48" height="32.5" fill="#82D548"/>
+<text class="sv mono" x="42.0" y="63.5" text-anchor="middle" font-size="16" font-weight="700" fill="#16233A" data-s="2">150</text>
+<text class="sv" x="42.0" y="185.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" data-s="2">修理100</text>
+<rect class="grow" data-s="2" x="80" y="103.0" width="48" height="65.0" fill="#F88039"/>
+<rect class="grow" data-s="2" x="80" y="83.5" width="48" height="19.5" fill="#82D548"/>
+<text class="sv mono" x="104.0" y="76.5" text-anchor="middle" font-size="16" font-weight="700" fill="#16233A" data-s="2">130</text>
+<text class="sv" x="104.0" y="185.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" data-s="2">修理60</text>
+<rect class="grow" data-s="2" x="172" y="155.0" width="48" height="13.0" fill="#F88039"/>
+<rect class="grow" data-s="2" x="172" y="122.5" width="48" height="32.5" fill="#82D548"/>
+<text class="sv mono" x="196.0" y="115.5" text-anchor="middle" font-size="16" font-weight="700" fill="#16233A" data-s="2">70</text>
+<text class="sv" x="196.0" y="185.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" data-s="2">修理100</text>
+<rect class="grow" data-s="2" x="234" y="155.0" width="48" height="13.0" fill="#F88039"/>
+<rect class="grow" data-s="2" x="234" y="135.5" width="48" height="19.5" fill="#82D548"/>
+<text class="sv mono" x="258.0" y="128.5" text-anchor="middle" font-size="16" font-weight="700" fill="#16233A" data-s="2">50</text>
+<text class="sv" x="258.0" y="185.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" data-s="2">修理60</text>
+<text x="73.0" y="204.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >暑い月</text>
+<text x="227.0" y="204.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >寒い月</text>
+<path d="M14 168H286" stroke="#D8DFE8" stroke-width="2"/></svg><div class="leg"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（半分）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#82D548;display:inline-block"></i>時計修理（半分）</span></div>
+        <p class="note sv" data-s="2">起こりうる月は4通りで、売上は50万〜150万円。アイスだけの40万円か200万円より<b>幅が狭くなる</b>。平均はアイス120万円と時計修理80万円の真ん中で100万円。<b>問いの答えは②</b>。</p></div>
+      <div class="card tight sv" data-s="3" style="border-left:5px solid var(--b1)"><h4 style="font-size:16px">一緒に動く度合い＝<b>相関</b><span class="ex">出典4</span></h4>
+        <p class="mini">相関には、同じ向き・逆向き・無関係の3つの形がある。分散がどれだけ効くかは、この度合いで決まる。</p>
+        <div class="forms">
+          <div><i style="background:#65CCFE"></i><b>逆向き</b>：傘の店<br><span>差が消える</span></div>
+          <div><i style="background:#82D548"></i><b>無関係</b>：時計修理店<br><span>幅が狭くなる</span></div>
+          <div><i style="background:#FEDA37"></i><b>同じ向き</b>：ビール店<br><span>ほとんど変わらない</span></div>
+        </div></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s2b" data-steps="3">
-  <header class="hd"><span class="chap">2. 正反対に動く2つの資産</span><h2>2年続けると、2年後の残高はどう変わるか</h2><span class="num">04</span></header>
+<section class="slide br" data-n="s4" data-steps="4">
+  <header class="hd"><span class="chap">4. 店から資産へ</span><h2>店を資産に置き換えても、同じことが起きるか</h2><span class="num">05</span></header>
+  <p class="bridge"><span class="was">店で見た3つの形（同じ向き・逆向き・無関係）</span><span class="ar">→</span><span class="now">店の売上を、資産の値動きに置き換えてみる</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.1fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">持ち方ごとに2年たどる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 560 352" style="width:100%;height:400px" aria-label="2年続けたときの残高。Aだけ、毎年50万円ずつに戻す、戻さない"><text x="52.0" y="30.0" text-anchor="start" font-size="13" font-weight="400" fill="#8A9AB0" >残高（万円）</text>
-<path d="M60 266.7H400" stroke="#EEF2F7"/><text class="mono" x="54.0" y="270.7" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >100</text>
-<path d="M60 180.0H400" stroke="#EEF2F7"/><text class="mono" x="54.0" y="184.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >110</text>
-<path d="M60 93.3H400" stroke="#EEF2F7"/><text class="mono" x="54.0" y="97.3" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >120</text>
-<text x="90.0" y="340.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >はじめ</text>
-<text x="240.0" y="340.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >1年後</text>
-<text x="390.0" y="340.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >2年後</text>
-<polyline class="draw d0" points="90,266.7 240,93.3 390,197.3" fill="none" stroke="#2B5FA8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<circle class="" cx="90" cy="266.7" r="6" fill="#fff" stroke="#2B5FA8" stroke-width="3"/>
-<circle class="" cx="240" cy="93.3" r="6" fill="#fff" stroke="#2B5FA8" stroke-width="3"/>
-<circle class="" cx="390" cy="197.3" r="6" fill="#fff" stroke="#2B5FA8" stroke-width="3"/>
-<polyline class="draw" data-s="1" points="90,266.7 240,223.3 390,177.8" fill="none" stroke="#40B69A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<circle class="sv" data-s="1" cx="90" cy="266.7" r="6" fill="#fff" stroke="#40B69A" stroke-width="3"/>
-<circle class="sv" data-s="1" cx="240" cy="223.3" r="6" fill="#fff" stroke="#40B69A" stroke-width="3"/>
-<circle class="sv" data-s="1" cx="390" cy="177.8" r="6" fill="#fff" stroke="#40B69A" stroke-width="3"/>
-<polyline class="sv" data-s="2" points="90,266.7 240,223.3 390,197.3" fill="none" stroke="#F88039" stroke-width="4" stroke-dasharray="7 6" stroke-linecap="round"/>
-<circle class="sv" data-s="2" cx="90" cy="266.7" r="6" fill="#fff" stroke="#F88039" stroke-width="3"/>
-<circle class="sv" data-s="2" cx="240" cy="223.3" r="6" fill="#fff" stroke="#F88039" stroke-width="3"/>
-<circle class="sv" data-s="2" cx="390" cy="197.3" r="6" fill="#fff" stroke="#F88039" stroke-width="3"/>
-<text class="mono" x="240.0" y="81.3" text-anchor="middle" font-size="15" font-weight="700" fill="#2B5FA8" >120</text>
-<text x="406.0" y="200.3" text-anchor="start" font-size="14" font-weight="700" fill="#2B5FA8" >108　Aだけ</text>
-<text class="sv mono" x="240.0" y="247.3" text-anchor="middle" font-size="15" font-weight="700" fill="#1F7A63" data-s="1">105</text>
-<text class="sv" x="406.0" y="167.8" text-anchor="start" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">110.25　毎年戻す</text>
-<text class="sv" x="406.0" y="219.3" text-anchor="start" font-size="14" font-weight="700" fill="#B5500F" data-s="2">108　戻さない</text></svg>
-      <p class="note">資産A・Bは架空の例。戻す手順は F3-09、続けて運用したときの増え方は F1-10 で扱う。</p>
-    </div>
-    <div class="kp g8 fade d2">
-      <div class="card tight"><h4 style="color:var(--safe)">資産Aだけ</h4><p>100万円 → 120万円 → 108万円。平均は年5％でも、1年あたりにならすと<b>約3.9％</b>。</p></div>
-      <div class="card tight sv" data-s="1"><h4 style="color:var(--okT)">50万円ずつ・毎年初めに50万円ずつへ戻す</h4><p>100万円 → 105万円 → <b>110.25万円</b>。同じ平均5％でも、ばらつきが大きいほうが2年後の残高は少なくなる。</p></div>
-      <div class="card tight sv" data-s="2"><h4 style="color:var(--warnT)">戻さずに置いておくと</h4><p>1年目のあと A 60万円・B 45万円。2年目のあとはどちらも54万円で、合計108万円。2年目の増え方は約2.9％。</p></div>
-      <div class="card tight sv" data-s="3" style="border-left:5px solid var(--b1)"><h4>この組み合わせは市場に長く残らない</h4><p>ばらつきなしで年5％は、F1-08 の上乗せのない基準（年0.5％程度）よりずっと高い。こうしたうまい話は裁定で消えていく。</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-n="s3" data-steps="3">
-  <header class="hd"><span class="chap">3. 無関係に動く2つの資産</span><h2>互いに関係なく動く資産CとDを半分ずつ持つと、結果はどう散らばるか</h2><span class="num">05</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.15fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:4px">
       <div class="stepbar"><b style="font-size:15px">組み合わせを数える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 560 360" style="width:100%;height:370px" aria-label="1年の結果の散らばり。資産Cだけと、CとDに50万円ずつ"><text x="40.0" y="28.0" text-anchor="start" font-size="13" font-weight="400" fill="#8A9AB0" >起こりやすさ</text>
-<path d="M60 290H520" stroke="#D8DFE8" stroke-width="2"/>
-<path d="M60 70H520" stroke="#EEF2F7"/><text x="56.0" y="74.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >半分</text>
-<path d="M60 180.0H520" stroke="#EEF2F7" class="sv" data-s="2"/><text class="sv" x="56.0" y="184.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" data-s="2">4分の1</text>
-<text class="mono" x="130.0" y="314.0" text-anchor="middle" font-size="16" font-weight="700" fill="#B5500F" >−15%</text>
-<g class="grow g0"><rect class="shr2" style="--k:.5" x="78.0" y="70" width="104" height="220" rx="4" fill="#F88039"/></g>
-<text class="hide2" x="130.0" y="60.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" >半分</text>
-<text class="sv dl" x="130.0" y="170.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" data-s="2">4分の1</text>
-<text class="mono" x="290.0" y="314.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1F7A63" >+5%</text>
-<rect class="grw2" x="238.0" y="70" width="104" height="220" rx="4" fill="#40B69A"/>
-<text class="sv dl" x="290.0" y="60.0" text-anchor="middle" font-size="15" font-weight="900" fill="#1F7A63" data-s="2">半分</text>
-<text class="mono" x="450.0" y="314.0" text-anchor="middle" font-size="16" font-weight="700" fill="#2B5FA8" >+25%</text>
-<g class="grow g0"><rect class="shr2" style="--k:.5" x="398.0" y="70" width="104" height="220" rx="4" fill="#2B5FA8"/></g>
-<text class="hide2" x="450.0" y="60.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" >半分</text>
-<text class="sv dl" x="450.0" y="170.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" data-s="2">4分の1</text>
-<path d="M290 324V334" stroke="#5A6B82"/><text x="290.0" y="352.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >平均 +5%</text>
-<text class="hide2" x="520.0" y="28.0" text-anchor="end" font-size="15" font-weight="700" fill="#2B5FA8" >資産Cだけを持つと</text>
-<text class="sv dl" x="520.0" y="28.0" text-anchor="end" font-size="15" font-weight="700" fill="#1F7A63" data-s="2">CとDに50万円ずつ持つと</text></svg>
-      <div class="ask sv" data-s="3"><b>チャットで問いかけ</b>：アイス店の売り場の残り半分を貸すなら、①ビール店 ②焼き芋店 ③時計修理店のどれが、月ごとの差をいちばん小さくする？ 番号をチャットへ。</div>
+      <svg viewBox="0 0 560 326" style="width:100%;height:360px" aria-label="1年の結果の起こりやすさ。資産Cだけと、CとDに50万円ずつ"><text x="40.0" y="26.0" text-anchor="start" font-size="14" font-weight="400" fill="#8A9AB0" >1年の結果の起こりやすさ</text>
+<path d="M60 262H520" stroke="#D8DFE8" stroke-width="2"/>
+<path d="M60 62H520" stroke="#EEF2F7"/><text x="56.0" y="66.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" >半分</text>
+<path d="M60 162.0H520" stroke="#EEF2F7" class="sv" data-s="2"/><text class="sv" x="56.0" y="166.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" data-s="2">4分の1</text>
+<text class="mono" x="130.0" y="288.0" text-anchor="middle" font-size="18" font-weight="700" fill="#B5500F" >−15%</text>
+<g class="grow g0"><rect class="shr2 cdbar" style="--k:.5" x="78.0" y="62" width="104" height="200" rx="4" fill="#2B5FA8"/></g>
+<text class="hide2" x="130.0" y="52.0" text-anchor="middle" font-size="16" font-weight="900" fill="#16233A" >半分</text>
+<text class="sv dl" x="130.0" y="152.0" text-anchor="middle" font-size="16" font-weight="900" fill="#16233A" data-s="2">4分の1</text>
+<text class="mono" x="290.0" y="288.0" text-anchor="middle" font-size="18" font-weight="700" fill="#1F7A63" >+5%</text>
+<rect class="grw2" x="238.0" y="62" width="104" height="200" rx="4" fill="#40B69A"/>
+<text class="sv dl" x="290.0" y="52.0" text-anchor="middle" font-size="16" font-weight="900" fill="#1F7A63" data-s="2">半分</text>
+<text class="mono" x="450.0" y="288.0" text-anchor="middle" font-size="18" font-weight="700" fill="#2B5FA8" >+25%</text>
+<g class="grow g0"><rect class="shr2 cdbar" style="--k:.5" x="398.0" y="62" width="104" height="200" rx="4" fill="#2B5FA8"/></g>
+<text class="hide2" x="450.0" y="52.0" text-anchor="middle" font-size="16" font-weight="900" fill="#16233A" >半分</text>
+<text class="sv dl" x="450.0" y="152.0" text-anchor="middle" font-size="16" font-weight="900" fill="#16233A" data-s="2">4分の1</text>
+<path d="M290 296V304" stroke="#5A6B82"/><text x="290.0" y="320.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >平均 +5%</text></svg>
+      <div class="swap"><div class="leg"><span class="hide2" style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#2B5FA8;display:inline-block"></i>資産Cだけを持つ</span></div><div class="leg"><span class="sv" data-s="2" style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#40B69A;display:inline-block"></i>CとDに50万円ずつ持つ</span></div></div>
     </div>
-    <div class="kp g8 fade d2">
-      <div class="card tight"><h4>資産CとD<span class="ex">説明のための例</span></h4><p>どちらも上がる年は＋25％、下がる年は−15％。平均は＋5％。ただし、2つは互いに関係なく動く。1つだけ持つと、＋25％か−15％が半分ずつ。</p></div>
+    <div class="kp fade d2" style="gap:6px">
+      <div class="card tight"><h4>資産CとD<span class="ex">説明のための例</span></h4><p class="mini">どちらも上がる年は＋25％、下がる年は−15％。平均は＋5％。2つは、アイスと時計修理店のように、互いに関係なく動く。</p></div>
       <div class="card tight sv" data-s="1"><h4>50万円ずつ持つと、起こりうる年は4通り</h4>
         <div class="out4"><div class="h"></div><div class="h">Dが上がる</div><div class="h">Dが下がる</div>
           <div class="h">Cが上がる</div><div class="v u">+25%</div><div class="v m">+5%</div>
           <div class="h">Cが下がる</div><div class="v m">+5%</div><div class="v d">−15%</div></div>
         <p class="mini" style="margin-top:4px">どれも同じくらい起こりやすいとする。+5%は+25%と−15%の真ん中。</p></div>
-      <div class="card tight sv" data-s="2"><p>4通りの平均は (25+5+5−15)÷4 で<b>＋5％のまま</b>。両端の＋25％と−15％は、それぞれ4分の1に減る。ばらつきは消えないが、小さくなる。</p></div>
-      <div class="keybox sv" data-s="3">平均は組み合わせた資産の平均どおりで、ばらつきはそれより小さくなります。値動きが似ていないほど、小さくなります。</div>
+      <div class="card tight sv" data-s="2"><p class="mini">4通りの平均は (25+5+5−15)÷4 で<b>＋5％のまま</b>。両端の＋25％と−15％は、それぞれ4分の1に減る。<b style="color:var(--ink)">時計修理店と組んで幅が狭くなったのと同じ形</b>。</p></div>
+      <div class="keybox sv" data-s="3">平均は、組み合わせた2つの平均と同じです。ばらつきはそれより小さくなり、値動きが似ていないほど小さくなります。</div>
+      <div class="card tight sv" data-s="4"><p class="mini">現実の資産では、<b style="color:var(--ink)">株式と債券</b>が、一般に相関が低い組み合わせとされる（出典2）。</p>
+        <p class="mini" style="margin-top:3px">傘の店のようにぴったり逆に動く相手は、理屈を見せるための理想の例。</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s4" data-steps="3">
-  <header class="hd"><span class="chap">4. 一緒に動く度合いと相関</span><h2>残り半分をどの店に貸すかで、月ごとの差はどう変わるか</h2><span class="num">06</span></header>
-  <div class="body" style="display:flex;flex-direction:column;gap:10px">
-    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><div class="stepbar"><b style="font-size:15px">貸す相手を変える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><p class="note" style="flex:1;min-width:280px">2つが一緒に動く度合いを<b>相関</b>と呼ぶ。形は同じ向き・逆向き・無関係の3つ（出典4）。数字は説明のための例。</p></div>
-    <div class="g3">
-      <div class="card tight fade d1"><span class="pill w">同じ向き</span><h4 style="margin:6px 0 0;font-size:16px">①ビール店（暑い月150・寒い月30）</h4><div style="display:flex;gap:14px;font-size:13px;color:var(--ink2);margin-top:6px"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（売り場の半分）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#FEDA37;display:inline-block"></i>ビール（残り半分）</span></div><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="暑い月と寒い月の合計の売上"><rect class="grow g0" x="45" y="103.0" width="80" height="65.0" fill="#F88039"/>
-<text class="mono" x="85.0" y="140.5" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" >100</text>
-<rect class="grow g0" x="45" y="54.2" width="80" height="48.8" fill="#FEDA37"/>
-<text class="mono" x="85.0" y="83.6" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >75</text>
-<text class="mono" x="85.0" y="46.2" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >175</text>
-<text x="85.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >暑い月</text>
-<rect class="grow g0" x="175" y="155.0" width="80" height="13.0" fill="#F88039"/>
-<text class="mono" x="261.0" y="172.5" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >20</text>
-<rect class="grow g0" x="175" y="145.2" width="80" height="9.8" fill="#FEDA37"/>
-<text class="mono" x="261.0" y="149.1" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >15</text>
-<text class="mono" x="215.0" y="137.2" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >35</text>
-<text x="215.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >寒い月</text>
-<path d="M30 168H270" stroke="#D8DFE8" stroke-width="2"/></svg>
-        <p class="note">寒い月が暑い月の5分の1なのは、アイスだけのとき（200と40）と同じ。<b>打ち消し合いが起きない</b>。</p></div>
-      <div class="card tight sv" data-s="1"><span class="pill g">逆向き</span><h4 style="margin:6px 0 0;font-size:16px">②焼き芋店（暑い月20・寒い月180）</h4><div style="display:flex;gap:14px;font-size:13px;color:var(--ink2);margin-top:6px"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（売り場の半分）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#40B69A;display:inline-block"></i>焼き芋（残り半分）</span></div><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="暑い月と寒い月の合計の売上"><rect class="grow" data-s="1" x="45" y="103.0" width="80" height="65.0" fill="#F88039"/>
-<text class="mono" x="85.0" y="140.5" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" >100</text>
-<rect class="grow" data-s="1" x="45" y="96.5" width="80" height="6.5" fill="#40B69A"/>
-<text class="mono" x="131.0" y="98.8" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >10</text>
-<text class="mono" x="85.0" y="88.5" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >110</text>
-<text x="85.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >暑い月</text>
-<rect class="grow" data-s="1" x="175" y="155.0" width="80" height="13.0" fill="#F88039"/>
-<text class="mono" x="261.0" y="172.5" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >20</text>
-<rect class="grow" data-s="1" x="175" y="96.5" width="80" height="58.5" fill="#40B69A"/>
-<text class="mono" x="215.0" y="130.8" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" >90</text>
-<text class="mono" x="215.0" y="88.5" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >110</text>
-<text x="215.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >寒い月</text>
-<path d="M30 168H270" stroke="#D8DFE8" stroke-width="2"/></svg>
-        <p class="note">暑い月も寒い月も110万円。<b>差は0</b>。ここまできれいに逆になるのは、2節と同じく理屈を見せるための例。</p></div>
-      <div class="card tight sv" data-s="2"><span class="pill">無関係</span><h4 style="margin:6px 0 0;font-size:16px">③時計修理店（月100か60を半々）</h4><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="月の売上の幅。アイスだけと時計修理と半分ずつ"><path d="M30 150H274" stroke="#D8DFE8" stroke-width="2"/>
-<path d="M30.0 146V154" stroke="#8A9AB0"/><text class="mono" x="30.0" y="170.0" text-anchor="middle" font-size="13" font-weight="400" fill="#8A9AB0" >0</text>
-<path d="M150.0 146V154" stroke="#8A9AB0"/><text class="mono" x="150.0" y="170.0" text-anchor="middle" font-size="13" font-weight="400" fill="#8A9AB0" >100</text>
-<path d="M270.0 146V154" stroke="#8A9AB0"/><text class="mono" x="270.0" y="170.0" text-anchor="middle" font-size="13" font-weight="400" fill="#8A9AB0" >200</text>
-<text x="30.0" y="24.0" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >アイスだけ</text>
-<rect class="grow g0" x="78.0" y="34" width="192.0" height="22" rx="11" fill="#F88039" opacity=".85"/>
-<text class="mono" x="74.0" y="50.0" text-anchor="end" font-size="13" font-weight="700" fill="#B5500F" >40</text><text class="mono" x="274.0" y="50.0" text-anchor="start" font-size="13" font-weight="700" fill="#B5500F" >200</text>
-<text x="30.0" y="84.0" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >時計修理と半分ずつ</text>
-<rect class="grow" data-s="2" x="90.0" y="94" width="120.0" height="22" rx="11" fill="#82D548"/>
-<text class="mono" x="86.0" y="110.0" text-anchor="end" font-size="13" font-weight="700" fill="#3F7A16" >50</text><text class="mono" x="214.0" y="110.0" text-anchor="start" font-size="13" font-weight="700" fill="#3F7A16" >150</text>
-<path d="M150.0 90V120" stroke="#16233A" stroke-width="2.5"/><text x="150.0" y="136.0" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" >平均 100</text>
-<text x="150.0" y="190.0" text-anchor="middle" font-size="13" font-weight="400" fill="#8A9AB0" >月の売上（万円）</text></svg>
-        <p class="note">幅が狭くなる。平均はアイスの120万円と時計修理の80万円の真ん中で100万円。3節のCとDと同じ形。</p></div>
-    </div>
-    <div class="card tight sv corr" data-s="3" style="display:grid;grid-template-columns:440px 1fr;gap:16px;align-items:center">
-      <p class="mini"><b style="color:var(--ink);font-size:15px">資産では、株式と債券は一般に相関が低いとされる</b>（出典2）。一緒に動く度合いを−1から+1までの数で表したものが<b>相関係数</b>。数字として扱うのは F2-17。</p>
-      <div><div style="height:16px;border-radius:8px;background:linear-gradient(90deg,#40B69A,#D8DFE8,#F88039)"></div>
-        <div style="display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:13px;color:var(--ink2)"><span><b class="mono" style="color:var(--okT);font-size:15px">−1</b>　逆向き（焼き芋店）</span><span>0 付近：無関係（時計修理店）</span><span>同じ向き（ビール店）　<b class="mono" style="color:var(--warnT);font-size:15px">+1</b></span></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-n="s5a" data-steps="2">
-  <header class="hd"><span class="chap">5. 消せるリスクと消せないリスク</span><h2>1つの店に起きることは薄められる。では、街全体が止まったら</h2><span class="num">07</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.15fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+<section class="slide br" data-n="s5" data-steps="5">
+  <header class="hd"><span class="chap">5. 消せるリスクと消せないリスク</span><h2>それでも、街全体が止まる地震は防げない</h2><span class="num">06</span></header>
+  <p class="bridge"><span class="was">似ていない相手と組めば、ばらつきは小さくなる</span><span class="ar">→</span><span class="now">では、どんな下振れでも薄められるか。アイスと傘の店に戻る</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1fr 1.15fr;gap:20px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:4px">
       <div class="stepbar"><b style="font-size:15px">出来事を起こす</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 500 356" style="width:100%;height:430px" aria-label="売り場を半分ずつ使った店の月の売上。機械の故障と、街ごと止まる地震"><text x="40.0" y="26.0" text-anchor="start" font-size="13" font-weight="400" fill="#8A9AB0" >月の損益（万円）</text>
-<path d="M60 311.0H470" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="54.0" y="315.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >−100</text>
-<path d="M60 196.0H470" stroke="#C9D3DF" stroke-width="2"/><text class="mono" x="54.0" y="200.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >0</text>
-<path d="M60 81.0H470" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="54.0" y="85.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >100</text>
-<path d="M60 81.0H470" stroke="#B5500F" stroke-width="2" stroke-dasharray="8 6"/><path d="M290 22H318" stroke="#B5500F" stroke-width="2" stroke-dasharray="8 6"/><text x="324.0" y="26.0" text-anchor="start" font-size="13" font-weight="700" fill="#B5500F" >家賃・人件費（毎月100）</text>
-<g class="grow g0"><g class="shr2" style="--k:0"><rect class="dim1 fadebar" x="100" y="81.0" width="120" height="115.0" fill="#F88039"/><rect x="100" y="58.0" width="120" height="23.0" fill="#65CCFE"/></g></g>
-<text class="hide1" x="160.0" y="143.5" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" >アイス</text>
-<text class="sv hide2" x="160.0" y="143.5" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" data-s="1">故障で休み</text>
-<text class="hide2" x="160.0" y="74.5" text-anchor="middle" font-size="14" font-weight="700" fill="#0F1B2D" >傘</text>
-<text class="mono hide1" x="160.0" y="48.0" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" >120</text>
-<text class="sv dl" x="160.0" y="186.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" data-s="2">売上 0円</text>
-<g class="sv dl" data-s="2"><rect x="100" y="198.0" width="120" height="113.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="160.0" y="249.5" text-anchor="middle" font-size="15" font-weight="900" fill="#B5500F" >100万円</text><text x="160.0" y="269.5" text-anchor="middle" font-size="14" font-weight="700" fill="#B5500F" >の赤字</text></g>
-<text x="160.0" y="344.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >暑い月</text>
-<g class="grow g0"><g class="shr2" style="--k:0"><rect class="dim1 fadebar" x="300" y="173.0" width="120" height="23.0" fill="#F88039"/><rect x="300" y="58.0" width="120" height="115.0" fill="#65CCFE"/></g></g>
-<text class="hide1" x="360.0" y="189.5" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" >アイス</text>
-<text class="sv hide2" x="360.0" y="189.5" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" data-s="1">故障で休み</text>
-<text class="hide2" x="360.0" y="120.5" text-anchor="middle" font-size="14" font-weight="700" fill="#0F1B2D" >傘</text>
-<text class="mono hide1" x="360.0" y="48.0" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8" >120</text>
-<text class="sv dl" x="360.0" y="186.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" data-s="2">売上 0円</text>
-<g class="sv dl" data-s="2"><rect x="300" y="198.0" width="120" height="113.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="360.0" y="249.5" text-anchor="middle" font-size="15" font-weight="900" fill="#B5500F" >100万円</text><text x="360.0" y="269.5" text-anchor="middle" font-size="14" font-weight="700" fill="#B5500F" >の赤字</text></g>
-<text x="360.0" y="344.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >寒い月</text></svg>
-    </div>
-    <div class="kp fade d2">
-      <div class="card tight"><h4>店の話に戻る</h4><p>売り場を半分ずつ使うアイスと傘の店。暑い月も寒い月も120万円の売上。</p></div>
-      <div class="card tight sv" data-s="1"><span class="pill g">1つの店だけに起きる</span><p style="margin-top:6px">アイスの機械が故障しても、傘の売り場は開けられる。1つの店だけに起きる出来事は、もう片方で薄められる。</p></div>
-      <div class="card tight sv" data-s="2" style="border-left:5px solid var(--warn)"><span class="pill w">街全体に起きる</span><p style="margin-top:6px">しかし大きな地震で街ごと止まれば、アイスも傘も売れない。売上は0円になり、毎月100万円の家賃や人件費は、そのまま赤字になる<span class="ex">説明のための例</span>。<b style="color:var(--ink)">売り場をどう分けても、街全体に起きることは防げない。</b></p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-n="s5b" data-steps="3">
-  <header class="hd"><span class="chap">5. 消せるリスクと消せないリスク</span><h2>分散で消せるのは個別のリスク、消せないのは市場全体のリスク</h2><span class="num">08</span></header>
-  <div class="body" style="display:flex;flex-direction:column;gap:12px">
-    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><div class="stepbar"><b style="font-size:15px">表を埋める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><p class="note">投資でも同じ（出典5）。</p></div>
-    <div class="card tight fade d1">
-      <table class="rtab"><thead><tr><th></th><th>個別のリスク</th><th>市場全体のリスク</th></tr></thead><tbody>
-        <tr><th>投資での例</th><td>1つの会社の不祥事、新製品の失敗</td><td>景気の悪化、金利の大きな変化、戦争</td></tr>
-        <tr class="sv" data-s="1"><th>店にたとえると</th><td>アイスの機械の故障</td><td>街全体が止まる地震</td></tr>
-        <tr class="sv" data-s="2"><th>店や会社を分けて持つと</th><td class="no">片方が不調でも、もう片方で埋まるので薄まる</td><td class="yes">全部に同時に起きるので、いくつに分けても残る</td></tr>
-        <tr class="sv" data-s="3"><th>上乗せ（リスクプレミアム）</th><td class="no">付かない</td><td class="yes">付く</td></tr>
-      </tbody></table>
-    </div>
-    <div class="g2">
-      <div class="card tight sv" data-s="3"><h4 style="font-size:16px">なぜ上乗せが付かないのか（F1-08 とつながる）</h4><p class="mini">誰でも分散で消せるリスクに、市場が上乗せを払う理由はない。上乗せが付くのは、分散しても消せない市場全体のリスクのほう。分散で得られるのは、上乗せの付かないばらつきを背負わずに済むこと。</p></div>
-      <div class="card tight sv" data-s="3" style="border-left:5px solid var(--b3)"><h4 style="font-size:16px">手元の資産を見るときは、分けて見る</h4><p class="mini">消せるリスクを残していないか。消せないリスクをどれだけ持っているか。危機のときに一緒に動く度合いがどう変わるかは、F2-17 で数字を使って見る。</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-n="s6a" data-steps="1">
-  <header class="hd"><span class="chap">6. 見せかけの分散と確かめ方</span><h2>2本の投資信託、中身はどれくらい重なっているか</h2><span class="num">09</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.15fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">同じ名前を数える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 560 424" style="width:100%;height:440px" aria-label="2本の投資信託の組入上位10銘柄。同じ名前を数える"><text x="145.0" y="28.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >投資信託X</text>
-<text x="405.0" y="28.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >投資信託Y</text>
-<text x="145.0" y="48.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" >組入上位10銘柄</text>
-<text x="405.0" y="48.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5A6B82" >組入上位10銘柄</text>
-<path class="sv" data-s="1" d="M220 77.0C280 77.0 270 139.0 330 139.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<path class="sv" data-s="1" d="M220 108.0C280 108.0 270 325.0 330 325.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<path class="sv" data-s="1" d="M220 139.0C280 139.0 270 232.0 330 232.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<path class="sv" data-s="1" d="M220 170.0C280 170.0 270 356.0 330 356.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<path class="sv" data-s="1" d="M220 201.0C280 201.0 270 170.0 330 170.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<path class="sv" data-s="1" d="M220 232.0C280 232.0 270 263.0 330 263.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<path class="sv" data-s="1" d="M220 263.0C280 263.0 270 77.0 330 77.0" fill="none" stroke="#2B5FA8" stroke-width="2" opacity=".7"/>
-<rect x="70" y="64" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="64" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ア社</text>
-<rect x="70" y="95" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="95" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="113.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >イ社</text>
-<rect x="70" y="126" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="126" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="144.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ウ社</text>
-<rect x="70" y="157" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="157" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="175.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >エ社</text>
-<rect x="70" y="188" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="188" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="206.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >オ社</text>
-<rect x="70" y="219" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="219" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="237.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >カ社</text>
-<rect x="70" y="250" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="70" y="250" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="145.0" y="268.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >キ社</text>
-<rect x="70" y="281" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<text x="145.0" y="299.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ク社</text>
-<rect x="70" y="312" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<text x="145.0" y="330.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ケ社</text>
-<rect x="70" y="343" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<text x="145.0" y="361.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >コ社</text>
-<rect x="330" y="64" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="64" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >キ社</text>
-<rect x="330" y="95" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<text x="405.0" y="113.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >サ社</text>
-<rect x="330" y="126" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="126" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="144.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ア社</text>
-<rect x="330" y="157" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="157" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="175.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >オ社</text>
-<rect x="330" y="188" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<text x="405.0" y="206.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >シ社</text>
-<rect x="330" y="219" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="219" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="237.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ウ社</text>
-<rect x="330" y="250" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="250" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="268.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >カ社</text>
-<rect x="330" y="281" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<text x="405.0" y="299.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >ス社</text>
-<rect x="330" y="312" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="312" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="330.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >イ社</text>
-<rect x="330" y="343" width="150" height="26" rx="6" fill="#fff" stroke="#D8DFE8"/>
-<rect class="sv" data-s="1" x="330" y="343" width="150" height="26" rx="6" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/>
-<text x="405.0" y="361.0" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >エ社</text>
-<g class="sv dl" data-s="1"><rect x="190" y="382" width="180" height="34" rx="17" fill="#2B5FA8"/><text x="280.0" y="404.0" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" >同じ名前が 7つ</text></g></svg>
-    </div>
-    <div class="kp fade d2">
-      <div class="card tight"><h4>数を増やしても、分散にならないことがある</h4><p>同じ業種の会社の株を10社集めても、値動きが似ていれば、打ち消し合いはほとんど起きない。投資信託を何本も持っていても、中身の会社が重なっていれば同じこと（出典3）。</p></div>
-      <div class="card tight" style="border-left:5px solid var(--b1)"><h4>確かめる手順は1つ</h4><p>持っている投資信託の月次レポートを開き、<b style="color:var(--ink)">「組入上位10銘柄」の欄で、2本の間に同じ名前がいくつあるかを数える</b>。</p></div>
-      <div class="card tight sv" data-s="1"><div class="row2"><h4>10銘柄のうち7つが同じなら</h4><div class="mid w" style="white-space:nowrap">7<small>/ 10</small></div></div><p>2本に分けても、中身はかなり似ている<span class="ex">説明のための例</span>。</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-n="s6b" data-steps="3">
-  <header class="hd"><span class="chap">6. 見せかけの分散と確かめ方</span><h2>持つものを増やすと、リスクはどこまで減るか</h2><span class="num">10</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.2fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">数を増やしていく</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 560 370" style="width:100%;height:420px" aria-label="持つものを増やしたときのリスクの減り方"><path d="M70 30V300H530" fill="none" stroke="#D8DFE8" stroke-width="2"/>
-<text x="62.0" y="24.0" text-anchor="start" font-size="13" font-weight="400" fill="#8A9AB0" >リスク（ばらつき）</text>
-<text x="528.0" y="324.0" text-anchor="end" font-size="13" font-weight="400" fill="#8A9AB0" >持つものの数 →</text>
-<g class="sv" data-s="2"><rect x="71" y="220" width="450" height="79" fill="#FFF1E6"/><path d="M70 220H520" stroke="#F88039" stroke-width="2" stroke-dasharray="6 5"/><text x="90.0" y="254.0" text-anchor="start" font-size="16" font-weight="900" fill="#B5500F" >市場全体のリスクは残る</text></g>
-<polyline class="draw d0" points="70.0,50.0 77.5,61.5 85.0,72.2 92.5,82.2 100.0,91.5 107.5,100.2 115.0,108.3 122.5,115.9 130.0,122.9 137.5,129.5 145.0,135.6 152.5,141.3 160.0,146.6 167.5,151.6 175.0,156.2 182.5,160.5 190.0,164.5 197.5,168.3 205.0,171.8 212.5,175.0 220.0,178.1 227.5,180.9 235.0,183.6 242.5,186.0 250.0,188.3 257.5,190.5 265.0,192.5 272.5,194.3 280.0,196.1 287.5,197.7 295.0,199.2 302.5,200.6 310.0,201.9 317.5,203.1 325.0,204.3 332.5,205.3 340.0,206.3 347.5,207.2 355.0,208.1 362.5,208.9 370.0,209.7 377.5,210.4 385.0,211.0 392.5,211.6 400.0,212.2 407.5,212.7 415.0,213.2 422.5,213.7 430.0,214.1 437.5,214.5 445.0,214.9 452.5,215.2 460.0,215.5 467.5,215.8 475.0,216.1 482.5,216.4 490.0,216.6 497.5,216.9 505.0,217.1 512.5,217.3 520.0,217.5" fill="none" stroke="#2B5FA8" stroke-width="5" stroke-linecap="round"/>
-<text x="230.0" y="130.0" text-anchor="start" font-size="14" font-weight="700" fill="#2B5FA8" >個別のリスクが減っていく</text>
-<g class="sv" data-s="1"><path d="M70.0 50.0H124.0V117.3" fill="none" stroke="#40B69A" stroke-width="3"/><circle cx="124.0" cy="117.3" r="4" fill="#40B69A"/></g>
-<g class="sv" data-s="1"><path d="M349.0 207.4H403.0V212.4" fill="none" stroke="#40B69A" stroke-width="3"/><circle cx="403.0" cy="212.4" r="4" fill="#40B69A"/></g>
-<text class="sv" x="136.0" y="89.7" text-anchor="start" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">1本→2本で大きく減る</text>
-<text class="sv" x="367.0" y="163.4" text-anchor="middle" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">たくさん持つと、1本足してもほとんど減らない</text>
-<g class="sv" data-s="3"><polygon points="150,360 520,360 520,340" fill="#C9D3DF"/><text x="70.0" y="358.0" text-anchor="start" font-size="14" font-weight="700" fill="#5A6B82" >手数料も増える</text></g></svg>
-      <p class="note">形を見せるための模式図（目盛りの数字は無い）。</p>
+      <svg viewBox="0 0 500 344" style="width:100%;height:300px" aria-label="アイスと傘の店の月の売上。機械の故障と、街ごと止まる地震"><text x="40.0" y="22.0" text-anchor="start" font-size="14" font-weight="400" fill="#8A9AB0" >万円</text>
+<path d="M60 301.0H470" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="54.0" y="305.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" >−100</text>
+<path d="M60 186.0H470" stroke="#C9D3DF" stroke-width="2"/><text class="mono" x="54.0" y="190.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" >0</text>
+<path d="M60 71.0H470" stroke="#EEF2F7" stroke-width="1"/><text class="mono" x="54.0" y="75.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" >100</text>
+<g class="grow g0"><g class="shr2" style="--k:0"><rect class="dim1 fadebar" x="100" y="71.0" width="120" height="115.0" fill="#F88039"/><rect x="100" y="48.0" width="120" height="23.0" fill="#65CCFE"/></g></g>
+<text class="hide1" x="160.0" y="133.5" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" >アイス</text>
+<text class="sv hide2" x="160.0" y="133.5" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" data-s="1">故障で休み</text>
+<text class="hide2" x="160.0" y="64.5" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >傘</text>
+<text class="hide2" x="160.0" y="38.0" text-anchor="middle" font-size="16" font-weight="700" fill="#2B5FA8" >売上 120</text>
+<text class="sv dl" x="160.0" y="176.0" text-anchor="middle" font-size="17" font-weight="900" fill="#16233A" data-s="2">売上 0</text>
+<g class="sv dl" data-s="2"><rect x="100" y="188.0" width="120" height="113.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="160.0" y="237.5" text-anchor="middle" font-size="15" font-weight="900" fill="#B5500F" >毎月100万円</text><text x="160.0" y="259.5" text-anchor="middle" font-size="15" font-weight="900" fill="#B5500F" >の赤字</text></g>
+<text x="160.0" y="334.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >暑い月</text>
+<g class="grow g0"><g class="shr2" style="--k:0"><rect class="dim1 fadebar" x="300" y="163.0" width="120" height="23.0" fill="#F88039"/><rect x="300" y="48.0" width="120" height="115.0" fill="#65CCFE"/></g></g>
+<text class="hide1" x="360.0" y="179.5" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" >アイス</text>
+<text class="sv hide2" x="360.0" y="179.5" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" data-s="1">故障で休み</text>
+<text class="hide2" x="360.0" y="110.5" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >傘</text>
+<text class="hide2" x="360.0" y="38.0" text-anchor="middle" font-size="16" font-weight="700" fill="#2B5FA8" >売上 120</text>
+<text class="sv dl" x="360.0" y="176.0" text-anchor="middle" font-size="17" font-weight="900" fill="#16233A" data-s="2">売上 0</text>
+<g class="sv dl" data-s="2"><rect x="300" y="188.0" width="120" height="113.0" fill="#FFF1E6" stroke="#F88039" stroke-dasharray="4 4"/><text x="360.0" y="237.5" text-anchor="middle" font-size="15" font-weight="900" fill="#B5500F" >毎月100万円</text><text x="360.0" y="259.5" text-anchor="middle" font-size="15" font-weight="900" fill="#B5500F" >の赤字</text></g>
+<text x="360.0" y="334.0" text-anchor="middle" font-size="15" font-weight="700" fill="#16233A" >寒い月</text></svg>
+      <div class="swap"><div class="leg"><span class="hide2" style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（半分）</span><span class="hide2" style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#65CCFE;display:inline-block"></i>傘（半分）</span></div><div class="leg"><span class="sv" data-s="2" style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#FFD9BD;display:inline-block"></i>売上0 → 家賃・人件費の毎月100万円がそのまま赤字</span></div></div>
+      <p class="mini sv" data-s="1" style="margin-top:6px">アイスの機械が故障しても、傘の売り場は開けられる。1つの店だけに起きる出来事は、もう片方で薄められる。</p>
+      <p class="mini sv" data-s="2"><b style="color:var(--warnT)">しかし大きな地震で街ごと止まれば、アイスも傘も売れない</b>。売上は0になり、毎月100万円の赤字<span class="ex">説明のための例</span>。どの店に貸しても防げない。</p>
     </div>
     <div class="kp g8 fade d2">
-      <div class="card tight"><p>持つものを増やすと、<b style="color:var(--safe)">個別のリスクは減っていく</b>。</p></div>
-      <div class="card tight sv" data-s="1"><p>1本から2本に増やしたときは、<b style="color:var(--okT)">ばらつきが大きく減る</b>。すでにたくさん持っているところに1本足しても、<b style="color:var(--okT)">ほとんど減らない</b>。</p></div>
-      <div class="card tight sv" data-s="2"><p>最後には<b style="color:var(--warnT)">市場全体のリスクが残る</b>。</p></div>
-      <div class="card tight sv" data-s="3"><p>持つ本数を増やせば、そのぶん手数料もかかる。手数料がどれだけ響くかは F1-11 で扱う。</p></div>
-      <div class="card tight sv" data-s="3" style="border-left:5px solid var(--b1)"><h4 style="font-size:16px">今日の分散は「同じ時点で何を持つか」</h4><p>買う時期をずらす話とは別のもの。</p></div>
+      <div class="card tight">
+      <table class="rtab"><thead><tr><th></th><th class="sv" data-s="1">個別のリスク</th><th class="sv" data-s="2">市場全体のリスク</th></tr></thead><tbody>
+        <tr><th>店にたとえると</th><td class="sv" data-s="1">アイスの機械の故障</td><td class="sv" data-s="2">街全体が止まる地震</td></tr>
+        <tr><th>投資での例<span class="ex">出典5</span></th><td class="sv" data-s="3">1つの会社の不祥事、新製品の失敗</td><td class="sv" data-s="3">景気の悪化、金利の大きな変化、戦争</td></tr>
+        <tr><th>店や会社を分けて持つと</th><td class="no sv" data-s="4">片方が不調でも、もう片方で埋まるので薄まる</td><td class="yes sv" data-s="4">全部に同時に起きるので、いくつに分けても残る</td></tr>
+        <tr><th>上乗せ（リスクプレミアム）</th><td class="no sv" data-s="5">付かない</td><td class="yes sv" data-s="5">付く</td></tr>
+      </tbody></table></div>
+      <div class="card tight sv" data-s="5" style="border-left:5px solid var(--b1)"><h4 style="font-size:16px">なぜ上乗せが付かないのか（F1-08 とつながる）</h4><p class="mini">誰でも分散で消せるリスクに、市場が上乗せを払う理由はない。上乗せが付くのは、分散しても消せない市場全体のリスクのほう。<b style="color:var(--ink)">分けて持てば、上乗せのもらえない揺れまで抱えずに済む</b>。手元の資産は、消せるリスクを残していないかと、消せないリスクをどれだけ持っているかを分けて見る。</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="sum">
-  <header class="hd"><span class="chap">まとめと出典</span><h2>平均は組み合わせた資産の平均どおり。市場全体のリスクは残る</h2><span class="num">11</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.05fr 1fr;gap:22px">
-    <div class="kp">
-      <div class="keymsg fade d1" style="font-size:21px;text-align:left">平均は組み合わせた資産の平均どおりで、<br>ばらつきはそれより小さくなります。<br>ただし、<span style="color:var(--warnT)">市場全体のリスクは、どれだけ分けても残ります</span>。</div>
-      <div class="card tight fade d2"><h4>確かめること</h4><p>一緒に動く度合い（相関）が低いほど、よく効く。中身が重なっていないかは「組入上位10銘柄」で数える。</p></div>
-      <div class="card tight fade d3"><h4>この先へ</h4><p>F2-16 リスク指標：標準偏差とシャープ ／ F2-17 相関係数——分散設計のための数値化</p></div>
+<section class="slide br" data-n="s6" data-steps="2">
+  <header class="hd"><span class="chap">6. 手元の持ち方の確かめ方</span><h2>分けたつもりが、分かれていないことはないか</h2><span class="num">07</span></header>
+  <p class="bridge"><span class="was">分けて持てば個別のリスクは薄まる</span><span class="ar">→</span><span class="now">店を2つ持つのと同じで、投資信託を何本持つかでも同じことが起きる</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1fr 1.1fr;gap:20px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">同じ名前を数える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <div class="flists"><div class="flist"><h5>投資信託X</h5><p>組入上位10銘柄</p><ol><li class="same">ア社</li><li class="same">イ社</li><li class="same">ウ社</li><li class="same">エ社</li><li class="same">オ社</li><li class="same">カ社</li><li class="same">キ社</li><li class="">ク社</li><li class="">ケ社</li><li class="">コ社</li></ol></div><div class="flist"><h5>投資信託Y</h5><p>組入上位10銘柄</p><ol><li class="same">キ社</li><li class="">サ社</li><li class="same">ア社</li><li class="same">オ社</li><li class="">シ社</li><li class="same">ウ社</li><li class="same">カ社</li><li class="">ス社</li><li class="same">イ社</li><li class="same">エ社</li></ol></div></div>
+      <div class="row2 sv" data-s="1" style="align-items:center"><p class="mini" style="margin:0">色の付いた7社は、2本の両方に入っている。2本に分けても、中身はかなり似ている<span class="ex">説明のための例</span>。</p><div class="mid w" style="white-space:nowrap">7<small>/ 10</small></div></div>
     </div>
-    <div class="card fade d4" style="display:flex;flex-direction:column;gap:7px">
+    <div class="kp g8 fade d2">
+      <div class="card tight"><h4>もう1軒のアイス店に貸したら</h4><p class="mini">2軒とも暑い月に売れて寒い月に売れないので、月ごとの差は小さくならない<span class="ex">説明のための例</span>。</p></div>
+      <div class="card tight"><h4>投資信託でも同じことが起きる</h4><p class="mini"><b style="color:var(--ink)">投資信託は、たくさんの会社の株などを1つにまとめて持てる商品</b>（F1-06）。何本も持っていても、中身の会社が重なっていれば、店を2つに分けたことにならない（出典3）。</p></div>
+      <div class="card tight" style="border-left:5px solid var(--b1)"><h4>確かめる手順は1つ</h4><p class="mini">持っている投資信託の月次レポートを開き、<b style="color:var(--ink)">「組入上位10銘柄」の欄で、2本の間に同じ名前がいくつあるかを数える</b>。</p></div>
+      <div class="card tight sv" data-s="2"><h4>持つものを増やすと</h4><svg viewBox="0 0 540 152" style="width:100%;height:104px" aria-label="持つものを増やしたときのリスクの減り方の模式図"><path d="M30 12V128H526" fill="none" stroke="#D8DFE8" stroke-width="2"/>
+<text x="520.0" y="24.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" >縦：リスク（ばらつき）</text>
+<text x="520.0" y="148.0" text-anchor="end" font-size="14" font-weight="400" fill="#8A9AB0" >持つものの数 →</text>
+<rect x="31" y="92" width="490" height="35" fill="#FFF1E6"/><path d="M30 92H520" stroke="#F88039" stroke-width="2" stroke-dasharray="6 5"/><text x="514.0" y="118.0" text-anchor="end" font-size="16" font-weight="900" fill="#B5500F" >市場全体のリスクは残る</text>
+<polyline points="30.0,26.0 38.2,30.5 46.3,34.6 54.5,38.5 62.7,42.1 70.8,45.5 79.0,48.6 87.2,51.6 95.3,54.3 103.5,56.8 111.7,59.2 119.8,61.4 128.0,63.5 136.2,65.4 144.3,67.2 152.5,68.9 160.7,70.5 168.8,71.9 177.0,73.3 185.2,74.5 193.3,75.7 201.5,76.8 209.7,77.9 217.8,78.8 226.0,79.7 234.2,80.5 242.3,81.3 250.5,82.0 258.7,82.7 266.8,83.3 275.0,83.9 283.2,84.5 291.3,85.0 299.5,85.4 307.7,85.9 315.8,86.3 324.0,86.7 332.2,87.0 340.3,87.4 348.5,87.7 356.7,88.0 364.8,88.3 373.0,88.5 381.2,88.7 389.3,89.0 397.5,89.2 405.7,89.4 413.8,89.5 422.0,89.7 430.2,89.9 438.3,90.0 446.5,90.1 454.7,90.3 462.8,90.4 471.0,90.5 479.2,90.6 487.3,90.7 495.5,90.8 503.7,90.9 511.8,90.9 520.0,91.0" fill="none" stroke="#2B5FA8" stroke-width="4" stroke-linecap="round"/>
+<path d="M30.0 26.0H79.0V48.6" fill="none" stroke="#40B69A" stroke-width="3"/><circle cx="79.0" cy="48.6" r="4" fill="#40B69A"/>
+<path d="M333.8 87.1H382.8V88.8" fill="none" stroke="#40B69A" stroke-width="3"/><circle cx="382.8" cy="88.8" r="4" fill="#40B69A"/>
+<text x="89.0" y="40.0" text-anchor="start" font-size="15" font-weight="700" fill="#1F7A63" >1本→2本で大きく減る</text>
+<text x="358.3" y="75.1" text-anchor="middle" font-size="15" font-weight="700" fill="#1F7A63" >1本足してもほとんど減らない</text></svg>
+        <p class="mini">1本から2本に増やすと大きく減る。たくさん持っているところに1本足しても、ほとんど減らない。いくら増やしても市場全体のリスクは残る（形を見せる模式図）。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide br" data-n="end">
+  <header class="hd"><span class="chap">7. 残り半分を貸す相手</span><h2>今日の問いへの答え</h2><span class="num">08</span></header>
+  <p class="bridge"><span class="was">分けたつもりかどうかは、中身の重なりで確かめる</span><span class="ar">→</span><span class="now">最初の問いに答える</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.05fr 1fr;gap:22px">
+    <div class="kp g8">
+      <div class="keymsg fade d1" style="font-size:19px;text-align:left;padding:14px 18px">アイス店の売り場の残り半分は、<br>売れる時期がアイスと似ていない店に貸すほど、<br>月ごとの差が小さくなります。<br>ただし、<span style="color:var(--warnT)">街全体が止まる地震のような<br>市場全体のリスクは、誰に貸しても残ります</span>。</div>
+      <div class="card tight fade d2"><h4>今日たどった相手</h4>
+        <div class="forms row3"><div><i style="background:#65CCFE"></i><b>傘の店</b><br>逆向き<br><span>差が消える</span></div><div><i style="background:#82D548"></i><b>時計修理店</b><br>無関係<br><span>幅が狭くなる</span></div><div><i style="background:#FEDA37"></i><b>ビール店</b><br>同じ向き<br><span>ほとんど変わらない</span></div></div>
+        <p class="mini" style="margin-top:6px">資産でも同じ形：資産CとDを半分ずつ持つと、平均は＋5％のまま、両端は4分の1に減る。</p></div>
+      <div class="card tight fade d3"><h4>この先へ</h4><p class="mini">F2-16 リスク指標：標準偏差とシャープ ／ F2-17 相関係数——分散設計のための数値化</p></div>
+    </div>
+    <div class="card fade d4 srcs" style="display:flex;flex-direction:column;gap:5px">
       <h4 style="font-size:16px">出典（一次資料）</h4>
-      <p class="note"><b style="color:var(--ink)">1. 金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子の13ページ）</b><br>1節：分散投資の目的</p><p class="note"><b style="color:var(--ink)">2. 年金積立金管理運用独立行政法人（GPIF）「分散投資の意義③」</b><br>4節：債券と株式は相関が低いとされること、相関係数の範囲</p><p class="note"><b style="color:var(--ink)">3. 投資信託協会「投資信託の基礎知識」</b><br>6節：中身の重複</p><p class="note"><b style="color:var(--ink)">4. 企業年金連合会 用語集「相関関係」</b><br>4節：同じ向き・逆向き・無関係</p><p class="note"><b style="color:var(--ink)">5. 企業年金連合会 用語集「システマティック・リスク」</b><br>5節：分散で消せるリスクと、分散しても消せないリスク</p>
-      <p class="note" style="margin-top:2px">店の売上と資産A〜Dの数字は、説明のための架空の例です。相関係数の範囲（−1〜+1）は出典2で確かめた事実です。</p>
+      <p class="note"><b style="color:var(--ink)">1. 金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子の13ページ）</b><br>2節：分散投資の目的</p><p class="note"><b style="color:var(--ink)">2. 年金積立金管理運用独立行政法人（GPIF）「分散投資の意義③」</b><br>4節：債券と株式は相関が低いとされること、相関係数の範囲</p><p class="note"><b style="color:var(--ink)">3. 投資信託協会「投資信託の基礎知識」</b><br>6節：中身の重複</p><p class="note"><b style="color:var(--ink)">4. 企業年金連合会 用語集「相関関係」</b><br>3節：同じ向き・逆向き・無関係</p><p class="note"><b style="color:var(--ink)">5. 企業年金連合会 用語集「システマティック・リスク」</b><br>5節：分散で消せるリスクと、分散しても消せないリスク</p>
+      <p class="note" style="margin-top:2px">店の売上と資産CとDの数字は、説明のための架空の例です。相関係数の範囲（−1〜+1）は出典2で確かめた事実です。</p>
       <p class="note" style="border-top:1px dashed var(--rule);padding-top:7px">この資料は事実と構造の説明であり、推奨ではありません。どの商品を選ぶか、どの比率で配分するか、いつ実行するかは、ご自身が決める領域です。</p>
     </div>
   </div>
@@ -769,79 +660,58 @@ svg .sv.dl{transition-delay:.6s}
 【到達目標】 値動きが完全には一致しない資産を組み合わせると、平均リターンを落とさずに
              ばらつきだけを下げられる理由を、打ち消し合いとして説明できる。
              分散で消せるものと消せないものを区別できる。
-【読了目安】 読み上げ約11分（黙読約7分）
+【読了目安】 読み上げ約11分（黙読約6分）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
-<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 売り場を半分ずつ使う</h5>
-<p>分散はよく勧められます。今日は、なぜ効くのかを数字で確かめます。</p>
-<p>商店街のアイス店で考えます。月は2種類だけとします。晴れて暑い月と、雨が続いて寒い月です。アイスの売上は暑い月に200万円、寒い月に40万円です。家賃や人件費は毎月100万円かかるので、寒い月は60万円の赤字になります（説明のための例）。</p>
-<p>そこで店主は、売り場の半分で傘を売ることにしました。傘の売上はアイスの裏返しで、暑い月に40万円、寒い月に200万円とします。売り場が半分なので、売上もそれぞれ半分になります。</p>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. アイス店だけの売り場</h5>
+<p>分散はよく勧められます。今日は、なぜ効くのかを、1つの問いを最後まで追いかけながら数字で確かめます。</p>
+<p>問いは「アイス店の売り場の残り半分を、誰に貸すか」です。</p>
+<p>商店街のアイス店で考えます。月は2種類だけとします。晴れて暑い月と、雨が続いて寒い月です。アイスの売上は暑い月に200万円、寒い月に40万円です（説明のための例）。</p>
+<p>平均すると月120万円で、家賃や人件費の毎月100万円を払っても20万円残ります。しかし寒い月には40万円しか売れないので、60万円の赤字になります。暑い月と寒い月の差は160万円です。平均で見るとやっていけそうでも、月ごとの揺れが大きすぎます。</p>
+<p>そこで店主は、アイスの売り場を半分にして、残り半分をほかの店に貸すことを考えました。貸した店とは売上を合わせて、家賃や人件費を払うことにします（説明のための例）。誰に貸せば、月ごとの差が小さくなるでしょうか。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 傘の店と半分ずつ</h5>
+<p>アイスだけでは、暑い月と寒い月で売上が大きく揺れました。まず、天気と逆に売れる傘の店に貸すとどうなるかを見ます。</p>
+<p>傘の売上はアイスの裏返しで、暑い月に40万円、寒い月に200万円とします。売り場が半分なので、アイスも傘も、売上はそれぞれ半分になります。</p>
 <p>暑い月は、アイス100万円と傘20万円で120万円です。寒い月は、アイス20万円と傘100万円で、やはり120万円です。</p>
-<p>アイスだけのときも、平均は月120万円でした。平均は変わらないまま、月ごとの差が160万円から0になりました。どの月も20万円の黒字です。</p>
-<p>金融でいう<b>分散投資</b>は、お金を1つにまとめずに、値動きの違う複数の資産に分けて持つことです（出典1）。</p>
+<p>平均は月120万円のまま、月ごとの差が160万円から0になりました。どの月も20万円の黒字です。アイスが売れない月を、傘が埋めています。片方が減った分をもう片方が埋めるこの動きを、<b>打ち消し合い</b>と呼びます。</p>
+<p>金融でいう<b>分散投資</b>は、お金を1つにまとめずに、値動きの違う複数の資産に分けて持つことです（出典1）。売り場を2つの店で分けたのと同じ形です。</p>
 <p>分散で小さくなるのは、結果のばらつき、つまりリスクです。ただし、薄められるのは1つの店や1つの会社だけに起きる下振れです。街全体に起きる下振れは、5節で扱います。</p></div>
-<div class="notes-src" id="notes-s2a"><h5 style="font-size:15px;margin:8px 0 6px">2. 正反対に動く2つの資産</h5>
-<p>次は資産で考えます。ここで使う資産Aと資産Bは、理屈を見せるための架空の例です。</p>
-<p>資産Aは景気のよい年に20%増え、悪い年に10%減ります。資産Bはその逆で、よい年に10%減り、悪い年に20%増えます。よい年と悪い年が1回ずつなら、どちらも平均は年5%です。</p>
-<p>100万円を資産Aだけに入れると、よい年は120万円、悪い年は90万円になります。1年で30万円の差です。</p>
-<p>50万円ずつに分けてみます。よい年は、資産Aが10万円増え、資産Bが5万円減ります。合わせて5万円、つまり5%の増加です。悪い年は、資産Aが5万円減り、資産Bが10万円増えます。こちらも5%の増加です。</p>
-<p>片方が減った分を、もう片方が増えて埋めています。この動きを<b>打ち消し合い</b>と呼びます。</p>
-<p>2年続けると、違いはもっとはっきりします。資産Aだけなら、100万円が120万円になり、次の年に108万円になります。平均は年5%でも、1年あたりにならすと約3.9%です。50万円ずつに分け、毎年初めに50万円ずつへ戻した場合は、100万円が105万円、110.25万円になります。同じ平均5%でも、ばらつきが大きいほうが2年後の残高は少なくなります。</p>
-<p>戻さずに置いておくと、結果は変わります。1年目のあと、資産Aは60万円、資産Bは45万円です。2年目のあとは、どちらも54万円で、合計108万円です。2年目の増え方は約2.9%にとどまります。戻す手順は F3-09 で、続けて運用したときの増え方は F1-10 で扱います。</p>
-<p>この組み合わせが、市場に長く残ることはありません。ばらつきなしで年5%は、F1-08 で見た上乗せのない基準の年0.5%程度より、ずっと高い利回りです。F1-08 で見たとおり、こうしたうまい話は裁定で消えていきます。</p></div>
-<div class="notes-src" id="notes-s2b"><h5 style="font-size:15px;margin:8px 0 6px">2. 正反対に動く2つの資産</h5>
-<p>次は資産で考えます。ここで使う資産Aと資産Bは、理屈を見せるための架空の例です。</p>
-<p>資産Aは景気のよい年に20%増え、悪い年に10%減ります。資産Bはその逆で、よい年に10%減り、悪い年に20%増えます。よい年と悪い年が1回ずつなら、どちらも平均は年5%です。</p>
-<p>100万円を資産Aだけに入れると、よい年は120万円、悪い年は90万円になります。1年で30万円の差です。</p>
-<p>50万円ずつに分けてみます。よい年は、資産Aが10万円増え、資産Bが5万円減ります。合わせて5万円、つまり5%の増加です。悪い年は、資産Aが5万円減り、資産Bが10万円増えます。こちらも5%の増加です。</p>
-<p>片方が減った分を、もう片方が増えて埋めています。この動きを<b>打ち消し合い</b>と呼びます。</p>
-<p>2年続けると、違いはもっとはっきりします。資産Aだけなら、100万円が120万円になり、次の年に108万円になります。平均は年5%でも、1年あたりにならすと約3.9%です。50万円ずつに分け、毎年初めに50万円ずつへ戻した場合は、100万円が105万円、110.25万円になります。同じ平均5%でも、ばらつきが大きいほうが2年後の残高は少なくなります。</p>
-<p>戻さずに置いておくと、結果は変わります。1年目のあと、資産Aは60万円、資産Bは45万円です。2年目のあとは、どちらも54万円で、合計108万円です。2年目の増え方は約2.9%にとどまります。戻す手順は F3-09 で、続けて運用したときの増え方は F1-10 で扱います。</p>
-<p>この組み合わせが、市場に長く残ることはありません。ばらつきなしで年5%は、F1-08 で見た上乗せのない基準の年0.5%程度より、ずっと高い利回りです。F1-08 で見たとおり、こうしたうまい話は裁定で消えていきます。</p></div>
-<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 無関係に動く2つの資産</h5>
-<p>現実に近いのは、一緒に動いたり、動かなかったりする組み合わせです。</p>
-<p>資産Cと資産Dは、どちらも上がる年は+25%、下がる年は−15%とします。平均は+5%です（説明のための例）。ただし、2つは互いに関係なく動きます。</p>
+<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 貸す相手と相関</h5>
+<p>傘の店と組むと、月ごとの差は0になりました。ただ、天気と逆に売れる店が、いつも借り手として見つかるとは限りません。ほかの店に貸したらどうなるかを比べます。</p>
+<p>*(講師：ビール店の段落に入る前に、チャットで問いかける。「傘の店が見つからなかったとします。残り半分を①ビール店 ②時計修理店のどちらに貸すと、月ごとの差が小さくなると思いますか。番号をチャットへ」。答えが割れたら、そのまま続ける)*</p>
+<p>ビールも暑い月に売れて、寒い月に売れません。ビール店の売上を暑い月150万円、寒い月30万円とします。半分ずつにすると、暑い月は100万円と75万円で175万円、寒い月は20万円と15万円で35万円です。差は140万円で、アイスだけのときの160万円とあまり変わりません。寒い月が暑い月の5分の1なのも、アイスだけのとき（200万円と40万円）と同じです。同じ向きに売れる店どうしでは、打ち消し合いが起きません。</p>
+<p>時計の修理は天気と関係なく、月100万円か60万円のどちらかで、半々とします。半分ずつにすると、月の売上は150万円、130万円、70万円、50万円の4通りになり、アイスだけのときの40万円か200万円より幅が狭くなります。平均はアイスの120万円と時計修理の80万円の真ん中で、100万円です。チャットの問いの答えは、②の時計修理店です。</p>
+<p>2つのものが一緒に動く度合いを、<b>相関</b>と呼びます。相関には、同じ向き、逆向き、無関係の3つの形があります（出典4）。ビール店は同じ向き、傘の店は逆向き、時計修理店は無関係にあたります。分散がどれだけ効くかは、この度合いで決まります。逆向きなら差が消え、無関係なら幅が狭くなり、同じ向きならほとんど変わりません。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 店から資産へ</h5>
+<p>店で見た3つの形は、資産にもあります。店の売上を、資産の値動きに置き換えてみます。</p>
+<p>資産Cと資産Dは、どちらも上がる年は+25%、下がる年は−15%とします。平均は+5%です（説明のための例）。2つは、アイスと時計修理店のように、互いに関係なく動きます。</p>
 <p>50万円ずつ持つと、起こりうる年は次の4通りです。どれも同じくらい起こりやすいとします。</p>
 <p>・両方が上がる年: +25%</p>
 <p>・Cだけが上がる年: +25%と−15%の真ん中で、+5%</p>
 <p>・Dだけが上がる年: 同じく+5%</p>
 <p>・両方が下がる年: −15%</p>
-<p>4通りの平均は、(25+5+5−15)÷4で+5%のままです。1つだけ持つと、+25%か−15%が半分ずつでした。2つに分けると、+5%が半分の確率で出ます。両端の+25%と−15%は、それぞれ4分の1に減ります。ばらつきは消えませんが、小さくなります。</p>
-<p style="border-left:3px solid #65CCFE;padding-left:10px"><b>平均は組み合わせた資産の平均どおりで、ばらつきはそれより小さくなります。値動きが似ていないほど、小さくなります。</b></p>
-<p>ここで平均が変わらなかったのは、2つの平均がどちらも+5%だからです。</p>
-<p>*(講師：4節の前にチャットで問いかける。「アイス店の売り場の残り半分を貸すなら、①ビール店 ②焼き芋店 ③時計修理店のどれが、月ごとの差をいちばん小さくすると思いますか。番号をチャットへ」。答えが割れたら、そのまま4節へ進む)*</p></div>
-<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 一緒に動く度合いと相関</h5>
-<p>2つのものが一緒に動く度合いを、<b>相関</b>と呼びます。分散がどれだけ効くかは、この度合いで決まります。相関には、同じ向き、逆向き、無関係の3つの形があります（出典4）。アイス店の売り場の残り半分を、3つの店で比べます（説明のための例）。</p>
-<p>同じ向きに動くのは、ビール店です。ビールも暑い月に売れ、寒い月に売れません。売上を暑い月150万円、寒い月30万円とします。半分ずつにすると、暑い月は100万円と75万円で175万円、寒い月は20万円と15万円で35万円です。寒い月が暑い月の5分の1なのは、アイスだけのとき（200万円と40万円）と同じです。同じ向きのもの同士では、打ち消し合いが起きません。</p>
-<p>逆向きに動くのは、焼き芋店です。焼き芋は寒い月に売れます。売上を暑い月20万円、寒い月180万円とします。半分ずつにすると、暑い月は100万円と10万円で110万円、寒い月は20万円と90万円で、これも110万円です。差は0になります。ここまできれいに逆になるのは、2節と同じく理屈を見せるための例です。</p>
-<p>無関係に動くのは、時計修理店です。時計の修理は天気とは関係なく、月100万円か60万円のどちらかで、半々とします。半分ずつにすると、月の売上は50万円から150万円の間になります。アイスだけのときの40万円から200万円より、幅が狭くなります。平均はアイスの120万円と時計修理の80万円の真ん中で、100万円です。3節の資産CとDと同じ形です。</p>
-<p>資産では、株式と債券は一般に相関が低いとされています（出典2）。一緒に動く度合いは、−1から+1までの数で表すこともでき、これを相関係数と呼びます（出典2）。数字として扱うのは F2-17 です。</p></div>
-<div class="notes-src" id="notes-s5a"><h5 style="font-size:15px;margin:8px 0 6px">5. 消せるリスクと消せないリスク</h5>
-<p>店の話に戻ります。アイスの機械が故障しても、傘の売り場は開けられます。1つの店だけに起きる出来事は、もう片方で薄められます。</p>
-<p>しかし、大きな地震で街ごと止まれば、アイスも傘も売れません。売上は0円になり、毎月100万円の家賃や人件費は、そのまま赤字になります（説明のための例）。売り場をどう分けても、街全体に起きることは防げません。</p>
+<p>4通りの平均は、(25+5+5−15)÷4で+5%のままです。1つだけ持つと、+25%か−15%が半分ずつでした。2つに分けると、真ん中の+5%が半分の確率で出ます。両端の+25%と−15%は、それぞれ4分の1に減ります。時計修理店と組んだアイス店で、売上の幅が狭くなったのと同じ形です。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px"><b>平均は、組み合わせた2つの平均と同じです。ばらつきはそれより小さくなり、値動きが似ていないほど小さくなります。</b></p>
+<p>平均が変わらなかったのは、2つの平均がどちらも+5%だからです。</p>
+<p>現実の資産では、株式と債券が、一般に相関が低い組み合わせとされています（出典2）。</p>
+<p>傘の店のようにぴったり逆に動く相手は、理屈を見せるための理想の例です。資産でこれができると、ばらつきなしで上乗せが手に入ることになりますが、F1-08 で見たとおり、そうしたうまい話は市場に長く残りません。</p>
+<p>一緒に動く度合いを−1から+1までの数で表したものを相関係数と呼び（出典2）、数字として扱うのは F2-17 です。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 消せるリスクと消せないリスク</h5>
+<p>似ていない店や資産と組めば、ばらつきが小さくなることが分かりました。では、どんな下振れでも薄められるのでしょうか。アイスと傘の店に戻って考えます。</p>
+<p>アイスの機械が故障しても、傘の売り場は開けられます。1つの店だけに起きる出来事は、もう片方で薄められます。</p>
+<p>しかし、大きな地震で街ごと止まれば、アイスも傘も売れません。売上は0円になり、毎月100万円の家賃や人件費は、そのまま赤字になります（説明のための例）。どの店に貸しても、街全体に起きることは防げません。</p>
 <p>投資でも同じです。分散で消せるのは<b>個別のリスク</b>で、分散しても消せないのは<b>市場全体のリスク</b>です（出典5）。1つの会社の不祥事や新製品の失敗は、個別のリスクにあたります。景気の悪化、金利の大きな変化、戦争は、市場全体のリスクにあたります。</p>
-<p>この区別は、F1-08 の上乗せ（リスクプレミアム）とつながります。市場は分散で消せるリスクには上乗せを払いません。誰でも分散で消せるリスクに、上乗せを払う理由がないからです。上乗せが付くのは、分散しても消せない市場全体のリスクのほうです。分散で得られるのは、上乗せの付かないばらつきを背負わずに済むことです。</p>
-<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店や会社を分けて持つと</td><td style="border:1px solid #D8DFE8;padding:3px 8px">片方が不調でも、もう片方で埋まるので薄まる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">全部に同時に起きるので、いくつに分けても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
+<p>この区別は、F1-08 の上乗せ（リスクプレミアム）とつながります。市場は分散で消せるリスクには上乗せを払いません。誰でも分散で消せるリスクに、上乗せを払う理由がないからです。上乗せが付くのは、分散しても消せない市場全体のリスクのほうです。分けて持てば、上乗せのもらえない揺れまで抱えずに済みます。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店や会社を分けて持つと</td><td style="border:1px solid #D8DFE8;padding:3px 8px">片方が不調でも、もう片方で埋まるので薄まる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">全部に同時に起きるので、いくつに分けても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
 <p>手元の資産を見るときは、消せるリスクを残していないかと、消せないリスクをどれだけ持っているかを分けて見ます。危機のときに、資産どうしが一緒に動く度合いがどう変わるかは、F2-17 で数字を使って見ます。</p></div>
-<div class="notes-src" id="notes-s5b"><h5 style="font-size:15px;margin:8px 0 6px">5. 消せるリスクと消せないリスク</h5>
-<p>店の話に戻ります。アイスの機械が故障しても、傘の売り場は開けられます。1つの店だけに起きる出来事は、もう片方で薄められます。</p>
-<p>しかし、大きな地震で街ごと止まれば、アイスも傘も売れません。売上は0円になり、毎月100万円の家賃や人件費は、そのまま赤字になります（説明のための例）。売り場をどう分けても、街全体に起きることは防げません。</p>
-<p>投資でも同じです。分散で消せるのは<b>個別のリスク</b>で、分散しても消せないのは<b>市場全体のリスク</b>です（出典5）。1つの会社の不祥事や新製品の失敗は、個別のリスクにあたります。景気の悪化、金利の大きな変化、戦争は、市場全体のリスクにあたります。</p>
-<p>この区別は、F1-08 の上乗せ（リスクプレミアム）とつながります。市場は分散で消せるリスクには上乗せを払いません。誰でも分散で消せるリスクに、上乗せを払う理由がないからです。上乗せが付くのは、分散しても消せない市場全体のリスクのほうです。分散で得られるのは、上乗せの付かないばらつきを背負わずに済むことです。</p>
-<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店や会社を分けて持つと</td><td style="border:1px solid #D8DFE8;padding:3px 8px">片方が不調でも、もう片方で埋まるので薄まる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">全部に同時に起きるので、いくつに分けても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
-<p>手元の資産を見るときは、消せるリスクを残していないかと、消せないリスクをどれだけ持っているかを分けて見ます。危機のときに、資産どうしが一緒に動く度合いがどう変わるかは、F2-17 で数字を使って見ます。</p></div>
-<div class="notes-src" id="notes-s6a"><h5 style="font-size:15px;margin:8px 0 6px">6. 見せかけの分散と確かめ方</h5>
-<p>数を増やしても、分散にならないことがあります。同じ業種の会社の株を10社集めても、値動きが似ていれば、打ち消し合いはほとんど起きません。投資信託を何本も持っていても、中身の会社が重なっていれば同じことです（出典3）。</p>
+<div class="notes-src" id="notes-s6"><h5 style="font-size:15px;margin:8px 0 6px">6. 手元の持ち方の確かめ方</h5>
+<p>分けて持てば個別のリスクは薄まり、市場全体のリスクは残ると分かりました。最後に、分けたつもりなのに分かれていない持ち方になっていないかを確かめます。</p>
+<p>残り半分をもう1軒のアイス店に貸しても、2軒とも暑い月に売れて寒い月に売れないので、月ごとの差は小さくなりません（説明のための例）。店を2つ持つのと同じで、投資信託を何本持つかでも同じことが起きます。投資信託は、F1-06 で見たとおり、たくさんの会社の株などを1つにまとめて持てる商品です。同じ業種の会社の株を10社集めても、値動きが似ていれば、打ち消し合いはほとんど起きません。投資信託を何本も持っていても、中身の会社が重なっていれば同じことです（出典3）。</p>
 <p>確かめる手順は1つです。持っている投資信託の月次レポートを開き、<b>「組入上位10銘柄」の欄で、2本の間に同じ名前がいくつあるかを数えます</b>。10銘柄のうち7つが同じなら、2本に分けても、中身はかなり似ています（説明のための例）。</p>
 <p>持つものを増やすと、個別のリスクは減っていきます。1本から2本に増やしたときは、ばらつきが大きく減ります。すでにたくさん持っているところに1本足しても、ほとんど減りません。いくら増やしても、市場全体のリスクは残ります。持つ本数を増やせば、そのぶん手数料もかかります。手数料がどれだけ響くかは、F1-11 で扱います。</p>
-<p>今日の分散は同じ時点で何を持つかの話です。買う時期をずらす話とは別のものです。</p>
-<p>平均は組み合わせた資産の平均どおりで、ばらつきはそれより小さくなります。ただし、市場全体のリスクは、どれだけ分けても残ります。</p></div>
-<div class="notes-src" id="notes-s6b"><h5 style="font-size:15px;margin:8px 0 6px">6. 見せかけの分散と確かめ方</h5>
-<p>数を増やしても、分散にならないことがあります。同じ業種の会社の株を10社集めても、値動きが似ていれば、打ち消し合いはほとんど起きません。投資信託を何本も持っていても、中身の会社が重なっていれば同じことです（出典3）。</p>
-<p>確かめる手順は1つです。持っている投資信託の月次レポートを開き、<b>「組入上位10銘柄」の欄で、2本の間に同じ名前がいくつあるかを数えます</b>。10銘柄のうち7つが同じなら、2本に分けても、中身はかなり似ています（説明のための例）。</p>
-<p>持つものを増やすと、個別のリスクは減っていきます。1本から2本に増やしたときは、ばらつきが大きく減ります。すでにたくさん持っているところに1本足しても、ほとんど減りません。いくら増やしても、市場全体のリスクは残ります。持つ本数を増やせば、そのぶん手数料もかかります。手数料がどれだけ響くかは、F1-11 で扱います。</p>
-<p>今日の分散は同じ時点で何を持つかの話です。買う時期をずらす話とは別のものです。</p>
-<p>平均は組み合わせた資産の平均どおりで、ばらつきはそれより小さくなります。ただし、市場全体のリスクは、どれだけ分けても残ります。</p></div>
-<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p>今日の分散は同じ時点で何を持つかの話で、買う時期をずらす話とは別のものです。</p></div>
+<div class="notes-src" id="notes-end"><h5 style="font-size:15px;margin:8px 0 6px">7. 残り半分を貸す相手</h5>
+<p>アイス店の売り場の残り半分は、売れる時期がアイスと似ていない店に貸すほど、月ごとの差が小さくなります。ただし、街全体が止まる地震のような市場全体のリスクは、誰に貸しても残ります。</p>
+<h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
 <p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
 <p>引き受けたのは、次の一点だけです。</p>
 <p style="border-left:3px solid #65CCFE;padding-left:10px">値動きが完全には一致しない資産を組み合わせると、平均リターンを落とさずにばらつきだけを下げられる理由を、打ち消し合いとして説明できる。分散で消せるものと消せないものを区別できる。</p>

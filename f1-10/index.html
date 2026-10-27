@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>複利の数理｜同じ5％でも、30年後に182万円の差（TriFuse F1-10）</title>
+<title>複利の数理｜同じ5％でも、何が30年後の差を決めるのか（TriFuse F1-10）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -249,7 +249,7 @@ svg .sv{transform:none}
 .fa.on{opacity:1}
 /* 72の法則：答えが出たら「？」を消す */
 .q6{transition:opacity .4s ease}
-.slide.s3 .q6{opacity:0}
+.slide.s4 .q6{opacity:0}
 .mobile .keymsg{font-size:17px!important}
 .sumb .kp .card h4{font-size:20px}
 .sumb .kp .card p{font-size:17px;line-height:1.8}
@@ -257,6 +257,25 @@ svg .sv{transform:none}
 .sumb>.card h4{font-size:18px!important}
 .mobile .r72{grid-template-columns:62px 1fr 76px!important;gap:10px!important;padding:16px 14px!important}
 .mobile .r72 .big{font-size:28px!important}
+/* ===== v3.0：橋渡しの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:56px;right:56px;top:112px;margin:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--ink);line-height:1.4;white-space:nowrap}
+.bridge .bk{font-size:12px;font-weight:700;color:#5A6B82;background:#EEF2F7;border-radius:4px;padding:2px 8px;flex:none}
+.bridge .bk.now{color:#fff;background:#2B5FA8}
+.bridge .ar{font-style:normal;color:#8A9AB0;padding:0 4px}
+.slide.hasbr .body{top:146px}
+.mobile .bridge{position:static;flex-wrap:wrap;white-space:normal;padding:12px 14px 0;font-size:14px;row-gap:4px}
+/* 問いへの答え */
+.ans{margin:0;display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:12px;background:#EAF4FF;border:1.5px solid #2B5FA8;font-size:18px;font-weight:900;color:#16233A;line-height:1.4}
+.ans b{flex:none;font-size:13px;font-weight:700;color:#fff;background:#2B5FA8;border-radius:4px;padding:3px 8px}
+.mobile .ans{font-size:16px}
+.a3{display:flex;gap:14px;align-items:center;padding:12px 18px!important}
+.a3 .no{flex:none;width:34px;height:34px;border-radius:50%;background:#2B5FA8;color:#fff;font-family:var(--mono);font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center}
+.a3 h4{margin-bottom:2px!important}
+.tight .card{padding:10px 18px}
+.tight .card h4{font-size:16px;margin-bottom:2px}
+.tight .card p{font-size:14.5px;line-height:1.55}
+.tight .note{font-size:13px;line-height:1.6}
+.mobile .slide.hasbr .body{top:auto}
 
 </style>
 </head>
@@ -306,39 +325,42 @@ svg .sv{transform:none}
   <div class="cover">
     <div class="cover-text">
       <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-10</div>
-      <h1 class="fade d2"><small>複利の数理</small>同じ5％でも、<br>30年後に<span class="hl2">182万円の差</span></h1>
-      <p class="sub fade d3">利益を使うか、元手に足すか。増え方の形、72の法則、期間と利率、借金、値動きのある場合までを数字で確かめます。</p>
-      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>利益を使うか、元手に足すか</button><button data-go="2"><span class="n">03</span>掛け算を繰り返すと何が起きるか</button><button data-go="3"><span class="n">04</span>72の法則で2倍になる年数</button><button data-go="4"><span class="n">05</span>72の法則を逆向きに使う</button><button data-go="5"><span class="n">06</span>期間と利率はどちらも効く</button><button data-go="6"><span class="n">07</span>借金にも同じ掛け算が働く</button><button data-go="7"><span class="n">08</span>毎年同じ率で増えるとは限らない</button><button data-go="8"><span class="n">09</span>足して2で割る平均の落とし穴</button><button data-go="9"><span class="n">10</span>まとめと出典</button></div>
+      <h1 class="fade d2"><small>複利の数理 ｜ 今日の問い</small>同じ5％でも、<br>何が<br><span class="hl2">30年後の差</span>を決めるのか</h1>
+      <p class="sub fade d3">町のパン屋の元手100万円を、最後まで1つの例として追います。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>利益を取り出すか、店に戻すか</button><button data-go="2"><span class="n">03</span>掛け算を繰り返すと何が起きるか</button><button data-go="3"><span class="n">04</span>72の法則で2倍になる年数</button><button data-go="4"><span class="n">05</span>期間と利率はどちらも効く</button><button data-go="5"><span class="n">06</span>毎年同じ率で増えるとは限らない</button><button data-go="6"><span class="n">07</span>足して2で割る平均が合わない理由</button><button data-go="7"><span class="n">08</span>「3年で2倍」を72で確かめる</button><button data-go="8"><span class="n">09</span>借金にも同じ掛け算が働く</button><button data-go="9"><span class="n">10</span>問いへの答えと出典</button></div>
       <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
     </div>
     <svg class="cover-ill" viewBox="0 0 460 500" aria-label="直線と曲線が離れていく絵">
       <rect width="460" height="500" rx="22" fill="#fff" opacity=".8"/>
-      <text x="30" y="46" font-size="15" font-weight="700" fill="#5A6B82">100万円・年5％（例）</text>
+      <text x="30" y="46" font-size="15" font-weight="700" fill="#5A6B82">パン屋の100万円・年5％（例）</text>
       <path d="M40 440H430M40 440V80" stroke="#D8DFE8" stroke-width="2"/>
       <polyline class="drawline g0" points="40,365 53,361 66,358 79,354 92,350 105,346 118,342 131,339 144,335 157,331 170,328 183,324 196,320 209,316 222,312 235,309 248,305 261,301 274,298 287,294 300,290 313,286 326,282 339,279 352,275 365,271 378,268 391,264 404,260 417,256 430,252" fill="none" stroke="#8A9AB0" stroke-width="5"/>
       <polyline class="drawline g0" points="40,365 53,361 66,357 79,353 92,349 105,344 118,339 131,334 144,329 157,324 170,318 183,312 196,305 209,299 222,292 235,284 248,276 261,268 274,260 287,250 300,241 313,231 326,221 339,210 352,198 365,186 378,173 391,160 404,146 417,131 430,116" fill="none" stroke="#2B5FA8" stroke-width="6"/>
-      <text x="420" y="104" text-anchor="end" font-size="20" font-weight="700" fill="#2B5FA8" ><tspan font-size="15">複利 </tspan><tspan class="mono">432万円</tspan></text>
-      <text x="420" y="292" text-anchor="end" font-size="18" font-weight="700" fill="#5A6B82" ><tspan font-size="15">単利 </tspan><tspan class="mono">250万円</tspan></text>
+      <text x="420" y="104" text-anchor="end" font-size="20" font-weight="700" fill="#2B5FA8"><tspan font-size="15">複利 </tspan><tspan class="mono">432万円</tspan></text>
+      <text x="420" y="292" text-anchor="end" font-size="18" font-weight="700" fill="#5A6B82"><tspan font-size="15">単利 </tspan><tspan class="mono">250万円</tspan></text>
+      <text x="230" y="185" text-anchor="middle" font-size="40" font-weight="900" fill="#B5500F">？</text>
       <text x="40" y="470" font-size="13" fill="#5A6B82">いま</text><text x="430" y="470" text-anchor="end" font-size="13" fill="#5A6B82">30年後</text>
     </svg>
     <div class="brandbar"></div>
   </div>
 </section>
 
-<section class="slide" data-n="s1" data-steps="4">
-  <header class="hd"><span class="chap">1. 利益を使うか、元手に足すか</span><h2>利率はどちらも5％。違うのは、利益を元手に足したかどうかだけ</h2><span class="num">02</span></header>
+<section class="slide hasbr" data-n="s1" data-steps="5">
+  <header class="hd"><span class="chap">1. 利益を取り出すか、店に戻すか</span><h2>利率はどちらも5％。違うのは、利益を店に戻したかどうかだけ</h2><span class="num">02</span></header><p class="bridge"><b class="bk">今日の問い</b><span>同じ5％でも、何が30年後の差を決めるのか。パン屋の元手100万円で追います</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">年数を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 430" style="width:100%;height:420px" aria-label="単利と複利の残高の線グラフ">
+      <svg viewBox="0 0 600 430" style="width:100%;height:392px" aria-label="単利と複利の残高の線グラフ">
 <path d="M64 318.2H536" stroke="#E3E8EF"/>
 <path d="M64 244.4H536" stroke="#E3E8EF"/>
 <path d="M64 170.7H536" stroke="#E3E8EF"/>
 <path d="M64 96.9H536" stroke="#E3E8EF"/>
 <path d="M64 392H536" stroke="#D8DFE8" stroke-width="2"/>
-<text x="56" y="396.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">0</text>
-<text x="56" y="322.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">100</text>
-<text x="56" y="248.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">200</text>
+<text x="56" y="396.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">0</text>
+<text x="56" y="322.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">100</text>
+<text x="56" y="248.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">200</text>
+<text x="56" y="174.7" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">300</text>
+<text x="56" y="100.9" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">400</text>
 <text x="56" y="48" text-anchor="end" font-size="12" fill="#8A9AB0">万円</text>
 <text x="64.0" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">いま</text>
 <text x="142.7" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">5年後</text>
@@ -358,23 +380,24 @@ svg .sv{transform:none}
 <g class="sv" data-s="2" style="transition-delay:.9s"><path d="M221.3 271.8V281.3" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="221.3" cy="271.8" r="6" fill="#2B5FA8"/><circle cx="221.3" cy="281.3" r="5" fill="#8A9AB0"/><text x="213.3" y="259.8" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">162.9</text><text x="231.3" y="281.6" font-size="13" font-weight="700" fill="#B5500F">差 12.9</text></g>
 <g class="sv" data-s="3" style="transition-delay:.9s"><path d="M378.7 196.3V244.4" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="378.7" cy="196.3" r="6" fill="#2B5FA8"/><circle cx="378.7" cy="244.4" r="5" fill="#8A9AB0"/><text x="370.7" y="184.3" text-anchor="end" font-size="14" font-weight="700" fill="#2B5FA8" class="mono">265.3</text><text x="388.7" y="225.4" font-size="13" font-weight="700" fill="#B5500F">差 65.3</text></g>
 <g class="sv" data-s="4" style="transition-delay:.9s"><path d="M536.0 73.1V207.6" stroke="#F88039" stroke-width="3" stroke-dasharray="4 4"/><circle cx="536.0" cy="73.1" r="6" fill="#2B5FA8"/><circle cx="536.0" cy="207.6" r="5" fill="#8A9AB0"/><text x="544.0" y="78.1" font-size="15" font-weight="700" fill="#2B5FA8" class="mono">432.2</text><text x="544.0" y="212.6" font-size="15" font-weight="700" fill="#5A6B82" class="mono">250</text><text x="524.0" y="146.3" text-anchor="end" font-size="16" font-weight="900" fill="#B5500F">差 182.2</text></g>
-<g transform="translate(64 14)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">複利（利益を毎年元手に足す）</text><rect x="216" width="16" height="5" y="5" fill="#8A9AB0"/><text x="238" y="12" font-size="13" fill="#16233A">単利（元手100万円＋ためた利益の合計）</text></g>
+<g transform="translate(64 14)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">複利（利益を店に戻し元手に足す）</text><rect x="236" width="16" height="5" y="5" fill="#8A9AB0"/><text x="258" y="12" font-size="13" fill="#16233A">単利（元手100万円＋取り出した利益）</text></g>
 </svg>
     </div>
     <div class="kp fade d2">
-      <div class="card"><h4>町のパン屋<span class="ex">（例）</span></h4><p>元手100万円、毎年5％の5万円の利益。<br><b style="color:#5A6B82">単利</b>：5万円を店から出し、別の財布にためる。元手は100万円のまま。<br><b style="color:var(--safe)">複利</b>：5万円を店に使い、元手に足す。2年目の元手は105万円、利益は5万2,500円。</p></div>
+      <div class="card"><h4>町のパン屋<span class="ex">（例）</span></h4><p>元手100万円、毎年5％の5万円の利益。<br><b style="color:#5A6B82">単利</b>：5万円を店から取り出し、別の財布にためる。元手は100万円のまま。<br><b style="color:var(--safe)">複利</b>：5万円を店に戻し、オーブンなどに使って元手に足す。2年目の元手は105万円、利益は5万2,500円。</p></div>
       <div class="card sv" data-s="2"><h4>はじめのうち、差は小さい</h4><p>5年後の差は2.6万円、10年後は約13万円。</p></div>
       <div class="card sv" data-s="4" style="text-align:center"><p>30年で単利は元手の2.5倍、複利は約4.3倍</p><div class="big w">182.2<small>万円の差</small></div></div>
+      <div class="sv" data-s="5"><p class="ans"><b>1つ目の答え</b>利益を店に戻して元手に足すかどうか</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s2" data-steps="3">
-  <header class="hd"><span class="chap">2. 掛け算を繰り返すと何が起きるか</span><h2>増える割合は5％のまま。1年に増える金額が少しずつ大きくなる</h2><span class="num">03</span></header>
+<section class="slide hasbr" data-n="s2" data-steps="3">
+  <header class="hd"><span class="chap">2. 掛け算を繰り返すと何が起きるか</span><h2>増える割合は5％のまま。1年に増える金額が少しずつ大きくなる</h2><span class="num">03</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>30年後に約182万円の差</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>差が後の年ほど大きく開く理由</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 390" style="width:100%;height:370px" aria-label="1年に増える金額の棒グラフ">
+      <svg viewBox="0 0 600 390" style="width:100%;height:352px" aria-label="1年に増える金額の棒グラフ">
 <path d="M40 330H580" stroke="#D8DFE8" stroke-width="2"/>
 <rect x="62" y="270" width="40" height="60" rx="3" fill="#8A9AB0"/><text x="82" y="262" text-anchor="middle" font-size="13" fill="#5A6B82" class="mono">5</text>
 <rect class="grow g0" x="114" y="270.0" width="44" height="60.0" rx="3" fill="#2B5FA8"/>
@@ -392,9 +415,9 @@ svg .sv{transform:none}
 <rect class="grow" data-s="3" x="504" y="82.8" width="44" height="247.2" rx="3" fill="#2B5FA8"/>
 <text class="mono sv" data-s="3" x="526" y="72.8" text-anchor="middle" font-size="17" font-weight="700" fill="#2B5FA8">約20.6</text>
 <text x="500" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">30年目</text>
-<g class="sv" data-s="3" style="transition-delay:.8s"><text x="440" y="112.8" text-anchor="end" font-size="15" font-weight="900" fill="#2B5FA8">1年目の約4倍</text></g>
-<text x="40" y="22" font-size="12" fill="#8A9AB0">その1年で増える金額（万円）（例）</text>
-<g transform="translate(330 10)"><rect width="14" height="14" fill="#8A9AB0" rx="2"/><text x="20" y="12" font-size="12" fill="#5A6B82">単利：足し算</text><rect x="110" width="14" height="14" fill="#2B5FA8" rx="2"/><text x="130" y="12" font-size="12" fill="#5A6B82">複利：掛け算</text></g>
+<g class="sv" data-s="3" style="transition-delay:.8s"><path d="M158 270H548" stroke="#F88039" stroke-width="2" stroke-dasharray="5 5"/><path d="M496 270V82.8M491 270H501M491 82.8H501" stroke="#B5500F" stroke-width="2.5"/><text x="486" y="90.8" text-anchor="end" font-size="14" font-weight="700" fill="#B5500F">30年目の1年分は</text><text x="486" y="110.8" text-anchor="end" font-size="16" font-weight="900" fill="#B5500F">1年目の約4倍</text></g>
+<text x="40" y="22" font-size="12" fill="#8A9AB0">パン屋の100万円が1年に増える金額（万円）（例）</text>
+<g transform="translate(350 10)"><rect width="14" height="14" fill="#8A9AB0" rx="2"/><text x="20" y="12" font-size="12" fill="#5A6B82">単利：足し算</text><rect x="110" width="14" height="14" fill="#2B5FA8" rx="2"/><text x="130" y="12" font-size="12" fill="#5A6B82">複利：掛け算</text></g>
 </svg>
       <p class="note">前提：利益は1年に1回。税金や手数料は引かず、物価の変化も考えていません（F0-03）。</p>
     </div>
@@ -407,127 +430,77 @@ svg .sv{transform:none}
   </div>
 </section>
 
-<section class="slide" data-n="s3a" data-steps="4">
-  <header class="hd"><span class="chap">3. 72の法則で2倍になる年数を出す</span><h2>72を利率の数字で割ると、2倍になるまでのおおよその年数が出る</h2><span class="num">04</span></header>
+<section class="slide hasbr" data-n="s3a" data-steps="6">
+  <header class="hd"><span class="chap">3. 72の法則で2倍になる年数を出す</span><h2>72を利率の数字で割ると、2倍になるまでのおおよその年数が出る</h2><span class="num">04</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>複利は毎年1.05を掛ける掛け算</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>2倍になる年数で、差の開く速さを測る</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
-    <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:10px">
       <div class="stepbar"><b style="font-size:15px">利率を変える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <div style="display:flex;flex-direction:column;gap:18px"><div class="card r72 fade d1" style="display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:14px;padding:26px 22px"><div class="big" style="font-size:34px">3<small>％</small></div><div class=""><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 3 ＝ 24<span class="sv" data-s="4" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約23.4年</span></p></div><div class="swap"><div class="big g" style="font-size:34px;text-align:right">24<small>年</small></div></div></div><div class="card r72 sv" data-s="2" style="display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:14px;padding:26px 22px"><div class="big" style="font-size:34px">6<small>％</small></div><div class="sv" data-s="3"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:50%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 6 ＝ 12</p></div><div class="swap"><div class="q6 big" style="font-size:34px;text-align:right;color:var(--ink2)">？</div><div class="big g sv" data-s="3" style="font-size:34px;text-align:right">12<small>年</small></div></div></div><div class="card r72 sv" data-s="1" style="display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:14px;padding:26px 22px"><div class="big" style="font-size:34px">12<small>％</small></div><div class="sv" data-s="1"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:25%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 12 ＝ 6<span class="sv" data-s="4" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約6.1年</span></p></div><div class="swap"><div class="big g sv" data-s="1" style="font-size:34px;text-align:right">6<small>年</small></div></div></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div class="card r72 fade d1" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px;padding:12px 22px"><div class="big" style="font-size:32px">5<small>％</small><span class='ex' style='display:block;margin:2px 0 0;width:max-content'>パン屋</span></div><div class="sv" data-s="1"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:58%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 5 ＝ 約14<span class="sv" data-s="1" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約14.2年</span></p></div><div class="swap"><div class="big g sv" data-s="1" style="font-size:32px;text-align:right">約14<small>年</small></div></div></div><div class="card r72 sv" data-s="2" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px;padding:12px 22px"><div class="big" style="font-size:32px">3<small>％</small></div><div class="sv" data-s="2"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 3 ＝ 24<span class="sv" data-s="5" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約23.4年</span></p></div><div class="swap"><div class="big g sv" data-s="2" style="font-size:32px;text-align:right">24<small>年</small></div></div></div><div class="card r72 sv" data-s="2" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px;padding:12px 22px"><div class="big" style="font-size:32px">12<small>％</small></div><div class="sv" data-s="2"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:25%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 12 ＝ 6<span class="sv" data-s="5" style="display:inline-block;margin-left:10px;font-weight:700;color:var(--ink)">正確には約6.1年</span></p></div><div class="swap"><div class="big g sv" data-s="2" style="font-size:32px;text-align:right">6<small>年</small></div></div></div><div class="card r72 sv" data-s="3" style="display:grid;grid-template-columns:120px 1fr 120px;align-items:center;gap:14px;padding:12px 22px"><div class="big" style="font-size:32px">6<small>％</small></div><div class="sv" data-s="4"><div style="height:24px;border-radius:6px;background:#EEF2F7;overflow:hidden"><i style="display:block;height:100%;width:50%;background:linear-gradient(90deg,#2B5FA8,#65CCFE)"></i></div><p class="note" style="margin-top:4px">72 ÷ 6 ＝ 12</p></div><div class="swap"><div class="q6 big" style="font-size:34px;text-align:right;color:var(--ink2)">？</div><div class="big g sv" data-s="4" style="font-size:32px;text-align:right">12<small>年</small></div></div></div></div>
     </div>
-    <div class="kp fade d2">
-      <div class="card" style="text-align:center"><p style="font-size:15px;color:var(--ink2)">72の法則</p><div class="big" style="font-size:36px">72 ÷ 利率の数字<br>≒ 2倍になる年数</div></div>
-      <div class="card sv" data-s="2" style="border-left:5px solid var(--safe)"><h4>チャットで答えてください</h4><p style="color:var(--ink);font-weight:700">「年6％なら、何年で2倍になりますか？」</p></div>
-      <div class="card sv" data-s="4"><h4>あくまで、おおよその目安</h4><p>年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれる。</p></div>
+    <div class="kp tight fade d2" style="gap:8px">
+      <div class="card" style="text-align:center"><p style="font-size:14px;color:var(--ink2)">72の法則</p><div class="big" style="font-size:26px">72 ÷ 利率の数字 ≒ 2倍になる年数</div></div>
+      <div class="card sv" data-s="1"><h4>パン屋の年5％なら約14年</h4><p>正確に計算すると約14.2年で、よく合う。店の元手100万円は、14年あまりで200万円になる。</p></div>
+      <div class="card sv" data-s="3" style="border-left:5px solid var(--safe)"><h4>チャットで答えてください</h4><p style="color:var(--ink);font-weight:700">「年6％なら、何年で2倍になりますか？」</p></div>
+      <div class="card sv" data-s="5"><h4>あくまで、おおよその目安</h4><p>年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれる。</p></div>
+      <div class="card sv" data-s="6" style="border-left:5px solid var(--safe)"><h4>今日の問いとのつながり</h4><p>2倍になる年数で、差の開く速さを測れる。年5％なら、30年のあいだに2倍が2回あまり起きるので約4倍。p2の約4.3倍と合う。</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s3b" data-steps="3">
-  <header class="hd"><span class="chap">3. 72の法則は逆向きにも使える</span><h2>「3年で2倍」と勧められたら、利回りを逆算してみる</h2><span class="num">05</span></header>
-  <div class="body" style="display:flex;flex-direction:column;gap:14px">
-    <div class="quote fade d1">「手元の100万円が、3年で200万円になります」</div>
-    <div class="stepbar"><b style="font-size:15px">逆算する</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-    <div class="flow">
-      <div class="fs on tap"><svg class="ico"><use href="#i-search"/></svg><span class="n">STEP 0</span>3年で2倍、と<br>勧められた</div><div class="fa" data-s="1">▶</div>
-      <div class="fs tap" data-s="1"><svg class="ico"><use href="#i-percent"/></svg><span class="n">STEP 1</span>72 ÷ 3 ＝ 24<br>年およそ24％<br><small style="font-weight:500;color:var(--ink2)">正確には年約26％</small></div><div class="fa" data-s="2">▶</div>
-      <div class="fs tap" data-s="2"><svg class="ico"><use href="#i-chart-up"/></svg><span class="n">STEP 2</span>上場株式でも<br>年5〜8％程度が目安<br><small style="font-weight:500;color:var(--ink2)">F1-08の表</small></div><div class="fa" data-s="3">▶</div>
-      <div class="fs last tap" data-s="3"><svg class="ico"><use href="#i-warning"/></svg><span class="n">STEP 3</span>8％の3倍超。大きなリスクを<br>引き受けていなければ出ない</div>
-    </div>
-    <div class="card sv" data-s="2" style="padding:8px 16px"><svg viewBox="0 0 600 150" style="width:100%;height:150px" aria-label="上場株式の目安と勧められた利回りの比べ">
-<path d="M170 10V134" stroke="#D8DFE8" stroke-width="2"/>
-<g><text x="158" y="44" text-anchor="end" font-size="14" font-weight="700" fill="#16233A">上場株式の目安</text><text x="158" y="62" text-anchor="end" font-size="12" fill="#5A6B82">F1-08の表</text><rect x="170.0" y="30" width="66.7" height="30" fill="#EAF4FF"/><rect x="236.7" y="30" width="40.0" height="30" rx="3" fill="#40B69A"/><text x="286.7" y="51" font-size="17" font-weight="700" fill="#1F7A63">年5〜8％程度</text></g>
-<g class="sv" data-s="3"><text x="158" y="108" text-anchor="end" font-size="14" font-weight="700" fill="#16233A">勧められた話</text><text x="158" y="126" text-anchor="end" font-size="12" fill="#5A6B82">3年で2倍</text><rect x="170.0" y="94" width="346.7" height="30" rx="3" fill="#F88039"/><text x="506.7" y="115" text-anchor="end" font-size="17" font-weight="900" fill="#fff">年約26％</text><text x="524.7" y="115" font-size="13" font-weight="700" fill="#B5500F">8％の</text><text x="524.7" y="132" font-size="13" font-weight="700" fill="#B5500F">3倍超</text></g>
-</svg></div>
-    <p class="note sv" data-s="3">話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかは、卒業課題のF1-EXで考えます。</p>
-  </div>
-</section>
-
-<section class="slide" data-n="s4" data-steps="3">
-  <header class="hd"><span class="chap">4. 期間と利率はどちらも効く</span><h2>期間だけ変える、利率も変える。100万円の到達額を3つの比べで確かめる</h2><span class="num">06</span></header>
+<section class="slide hasbr" data-n="s4" data-steps="4">
+  <header class="hd"><span class="chap">4. 期間と利率はどちらも効く</span><h2>期間だけ変える、利率も変える。パン屋の100万円で3つの比較</h2><span class="num">05</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>利率が違えば、2倍になるまでの年数も変わる</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>期間と利率をそれぞれ変える</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">比べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 400" style="width:100%;height:380px" aria-label="期間と利率を変えた残高の棒グラフ">
-<path d="M20 318H580" stroke="#D8DFE8" stroke-width="2"/>
-<g class=""><text x="110" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">同じ5％で</text><text x="110" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">期間だけ変える</text></g>
-<rect class="grow g0" x="48" y="158.5" width="56" height="159.5" rx="4" fill="#2B5FA8"/>
-<g class=""><text class="mono" x="76" y="148.5" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約432</text><text x="76" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="76" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
-<rect class="grow" data-s="1" x="116" y="58.0" width="56" height="260.0" rx="4" fill="#2B5FA8"/>
-<g class="sv" data-s="1"><text class="mono" x="144" y="48.0" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約704</text><text x="144" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="144" y="355" text-anchor="middle" font-size="13" fill="#16233A">40年</text></g>
-<g class="sv" data-s="2"><text x="300" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">利率と期間を</text><text x="300" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">入れ替える</text></g>
-<rect class="grow" data-s="2" x="238" y="228.3" width="56" height="89.7" rx="4" fill="#40B69A"/>
-<g class="sv" data-s="2"><text class="mono" x="266" y="218.3" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約243</text><text x="266" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％</text><text x="266" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
-<rect class="grow" data-s="2" x="306" y="220.1" width="56" height="97.9" rx="4" fill="#2B5FA8"/>
-<g class="sv" data-s="2"><text class="mono" x="334" y="210.1" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約265</text><text x="334" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="334" y="355" text-anchor="middle" font-size="13" fill="#16233A">20年</text></g>
-<g class="sv" data-s="3"><text x="490" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">30年で</text><text x="490" y="398" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">1％の差</text></g>
-<rect class="grow" data-s="3" x="428" y="251.2" width="56" height="66.8" rx="4" fill="#65CCFE"/>
-<g class="sv" data-s="3"><text class="mono" x="456" y="241.2" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約181</text><text x="456" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年2％</text><text x="456" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
-<rect class="grow" data-s="3" x="496" y="228.3" width="56" height="89.7" rx="4" fill="#40B69A"/>
-<g class="sv" data-s="3"><text class="mono" x="524" y="218.3" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約243</text><text x="524" y="338" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％</text><text x="524" y="355" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
-<g class="sv" data-s="1" style="transition-delay:.8s"><path d="M104 158.5H120" stroke="#F88039" stroke-width="2" stroke-dasharray="4 4"/><text x="178" y="113.2" font-size="15" font-weight="900" fill="#B5500F">差</text><text x="178" y="132.2" font-size="15" font-weight="900" fill="#B5500F" class="mono">約272</text></g>
-<g class="sv" data-s="3" style="transition-delay:.8s"><text x="490" y="188.3" text-anchor="middle" font-size="16" font-weight="900" fill="#B5500F">約1.34倍</text></g>
-<text x="20" y="22" font-size="12" fill="#8A9AB0">100万円を置いた到達額（万円）（例）</text>
+      <svg viewBox="0 0 600 396" style="width:100%;height:360px" aria-label="期間と利率を変えた残高の棒グラフ">
+<path d="M20 300H580" stroke="#D8DFE8" stroke-width="2"/>
+<g class=""><text x="110" y="362" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">同じ5％で</text><text x="110" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">期間だけ変える</text></g>
+<rect class="grow g0" x="48" y="157.6" width="56" height="142.4" rx="4" fill="#2B5FA8"/>
+<g class=""><text class="mono" x="76" y="147.6" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約432</text><text x="76" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="76" y="337" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<rect class="grow" data-s="1" x="116" y="68.0" width="56" height="232.0" rx="4" fill="#2B5FA8"/>
+<g class="sv" data-s="1"><text class="mono" x="144" y="58.0" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約704</text><text x="144" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="144" y="337" text-anchor="middle" font-size="13" fill="#16233A">40年</text></g>
+<g class="sv" data-s="2"><text x="300" y="362" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">利率と期間を</text><text x="300" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">入れ替える</text></g>
+<rect class="grow" data-s="2" x="238" y="219.9" width="56" height="80.1" rx="4" fill="#40B69A"/>
+<g class="sv" data-s="2"><text class="mono" x="266" y="209.9" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約243</text><text x="266" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％</text><text x="266" y="337" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<rect class="grow" data-s="2" x="306" y="212.7" width="56" height="87.3" rx="4" fill="#2B5FA8"/>
+<g class="sv" data-s="2"><text class="mono" x="334" y="202.7" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約265</text><text x="334" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年5％</text><text x="334" y="337" text-anchor="middle" font-size="13" fill="#16233A">20年</text></g>
+<g class="sv" data-s="3"><text x="490" y="362" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">30年で</text><text x="490" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#5A6B82">1％の差</text></g>
+<rect class="grow" data-s="3" x="428" y="240.4" width="56" height="59.6" rx="4" fill="#65CCFE"/>
+<g class="sv" data-s="3"><text class="mono" x="456" y="230.4" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約181</text><text x="456" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年2％</text><text x="456" y="337" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<rect class="grow" data-s="3" x="496" y="219.9" width="56" height="80.1" rx="4" fill="#40B69A"/>
+<g class="sv" data-s="3"><text class="mono" x="524" y="209.9" text-anchor="middle" font-size="17" font-weight="700" fill="#16233A">約243</text><text x="524" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A">年3％</text><text x="524" y="337" text-anchor="middle" font-size="13" fill="#16233A">30年</text></g>
+<g class="sv" data-s="1" style="transition-delay:.8s"><path d="M104 157.6H120" stroke="#F88039" stroke-width="2" stroke-dasharray="4 4"/><text x="178" y="117.8" font-size="15" font-weight="900" fill="#B5500F">差</text><text x="178" y="136.8" font-size="15" font-weight="900" fill="#B5500F" class="mono">約272</text></g>
+<g class="sv" data-s="3" style="transition-delay:.8s"><text x="490" y="179.9" text-anchor="middle" font-size="16" font-weight="900" fill="#B5500F">約1.34倍</text></g>
+<text x="20" y="22" font-size="12" fill="#8A9AB0">パン屋の100万円の到達額（万円）（例）</text>
+<g transform="translate(300 10)"><rect width="14" height="14" rx="2" fill="#2B5FA8"/><text x="20" y="12" font-size="12" fill="#5A6B82">年5％</text><rect x="80" width="14" height="14" rx="2" fill="#40B69A"/><text x="100" y="12" font-size="12" fill="#5A6B82">年3％</text><rect x="160" width="14" height="14" rx="2" fill="#65CCFE"/><text x="180" y="12" font-size="12" fill="#5A6B82">年2％</text></g>
 </svg>
     </div>
-    <div class="kp fade d2" style="gap:10px">
-      <div class="card"><h4>同じ年5％で、期間だけ変える</h4><p>100万円を30年置くと約432万円。</p></div>
+    <div class="kp tight fade d2" style="gap:8px">
+      <div class="card"><h4>同じ年5％で、期間だけ変える</h4><p>利益を元手に足しながら30年続けると約432万円。</p></div>
       <div class="card sv" data-s="1"><h4>40年なら約704万円、差は約272万円</h4><p>最初の30年で増えた額は約332万円。最後の10年だけで、それに近い額が増える。</p></div>
       <div class="card sv" data-s="2"><h4>年3％×30年 と 年5％×20年</h4><p>約243万円と約265万円。期間が10年長くても、2％の利率の差は埋まらない。</p></div>
       <div class="card sv" data-s="3"><h4>30年なら、1％の差で約1.34倍</h4><p>年2％で約181万円、年3％で約243万円。</p></div>
-      <p class="note sv" data-s="3">利率を上げるには、より大きなリスクを引き受けることになる（F1-08）。期間を延ばすには、お金を長いあいだ使わずに置く必要がある。いつ始めるかは、それぞれの事情で決まる（A2-05）。</p>
+      <div class="sv" data-s="4"><p class="ans"><b>2つ目の答え</b>置いておく期間の長さ</p><p class="note" style="margin-top:6px">利率の違いも効く（ただし利率を上げるにはリスクがつく。F1-08）。期間を延ばすには、お金を長いあいだ使わずに置く必要がある。いつ始めるかは、それぞれの事情で決まる（A2-05）。</p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s5" data-steps="3">
-  <header class="hd"><span class="chap">5. 借金にも同じ掛け算が働く</span><h2>複利はただの掛け算。増える側にも、借金の側にも同じように働く</h2><span class="num">07</span></header>
+<section class="slide hasbr" data-n="s5a" data-steps="3">
+  <header class="hd"><span class="chap">5. 毎年同じ率で増えるとは限らない</span><h2>平均が同じ年5％でも、年ごとに上下すると30年後の金額は変わる</h2><span class="num">06</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>ここまでは毎年きっちり5％が前提</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>よく売れた年と売れなかった年が交互に来たら</span></p>
   <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
     <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
       <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 600 390" style="width:100%;height:380px" aria-label="借金を放っておいたときの残高の棒グラフ">
-<path d="M30 332H580" stroke="#D8DFE8" stroke-width="2"/>
-<g class="sv" data-s="2" style="transition-delay:.9s"><path d="M30 82.0H580" stroke="#B5500F" stroke-width="1.5" stroke-dasharray="6 6"/><text x="34" y="74.0" font-size="12" font-weight="700" fill="#B5500F">借りた額の2倍（100万円）</text></g>
-<rect class="grow g0" x="50" y="207.0" width="60" height="125.0" rx="4" fill="#FDBA8C"/>
-<text class="mono" x="80" y="197.0" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">50</text>
-<text x="80" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">借りた日</text>
-<rect class="grow" data-s="1" style="transition-delay:0.00s" x="140" y="188.3" width="60" height="143.7" rx="4" fill="#FBA46A"/>
-<text x="170" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">1年後</text>
-<rect class="grow" data-s="1" style="transition-delay:0.35s" x="230" y="166.7" width="60" height="165.3" rx="4" fill="#FBA46A"/>
-<text x="260" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">2年後</text>
-<rect class="grow" data-s="1" style="transition-delay:0.70s" x="320" y="141.9" width="60" height="190.1" rx="4" fill="#F88039"/>
-<text class="mono sv" data-s="1" x="350" y="131.9" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">約76</text>
-<text x="350" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">3年後</text>
-<rect class="grow" data-s="2" style="transition-delay:0.00s" x="410" y="113.4" width="60" height="218.6" rx="4" fill="#FBA46A"/>
-<text x="440" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">4年後</text>
-<rect class="grow" data-s="2" style="transition-delay:0.35s" x="500" y="80.6" width="60" height="251.4" rx="4" fill="#F88039"/>
-<text class="mono sv" data-s="2" x="530" y="70.6" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">約101</text>
-<text x="530" y="356" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">5年後</text>
-<text x="30" y="22" font-size="12" fill="#8A9AB0">50万円を年15％で、返さずに放っておいた残高（万円）（例）</text>
-</svg>
-    </div>
-    <div class="kp fade d2">
-      <div class="card"><h4>極端な例<span class="ex">（例）</span></h4><p>50万円を年15％で借りて、返済も利息の支払いもせずに放っておく。</p></div>
-      <div class="card sv" data-s="2"><h4>5年後には約101万円、およそ2倍</h4><p>72の法則でも、72 ÷ 15 ＝ 約4.8年。ほぼ同じ答え。</p></div>
-      <div class="card sv" data-s="3" style="border-left:5px solid var(--warn)"><h4>リボ払い（リボルビング払い）</h4><p>使った金額が増えても、毎月の返済額はあまり変わらない。多くの場合、返済額から利息が先に引かれ、元本がなかなか減らない。返し終わるまでが長くなり、利息の合計も増える。</p></div>
-      <p class="note sv" data-s="3">投資にかかる手数料にも同じ掛け算が働くことは、次のF1-11で計算します。</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-n="s6a" data-steps="3">
-  <header class="hd"><span class="chap">6. 毎年同じ率で増えるとは限らない</span><h2>平均が同じ年5％でも、値動きがあると30年後の金額は変わる</h2><span class="num">08</span></header>
-  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
-    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
-      <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-      <svg viewBox="0 0 620 430" style="width:100%;height:420px" aria-label="毎年5％と、+20％と−10％を交互にくり返す場合の線グラフ">
+      <svg viewBox="0 0 620 430" style="width:100%;height:392px" aria-label="毎年5％と、+20％と−10％を交互にくり返す場合の線グラフ">
 <path d="M64 318.2H480" stroke="#E3E8EF"/>
 <path d="M64 244.4H480" stroke="#E3E8EF"/>
 <path d="M64 170.7H480" stroke="#E3E8EF"/>
 <path d="M64 96.9H480" stroke="#E3E8EF"/>
 <path d="M64 392H480" stroke="#D8DFE8" stroke-width="2"/>
-<text x="56" y="396.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">0</text>
-<text x="56" y="322.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">100</text>
-<text x="56" y="248.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono">200</text>
+<text x="56" y="396.0" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">0</text>
+<text x="56" y="322.2" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">100</text>
+<text x="56" y="248.4" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">200</text>
+<text x="56" y="174.7" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">300</text>
+<text x="56" y="100.9" text-anchor="end" font-size="12" fill="#8A9AB0" class="mono ax">400</text>
 <text x="56" y="48" text-anchor="end" font-size="12" fill="#8A9AB0">万円</text>
 <text x="64.0" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">いま</text>
 <text x="133.3" y="414" text-anchor="middle" font-size="12" fill="#5A6B82">5年後</text>
@@ -542,58 +515,117 @@ svg .sv{transform:none}
 <g class="sv" data-s="1" style="transition-delay:.6s"><circle cx="77.9" cy="303.5" r="4" fill="#F88039"/><text x="75.9" y="293.5" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" class="mono">120</text><circle cx="91.7" cy="312.3" r="4" fill="#F88039"/><text x="97.7" y="332.3" font-size="13" font-weight="700" fill="#B5500F" class="mono">108</text></g>
 <g class="sv" data-s="2" style="transition-delay:1.5s"><circle cx="480" cy="73.1" r="6" fill="#2B5FA8"/><circle cx="480" cy="158.0" r="6" fill="#F88039"/><text x="490" y="78.1" font-size="15" font-weight="700" fill="#2B5FA8" class="mono">約432</text><text x="490" y="163.0" font-size="15" font-weight="700" fill="#B5500F" class="mono">約317</text></g>
 <g class="sv" data-s="3"><path d="M550 73.1V158.0M544 73.1H556M544 158.0H556" stroke="#B5500F" stroke-width="2.5"/><text x="560" y="111.6" font-size="17" font-weight="900" fill="#B5500F">差</text><text x="560" y="131.6" font-size="17" font-weight="900" fill="#B5500F" class="mono">約115</text></g>
-<g transform="translate(64 14)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">毎年5％</text><rect x="96" width="16" height="5" y="5" fill="#F88039"/><text x="118" y="12" font-size="13" fill="#16233A">+20％と−10％を交互に（平均5％）</text></g>
+<g transform="translate(64 14)"><rect width="16" height="5" y="5" fill="#2B5FA8"/><text x="22" y="12" font-size="13" fill="#16233A">毎年5％</text><rect x="96" width="16" height="5" y="5" fill="#F88039"/><text x="118" y="12" font-size="13" fill="#16233A">よく売れた年+20％・売れなかった年−10％が交互（平均5％）</text></g>
 </svg>
     </div>
     <div class="kp fade d2">
-      <div class="card"><h4>F1-09の資産A<span class="ex">（例）</span></h4><p>好況の年は+20％、不況の年は−10％。平均すると年5％。30年後も約432万円になりそうに見える。</p></div>
+      <div class="card"><h4>パン屋の売り上げは年ごとに変わる<span class="ex">（例）</span></h4><p>よく売れた年は元手が+20％、売れなかった年は−10％。交互に来ると、平均は年5％。30年後も約432万円になりそうに見える。</p></div>
       <div class="card sv" data-s="1"><h4>はじめの2年</h4><p>100万円 → 120万円 → 108万円。毎年5％なら2年で110万2,500円。差は2万2,500円。</p></div>
       <div class="card sv" data-s="3" style="text-align:center"><p>この2年を15回くり返すと、30年後は約317万円</p><div class="big w">約115<small>万円少ない</small></div></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-n="s6b" data-steps="3">
-  <header class="hd"><span class="chap">6. 毎年同じ率で増えるとは限らない</span><h2>足して2で割る平均は、掛け算で増えるお金にそのまま当てはまらない</h2><span class="num">09</span></header>
-  <div class="body" style="display:flex;flex-direction:column;gap:14px">
+<section class="slide hasbr" data-n="s5b" data-steps="4">
+  <header class="hd"><span class="chap">5. 毎年同じ率で増えるとは限らない</span><h2>足して2で割る平均は、掛け算で増えるお金にそのまま当てはまらない</h2><span class="num">07</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>平均5％でも、30年後は約317万円</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>なぜ、足して2で割る平均が合わないのか</span></p>
+  <div class="body" style="display:flex;flex-direction:column;gap:12px">
     <div class="g2" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
       <div class="card fade d1" style="display:flex;flex-direction:column;gap:4px">
-        <div class="stepbar"><b style="font-size:15px">値動きを大きくする</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
-        <p class="note">100万円を2年置いたとき（例）</p>
-        <svg viewBox="0 0 600 250" style="width:100%;height:250px" aria-label="2年後の金額の比べ">
-<path d="M190 34V240" stroke="#D8DFE8" stroke-width="2"/><text x="190" y="22" text-anchor="middle" font-size="12" fill="#8A9AB0">100万円</text>
-<text x="176" y="64" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">毎年5％</text><text x="176" y="82" text-anchor="end" font-size="12" fill="#5A6B82">5％ → 5％</text>
-<rect class="growx g0" x="190" y="50" width="242.3" height="34" rx="3" fill="#2B5FA8"/>
-<text class="mono" x="442.3" y="73" font-size="16" font-weight="700" fill="#2B5FA8">110万2,500円</text>
-<text x="176" y="134" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">+20％ → −10％</text><text x="176" y="152" text-anchor="end" font-size="12" fill="#5A6B82">平均5％</text>
-<rect class="growx" data-s="1" x="190" y="120" width="189.1" height="34" rx="3" fill="#F88039"/>
-<text class="mono sv" data-s="1" x="389.1" y="143" font-size="16" font-weight="700" fill="#F88039">108万円（1.08倍）</text>
-<text x="176" y="204" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">+30％ → −20％</text><text x="176" y="222" text-anchor="end" font-size="12" fill="#5A6B82">平均5％</text>
-<rect class="growx" data-s="2" x="190" y="190" width="94.5" height="34" rx="3" fill="#B5500F"/>
-<text class="mono sv" data-s="2" x="294.5" y="213" font-size="16" font-weight="700" fill="#B5500F">1.04倍</text>
+        <div class="stepbar"><b style="font-size:15px">上下の幅を大きくする</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+        <p class="note">パン屋の100万円を2年置いたとき（例）</p>
+        <svg viewBox="0 0 600 250" style="width:100%;height:224px" aria-label="2年後の金額の比べ">
+<g transform="translate(250 6)"><rect width="14" height="14" rx="2" fill="#2B5FA8"/><text x="20" y="12" font-size="12" fill="#5A6B82">毎年5％</text><rect x="84" width="14" height="14" rx="2" fill="#F88039"/><text x="104" y="12" font-size="12" fill="#5A6B82">+20／−10</text><rect x="180" width="14" height="14" rx="2" fill="#B5500F"/><text x="200" y="12" font-size="12" fill="#5A6B82">+30／−20</text></g>
+<path d="M200 34V240" stroke="#D8DFE8" stroke-width="2"/><text x="200" y="22" text-anchor="middle" font-size="12" fill="#8A9AB0">100万円</text>
+<text x="186" y="64" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">毎年5％</text><text x="186" y="82" text-anchor="end" font-size="12" fill="#5A6B82">5％ → 5％</text>
+<rect class="growx g0" x="200" y="50" width="233.0" height="34" rx="3" fill="#2B5FA8"/>
+<text class="mono" x="443.0" y="73" font-size="16" font-weight="700" fill="#2B5FA8">110万2,500円</text>
+<text x="186" y="134" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">+20％ → −10％</text><text x="186" y="152" text-anchor="end" font-size="12" fill="#5A6B82">よく売れた年→売れなかった年</text>
+<rect class="growx" data-s="1" x="200" y="120" width="181.8" height="34" rx="3" fill="#F88039"/>
+<text class="mono sv" data-s="1" x="391.8" y="143" font-size="16" font-weight="700" fill="#F88039">108万円（1.08倍）</text>
+<text x="186" y="204" text-anchor="end" font-size="15" font-weight="700" fill="#16233A">+30％ → −20％</text><text x="186" y="222" text-anchor="end" font-size="12" fill="#5A6B82">上下の幅が大きい</text>
+<rect class="growx" data-s="2" x="200" y="190" width="90.9" height="34" rx="3" fill="#B5500F"/>
+<text class="mono sv" data-s="2" x="300.9" y="213" font-size="16" font-weight="700" fill="#B5500F">104万円（1.04倍）</text>
 </svg>
       </div>
       <div class="kp fade d2">
         <div class="card"><h4>足して2で割ると</h4><p>+20％と−10％を足して2で割れば、たしかに5％。これは足し算で増える場合の平均。</p></div>
         <div class="card sv" data-s="1"><h4>掛け算で増えるお金では</h4><p>1.2 × 0.9 で、2年で1.08倍。1年あたりにすると約3.9％。</p></div>
-        <div class="card sv" data-s="2"><h4>値動きの幅が大きいほど、差も大きい</h4><p>+30％と−20％を交互にくり返すと、平均は同じ5％でも2年で1.04倍。</p></div>
+        <div class="card sv" data-s="2"><h4>上下の幅が大きいほど、差も大きい</h4><p>よく売れた年が+30％、売れなかった年が−20％なら、平均は同じ5％でも2年で1.04倍。</p></div>
       </div>
     </div>
-    <div class="keymsg sv" data-s="3" style="font-size:22px;padding:14px">平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなる<p class="note" style="font-weight:500;margin-top:4px">1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p></div>
+    <div class="keymsg sv" data-s="3" style="font-size:21px;padding:10px 14px">平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなる<p class="note" style="font-weight:500;margin-top:2px">p2の複利の数字（約432万円）は、そのいちばん大きい場合の数字です。</p></div>
+    <div class="sv" data-s="4"><p class="ans"><b>3つ目の答え</b>毎年の率がそろうかどうか</p></div>
   </div>
 </section>
 
-<section class="slide" data-n="sum">
-  <header class="hd"><span class="chap">まとめと出典</span><h2>複利は同じ倍率を掛け続ける増え方。期間が長いほど差は大きく開く</h2><span class="num">10</span></header>
-  <div class="body sumb" style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
-    <div class="kp">
-      <div class="card fade d1"><h4>同じ倍率を掛け続ける増え方</h4><p>複利は同じ倍率を掛け続ける増え方で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。</p></div>
-      <div class="card fade d2"><h4>期間が長いほど、差が開く</h4><p>期間が長いほど、利率の小さな差も、値動きによる差も大きく開きます。</p></div>
-      <div class="card fade d3"><p class="note">この資料は事実と構造の説明であって、推奨ではありません。どの商品を選ぶか、いつ投資を始めるか、いくら出すかは、このノートの外にあり、あなた自身が決める領域です。</p></div>
+<section class="slide hasbr" data-n="s6a" data-steps="3">
+  <header class="hd"><span class="chap">6. 勧められた話と借金に72の法則を使う</span><h2>72の法則の別の使い方①　「3年で2倍」から利回りを逆算する</h2><span class="num">08</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>30年後の差を決める3つの答えが出そろった</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>72の法則で、店主が勧められた話を確かめる</span></p>
+  <div class="body" style="display:flex;flex-direction:column;gap:12px">
+    <div class="quote fade d1">パン屋の店主が勧められた話：「手元の100万円が、3年で200万円になります」</div>
+    <div class="stepbar"><b style="font-size:15px">逆算する</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="flow">
+      <div class="fs on tap"><svg class="ico"><use href="#i-search"/></svg><span class="n">STEP 0</span>3年で2倍、と<br>店主が勧められた</div><div class="fa" data-s="1">▶</div>
+      <div class="fs tap" data-s="1"><svg class="ico"><use href="#i-percent"/></svg><span class="n">STEP 1</span>72 ÷ 3 ＝ 24<br>年およそ24％<br><small style="font-weight:500;color:var(--ink2)">正確には年約26％</small></div><div class="fa" data-s="2">▶</div>
+      <div class="fs tap" data-s="2"><svg class="ico"><use href="#i-chart-up"/></svg><span class="n">STEP 2</span>上場株式でも<br>年5〜8％程度が目安<br><small style="font-weight:500;color:var(--ink2)">F1-08の表</small></div><div class="fa" data-s="3">▶</div>
+      <div class="fs last tap" data-s="3"><svg class="ico"><use href="#i-warning"/></svg><span class="n">STEP 3</span>8％の3倍超。大きなリスクを<br>引き受けていなければ出ない</div>
     </div>
-    <div class="card fade d4" style="display:flex;flex-direction:column;gap:8px;align-self:start">
+    <div class="card sv" data-s="2" style="padding:6px 16px"><svg viewBox="0 0 600 150" style="width:100%;height:140px" aria-label="上場株式の目安と勧められた利回りの比べ">
+<path d="M180 10V134" stroke="#D8DFE8" stroke-width="2"/>
+<g><text x="168" y="44" text-anchor="end" font-size="14" font-weight="700" fill="#16233A">上場株式の目安</text><text x="168" y="62" text-anchor="end" font-size="12" fill="#5A6B82">F1-08の表</text><rect x="180.0" y="30" width="65.0" height="30" fill="#EAF4FF"/><rect x="245.0" y="30" width="39.0" height="30" rx="3" fill="#8A9AB0"/><text x="294.0" y="51" font-size="17" font-weight="700" fill="#5A6B82">年5〜8％程度</text></g>
+<g transform="translate(330 2)"><rect width="14" height="14" rx="2" fill="#8A9AB0"/><text x="20" y="12" font-size="12" fill="#5A6B82">上場株式の目安</text><rect x="120" width="14" height="14" rx="2" fill="#F88039"/><text x="140" y="12" font-size="12" fill="#5A6B82">店主が勧められた話</text></g>
+<g class="sv" data-s="3"><text x="168" y="108" text-anchor="end" font-size="14" font-weight="700" fill="#16233A">店主が勧められた話</text><text x="168" y="126" text-anchor="end" font-size="12" fill="#5A6B82">3年で2倍</text><rect x="180.0" y="94" width="338.0" height="30" rx="3" fill="#F88039"/><text x="508.0" y="115" text-anchor="end" font-size="17" font-weight="900" fill="#fff">年約26％</text><text x="526.0" y="115" font-size="13" font-weight="700" fill="#B5500F">8％の</text><text x="526.0" y="132" font-size="13" font-weight="700" fill="#B5500F">3倍超</text></g>
+</svg></div>
+    <p class="note sv" data-s="3">話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかは、卒業課題のF1-EXで考えます。</p>
+  </div>
+</section>
+
+<section class="slide hasbr" data-n="s6b" data-steps="3">
+  <header class="hd"><span class="chap">6. 勧められた話と借金に72の法則を使う</span><h2>72の法則の別の使い方②　掛け算は、借りたお金の側にも働く</h2><span class="num">09</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>「3年で2倍」は年約26％。8％の3倍超</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>同じ掛け算が、店主の借金に働くと</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:6px">
+      <div class="stepbar"><b style="font-size:15px">年を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 370" style="width:100%;height:360px" aria-label="借金を放っておいたときの残高の棒グラフ">
+<path d="M30 318H580" stroke="#D8DFE8" stroke-width="2"/>
+<g class="sv" data-s="2" style="transition-delay:.9s"><path d="M30 78.0H580" stroke="#B5500F" stroke-width="1.5" stroke-dasharray="6 6"/><text x="34" y="70.0" font-size="12" font-weight="700" fill="#B5500F">借りた額の2倍（100万円）</text></g>
+<rect class="grow g0" x="50" y="198.0" width="60" height="120.0" rx="4" fill="#FDBA8C"/>
+<text class="mono" x="80" y="188.0" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">50</text>
+<text x="80" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">借りた日</text>
+<rect class="grow" data-s="1" style="transition-delay:0.00s" x="140" y="180.0" width="60" height="138.0" rx="4" fill="#FBA46A"/>
+<text x="170" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">1年後</text>
+<rect class="grow" data-s="1" style="transition-delay:0.35s" x="230" y="159.3" width="60" height="158.7" rx="4" fill="#FBA46A"/>
+<text x="260" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">2年後</text>
+<rect class="grow" data-s="1" style="transition-delay:0.70s" x="320" y="135.5" width="60" height="182.5" rx="4" fill="#F88039"/>
+<text class="mono sv" data-s="1" x="350" y="125.5" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">約76</text>
+<text x="350" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">3年後</text>
+<rect class="grow" data-s="2" style="transition-delay:0.00s" x="410" y="108.1" width="60" height="209.9" rx="4" fill="#FBA46A"/>
+<text x="440" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">4年後</text>
+<rect class="grow" data-s="2" style="transition-delay:0.35s" x="500" y="76.6" width="60" height="241.4" rx="4" fill="#F88039"/>
+<text class="mono sv" data-s="2" x="530" y="66.6" text-anchor="middle" font-size="19" font-weight="700" fill="#B5500F">約101</text>
+<text x="530" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A">5年後</text>
+<text x="30" y="22" font-size="12" fill="#8A9AB0">店主が50万円を年15％で借り、返さずに放っておいた残高（万円）（例）</text>
+<g transform="translate(30 34)"><rect width="14" height="14" rx="2" fill="#F88039"/><text x="20" y="12" font-size="12" fill="#5A6B82">借りたお金の残高（返す額）</text></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>極端な例<span class="ex">（例）</span></h4><p>店主が、オーブンを買うために50万円を年15％で借りる。返済も利息の支払いもせずに放っておく。</p></div>
+      <div class="card sv" data-s="2"><h4>5年後には約101万円、およそ2倍</h4><p>72の法則でも、72 ÷ 15 ＝ 約4.8年。ほぼ同じ答え。</p></div>
+      <div class="card sv" data-s="3" style="border-left:5px solid var(--warn)"><h4>リボ払い（リボルビング払い）</h4><p>毎月の返済額があまり変わらず、利息が先に引かれるので元本が減りにくい。返し終わるまでが長く、利息の合計も増える。</p></div>
+      <p class="note sv" data-s="3">借金では、期間が長いほど、利率が高いほど、増えるのは返す額のほう。投資にかかる手数料の掛け算は、次のF1-11で計算します。</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide hasbr" data-n="sum">
+  <header class="hd"><span class="chap">問いへの答えと出典</span><h2>同じ5％でも、30年後の差を決めるのは3つ</h2><span class="num">10</span></header><p class="bridge"><b class="bk">今日の問い</b><span>同じ5％でも、何が30年後の差を決めるのか</span></p>
+  <div class="body sumb" style="display:grid;grid-template-columns:1.15fr 1fr;gap:22px">
+    <div class="kp" style="gap:10px">
+      <div class="card fade d1 a3"><span class="no">1</span><div><h4>利益を店に戻して元手に足すかどうか</h4><p>単利250万円、複利約432万円（p2）</p></div></div><div class="card fade d2 a3"><span class="no">2</span><div><h4>置いておく期間の長さ</h4><p>同じ5％で30年約432万円、40年約704万円（p5）</p></div></div><div class="card fade d3 a3"><span class="no">3</span><div><h4>毎年の率がそろうかどうか</h4><p>平均5％でも、上下すると約317万円（p6〜p7）</p></div></div>
+      <div class="card fade d4"><p>どれも同じ倍率を掛け続ける増え方から生まれる差です。2倍になるまでの年数は、72を利率で割るとおおよそ出せます。借金では、同じ掛け算で返す額が増えます。</p></div>
+      <p class="note fade d5">この資料は事実と構造の説明であって、推奨ではありません。どの商品を選ぶか、いつ投資を始めるか、いくら出すかは、このノートの外にあり、あなた自身が決める領域です。</p>
+    </div>
+    <div class="card fade d5" style="display:flex;flex-direction:column;gap:8px;align-self:start">
       <h4 style="font-size:16px">出典</h4>
-      <p class="note"><b style="color:var(--ink)">日本取引所グループ なるほど！東証経済教室「7-2.ライフプランとお金②」</b><br>1〜2節のうち、複利の説明</p><p class="note"><b style="color:var(--ink)">金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子の14・22ページ）</b><br>4節：期間と利率の違いによる差</p><p class="note"><b style="color:var(--ink)">本稿の数値計算モデル</b><br>1節の表・2〜6節の本文の数字（説明のための計算例）</p>
+      <p class="note"><b style="color:var(--ink)">日本取引所グループ なるほど！東証経済教室「7-2.ライフプランとお金②」</b><br>台本の1〜2節（p2〜p3）のうち、複利の説明</p><p class="note"><b style="color:var(--ink)">金融庁「基礎から学べる金融ガイド」（令和5年12月改訂・冊子の14・22ページ）</b><br>台本の4節（p5）：期間と利率の違いによる差</p><p class="note"><b style="color:var(--ink)">本稿の数値計算モデル</b><br>台本の1節の表と2〜6節の数字（説明のための計算例）</p>
       <p class="note" style="border-top:1px dashed var(--rule);padding-top:8px">数字はどれも説明のための例で、出典で確かめた事実ではありません。72の法則と単利の定義が出典のページに無いことなど、出典が支える範囲は台本の出典節に書いてあります。疑問があれば、原典の公的資料を直接確かめてください。</p>
     </div>
   </div>
@@ -614,15 +646,17 @@ svg .sv{transform:none}
              指数関数という増え方が、時間に対して何をするのかを言える。
 【読了目安】 11分（チャットの問いかけ1回を含む）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
-<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 利益を使うか、元手に足すか</h5>
-<p>今日出てくる金額と利率は、すべて説明のための例です。</p>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 利益を取り出すか、店に戻すか</h5>
+<p>今日は、1つの問いを最後まで追います。「同じ5％でも、何が30年後の差を決めるのか」という問いです。今日出てくる金額と利率は、すべて説明のための例です。</p>
 <p>町のパン屋で考えます。店主は元手100万円で店を始め、毎年その5％にあたる5万円の利益を出しているとします。ここでは、この利益を、お金を預けたときの利息と同じものとして扱います。</p>
-<p>1つ目のやり方では、店主は毎年の5万円を店から出して、別の財布にしまっておきます。店の元手は100万円のままなので、次の年の利益も5万円です。このように、最初の元手にだけ利息がつく増え方を<b>単利</b>と呼びます。</p>
-<p>2つ目のやり方では、5万円を店から出さずに、新しいオーブンなどに使います。2年目の元手は105万円になり、利益は5万2,500円です。3年目の元手は110万2,500円になります。ついた利息を元手に足し、その分にも利息がつく増え方を<b>複利</b>と呼びます。</p>
+<p>1つ目のやり方では、店主は毎年の5万円を店から取り出して、別の財布にしまっておきます。店の元手は100万円のままなので、次の年の利益も5万円です。このように、最初の元手にだけ利息がつく増え方を<b>単利</b>と呼びます。</p>
+<p>2つ目のやり方では、5万円を取り出さずに店に戻し、新しいオーブンなどに使います。2年目の元手は105万円になり、利益は5万2,500円です。3年目の元手は110万2,500円になります。ついた利息を元手に足し、その分にも利息がつく増え方を<b>複利</b>と呼びます。</p>
 <p>2つのやり方を、手元にあるお金の合計で比べます。単利の側は、店の元手100万円と、別の財布にためた利益を足した金額です。</p>
 <table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">経過年数</th><th style="border:1px solid #D8DFE8;padding:3px 8px">単利（元手100万円＋ためた利益の合計）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">複利（利益を毎年元手に足した場合）</th><th style="border:1px solid #D8DFE8;padding:3px 8px">差</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">1年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">105.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">0.0万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">5年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">125.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">127.6万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">2.6万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">10年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">150.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">162.9万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">12.9万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">20年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">200.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">265.3万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">65.3万円</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">30年後</td><td style="border:1px solid #D8DFE8;padding:3px 8px">250.0万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">432.2万円</td><td style="border:1px solid #D8DFE8;padding:3px 8px">182.2万円</td></tr></table>
-<p>10年後の差は約13万円です。30年後には、差は約182万円まで開きます。30年で、単利は元手の2.5倍、複利は約4.3倍になります。利率はどちらも同じ5％で、違うのは利益を元手に足したかどうかだけです。</p></div>
+<p>10年後の差は約13万円です。30年後には、差は約182万円まで開きます。30年で、単利は元手の2.5倍、複利は約4.3倍になります。利率はどちらも同じ5％で、違うのは利益を店に戻して元手に足したかどうかだけです。</p>
+<p>今日の問いへの1つ目の答えは、<b>利益を店に戻して元手に足すかどうか</b>です。同じ5％でも、これで30年後の金額が変わります。</p></div>
 <div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 掛け算を繰り返すと何が起きるか</h5>
+<p>1節の表では、5年後の差は2.6万円でしたが、30年後には約182万円まで開きました。ここでは、差が後の年ほど大きく開く理由を、パン屋の計算で見ます。</p>
 <p>単利は、毎年同じ5万円を足していく足し算です。グラフにすると、まっすぐな直線になります。</p>
 <p>複利は、毎年1.05を掛けていく掛け算です。100万円に1.05を30回掛けると、約432万円になります。これが1節の表の、30年後の数字です。このように同じ倍率を何回も掛けていく増え方を、数学では<b>指数関数</b>と呼びます。</p>
 <p>ここでは、利益は1年に1回つくものとします。税金や手数料は引いていません。物価の変化も考えに入れていないので、物価が上がれば、同じ金額で買えるものは減ります（F0-03）。</p>
@@ -630,47 +664,55 @@ svg .sv{transform:none}
 <p>1年に増える金額で比べてみます。単利は何年たっても5万円です。複利は1年目が5万円、10年目が約7.8万円、20年目が約12.6万円、30年目が約20.6万円です。30年目の1年分は、1年目の約4倍です。増え方はどこかで急に変わるのではなく、毎年少しずつ大きくなります。グラフにすると、右上がりに少しずつ反っていく曲線です。</p>
 <p>表の数字は、自分でも確かめられます。検索窓に「1.05^30」と入れると、4.32…と出ます。これに100万円を掛ければ、30年後の金額です。</p></div>
 <div class="notes-src" id="notes-s3a"><h5 style="font-size:15px;margin:8px 0 6px">3. 72の法則で2倍になる年数を出す</h5>
-<p>お金が何年で2倍になるかは、暗算でおおよそ出せます。72を利率の数字で割るだけです。これを<b>72の法則</b>と呼びます。</p>
-<p>年3％なら、72÷3で24年です。年12％なら、72÷12で6年です。</p>
+<p>2節で、複利は毎年1.05を掛けていく掛け算だと分かりました。掛け算で増えるお金は、何年で2倍になるかを暗算でおおよそ出せます。72を利率の数字で割るだけです。これを<b>72の法則</b>と呼びます。</p>
+<p>パン屋の年5％なら、72÷5で約14年です。正確に計算すると約14.2年なので、よく合います。店の元手100万円は、14年あまりで200万円になります。</p>
+<p>ほかの利率でも試してみます。年3％なら、72÷3で24年です。年12％なら、72÷12で6年です。</p>
 <p>*(講師：チャットで問う。「年6％なら、何年で2倍になりますか？」答えは72÷6で12年)*</p>
 <p>72の法則は、あくまでおおよその目安です。年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれます。年3％の24年は、正確に計算すると約23.4年です。年12％の6年は、正確には約6.1年です。</p>
-<p>72の法則は、逆向きにも使えます。「手元の100万円が、3年で200万円になります」と勧められたとします。72を3で割ると24なので、年およそ24％の利回りです。正確に計算すると、年約26％になります。</p>
-<p>F1-08の表では、上場株式でも年5〜8％程度が目安でした。年26％は、目安の高いほうの8％と比べても3倍を超えます。それだけ大きなリスクを引き受けていなければ、この利回りは出ません。話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかどうかは、卒業課題のF1-EXで考えます。</p></div>
-<div class="notes-src" id="notes-s3b"><h5 style="font-size:15px;margin:8px 0 6px">3. 72の法則で2倍になる年数を出す</h5>
-<p>お金が何年で2倍になるかは、暗算でおおよそ出せます。72を利率の数字で割るだけです。これを<b>72の法則</b>と呼びます。</p>
-<p>年3％なら、72÷3で24年です。年12％なら、72÷12で6年です。</p>
-<p>*(講師：チャットで問う。「年6％なら、何年で2倍になりますか？」答えは72÷6で12年)*</p>
-<p>72の法則は、あくまでおおよその目安です。年8％前後でいちばんよく合い、利率がそこから離れるほど少しずつずれます。年3％の24年は、正確に計算すると約23.4年です。年12％の6年は、正確には約6.1年です。</p>
-<p>72の法則は、逆向きにも使えます。「手元の100万円が、3年で200万円になります」と勧められたとします。72を3で割ると24なので、年およそ24％の利回りです。正確に計算すると、年約26％になります。</p>
-<p>F1-08の表では、上場株式でも年5〜8％程度が目安でした。年26％は、目安の高いほうの8％と比べても3倍を超えます。それだけ大きなリスクを引き受けていなければ、この利回りは出ません。話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかどうかは、卒業課題のF1-EXで考えます。</p></div>
+<p>2倍になる年数は、今日の問いの差がどのくらいの速さで開くかを測る目安になります。パン屋の年5％なら、約14年で2倍になります。30年のあいだに2倍が2回あまり起きるので、約4倍になります。1節の表の約4.3倍と合います。</p></div>
 <div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 期間と利率はどちらも効く</h5>
-<p>まず、同じ年5％で、期間だけを変えてみます。100万円を30年置くと約432万円、40年置くと約704万円です。終わりの年が同じなら、始めるのが10年遅いと期間は30年になります。</p>
+<p>72の法則で、利率が違えば2倍になるまでの年数も変わると分かりました。ここでは、パン屋の100万円で、期間と利率をそれぞれ変えてみます。</p>
+<p>まず、同じ年5％で、期間だけを変えてみます。利益を元手に足しながら30年続けると約432万円、40年続けると約704万円です。終わりの年が同じなら、店を始めるのが10年遅いと、期間は30年になります。</p>
 <p>その差は約272万円です。最初の30年で増えた額は約332万円でした。最後の10年だけで、それに近い額が増えています。1年に増える金額が、後の年ほど大きいからです。</p>
 <p>次に、利率も変えてみます。年3％で30年なら約243万円です。年5％で20年なら約265万円です。期間が10年長くても、2％の利率の差は埋まりません。</p>
 <p>期間が長いほど、同じ利率の差も大きく開きます。30年なら、年2％と年3％の1％の差で、到達額は約1.34倍違います。100万円なら、約181万円と約243万円です。</p>
+<p>問いへの2つ目の答えは、<b>置いておく期間の長さ</b>です。同じ5％でも、期間が長いほど、到達する金額は大きく開きます。利率の違いも効きますが、利率を上げるにはリスクがつきます。</p>
 <p>利率と期間では、伸ばし方が違います。利率を上げるには、F1-08で見たとおり、値動きの大きいものを選ぶなど、より大きなリスクを引き受けることになります。期間を延ばすのは、それとは別の手段です。その代わり、そのお金を長いあいだ使わずに置いておく必要があります。</p>
 <p>いつ始めて、どれだけの期間置くかは、それぞれの事情で決まります。人が始める時期をどう決めがちかという心の動きは、A2-05で扱います。</p></div>
-<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 借金にも同じ掛け算が働く</h5>
-<p>複利はただの掛け算なので、お金が増える側にも、借金が増える側にも同じように働きます。</p>
-<p>極端な例で見てみます。50万円を年15％で借りて、返済も利息の支払いもせずに放っておいたとします。3年後には約76万円、5年後には約101万円で、およそ2倍です。72の法則でも、72÷15で約4.8年と、ほぼ同じ答えになります。</p>
+<div class="notes-src" id="notes-s5a"><h5 style="font-size:15px;margin:8px 0 6px">5. 毎年同じ率で増えるとは限らない</h5>
+<p>ここまでの計算は、すべて「毎年きっちり5％で増える」という前提つきでした。ここでは、パン屋の利益が年によって上下する場合を見ます。</p>
+<p>パン屋の売り上げは、天気や客足で年ごとに変わります。よく売れた年は元手が20％増え、売れなかった年は10％減るとします。この2つの年が交互に来ると、平均は年5％です。平均が5％なら、30年後も約432万円になりそうに思えます。</p>
+<p>計算してみます。100万円の元手は、よく売れた年に120万円になります。売れなかった年には、その10％の12万円が減って108万円です。毎年5％なら、2年で110万2,500円なので、2万2,500円の差がつきます。</p>
+<p>この2年を15回くり返すと、30年後は約317万円です。毎年5％の約432万円より、約115万円少なくなります。</p>
+<p>+20％と−10％を足して2で割れば、たしかに5％です。ただ、この平均は足し算で増える場合の平均で、掛け算で増えるお金にはそのまま当てはまりません。実際の増え方は1.2×0.9で、2年で1.08倍です。1年あたりにすると、約3.9％になります。</p>
+<p>上下の幅が大きいほど、この差も大きくなります。よく売れた年が+30％、売れなかった年が−20％なら、平均は同じ5％でも、2年で1.04倍、100万円が104万円にしかなりません。<b>平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなります</b>。1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p>
+<p>問いへの3つ目の答えは、<b>毎年の率がそろうかどうか</b>です。平均が同じ5％でも、毎年の率が上下すると、30年後の金額は小さくなります。値動きのあるものに置いたお金でも、同じことが起きます。</p></div>
+<div class="notes-src" id="notes-s5b"><h5 style="font-size:15px;margin:8px 0 6px">5. 毎年同じ率で増えるとは限らない</h5>
+<p>ここまでの計算は、すべて「毎年きっちり5％で増える」という前提つきでした。ここでは、パン屋の利益が年によって上下する場合を見ます。</p>
+<p>パン屋の売り上げは、天気や客足で年ごとに変わります。よく売れた年は元手が20％増え、売れなかった年は10％減るとします。この2つの年が交互に来ると、平均は年5％です。平均が5％なら、30年後も約432万円になりそうに思えます。</p>
+<p>計算してみます。100万円の元手は、よく売れた年に120万円になります。売れなかった年には、その10％の12万円が減って108万円です。毎年5％なら、2年で110万2,500円なので、2万2,500円の差がつきます。</p>
+<p>この2年を15回くり返すと、30年後は約317万円です。毎年5％の約432万円より、約115万円少なくなります。</p>
+<p>+20％と−10％を足して2で割れば、たしかに5％です。ただ、この平均は足し算で増える場合の平均で、掛け算で増えるお金にはそのまま当てはまりません。実際の増え方は1.2×0.9で、2年で1.08倍です。1年あたりにすると、約3.9％になります。</p>
+<p>上下の幅が大きいほど、この差も大きくなります。よく売れた年が+30％、売れなかった年が−20％なら、平均は同じ5％でも、2年で1.04倍、100万円が104万円にしかなりません。<b>平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなります</b>。1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p>
+<p>問いへの3つ目の答えは、<b>毎年の率がそろうかどうか</b>です。平均が同じ5％でも、毎年の率が上下すると、30年後の金額は小さくなります。値動きのあるものに置いたお金でも、同じことが起きます。</p></div>
+<div class="notes-src" id="notes-s6a"><h5 style="font-size:15px;margin:8px 0 6px">6. 勧められた話と借金に72の法則を使う</h5>
+<p>ここまでで、30年後の差を決める3つの答えが出そろいました。最後に、72の法則の別の使い方として、店主が勧められた話と、店主の借金を確かめます。</p>
+<p>まず、72の法則は逆向きにも使えます。パン屋の店主が「手元の100万円が、3年で200万円になります」と勧められたとします。72を3で割ると24なので、年およそ24％の利回りです。正確に計算すると、年約26％になります。</p>
+<p>F1-08の表では、上場株式でも年5〜8％程度が目安でした。年26％は、目安の高いほうの8％と比べても3倍を超えます。それだけ大きなリスクを引き受けていなければ、この利回りは出ません。話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかどうかは、卒業課題のF1-EXで考えます。</p>
+<p>次に借金です。同じ掛け算は、お金が増える側だけでなく、借りたお金が増える側にも働きます。</p>
+<p>極端な例で見てみます。店主が、オーブンを買うために50万円を年15％で借りたとします。返済も利息の支払いもせずに放っておくと、3年後には約76万円、5年後には約101万円で、およそ2倍です。72の法則でも、72÷15で約4.8年と、ほぼ同じ答えになります。</p>
 <p>ふだんの借金では、毎月少しずつ返していく形のほうが多いです。クレジットカードの<b>リボ払い</b>（リボルビング払い）は、使った金額が増えても、毎月の返済額があまり変わらない払い方です。多くの場合、その返済額の中から利息が先に引かれます。利息の分が大きいうちは元本がなかなか減らず、返し終わるまでが長くなります。そのぶん、払う利息の合計も増えていきます。</p>
-<p>投資にかかる手数料にも同じ掛け算が働くことは、次のF1-11で計算します。</p></div>
-<div class="notes-src" id="notes-s6a"><h5 style="font-size:15px;margin:8px 0 6px">6. 毎年同じ率で増えるとは限らない</h5>
-<p>ここまでの計算は、すべて「毎年きっちり同じ率で増える」という前提つきでした。値動きのあるものでは、この前提が崩れます。</p>
-<p>F1-09で見た資産Aを思い出してください。好況の年は+20％、不況の年は−10％で、平均すると年5％でした。平均が5％なら、30年後も約432万円になりそうに思えます。</p>
-<p>計算してみます。100万円は、好況の年に120万円になります。不況の年には、その10％の12万円が減って108万円です。毎年5％なら、2年で110万2,500円なので、2万2,500円の差がつきます。</p>
-<p>この2年を15回くり返すと、30年後は約317万円です。毎年5％の約432万円より、約115万円少なくなります。</p>
-<p>+20％と−10％を足して2で割れば、たしかに5％です。ただ、この平均は足し算で増える場合の平均で、掛け算で増えるお金にはそのまま当てはまりません。実際の増え方は1.2×0.9で、2年で1.08倍です。1年あたりにすると、約3.9％になります。</p>
-<p>値動きの幅が大きいほど、この差も大きくなります。+30％と−20％を交互にくり返すと、平均は同じ5％でも、2年で1.04倍にしかなりません。<b>平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなります</b>。1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p>
-<p>複利は同じ倍率を掛け続ける増え方で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。期間が長いほど、利率の小さな差も、値動きによる差も大きく開きます。</p></div>
-<div class="notes-src" id="notes-s6b"><h5 style="font-size:15px;margin:8px 0 6px">6. 毎年同じ率で増えるとは限らない</h5>
-<p>ここまでの計算は、すべて「毎年きっちり同じ率で増える」という前提つきでした。値動きのあるものでは、この前提が崩れます。</p>
-<p>F1-09で見た資産Aを思い出してください。好況の年は+20％、不況の年は−10％で、平均すると年5％でした。平均が5％なら、30年後も約432万円になりそうに思えます。</p>
-<p>計算してみます。100万円は、好況の年に120万円になります。不況の年には、その10％の12万円が減って108万円です。毎年5％なら、2年で110万2,500円なので、2万2,500円の差がつきます。</p>
-<p>この2年を15回くり返すと、30年後は約317万円です。毎年5％の約432万円より、約115万円少なくなります。</p>
-<p>+20％と−10％を足して2で割れば、たしかに5％です。ただ、この平均は足し算で増える場合の平均で、掛け算で増えるお金にはそのまま当てはまりません。実際の増え方は1.2×0.9で、2年で1.08倍です。1年あたりにすると、約3.9％になります。</p>
-<p>値動きの幅が大きいほど、この差も大きくなります。+30％と−20％を交互にくり返すと、平均は同じ5％でも、2年で1.04倍にしかなりません。<b>平均の利率が同じなら、毎年ぴったりその率で増えたときの金額がいちばん大きくなります</b>。1節の表の複利の数字は、そのいちばん大きい場合の数字です。</p>
-<p>複利は同じ倍率を掛け続ける増え方で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。期間が長いほど、利率の小さな差も、値動きによる差も大きく開きます。</p></div>
+<p>借金では、期間が長いほど、利率が高いほど、増えるのは返す額のほうです。投資にかかる手数料にも同じ掛け算が働くことは、次のF1-11で計算します。</p>
+<p>同じ5％でも、30年後の差を決めるのは、利益を店に戻して元手に足すか、置いておく期間の長さ、毎年の率がそろうかの3つです。どれも同じ倍率を掛け続ける増え方から生まれる差で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。</p></div>
+<div class="notes-src" id="notes-s6b"><h5 style="font-size:15px;margin:8px 0 6px">6. 勧められた話と借金に72の法則を使う</h5>
+<p>ここまでで、30年後の差を決める3つの答えが出そろいました。最後に、72の法則の別の使い方として、店主が勧められた話と、店主の借金を確かめます。</p>
+<p>まず、72の法則は逆向きにも使えます。パン屋の店主が「手元の100万円が、3年で200万円になります」と勧められたとします。72を3で割ると24なので、年およそ24％の利回りです。正確に計算すると、年約26％になります。</p>
+<p>F1-08の表では、上場株式でも年5〜8％程度が目安でした。年26％は、目安の高いほうの8％と比べても3倍を超えます。それだけ大きなリスクを引き受けていなければ、この利回りは出ません。話をいったん止めて確かめる理由になります。元本が減らないという約束とこの利回りが一緒に成り立つかどうかは、卒業課題のF1-EXで考えます。</p>
+<p>次に借金です。同じ掛け算は、お金が増える側だけでなく、借りたお金が増える側にも働きます。</p>
+<p>極端な例で見てみます。店主が、オーブンを買うために50万円を年15％で借りたとします。返済も利息の支払いもせずに放っておくと、3年後には約76万円、5年後には約101万円で、およそ2倍です。72の法則でも、72÷15で約4.8年と、ほぼ同じ答えになります。</p>
+<p>ふだんの借金では、毎月少しずつ返していく形のほうが多いです。クレジットカードの<b>リボ払い</b>（リボルビング払い）は、使った金額が増えても、毎月の返済額があまり変わらない払い方です。多くの場合、その返済額の中から利息が先に引かれます。利息の分が大きいうちは元本がなかなか減らず、返し終わるまでが長くなります。そのぶん、払う利息の合計も増えていきます。</p>
+<p>借金では、期間が長いほど、利率が高いほど、増えるのは返す額のほうです。投資にかかる手数料にも同じ掛け算が働くことは、次のF1-11で計算します。</p>
+<p>同じ5％でも、30年後の差を決めるのは、利益を店に戻して元手に足すか、置いておく期間の長さ、毎年の率がそろうかの3つです。どれも同じ倍率を掛け続ける増え方から生まれる差で、2倍になるまでの年数は72を利率で割るとおおよそ出せます。</p></div>
 <div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
 <p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
 <p>引き受けたのは、次の一点だけです。</p>
