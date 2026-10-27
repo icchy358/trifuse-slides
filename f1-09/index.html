@@ -505,8 +505,8 @@ svg .sv.dl{transition-delay:.6s}
 <text class="hide2" x="450.0" y="60.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" >半分</text>
 <text class="sv dl" x="450.0" y="170.0" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" data-s="2">4分の1</text>
 <path d="M290 324V334" stroke="#5A6B82"/><text x="290.0" y="352.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5A6B82" >平均 +5%</text>
-<text class="hide2" x="80.0" y="52.0" text-anchor="start" font-size="15" font-weight="700" fill="#2B5FA8" >資産Cだけ</text>
-<text class="sv dl" x="80.0" y="52.0" text-anchor="start" font-size="15" font-weight="700" fill="#1F7A63" data-s="2">CとDに50万円ずつ</text></svg>
+<text class="hide2" x="520.0" y="28.0" text-anchor="end" font-size="15" font-weight="700" fill="#2B5FA8" >資産Cだけを持つと</text>
+<text class="sv dl" x="520.0" y="28.0" text-anchor="end" font-size="15" font-weight="700" fill="#1F7A63" data-s="2">CとDに50万円ずつ持つと</text></svg>
       <div class="ask sv" data-s="3"><b>チャットで問いかけ</b>：アイス店の売り場の残り半分を貸すなら、①ビール店 ②焼き芋店 ③時計修理店のどれが、月ごとの差をいちばん小さくする？ 番号をチャットへ。</div>
     </div>
     <div class="kp g8 fade d2">
@@ -527,22 +527,30 @@ svg .sv.dl{transition-delay:.6s}
   <div class="body" style="display:flex;flex-direction:column;gap:10px">
     <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><div class="stepbar"><b style="font-size:15px">貸す相手を変える</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><p class="note" style="flex:1;min-width:280px">2つが一緒に動く度合いを<b>相関</b>と呼ぶ。形は同じ向き・逆向き・無関係の3つ（出典4）。数字は説明のための例。</p></div>
     <div class="g3">
-      <div class="card tight fade d1"><span class="pill w">同じ向き</span><h4 style="margin:6px 0 0;font-size:16px">①ビール店（暑い月150・寒い月30）</h4><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="暑い月と寒い月の合計の売上"><rect class="grow g0" x="45" y="103.0" width="80" height="65.0" fill="#F88039"/>
+      <div class="card tight fade d1"><span class="pill w">同じ向き</span><h4 style="margin:6px 0 0;font-size:16px">①ビール店（暑い月150・寒い月30）</h4><div style="display:flex;gap:14px;font-size:13px;color:var(--ink2);margin-top:6px"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（売り場の半分）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#FEDA37;display:inline-block"></i>ビール（残り半分）</span></div><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="暑い月と寒い月の合計の売上"><rect class="grow g0" x="45" y="103.0" width="80" height="65.0" fill="#F88039"/>
+<text class="mono" x="85.0" y="140.5" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" >100</text>
 <rect class="grow g0" x="45" y="54.2" width="80" height="48.8" fill="#FEDA37"/>
+<text class="mono" x="85.0" y="83.6" text-anchor="middle" font-size="14" font-weight="700" fill="#16233A" >75</text>
 <text class="mono" x="85.0" y="46.2" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >175</text>
 <text x="85.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >暑い月</text>
 <rect class="grow g0" x="175" y="155.0" width="80" height="13.0" fill="#F88039"/>
+<text class="mono" x="261.0" y="172.5" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >20</text>
 <rect class="grow g0" x="175" y="145.2" width="80" height="9.8" fill="#FEDA37"/>
+<text class="mono" x="261.0" y="149.1" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >15</text>
 <text class="mono" x="215.0" y="137.2" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >35</text>
 <text x="215.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >寒い月</text>
 <path d="M30 168H270" stroke="#D8DFE8" stroke-width="2"/></svg>
         <p class="note">寒い月が暑い月の5分の1なのは、アイスだけのとき（200と40）と同じ。<b>打ち消し合いが起きない</b>。</p></div>
-      <div class="card tight sv" data-s="1"><span class="pill g">逆向き</span><h4 style="margin:6px 0 0;font-size:16px">②焼き芋店（暑い月20・寒い月180）</h4><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="暑い月と寒い月の合計の売上"><rect class="grow" data-s="1" x="45" y="103.0" width="80" height="65.0" fill="#F88039"/>
+      <div class="card tight sv" data-s="1"><span class="pill g">逆向き</span><h4 style="margin:6px 0 0;font-size:16px">②焼き芋店（暑い月20・寒い月180）</h4><div style="display:flex;gap:14px;font-size:13px;color:var(--ink2);margin-top:6px"><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#F88039;display:inline-block"></i>アイス（売り場の半分）</span><span style="display:inline-flex;align-items:center;gap:5px"><i style="width:12px;height:12px;border-radius:2px;background:#40B69A;display:inline-block"></i>焼き芋（残り半分）</span></div><svg viewBox="0 0 300 196" style="width:100%;height:176px" aria-label="暑い月と寒い月の合計の売上"><rect class="grow" data-s="1" x="45" y="103.0" width="80" height="65.0" fill="#F88039"/>
+<text class="mono" x="85.0" y="140.5" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" >100</text>
 <rect class="grow" data-s="1" x="45" y="96.5" width="80" height="6.5" fill="#40B69A"/>
+<text class="mono" x="131.0" y="98.8" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >10</text>
 <text class="mono" x="85.0" y="88.5" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >110</text>
 <text x="85.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >暑い月</text>
 <rect class="grow" data-s="1" x="175" y="155.0" width="80" height="13.0" fill="#F88039"/>
+<text class="mono" x="261.0" y="172.5" text-anchor="start" font-size="13" font-weight="700" fill="#5A6B82" >20</text>
 <rect class="grow" data-s="1" x="175" y="96.5" width="80" height="58.5" fill="#40B69A"/>
+<text class="mono" x="215.0" y="130.8" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF" >90</text>
 <text class="mono" x="215.0" y="88.5" text-anchor="middle" font-size="18" font-weight="700" fill="#16233A" >110</text>
 <text x="215.0" y="188.0" text-anchor="middle" font-size="14" font-weight="400" fill="#5A6B82" >寒い月</text>
 <path d="M30 168H270" stroke="#D8DFE8" stroke-width="2"/></svg>
@@ -612,7 +620,7 @@ svg .sv.dl{transition-delay:.6s}
       <table class="rtab"><thead><tr><th></th><th>個別のリスク</th><th>市場全体のリスク</th></tr></thead><tbody>
         <tr><th>投資での例</th><td>1つの会社の不祥事、新製品の失敗</td><td>景気の悪化、金利の大きな変化、戦争</td></tr>
         <tr class="sv" data-s="1"><th>店にたとえると</th><td>アイスの機械の故障</td><td>街全体が止まる地震</td></tr>
-        <tr class="sv" data-s="2"><th>分散すると</th><td class="no">小さくできる</td><td class="yes">どれほど分散しても残る</td></tr>
+        <tr class="sv" data-s="2"><th>店や会社を分けて持つと</th><td class="no">片方が不調でも、もう片方で埋まるので薄まる</td><td class="yes">全部に同時に起きるので、いくつに分けても残る</td></tr>
         <tr class="sv" data-s="3"><th>上乗せ（リスクプレミアム）</th><td class="no">付かない</td><td class="yes">付く</td></tr>
       </tbody></table>
     </div>
@@ -716,14 +724,14 @@ svg .sv.dl{transition-delay:.6s}
 <text x="230.0" y="130.0" text-anchor="start" font-size="14" font-weight="700" fill="#2B5FA8" >個別のリスクが減っていく</text>
 <g class="sv" data-s="1"><path d="M70.0 50.0H124.0V117.3" fill="none" stroke="#40B69A" stroke-width="3"/><circle cx="124.0" cy="117.3" r="4" fill="#40B69A"/></g>
 <g class="sv" data-s="1"><path d="M349.0 207.4H403.0V212.4" fill="none" stroke="#40B69A" stroke-width="3"/><circle cx="403.0" cy="212.4" r="4" fill="#40B69A"/></g>
-<text class="sv" x="136.0" y="89.7" text-anchor="start" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">大きく減る</text>
-<text class="sv" x="376.0" y="191.4" text-anchor="middle" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">あまり減らない</text>
+<text class="sv" x="136.0" y="89.7" text-anchor="start" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">1本→2本で大きく減る</text>
+<text class="sv" x="367.0" y="163.4" text-anchor="middle" font-size="14" font-weight="700" fill="#1F7A63" data-s="1">たくさん持つと、1本足してもほとんど減らない</text>
 <g class="sv" data-s="3"><polygon points="150,360 520,360 520,340" fill="#C9D3DF"/><text x="70.0" y="358.0" text-anchor="start" font-size="14" font-weight="700" fill="#5A6B82" >手数料も増える</text></g></svg>
       <p class="note">形を見せるための模式図（目盛りの数字は無い）。</p>
     </div>
     <div class="kp g8 fade d2">
       <div class="card tight"><p>持つものを増やすと、<b style="color:var(--safe)">個別のリスクは減っていく</b>。</p></div>
-      <div class="card tight sv" data-s="1"><p>ただ、<b style="color:var(--okT)">減り方はだんだん小さくなる</b>。</p></div>
+      <div class="card tight sv" data-s="1"><p>1本から2本に増やしたときは、<b style="color:var(--okT)">ばらつきが大きく減る</b>。すでにたくさん持っているところに1本足しても、<b style="color:var(--okT)">ほとんど減らない</b>。</p></div>
       <div class="card tight sv" data-s="2"><p>最後には<b style="color:var(--warnT)">市場全体のリスクが残る</b>。</p></div>
       <div class="card tight sv" data-s="3"><p>持つ本数を増やせば、そのぶん手数料もかかる。手数料がどれだけ響くかは F1-11 で扱う。</p></div>
       <div class="card tight sv" data-s="3" style="border-left:5px solid var(--b1)"><h4 style="font-size:16px">今日の分散は「同じ時点で何を持つか」</h4><p>買う時期をずらす話とは別のもの。</p></div>
@@ -812,25 +820,25 @@ svg .sv.dl{transition-delay:.6s}
 <p>しかし、大きな地震で街ごと止まれば、アイスも傘も売れません。売上は0円になり、毎月100万円の家賃や人件費は、そのまま赤字になります（説明のための例）。売り場をどう分けても、街全体に起きることは防げません。</p>
 <p>投資でも同じです。分散で消せるのは<b>個別のリスク</b>で、分散しても消せないのは<b>市場全体のリスク</b>です（出典5）。1つの会社の不祥事や新製品の失敗は、個別のリスクにあたります。景気の悪化、金利の大きな変化、戦争は、市場全体のリスクにあたります。</p>
 <p>この区別は、F1-08 の上乗せ（リスクプレミアム）とつながります。市場は分散で消せるリスクには上乗せを払いません。誰でも分散で消せるリスクに、上乗せを払う理由がないからです。上乗せが付くのは、分散しても消せない市場全体のリスクのほうです。分散で得られるのは、上乗せの付かないばらつきを背負わずに済むことです。</p>
-<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">分散すると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">小さくできる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">どれほど分散しても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店や会社を分けて持つと</td><td style="border:1px solid #D8DFE8;padding:3px 8px">片方が不調でも、もう片方で埋まるので薄まる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">全部に同時に起きるので、いくつに分けても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
 <p>手元の資産を見るときは、消せるリスクを残していないかと、消せないリスクをどれだけ持っているかを分けて見ます。危機のときに、資産どうしが一緒に動く度合いがどう変わるかは、F2-17 で数字を使って見ます。</p></div>
 <div class="notes-src" id="notes-s5b"><h5 style="font-size:15px;margin:8px 0 6px">5. 消せるリスクと消せないリスク</h5>
 <p>店の話に戻ります。アイスの機械が故障しても、傘の売り場は開けられます。1つの店だけに起きる出来事は、もう片方で薄められます。</p>
 <p>しかし、大きな地震で街ごと止まれば、アイスも傘も売れません。売上は0円になり、毎月100万円の家賃や人件費は、そのまま赤字になります（説明のための例）。売り場をどう分けても、街全体に起きることは防げません。</p>
 <p>投資でも同じです。分散で消せるのは<b>個別のリスク</b>で、分散しても消せないのは<b>市場全体のリスク</b>です（出典5）。1つの会社の不祥事や新製品の失敗は、個別のリスクにあたります。景気の悪化、金利の大きな変化、戦争は、市場全体のリスクにあたります。</p>
 <p>この区別は、F1-08 の上乗せ（リスクプレミアム）とつながります。市場は分散で消せるリスクには上乗せを払いません。誰でも分散で消せるリスクに、上乗せを払う理由がないからです。上乗せが付くのは、分散しても消せない市場全体のリスクのほうです。分散で得られるのは、上乗せの付かないばらつきを背負わずに済むことです。</p>
-<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">分散すると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">小さくできる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">どれほど分散しても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px"></th><th style="border:1px solid #D8DFE8;padding:3px 8px">個別のリスク</th><th style="border:1px solid #D8DFE8;padding:3px 8px">市場全体のリスク</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">投資での例</td><td style="border:1px solid #D8DFE8;padding:3px 8px">1つの会社の不祥事、新製品の失敗</td><td style="border:1px solid #D8DFE8;padding:3px 8px">景気の悪化、金利の大きな変化、戦争</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店にたとえると</td><td style="border:1px solid #D8DFE8;padding:3px 8px">アイスの機械の故障</td><td style="border:1px solid #D8DFE8;padding:3px 8px">街全体が止まる地震</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">店や会社を分けて持つと</td><td style="border:1px solid #D8DFE8;padding:3px 8px">片方が不調でも、もう片方で埋まるので薄まる</td><td style="border:1px solid #D8DFE8;padding:3px 8px">全部に同時に起きるので、いくつに分けても残る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">上乗せ（リスクプレミアム）</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付かない</td><td style="border:1px solid #D8DFE8;padding:3px 8px">付く</td></tr></table>
 <p>手元の資産を見るときは、消せるリスクを残していないかと、消せないリスクをどれだけ持っているかを分けて見ます。危機のときに、資産どうしが一緒に動く度合いがどう変わるかは、F2-17 で数字を使って見ます。</p></div>
 <div class="notes-src" id="notes-s6a"><h5 style="font-size:15px;margin:8px 0 6px">6. 見せかけの分散と確かめ方</h5>
 <p>数を増やしても、分散にならないことがあります。同じ業種の会社の株を10社集めても、値動きが似ていれば、打ち消し合いはほとんど起きません。投資信託を何本も持っていても、中身の会社が重なっていれば同じことです（出典3）。</p>
 <p>確かめる手順は1つです。持っている投資信託の月次レポートを開き、<b>「組入上位10銘柄」の欄で、2本の間に同じ名前がいくつあるかを数えます</b>。10銘柄のうち7つが同じなら、2本に分けても、中身はかなり似ています（説明のための例）。</p>
-<p>持つものを増やすと、個別のリスクは減っていきます。ただ、減り方はだんだん小さくなり、最後には市場全体のリスクが残ります。持つ本数を増やせば、そのぶん手数料もかかります。手数料がどれだけ響くかは、F1-11 で扱います。</p>
+<p>持つものを増やすと、個別のリスクは減っていきます。1本から2本に増やしたときは、ばらつきが大きく減ります。すでにたくさん持っているところに1本足しても、ほとんど減りません。いくら増やしても、市場全体のリスクは残ります。持つ本数を増やせば、そのぶん手数料もかかります。手数料がどれだけ響くかは、F1-11 で扱います。</p>
 <p>今日の分散は同じ時点で何を持つかの話です。買う時期をずらす話とは別のものです。</p>
 <p>平均は組み合わせた資産の平均どおりで、ばらつきはそれより小さくなります。ただし、市場全体のリスクは、どれだけ分けても残ります。</p></div>
 <div class="notes-src" id="notes-s6b"><h5 style="font-size:15px;margin:8px 0 6px">6. 見せかけの分散と確かめ方</h5>
 <p>数を増やしても、分散にならないことがあります。同じ業種の会社の株を10社集めても、値動きが似ていれば、打ち消し合いはほとんど起きません。投資信託を何本も持っていても、中身の会社が重なっていれば同じことです（出典3）。</p>
 <p>確かめる手順は1つです。持っている投資信託の月次レポートを開き、<b>「組入上位10銘柄」の欄で、2本の間に同じ名前がいくつあるかを数えます</b>。10銘柄のうち7つが同じなら、2本に分けても、中身はかなり似ています（説明のための例）。</p>
-<p>持つものを増やすと、個別のリスクは減っていきます。ただ、減り方はだんだん小さくなり、最後には市場全体のリスクが残ります。持つ本数を増やせば、そのぶん手数料もかかります。手数料がどれだけ響くかは、F1-11 で扱います。</p>
+<p>持つものを増やすと、個別のリスクは減っていきます。1本から2本に増やしたときは、ばらつきが大きく減ります。すでにたくさん持っているところに1本足しても、ほとんど減りません。いくら増やしても、市場全体のリスクは残ります。持つ本数を増やせば、そのぶん手数料もかかります。手数料がどれだけ響くかは、F1-11 で扱います。</p>
 <p>今日の分散は同じ時点で何を持つかの話です。買う時期をずらす話とは別のものです。</p>
 <p>平均は組み合わせた資産の平均どおりで、ばらつきはそれより小さくなります。ただし、市場全体のリスクは、どれだけ分けても残ります。</p></div>
 <div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
