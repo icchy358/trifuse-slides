@@ -230,6 +230,18 @@ button{font-family:inherit;cursor:pointer}
 .drop2 .card p{font-size:14px;color:var(--ink2);line-height:1.65}
 .drop2 .good{border-top:5px solid var(--b3)}
 .drop2 .bad{border-top:5px solid var(--warn)}
+.drop2 .card[data-s]{opacity:.35;transition:opacity .4s,box-shadow .4s;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.drop2 .card[data-s] h4{font-size:19px}.drop2 .card[data-s] p{font-size:15px}
+.drop2 .card[data-s].on{opacity:1;box-shadow:0 8px 24px -14px rgba(15,27,45,.45)}
+.dgs{display:flex;flex-direction:column;gap:6px}
+.dg{opacity:.3;transition:opacity .45s}
+.dg.on{opacity:1}
+.dgh{font-size:16px;font-weight:900;display:flex;align-items:center;gap:8px}
+.dg .gl{stroke-dasharray:700;stroke-dashoffset:700;transition:stroke-dashoffset 1.4s ease}
+.dg.on .gl{stroke-dashoffset:0}
+.dg .mv{animation:mv 2.4s ease-in-out infinite alternate}
+@keyframes mv{to{transform:translateX(26px)}}
+.mobile .dg{opacity:1}.mobile .dg .gl{stroke-dashoffset:0}.mobile .drop2 .card[data-s]{opacity:1}
 .drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.6s ease .4s}
 .slide.active .drawline{stroke-dashoffset:0}
 .slide.active .drawline.sd{stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
@@ -564,6 +576,12 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 .cycsvg .mk{opacity:0;transition:opacity .4s}
 .slide.s1 .cycsvg .m1,.slide.s2 .cycsvg .m2,.slide.s3 .cycsvg .m3,.slide.s4 .cycsvg .m4,.slide.s5 .cycsvg .m5,.slide.s6 .cycsvg .m6{opacity:1}
 .cycsvg .cur{transition:transform .6s ease}
+.cycsvg .cnum>g{opacity:.4;transition:opacity .4s}
+.cycsvg .cnum circle{fill:#fff;stroke:#8A9AB0;stroke-width:2.5;transition:fill .4s,stroke .4s}
+.cycsvg .cnum text{fill:#8A9AB0;transition:fill .4s}
+.cycsvg .cnum>g.on{opacity:1}
+.cycsvg .cnum>g.on circle{fill:var(--c);stroke:#fff}
+.cycsvg .cnum>g.on text{fill:#fff}
 /* S2d types */
 .ty{padding:14px 14px 12px;display:flex;flex-direction:column;gap:6px;opacity:.35;transition:all .4s;border-top:5px solid var(--rule)}
 .ty.on{opacity:1;border-top-color:var(--c,var(--safe))}
@@ -592,10 +610,15 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 .month .inv{background:var(--safe);width:100%}
 .month .wait{background:var(--warn);width:0;overflow:hidden;white-space:nowrap}
 .slide.s1 .month .inv{width:70%}.slide.s1 .month .wait{width:30%}
-.stack{display:flex;align-items:flex-end;gap:6px;height:70px}
-.stack i{width:22px;border-radius:4px;background:var(--warn);height:0;transition:height .5s}
-.slide.s2 .stack i{height:calc(var(--h)*1px)}
-.stack i:nth-child(2){transition-delay:.1s}.stack i:nth-child(3){transition-delay:.2s}.stack i:nth-child(4){transition-delay:.3s}.stack i:nth-child(5){transition-delay:.4s}.stack i:nth-child(6){transition-delay:.5s}
+.acc-t{font-size:15px;font-weight:700;margin-top:12px}
+.acc-t b{color:var(--warnT)}
+.acc{display:flex;align-items:flex-end;gap:8px;height:128px;margin-top:4px}
+.acc .ab{flex:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px}
+.acc .ab span{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--warnT);opacity:0;transition:opacity .4s .2s;white-space:nowrap}
+.acc .ab i{display:block;width:100%;max-width:44px;height:0;border-radius:4px 4px 0 0;background:var(--warn);transition:height .5s ease}
+.acc .ab label{font-size:11px;color:var(--ink2);white-space:nowrap;border-top:2px solid var(--rule);width:100%;text-align:center;padding-top:2px}
+.acc .ab.on span{opacity:1}
+.acc .ab.on i{height:calc(var(--h)*1px)}
 .nos{display:flex;flex-direction:column;gap:8px}
 .nos .card{display:flex;gap:10px;align-items:center;padding:10px 14px;font-size:15px;font-weight:700;line-height:1.5}
 .nos .x{width:26px;height:26px;border-radius:50%;background:#FFF1E6;color:var(--warnT);display:flex;align-items:center;justify-content:center;font-weight:900;flex:none}
@@ -658,15 +681,32 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 .spr .gap{opacity:0;transition:opacity .5s}
 .slide.s1 .spr .g1,.slide.s2 .spr .g2{opacity:1}
 .spr .later{opacity:0;transition:opacity .5s}.slide.s2 .spr .later{opacity:1}
-.quiz{display:flex;gap:12px;align-items:center;padding:12px 16px;font-size:15px;font-weight:700;line-height:1.55}
-.quiz .ab{display:flex;gap:8px;flex:none}
-.quiz .ab span{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;border:2px solid var(--rule);transition:all .4s}
-.slide.s3 .quiz .ab .B{background:var(--warn);border-color:var(--warn);color:#fff}
+.quiz{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:12px 16px;font-size:15px;font-weight:700;line-height:1.55}
+.quiz .ab{display:flex;gap:10px;flex:none}
+.quiz .ab span{display:flex;align-items:center;gap:8px;padding:5px 16px 5px 6px;border-radius:30px;font-size:15px;font-weight:900;border:2px solid var(--rule);background:#fff;transition:all .4s}
+.quiz .ab b{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);background:#EEF2F7;color:var(--ink2)}
+.slide.s3 .quiz .ab .A{opacity:.4}
+.slide.s3 .quiz .ab .B,.mobile .quiz .ab .B{background:var(--warn);border-color:var(--warn);color:#fff;transform:scale(1.06)}
+.slide.s3 .quiz .ab .B b,.mobile .quiz .ab .B b{background:#fff;color:var(--warnT)}
 .ans3{font-size:14px;font-weight:900;color:var(--warnT);margin-top:-4px;opacity:0;transition:opacity .4s}.slide.s3 .ans3{opacity:1}.mobile .ans3{opacity:1}
 .cal{width:150px;border-radius:12px;overflow:hidden;border:2px solid var(--ink);text-align:center;flex:none;background:#fff}
 .cal .m{background:var(--ink);color:#fff;font-weight:900;font-size:15px;padding:4px}
 .cal .d{font-family:var(--mono);font-size:56px;font-weight:700;line-height:1.1;color:var(--warnT)}
 .cal .w{font-size:13px;font-weight:700;padding-bottom:6px}
+.exs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ex{border:1.5px solid var(--rule);border-radius:12px;padding:10px 12px;opacity:.3;transition:opacity .45s,border-color .45s}
+.ex.on{opacity:1;border-color:#8A9AB0}
+.ex.b.on{border-color:var(--warn);background:#FFF8F2}
+.exh{font-size:17px;font-weight:900}
+.exd{font-size:13.5px;color:var(--ink2);font-weight:700;margin:2px 0 6px}
+.ex ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.ex li{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:14px;white-space:nowrap;font-weight:700;padding:3px 8px;border-radius:6px;background:#F3F6FA}
+.ex li em{font-style:normal;font-size:13px;color:var(--ink2);white-space:nowrap}
+.ex li.w{background:#FFF1E6}
+.ex li.w em{color:var(--warnT);font-weight:900}
+.exv{margin-top:8px;font-size:16px;font-weight:900;color:var(--ink)}
+.ex.b .exv{color:var(--warnT)}
+.mobile .exs{grid-template-columns:1fr}.mobile .ex{opacity:1}
 .sig{display:flex;gap:10px;align-items:center}
 .sig i{width:46px;height:46px;border-radius:50%;background:#E3E9F1;transition:all .4s;flex:none}
 .sig i.g.lit{background:#40B69A}.sig i.y.lit{background:#FEDA37;box-shadow:0 0 18px #FEDA37;animation:blink 1.6s infinite}.sig i.r.lit{background:#F88039}
@@ -685,6 +725,8 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 /* VIX */
 .vix .pk{opacity:0;transition:opacity .5s}
 .slide.active .vix .pk{opacity:1}
+.vix .drawline{stroke-dasharray:2000;stroke-dashoffset:2000}
+.slide.active .vix .drawline{stroke-dashoffset:0}
 .cau{display:flex;flex-direction:column;gap:8px}
 .cau .card{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:10px 14px;font-size:14px;line-height:1.55;opacity:.3;transition:opacity .4s}
 .cau .card.on{opacity:1}
@@ -704,8 +746,13 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 .faq p{font-size:13px;color:var(--ink2);line-height:1.55}
 /* S6 sheet */
 .sheet{display:flex;flex-direction:column;gap:8px}
-.ln{display:grid;grid-template-columns:40px 190px 1fr;gap:12px;align-items:center;padding:12px 16px;opacity:.3;transition:opacity .4s}
-.ln.on{opacity:1}
+.ln{display:grid;grid-template-columns:40px 190px 1fr;gap:12px;align-items:center;padding:12px 16px}
+.ln .blank{vertical-align:baseline;text-align:center;min-height:1.4em}
+.ln .fill{font-style:normal;font-weight:900;color:var(--okT);opacity:0;transition:opacity .45s;padding:0 4px}
+.ln .fill.on{opacity:1}
+.ln .exn{display:inline-block;font-size:11px;font-weight:900;color:#fff;background:var(--ok);border-radius:10px;padding:1px 8px;margin-right:6px;vertical-align:middle;opacity:0;transition:opacity .45s}
+.ln .exn.on{opacity:1}
+.slide.s5 .ln .tpl{display:none}
 .ln .n{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--safe)}
 .ln h4{font-size:17px;font-weight:900}
 .ln p{font-size:14px;color:var(--ink2);line-height:1.5}
@@ -910,18 +957,24 @@ input[type=range]{width:100%;accent-color:var(--safe)}
   <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1678984240126-70bcddd7a228?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">S2｜10月4日の振り返り ③</span><h2>株価は景気より先に動く　相場の6つの段階</h2><span class="credit only-b">Photo: Jakub Pabis / Unsplash</span></header>
   <div class="body">
     <div class="stepbar"><span style="font-size:15px;color:var(--ink2)">株価は<b style="color:var(--ink)">天気予報</b>、景気の数字は<b style="color:var(--ink)">雨量計</b>。株価が先を読んで動き、景気はあとから分かる。</span><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>リセット</button></div>
-    <svg class="cycsvg fade d1" viewBox="0 0 1168 170" style="width:100%;height:160px" aria-label="株価の線が先に下がって先に戻り、景気の線があとから追いかけるイメージ">
-      <path d="M20 150H1150" stroke="#D8DFE8" stroke-width="2"/>
-      <path class="drawline" d="M20 40 C120 34 160 36 210 50 S320 120 400 136 S520 140 590 128 S700 70 790 52 S1000 34 1150 28" fill="none" stroke="#2B5FA8" stroke-width="4"/>
-      <path class="drawline" d="M20 50 C200 46 280 48 340 60 S480 120 560 138 S700 142 780 130 S900 80 1000 62 S1100 52 1150 50" fill="none" stroke="#F88039" stroke-width="3" stroke-dasharray="1400"/>
-      <g font-family="Noto Sans JP" font-size="13" font-weight="700"><text x="1150" y="20" text-anchor="end" fill="#2B5FA8">株価（先に動く）</text><text x="1150" y="76" text-anchor="end" fill="#B5500F">景気（あとから追いかける）</text></g>
-      <g font-family="Noto Sans JP" font-size="12" font-weight="900" fill="#16233A">
-        <g class="mk m1"><circle cx="100" cy="36" r="8" fill="#F88039"/></g>
-        <g class="mk m2"><circle cx="290" cy="96" r="8" fill="#F88039"/></g>
-        <g class="mk m3"><circle cx="470" cy="112" r="8" fill="#F88039"/></g>
-        <g class="mk m4"><circle cx="560" cy="138" r="8" fill="#F88039"/></g>
-        <g class="mk m5"><circle cx="560" cy="130" r="0"/><rect x="520" y="8" width="96" height="24" rx="12" fill="#2B5FA8"/><text x="568" y="25" text-anchor="middle" fill="#fff">利下げ・対策</text></g>
-        <g class="mk m6"><circle cx="680" cy="96" r="9" fill="#40B69A"/><text x="690" y="118" fill="#1F7A63">景気は悪いままでも株価は反発</text></g>
+    <svg class="cycsvg fade d1" viewBox="0 0 1168 172" style="width:100%;height:172px" aria-label="株価の線が先に下がって先に戻り、景気の線があとから追いかけるイメージ。1〜6の番号は下の6枚のカードに対応">
+      <path d="M20 162H1150" stroke="#D8DFE8" stroke-width="2"/>
+      <path class="drawline" d="M20 48 C32 48 49 46 94 46 C139 46 239 46 290 48 C341 50 367 52 400 56 C433 60 456 66 486 72 C516 78 549 87 582 94 C615 101 649 107 682 114 C715 121 747 130 780 134 C813 138 845 139 878 140 C911 141 947 139 980 138 C1013 137 1046 135 1074 133 C1102 131 1137 129 1150 128" fill="none" stroke="#F88039" stroke-width="3" stroke-dasharray="1400"/>
+      <path class="drawline" d="M20 36 C32 36 66 33 94 34 C122 35 157 35 190 44 C223 53 257 78 290 90 C323 102 357 111 390 118 C423 125 437 126 486 130 C535 134 633 142 682 142 C731 142 747 138 780 132 C813 126 845 119 878 108 C911 97 947 76 980 66 C1013 56 1046 54 1074 50 C1102 46 1137 45 1150 44" fill="none" stroke="#2B5FA8" stroke-width="4"/>
+      <g font-family="Noto Sans JP" font-size="13" font-weight="700"><text x="1150" y="22" text-anchor="end" fill="#2B5FA8">株価（先に動く）</text><text x="22" y="70" fill="#B5500F">景気（あとから追いかける）</text></g>
+      <text x="114" y="18" font-family="Noto Sans JP" font-size="13" font-weight="900" fill="#B5500F">← いまはここ？</text>
+      <g font-family="Noto Sans JP" font-size="12" font-weight="900">
+        <g class="mk m3"><text x="486" y="52" text-anchor="middle" fill="#B5500F">景気が下がり始める</text></g>
+        <g class="mk m5"><rect x="830" y="58" width="96" height="24" rx="12" fill="#2B5FA8"/><text x="878" y="75" text-anchor="middle" fill="#fff">利下げ・対策</text></g>
+        <g class="mk m6"><path d="M1074 66V128" stroke="#40B69A" stroke-width="2" stroke-dasharray="4 4"/><text x="1150" y="157" text-anchor="end" fill="#1F7A63">景気はまだ低いのに、株価は戻る</text></g>
+      </g>
+      <g class="cnum" font-family="Roboto Mono" font-size="14" font-weight="700" text-anchor="middle">
+        <g data-s="1" style="--c:#B5500F"><circle cx="94" cy="34" r="13"/><text x="94" y="39">1</text></g>
+        <g data-s="2" style="--c:#B5500F"><circle cx="290" cy="90" r="13"/><text x="290" y="95">2</text></g>
+        <g data-s="3" style="--c:#B5500F"><circle cx="486" cy="130" r="13"/><text x="486" y="135">3</text></g>
+        <g data-s="4" style="--c:#B5500F"><circle cx="682" cy="142" r="13"/><text x="682" y="147">4</text></g>
+        <g data-s="5" style="--c:#2B5FA8"><circle cx="878" cy="108" r="13"/><text x="878" y="113">5</text></g>
+        <g data-s="6" style="--c:#1F7A63"><circle cx="1074" cy="50" r="13"/><text x="1074" y="55">6</text></g>
       </g>
     </svg>
     <div class="cyc">
@@ -957,7 +1010,7 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 </section>
 
 <!-- ================= S2e ================= -->
-<section class="slide" data-n="s2e" data-steps="2">
+<section class="slide" data-n="s2e" data-steps="7">
   <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1580076899534-1dbc3b938a19?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">S2｜10月4日の振り返り ⑤</span><h2>お金を4つの財布に分ける</h2><span class="credit only-b">Photo: Josh Sanabria / Unsplash</span></header>
   <div class="body">
     <div class="g4">
@@ -971,7 +1024,8 @@ input[type=range]{width:100%;accent-color:var(--safe)}
         <div class="stepbar" style="margin-bottom:8px"><b style="font-size:16px">待機資金は、株を売って作らない</b><button class="btn pr" data-next>次 ▶</button><button class="btn" data-reset>戻す</button></div>
         <div class="small" style="margin-bottom:4px">毎月の投資額 10万円の場合（ｉ講師の例）</div>
         <div class="month"><div class="seg inv">積み立て 7万円（止めない）</div><div class="seg wait">待機 3万円</div></div>
-        <div style="display:flex;align-items:flex-end;gap:14px;margin-top:10px"><div class="stack"><i style="--h:12"></i><i style="--h:24"></i><i style="--h:36"></i><i style="--h:48"></i><i style="--h:60"></i><i style="--h:70"></i></div><span class="small">毎月3万円ずつ、現金が積み上がる</span></div>
+        <div class="acc-t">待機3万円が毎月たまる → <b>半年で18万円</b></div>
+        <div class="acc"><div class="ab" data-s="2" style="--h:14"><span>3万</span><i></i><label>1か月目</label></div><div class="ab" data-s="3" style="--h:28"><span>6万</span><i></i><label>2か月目</label></div><div class="ab" data-s="4" style="--h:42"><span>9万</span><i></i><label>3か月目</label></div><div class="ab" data-s="5" style="--h:56"><span>12万</span><i></i><label>4か月目</label></div><div class="ab" data-s="6" style="--h:70"><span>15万</span><i></i><label>5か月目</label></div><div class="ab" data-s="7" style="--h:84"><span>18万円</span><i></i><label>6か月目</label></div></div>
       </div>
       <div class="nos fade d6">
         <div class="card"><span class="x o">○</span>毎月の積み立ては<b class="okt">止めない</b>（金額を少し減らすのはOK）</div>
@@ -1017,7 +1071,7 @@ input[type=range]{width:100%;accent-color:var(--safe)}
       <svg class="lag" viewBox="0 0 1060 120" style="width:100%;height:112px" aria-label="3か月前の原油が船で届き、今の値段に表れるイメージ">
         <path d="M60 86C140 76 220 96 300 86S460 76 540 86 700 96 780 86" fill="none" stroke="#65CCFE" stroke-width="3"/>
         <g fill="none" stroke="#2B5FA8" stroke-width="3"><use href="#i-barrel" x="10" y="30" width="56" height="56"/></g>
-        <text x="38" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" font-family="Noto Sans JP">3か月前の原油</text>
+        <text x="4" y="112" text-anchor="start" font-size="13" font-weight="700" fill="#16233A" font-family="Noto Sans JP">3か月前の原油</text>
         <g class="ship"><g fill="none" stroke="#16233A" stroke-width="3"><use href="#i-ship" x="80" y="36" width="60" height="60"/></g></g>
         <g fill="none" stroke="#B5500F" stroke-width="3"><use href="#i-wallet" x="840" y="28" width="58" height="58"/></g>
         <text x="870" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">今の値段・請求書</text>
@@ -1154,26 +1208,41 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 </section>
 
 <!-- ================= S3f ================= -->
-<section class="slide" data-n="s3f">
+<section class="slide" data-n="s3f" data-steps="2">
   <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1516199423456-1f1e91b06f25?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">S3｜10月18日の振り返り ⑥</span><h2>「原油が下がれば安心」とは限らない</h2><span class="credit only-b">Photo: Zbynek Burival / Unsplash</span></header>
   <div class="body">
     <div class="g2" style="grid-template-columns:1fr 1.05fr;gap:22px">
-      <div class="card fade d1">
-        <div class="t3">深刻な金融危機では、原油の需要そのものが消える</div>
-        <svg viewBox="0 0 520 200" style="width:100%;height:190px" aria-label="需要が消えて原油価格が急落するイメージ">
-          <path d="M20 180H500" stroke="#D8DFE8" stroke-width="2"/>
-          <path class="drawline" d="M20 50 C120 44 180 40 240 46 S300 70 330 130 S400 172 500 166" fill="none" stroke="#F88039" stroke-width="4"/>
-          <text x="22" y="30" font-size="12" fill="#5A6B82" font-family="Noto Sans JP">原油価格</text>
-          <g fill="none" stroke="#8A9AB0" stroke-width="3"><use href="#i-factory" x="350" y="60" width="44" height="44"/><use href="#i-truck" x="404" y="60" width="44" height="44"/><use href="#i-ship" x="456" y="60" width="44" height="44"/></g>
-          <path d="M352 60l144 46M496 60l-144 46" stroke="#F88039" stroke-width="2.5" opacity=".8"/>
-          <text x="420" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">工場・トラック・船が止まる</text>
-        </svg>
+      <div class="card fade d1 dgs">
+        <div class="stepbar" style="margin-bottom:2px"><b style="font-size:16px">同じ「値下がり」でも、2つの型</b><button class="btn pr" data-next>次 ▶</button><button class="btn" data-reset>戻す</button></div>
+        <div class="dg" data-s="1">
+          <div class="dgh"><span class="tag g">良い値下がり</span>＝供給が戻る</div>
+          <svg viewBox="0 0 520 170" style="width:100%;height:170px" aria-label="原油価格がゆっくり下がり、船とトラックが動いているイメージ">
+            <path d="M20 160H500" stroke="#D8DFE8" stroke-width="2"/>
+            <text x="22" y="18" font-size="12" fill="#5A6B82" font-family="Noto Sans JP">原油価格</text>
+            <path class="gl" d="M20 36 C120 38 220 56 320 78 S440 104 500 110" fill="none" stroke="#2E9A7F" stroke-width="4"/>
+            <text x="500" y="84" text-anchor="end" font-size="13" font-weight="700" fill="#1F7A63" font-family="Noto Sans JP">ゆっくり下がる</text>
+            <g class="mv" fill="none" stroke="#2B5FA8" stroke-width="3"><use href="#i-ship" x="40" y="96" width="52" height="52"/><use href="#i-truck" x="120" y="100" width="48" height="48"/></g>
+            <text x="250" y="140" font-size="13" font-weight="700" fill="#2B5FA8" font-family="Noto Sans JP">船・トラックが動いている</text>
+          </svg>
+        </div>
+        <div class="dg" data-s="2">
+          <div class="dgh"><span class="tag w">悪い値下がり</span>＝需要が消える</div>
+          <svg viewBox="0 0 520 170" style="width:100%;height:170px" aria-label="原油価格が急落し、工場・トラック・船が止まるイメージ">
+            <path d="M20 160H500" stroke="#D8DFE8" stroke-width="2"/>
+            <text x="22" y="18" font-size="12" fill="#5A6B82" font-family="Noto Sans JP">原油価格</text>
+            <path class="gl" d="M20 36 C110 32 180 32 220 40 S256 130 290 146 S420 152 500 150" fill="none" stroke="#F88039" stroke-width="4"/>
+            <text x="238" y="112" text-anchor="end" font-size="14" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">急落 ↓</text>
+            <g fill="none" stroke="#8A9AB0" stroke-width="3"><use href="#i-factory" x="330" y="34" width="44" height="44"/><use href="#i-truck" x="386" y="34" width="44" height="44"/><use href="#i-ship" x="442" y="34" width="44" height="44"/></g>
+            <g stroke="#F88039" stroke-width="3" stroke-linecap="round"><path d="M336 40l32 32M368 40l-32 32"/><path d="M392 40l32 32M424 40l-32 32"/><path d="M448 40l32 32M480 40l-32 32"/></g>
+            <text x="408" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">工場・トラック・船が止まる</text>
+          </svg>
+        </div>
       </div>
       <div class="fade d2" style="display:flex;flex-direction:column;gap:14px">
         <div style="font-size:18px;font-weight:900">値段の動きではなく、<span class="hl">なぜ下がったのか</span>を見る</div>
-        <div class="drop2">
-          <div class="card good"><span class="tag g">良い値下がり</span><h4>供給が戻って安くなる</h4><p>中東が落ち着き、輸送が戻った。シナリオ1につながる。</p></div>
-          <div class="card bad"><span class="tag w">悪い値下がり</span><h4>需要が消えて急落する</h4><p>世界の景気が急に冷え込んだ。シナリオ3の危険信号。</p></div>
+        <div class="drop2" style="grid-template-columns:1fr;grid-auto-rows:1fr;flex:1">
+          <div class="card good" data-s="1"><span class="tag g">良い値下がり</span><h4>供給が戻って安くなる</h4><p>中東が落ち着き、輸送が戻った。シナリオ1につながる。</p></div>
+          <div class="card bad" data-s="2"><span class="tag w">悪い値下がり</span><h4>需要が消えて急落する</h4><p>世界の景気が急に冷え込んだ。シナリオ3の危険信号。</p></div>
         </div>
         <div class="quote" style="font-size:16px">原油が下がったときは、<b>供給が戻ったからか、需要が消えたからか</b>。</div>
       </div>
@@ -1224,7 +1293,7 @@ input[type=range]{width:100%;accent-color:var(--safe)}
       </div>
       <div class="fade d2" style="display:flex;flex-direction:column;gap:12px">
         <div class="card" style="font-size:15px;line-height:1.65">差が広がるのは、貸す側が<b class="wt">「この会社に貸すのは危ない」</b>と感じ始めた合図。上乗せ分を<b>リスクプレミアム</b>と呼びます。</div>
-        <div class="card quiz"><span>国債の利回りは同じなのに、ある会社の社債の利回りだけが上がっていく。これは良い知らせ？</span><span class="ab"><span class="A">A</span><span class="B">B</span></span></div>
+        <div class="card quiz"><span>国債の利回りは同じなのに、ある会社の社債の利回りだけが上がっていく。これは良い知らせ？</span><span class="ab"><span class="A"><b>A</b>良い知らせ</span><span class="B"><b>B</b>悪い知らせ</span></span></div>
         <p class="ans3">答え：B（悪い知らせ）。前より高い利息を払わないと借りられない</p>
         <div class="card" style="padding:12px 16px"><div class="t3" style="font-size:16px">見るときのコツ</div><p style="font-size:14px;line-height:1.7">1. <b>同じものどうしを、時間で比べる</b>（Googleなら、Googleの前と今）<br>2. 差の大きさより、<b>広がる勢い</b>を見る</p></div>
         <div class="card" style="padding:10px 16px;font-size:13px;color:var(--ink2);line-height:1.6"><b style="color:var(--ink)">調べ方：</b>セントルイス連銀の「FRED」で、ハイイールド債のスプレッド（ICE BofA US High Yield Index Option-Adjusted Spread）が無料で見られる。何か月かの流れで見る。</div>
@@ -1234,21 +1303,17 @@ input[type=range]{width:100%;accent-color:var(--safe)}
 </section>
 
 <!-- ================= S4c ================= -->
-<section class="slide" data-n="s4c">
+<section class="slide" data-n="s4c" data-steps="2">
   <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1638481826540-7710b13f7d53?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">S4｜もう一歩</span><h2>6つは「全部そろって」意味がある</h2><span class="credit only-b">Photo: m. / Unsplash</span></header>
   <div class="body">
-    <div class="g2" style="grid-template-columns:1.2fr 1fr;gap:22px">
+    <div class="g2" style="grid-template-columns:1.45fr 1fr;gap:22px">
       <div class="card fade d1">
-        <div class="t3">1つの数字だけで判断しない</div>
-        <svg viewBox="0 0 560 220" style="width:100%;height:210px" aria-label="6つの数字の矢印の向きがそろっていくイメージ">
-          <g font-family="Noto Sans JP" font-size="13" font-weight="700" fill="#16233A">
-            <text x="20" y="34">原油</text><text x="20" y="68">米10年債</text><text x="20" y="102">CPI</text><text x="20" y="136">失業率</text><text x="20" y="170">スプレッド</text><text x="20" y="204">決算</text></g>
-          <g stroke-width="5" stroke-linecap="round" fill="none">
-            <path class="drawline" d="M140 28H400" stroke="#F88039"/><path class="drawline" d="M140 62H400" stroke="#F88039"/><path class="drawline" d="M140 96H340" stroke="#FEDA37"/><path class="drawline" d="M140 130H260" stroke="#40B69A"/><path class="drawline" d="M140 164H300" stroke="#FEDA37"/><path class="drawline" d="M140 198H240" stroke="#40B69A"/></g>
-          <path d="M440 20v186" stroke="#D8DFE8" stroke-width="2" stroke-dasharray="4 5"/>
-          <text x="500" y="100" text-anchor="middle" font-size="14" font-weight="900" fill="#2B5FA8" font-family="Noto Sans JP">向きが</text><text x="500" y="122" text-anchor="middle" font-size="14" font-weight="900" fill="#2B5FA8" font-family="Noto Sans JP">そろうか</text>
-        </svg>
-        <p class="src">線の長さはイメージです（実際の値ではありません）。</p>
+        <div class="stepbar" style="margin-bottom:8px"><b style="font-size:17px">1つの数字だけで判断しない</b><button class="btn pr" data-next>次 ▶</button><button class="btn" data-reset>戻す</button></div>
+        <div class="exs">
+          <div class="ex" data-s="1"><div class="exh">例A<span class="note-tag">イメージ</span></div><p class="exd">1つだけ悪い方向</p><ul><li class="w"><span>原油</span><em>↗ 悪化</em></li><li><span>米10年国債利回り</span><em>→ 横ばい</em></li><li><span>CPI</span><em>→ 横ばい</em></li><li><span>失業率</span><em>→ 横ばい</em></li><li><span>社債の信用スプレッド</span><em>→ 横ばい</em></li><li><span>決算</span><em>→ 横ばい</em></li></ul><div class="exv">→ まだ判断しない</div></div>
+          <div class="ex b" data-s="2"><div class="exh">例B<span class="note-tag">イメージ</span></div><p class="exd">6つとも悪い方向にそろう</p><ul><li class="w"><span>原油</span><em>↗ 悪化</em></li><li class="w"><span>米10年国債利回り</span><em>↗ 悪化</em></li><li class="w"><span>CPI</span><em>↗ 悪化</em></li><li class="w"><span>失業率</span><em>↗ 悪化</em></li><li class="w"><span>社債の信用スプレッド</span><em>↗ 悪化</em></li><li class="w"><span>決算</span><em>↗ 悪化</em></li></ul><div class="exv">→ ルールを見直す合図</div></div>
+        </div>
+        <p class="src">↗＝悪い方向へ動いている　→＝横ばい。どちらもイメージで、実際の値ではありません。</p>
       </div>
       <div class="card fade d2" style="display:flex;flex-direction:column;gap:12px;border-left:5px solid var(--warn)">
         <div class="t3"><svg class="ico" style="width:26px;height:26px;color:var(--warnT)"><use href="#i-flag"/></svg>カレンダーに印をつける日</div>
@@ -1295,19 +1360,18 @@ input[type=range]{width:100%;accent-color:var(--safe)}
     <div class="g2" style="grid-template-columns:1.2fr 1fr;gap:20px">
       <div class="card fade d1">
         <div class="t3"><svg class="ico" style="width:26px;height:26px;color:var(--safe)"><use href="#i-eye"/></svg>VIX指数（恐怖指数）の主な山<span class="note-tag">終値ベース</span></div>
-        <svg class="vix" viewBox="0 0 600 270" style="width:100%;height:260px" aria-label="VIX指数の主な山。2008年と2020年だけが70を超えた">
+        <svg class="vix" viewBox="0 0 600 270" style="width:100%;height:260px" aria-label="VIX指数の主な山（終値）。2008年11月20日80.86、2020年3月16日82.69、2024年8月5日38.57、2025年4月8日52.33。70を超えたのは2008年と2020年だけ">
+          <rect x="40" y="194" width="550" height="23" fill="#EAF4FF"/><text x="160" y="189" font-size="11" font-weight="700" fill="#2B5FA8" font-family="Noto Sans JP">普段は10〜20台（薄い帯）</text>
           <path d="M40 240H590" stroke="#D8DFE8" stroke-width="2"/>
-          <g font-family="Roboto Mono" font-size="11" fill="#8A9AB0"><text x="10" y="244">0</text><text x="4" y="164">40</text><text x="4" y="104">70</text></g>
-          <path d="M40 106H590" stroke="#F88039" stroke-width="2" stroke-dasharray="6 5"/><text x="586" y="98" text-anchor="end" font-size="12" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">70（過去2回だけ）</text>
-          <path d="M40 202H590" stroke="#BBD7F5" stroke-width="1.5" stroke-dasharray="3 5"/><text x="200" y="196" font-size="11" fill="#2B5FA8" font-family="Noto Sans JP">普段は10〜20台</text>
-          <path class="drawline" d="M40 214 C70 212 90 200 110 160 S120 70 130 78 S150 190 170 206 S260 216 300 212 S330 210 345 200 S352 70 358 74 S372 196 390 208 S470 212 500 210 S510 160 514 162 S524 206 540 208 S556 178 560 136 S568 196 590 206" fill="none" stroke="#2B5FA8" stroke-width="3"/>
-          <g class="pk" font-family="Noto Sans JP" font-weight="700">
-            <circle cx="130" cy="78" r="6" fill="#F88039"/><text x="134" y="58" text-anchor="middle" font-size="13" fill="#B5500F">2008年11月</text><text x="134" y="42" text-anchor="middle" font-size="13" fill="#16233A" font-family="Roboto Mono">80.86</text>
-            <circle cx="358" cy="74" r="6" fill="#F88039"/><text x="358" y="54" text-anchor="middle" font-size="13" fill="#B5500F">2020年3月16日</text><text x="358" y="38" text-anchor="middle" font-size="13" fill="#16233A" font-family="Roboto Mono">82.69</text>
-            <circle cx="514" cy="162" r="5" fill="#2B5FA8"/><text x="500" y="150" text-anchor="end" font-size="12" fill="#2B5FA8">2024年8月 38.57</text>
-            <circle cx="560" cy="136" r="5" fill="#2B5FA8"/><text x="560" y="124" text-anchor="end" font-size="12" fill="#2B5FA8">2025年4月 52.33</text>
-          </g>
-          <g font-family="Roboto Mono" font-size="11" fill="#8A9AB0"><text x="120" y="258">2008</text><text x="346" y="258">2020</text><text x="520" y="258">2024-25</text></g>
+          <path d="M40 148H590" stroke="#EEF2F7"/>
+          <g font-family="Roboto Mono" font-size="11" fill="#8A9AB0" text-anchor="end"><text x="34" y="244">0</text><text x="34" y="152">40</text><text x="34" y="83">70</text></g>
+          <path d="M40 79H590" stroke="#F88039" stroke-width="2" stroke-dasharray="6 5"/><text x="226" y="73" text-anchor="middle" font-size="12" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">70（超えたのは過去2回だけ）</text>
+          <path class="drawline" d="M40 207 C70 207 92 203 102 180 C110 150 114 54.0 120 54.0 C126 54.0 132 150 140 180 C150 202 172 207 200 207 C260 207 300 205 312 190 C320 168 326 49.8 330 49.8 C334 49.8 340 168 348 190 C358 205 380 207 410 207 C424 207 432 200 435 186 C438 168 438 151.3 440 151.3 C442 151.3 443 170 447 188 C452 204 470 207 495 206 C510 205 518 192 522 168 C526 140 528 119.6 530 119.6 C532 119.6 535 146 540 176 C547 202 568 206 590 206" fill="none" stroke="#2B5FA8" stroke-width="3"/>
+          <g class="pk"><path d="M120 40V47.0" stroke="#B5500F" stroke-width="1.5"/><circle cx="120" cy="54.0" r="6" fill="#B5500F"/><rect x="62" y="4" width="116" height="34" rx="6" fill="#fff" stroke="#B5500F" stroke-width="1"/><text x="120" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">2008年11月20日</text><text x="120" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" font-family="Roboto Mono">80.86</text></g>
+          <g class="pk"><path d="M330 40V42.8" stroke="#B5500F" stroke-width="1.5"/><circle cx="330" cy="49.8" r="6" fill="#B5500F"/><rect x="272" y="4" width="116" height="34" rx="6" fill="#fff" stroke="#B5500F" stroke-width="1"/><text x="330" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">2020年3月16日</text><text x="330" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" font-family="Roboto Mono">82.69</text></g>
+          <g class="pk"><path d="M440 116V144.3" stroke="#2B5FA8" stroke-width="1.5"/><circle cx="440" cy="151.3" r="6" fill="#2B5FA8"/><rect x="382" y="80" width="116" height="34" rx="6" fill="#fff" stroke="#2B5FA8" stroke-width="1"/><text x="440" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5FA8" font-family="Noto Sans JP">2024年8月5日</text><text x="440" y="110" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" font-family="Roboto Mono">38.57</text></g>
+          <g class="pk"><path d="M530 50V112.6" stroke="#2B5FA8" stroke-width="1.5"/><circle cx="530" cy="119.6" r="6" fill="#2B5FA8"/><rect x="472" y="14" width="116" height="34" rx="6" fill="#fff" stroke="#2B5FA8" stroke-width="1"/><text x="530" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5FA8" font-family="Noto Sans JP">2025年4月8日</text><text x="530" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#16233A" font-family="Roboto Mono">52.33</text></g>
+          <g font-family="Roboto Mono" font-size="11" fill="#8A9AB0" text-anchor="middle"><text x="120" y="258">2008</text><text x="330" y="258">2020</text><text x="440" y="258">2024</text><text x="530" y="258">2025</text></g>
         </svg>
         <p class="src">形はイメージ。山の値は終値（出典：macroption「VIX All-Time Highs」）。取引時間中の最高は2008年10月24日の89.53、2024年8月5日は取引時間中に65.73まで上昇。</p>
       </div>
@@ -1332,7 +1396,7 @@ input[type=range]{width:100%;accent-color:var(--safe)}
   <div class="body">
     <div class="avoid">
       <div class="card fade d1"><svg class="ico"><use href="#i-chart-down"/></svg><b>怖くなって全部売る</b><p>売った瞬間に損が確定する</p></div>
-      <div class="card fade d2"><svg class="ico"><use href="#i-drop"/></svg><b>理由が壊れた会社の買い増し</b><p>「薄めていいのはカルピスだけ」</p></div>
+      <div class="card fade d2"><svg class="ico"><use href="#i-drop"/></svg><b>買った理由が崩れた会社のナンピン買い</b><p>安くなったからと買い足して、平均の買値を“薄める”のはNG。ｉ講師「薄めていいのはカルピスだけ」</p></div>
       <div class="card fade d3"><svg class="ico"><use href="#i-users"/></svg><b>SNSの悲鳴に流される</b><p>下落のときほど「もう終わり」の声が大きくなる</p></div>
       <div class="card fade d4"><svg class="ico"><use href="#i-eye"/></svg><b>資産額を何度も見る</b><p>見ても株価は上がらない。アプリを開かない工夫も</p></div>
     </div>
@@ -1351,13 +1415,13 @@ input[type=range]{width:100%;accent-color:var(--safe)}
   <div class="body">
     <div class="stepbar"><span style="font-size:15px;color:var(--ink2)">スクリーンショットで保存してください。9月号の「確認シート」とセットで。</span><button class="btn pr" data-next style="background:var(--ok);border-color:var(--ok)">次の行 ▶</button><button class="btn" data-reset>リセット</button></div>
     <div class="sheet">
-      <div class="card ln" data-s="1"><span class="n">1</span><h4>生活防衛資金</h4><p>私は、生活費の<span class="blank"></span>か月分を現金で持っておく</p></div>
-      <div class="card ln hot" data-s="2"><span class="n">2</span><h4>毎月の積み立て</h4><p>積み立ては止めない。毎月<span class="blank"></span>を積み立て、そのうち<span class="blank"></span>を暴落待機資金に回す　<b style="color:var(--safe)">← いまチャットで</b></p></div>
-      <div class="card ln" data-s="3"><span class="n">3</span><h4>買い増し候補</h4><p>下がったら買い増したい会社・投資信託<span class="blank"></span>と、その理由をひとこと</p></div>
-      <div class="card ln" data-s="4"><span class="n">4</span><h4>買うときの合図</h4><p>高値から<span class="blank"></span>%下がったら<span class="blank"></span>入れる。VIX指数が<span class="blank"></span>を超えたら、ルールを見直す</p></div>
-      <div class="card ln" data-s="5"><span class="n">5</span><h4>やめる合図</h4><p><span class="blank"></span>が起きたら、その会社の買い増しをやめる（9月号「確認シート」の4行目と同じ）</p></div>
+      <div class="card ln"><span class="n">1</span><h4>生活防衛資金</h4><p><span class="exn" data-s="1">例</span>私は、生活費の<span class="blank"><em class="fill" data-s="1">6</em></span>か月分を現金で持っておく</p></div>
+      <div class="card ln hot"><span class="n">2</span><h4>毎月の積み立て</h4><p><span class="exn" data-s="2">例</span>積み立ては止めない。毎月の積み立ては<span class="blank"><em class="fill" data-s="2">止めない</em></span>、そのうち<span class="blank"><em class="fill" data-s="2">少し減らして待機資金に回す</em></span>　<b style="color:var(--safe)">← いまチャットで</b></p></div>
+      <div class="card ln"><span class="n">3</span><h4>買い増し候補</h4><p><span class="exn" data-s="3">例</span>下がったら買い増したい会社・投資信託<span class="blank"><em class="fill" data-s="3">長く使いたい会社や投資信託</em></span>と、その理由をひとこと<span class="blank"><em class="fill" data-s="3">理由：○○だから</em></span></p></div>
+      <div class="card ln"><span class="n">4</span><h4>買うときの合図</h4><p><span class="exn" data-s="4">例</span>高値から<span class="blank"><em class="fill" data-s="4">10・20…</em></span>%下がったら<span class="blank"><em class="fill" data-s="4">分けて</em></span>入れる。VIX指数が<span class="blank"><em class="fill" data-s="4">70</em></span>を超えたら、ルールを見直す</p></div>
+      <div class="card ln"><span class="n">5</span><h4>やめる合図</h4><p><span class="exn" data-s="5">例</span><span class="blank"><em class="fill" data-s="5">買った理由が崩れたら</em></span><span class="tpl">が起きたら</span>、その会社の買い増しをやめる（9月号「確認シート」の4行目と同じ）</p></div>
     </div>
-    <p class="src" style="margin-top:10px">チャットに書くのは2行目だけ。金額は書かなくて大丈夫です（例：「止めない」「少し減らして待機資金に回す」）。</p>
+    <p class="src" style="margin-top:10px">緑の文字は記入例です（数字は例。ご自身で決めてください）。チャットに書くのは2行目だけ。金額は書かなくて大丈夫です（例：「止めない」「少し減らして待機資金に回す」）。</p>
   </div>
 </section>
 
