@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Silua 戦略資料ボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F1B2D;--ink:#16233A;--ink2:#5A6B82;--paper:#F7F9FC;--sky:#65CCFE;--rule:#D8DFE8;--blue:#2B5FA8;--warn:#F88039;--safe:#40B69A;
+--brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039)}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font-family:'Noto Sans JP','Hiragino Sans','Yu Gothic',sans-serif;line-height:1.6}
+.strip{height:8px;background:var(--brand)}
+header.top{background:linear-gradient(120deg,#EAF4FF,#FFF3E3);padding:40px 16px 34px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.kick{font-size:13px;font-weight:700;letter-spacing:.2em;color:var(--ink2)}
+h1{margin:6px 0 8px;font-size:clamp(28px,5vw,44px);font-weight:900;line-height:1.2}
+h1 span{color:var(--blue)}
+.lead{margin:0;color:var(--ink2);font-size:15.5px;max-width:760px}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.stat{background:#fff;border:1.5px solid var(--rule);border-radius:12px;padding:10px 16px;min-width:130px}
+.stat b{display:block;font-family:'Roboto Mono',monospace;font-size:24px;color:var(--navy)}
+.stat small{color:var(--ink2);font-size:12.5px}
+section.grp{margin:34px 0 0}
+h2{font-size:19px;font-weight:900;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:6px;height:22px;border-radius:3px;background:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+a.card{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;background:#fff;border:1.5px solid var(--rule);border-radius:14px;padding:16px 18px;border-top:5px solid var(--sky);transition:transform .15s,box-shadow .15s}
+a.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,27,45,.10)}
+a.card.new{border-top-color:var(--warn)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink2);align-items:center}
+.tag{background:var(--paper);border:1px solid var(--rule);border-radius:999px;padding:1px 10px;font-weight:700}
+.tag.n{background:#FFF1E6;border-color:#F8C49E;color:#B5500F}
+.card h3{margin:0;font-size:17.5px;font-weight:900;line-height:1.4}
+.card p{margin:0;font-size:14px;color:var(--ink2)}
+.card .go{margin-top:auto;font-size:13px;font-weight:700;color:var(--blue)}
+.panel{background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:16px 18px}
+.panel ol{margin:6px 0 0;padding-left:22px}.panel li{margin:4px 0;font-size:14.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{font-size:12.5px;color:var(--ink2);margin-top:8px}
+footer{margin:40px 0 0;padding:20px 0 40px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink2)}
+@media (max-width:720px){.two{grid-template-columns:1fr}.grid{grid-template-columns:1fr}header.top{padding:28px 16px 24px}}
+</style>
+</head>
+<body>
+<div class="strip"></div>
+<header class="top"><div class="wrap">
+  <div class="kick">SILUA ｜ STRATEGY BOARD</div>
+  <h1>Silua <span>戦略資料ボード</span></h1>
+  <p class="lead">Siluaの戦略会議で作った資料を、1か所から開けるようにまとめたページです。新しい資料ができたら、ここに追加していきます。</p>
+  <div class="stats" id="stats"></div>
+</div></header>
+
+<div class="wrap">
+<section class="grp">
+  <h2>いま押さえておくこと</h2>
+  <div class="two">
+    <div class="panel"><b>全体会「決めること5つ」</b>（10/21提示）
+      <ol><li>売上目標（2年間の目標額で行くか）</li><li>代理店報酬の額と支払いタイミング</li><li>第1ロットの資金</li><li>営業体制</li><li>仕入れ原価</li></ol>
+      <div class="note">資料作成時点（10/26）の状態です。その後の決定はこのページにはまだ反映していません。</div></div>
+    <div class="panel"><b>戦略に足りない要素（10/30の洗い出し）</b>
+      <ol><li>資金繰り表と損益分岐点</li><li>チャネル別の粗利表（代理店・直販）</li><li>代理店と直販の役割分担</li><li>KPI・KDIの確定</li><li>法務チェック（薬機法・景表法・PSE・特商法）</li></ol>
+      <div class="note">優先順位はClaudeの判断による提案で、まだ誰も決めていません。</div></div>
+  </div>
+</section>
+</div>
+<main class="wrap"><section class="grp"><h2>資料一覧（新しい順）</h2><div class="grid" id="main"></div></section></main>
+
+<div class="wrap">
+<footer>
+  公開版は、融資・仕入れ・原価・交渉条件の金額を伏せています。金額入りの全部入り版は、プロジェクトの共有フォルダ（slides/各フォルダの index-full.html）にあります。<br>
+  このページはリンクを知っている人なら誰でも見られます。
+</footer>
+</div>
+
+<script>
+const DOCS=[
+ {grp:"運用・仕組み",title:"会議の仕組み化（運用ルール v0.1）",url:"../silua-meeting-system/",date:"2026-10-30",pages:8,desc:"決定ログ・会議の分担・宿題の担当と期日・冒頭の約束確認。すごい会議から借りる2つのやり方と、4週間の試し方。",isNew:true},
+ {grp:"意思決定",title:"全体会資料「決めること5つ」",url:"../silua-decide5/",date:"2026-10-26",pages:9,desc:"資金と報酬の方向性を決めるための台本。As is／To be、いちばん詰まっている点、決める順番、KGI・KPIの案。"},
+ {grp:"意思決定",title:"販売開始日と12月目標",url:"../silua-dec-launch/",date:"2026-10-26",pages:6,desc:"アラカワさんへの回答用。12/7で仮決めする案と、12月目標を第1ロットから逆算する考え方。"},
+ {grp:"販売・動線",title:"12月販売動線（アラカワさん提案）",url:"../silua-arakawa-funnel/",date:"2026-10-26",pages:16,desc:"インスタ→LINE→UTAGEの販売動線、BAN対策、12/1オープン・12/7販売開始までの工程。"},
+ {grp:"現状把握",title:"現状把握レポート",url:"../silua-status/",date:"2026-10-26",pages:8,desc:"9/23〜10/21の議事録から、決まったこと・未決事項・課題とリスク・記録の食い違いを整理。"}
+];
+const ORDER=["運用・仕組み","意思決定","販売・動線","現状把握"];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const latest=DOCS.map(d=>d.date).sort().pop();
+document.getElementById('stats').innerHTML=
+ `<div class="stat"><b>${DOCS.length}</b><small>資料の数</small></div>`+
+ `<div class="stat"><b>${DOCS.reduce((a,d)=>a+d.pages,0)}</b><small>スライドの合計枚数</small></div>`+
+ `<div class="stat"><b>${latest.slice(5).replace('-','/')}</b><small>最終更新</small></div>`;
+document.getElementById('main').innerHTML=[...DOCS].sort((a,b)=>b.date.localeCompare(a.date)||ORDER.indexOf(a.grp)-ORDER.indexOf(b.grp)).map(d=>
+  `<a class="card${d.isNew?' new':''}" href="${d.url}" target="_blank" rel="noopener">
+    <div class="meta">${d.isNew?'<span class="tag n">NEW</span>':''}<span class="tag">${esc(d.grp)}</span><span class="tag">${d.date.slice(5).replace('-','/')}</span><span>${d.pages}枚</span></div>
+    <h3>${esc(d.title)}</h3><p>${esc(d.desc)}</p><span class="go">開く →</span></a>`).join("");
+</script>
+</body>
+</html>
