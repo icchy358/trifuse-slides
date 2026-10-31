@@ -1,0 +1,710 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S1-04 OSとアプリを更新する意味</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 15px 75px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(39px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-39px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:156px;background:var(--navy);color:#fff;padding:0 84px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:var(--brand)}
+.hd .chap{font-size:22.5px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:6px}
+.hd h2{font-size:46.5px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:21px;bottom:15px;font-size:15px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:84px;right:84px;top:192px;bottom:87px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1.5px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 84px;font-size:18px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1.5px solid var(--cardline);border-radius:21px;padding:27px 30px}
+.theme-trifuse .card{box-shadow:0 3px 15px rgba(15,27,45,.05)}
+.lead{font-size:25.5px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:28.5px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:15px}
+.tag{display:inline-block;font-size:19.5px;font-weight:700;padding:4.5px 15px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:27px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:27px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:21px}
+.fade{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:2.25px solid var(--rule);border-radius:12px;padding:10.5px 21px;font-size:21px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:18px;color:var(--muted)}
+.quote{border-left:7.5px solid var(--safe);background:var(--card);border-radius:0 18px 18px 0;padding:21px 30px;font-size:27px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:2.25px solid var(--cardline);border-radius:18px;padding:18px 15px;text-align:center;font-size:24px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:198px}
+.fs .n{font-family:var(--mono);font-size:18px;color:var(--muted);margin-bottom:6px}
+.fs .ico{width:51px;height:51px;color:var(--muted);margin-bottom:9px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 12px 36px -18px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:42px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:30px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+
+
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:6px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:138px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:24px 24px 27px}
+.mobile .hd h2{font-size:31.5px}
+.mobile .hd .chap{font-size:18px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:24px 21px 12px;display:flex!important;flex-direction:column;gap:21px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:18px 21px;font-size:16.5px;gap:12px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .quote{font-size:24px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:6px 0 0;height:90px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:30px}
+.mobile .cover-photos{position:relative;height:300px}
+.mobile .cover-vs{top:105px;width:69px;height:69px;font-size:22.5px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:33px 27px 15px;gap:18px!important}
+.mobile .cover h1{font-size:45px!important}
+.mobile .cover .sub{font-size:22.5px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 54px);height:auto;margin:9px 27px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .cph .lbl{font-size:19.5px;left:15px;bottom:15px}
+
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== F1 live-slides 共通（oil100 の部品に足した分） ===== */
+.hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.hd .num{position:absolute;right:84px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:66px;font-weight:700;color:rgba(255,255,255,.14)}
+.ft{justify-content:space-between}
+.ex{font-size:18px;font-weight:700;color:var(--ink2);background:#EEF2F7;border-radius:6px;padding:1.5px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+svg .ex-t{font-size:18px;fill:#5A6B82;font-family:var(--font)}
+.big{font-family:var(--mono);font-weight:700;color:var(--safe);font-size:69px;line-height:1.1}
+.big small{font-family:var(--font);font-size:27px;color:var(--ink2);margin-left:6px}
+.big.w{color:var(--warnT)}.big.g{color:var(--okT)}
+.kp{display:flex;flex-direction:column;gap:18px}
+.kp .card h4{font-size:25.5px;margin-bottom:6px}
+.kp .card p{font-size:22.5px;color:var(--ink2);line-height:1.65}
+.stepbar{display:flex;align-items:center;gap:15px}
+.swap{position:relative}
+.swap>*{transition:opacity .45s ease}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+.grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.grow.on,.slide.active .grow.g0{transform:scaleY(1)}
+.slide.active .grow.g0{transition-delay:.3s}
+svg .sv{transition:opacity .5s ease}
+.gone{transition:opacity .5s ease}
+.note{font-size:19.5px;color:var(--ink2);line-height:1.6}
+.pill{display:inline-flex;align-items:center;gap:9px;font-size:21px;font-weight:900;padding:7.5px 18px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.pill.w{background:#FFF1E6;color:var(--warnT)}
+.pill.g{background:#E7F6F1;color:var(--okT)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:21px}
+.keymsg{text-align:center;font-size:39px;font-weight:900;line-height:1.5;padding:27px;border-radius:21px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.keymsg::after{content:"";display:block;width:330px;height:9px;margin:15px auto 0;border-radius:4.5px;background:var(--brand)}
+
+/* ===== 表紙（目次つき） ===== */
+.cover{position:absolute;inset:0;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:21px;background:var(--brand)}
+.cover-text{position:absolute;left:96px;top:96px;width:960px;display:flex;flex-direction:column;gap:24px}
+.cover .kicker{font-size:22.5px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:69px;font-weight:900;line-height:1.25;color:var(--ink)}
+.cover h1 .hl2{color:var(--safe)}
+.cover h1 small{display:block;font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:9px}
+.cover .sub{font-size:25.5px;color:var(--ink2);line-height:1.75;font-weight:500}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin-top:6px}
+.toc button{display:flex;gap:15px;align-items:center;text-align:left;background:#fff;border:1.5px solid var(--rule);border-radius:15px;padding:12px 18px;font-size:21px;font-weight:700;color:var(--ink);line-height:1.4}
+.toc button:hover{border-color:var(--safe)}
+.toc button .n{font-family:var(--mono);color:var(--safe);font-size:19.5px;min-width:30px}
+.cover .start{align-self:flex-start;margin-top:9px;font-size:24px;padding:15px 33px}
+.cover-ill{position:absolute;right:84px;top:144px;width:690px;height:750px}
+
+/* ===== スマホ縦向き ===== */
+.mobile .cover{position:relative;inset:auto;padding-bottom:36px}
+.mobile .cover-text{position:relative;left:auto;top:auto;width:auto;padding:33px 24px 9px}
+.mobile .cover h1{font-size:42px}
+.mobile .cover h1 small{font-size:24px}
+.mobile .cover .sub{font-size:22.5px}
+.mobile .toc{grid-template-columns:1fr}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 48px);height:auto;margin:12px 24px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .hd .num{display:none}
+.mobile .big{font-size:51px}
+.mobile .vs-row{grid-template-columns:1fr}
+.mobile .keymsg{font-size:28.5px;padding:21px}
+.mobile .g2,.mobile .g3{grid-template-columns:1fr!important}
+.mobile .row{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .ft span:first-child{display:none}
+.sv{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.sv.on{opacity:1;transform:none}
+svg .sv{transform:none}
+.swap{display:grid}
+.swap>*{grid-area:1/1}
+.ft{padding-right:510px}
+.mobile .ft{padding-right:21px}
+#notes:not(.show){visibility:hidden}
+
+/* ===== v4.0：表紙の見出しを1行に（点検の道具：1ページ1つの .head・1行） ===== */
+.cover .cover-q{font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:-15px}
+.cover h1.head{font-size:48px;white-space:nowrap}
+.mobile .cover h1.head{white-space:normal}
+.mobile .cover .cover-q{font-size:24px}
+/* ===== v4.0：台紙は 1920x1080 で組む（build.py が px を 1.5 倍にする）。スマホでは台紙を 2/3 に縮めて元の大きさに戻す ===== */
+.mobile #stage{zoom:calc(2/3);min-height:150vh}
+/* 台紙は縮めない（#viewport は flex。画面が 1920 より狭いと、台紙の幅が画面の幅まで縮んでしまう） */
+#stage{flex:none}
+
+/* ===== F1-10 だけの部品 ===== */
+/* 線を段階ごとに描く（長さ1400まで描き切る） */
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.drawline.on,.slide.active .drawline.g0{stroke-dashoffset:0}
+.slide.active .drawline.g0{transition:stroke-dashoffset 2.2s ease .4s}
+/* 横向きに伸びる棒 */
+.growx{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.growx.on,.slide.active .growx.g0{transform:scaleX(1)}
+/* 流れ図は、まだの段階を薄く見せずに隠す（段階ごとにフェードイン） */
+.fs:not(.on),.fa:not(.on){opacity:0}
+.fa.on{opacity:1}
+/* 72の法則：答えが出たら「？」を消す */
+.q6{transition:opacity .4s ease}
+.slide.s4 .q6{opacity:0}
+.mobile .keymsg{font-size:25.5px!important}
+.sumb .kp .card h4{font-size:30px}
+.sumb .kp .card p{font-size:25.5px;line-height:1.8}
+.sumb .note{font-size:21px;line-height:1.75}
+.sumb>.card h4{font-size:27px!important}
+.mobile .r72{grid-template-columns:93px 1fr 114px!important;gap:15px!important;padding:24px 21px!important}
+.mobile .r72 .big{font-size:42px!important}
+/* ===== v3.0：橋渡しの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:84px;right:84px;top:168px;margin:0;display:flex;align-items:center;gap:12px;font-size:22.5px;font-weight:700;color:var(--ink);line-height:1.4;white-space:nowrap}
+.bridge .bk{font-size:18px;font-weight:700;color:#5A6B82;background:#EEF2F7;border-radius:6px;padding:3px 12px;flex:none}
+.bridge .bk.now{color:#fff;background:#2B5FA8}
+.bridge .ar{font-style:normal;color:#8A9AB0;padding:0 6px}
+.slide.hasbr .body{top:219px}
+.mobile .bridge{position:static;flex-wrap:wrap;white-space:normal;padding:18px 21px 0;font-size:21px;row-gap:6px}
+/* 問いへの答え */
+.ans{margin:0;display:flex;align-items:center;gap:18px;padding:15px 24px;border-radius:18px;background:#EAF4FF;border:2.25px solid #2B5FA8;font-size:27px;font-weight:900;color:#16233A;line-height:1.4}
+.ans b{flex:none;font-size:19.5px;font-weight:700;color:#fff;background:#2B5FA8;border-radius:6px;padding:4.5px 12px}
+.mobile .ans{font-size:24px}
+.a3{display:flex;gap:21px;align-items:center;padding:18px 27px!important}
+.a3 .no{flex:none;width:51px;height:51px;border-radius:50%;background:#2B5FA8;color:#fff;font-family:var(--mono);font-weight:700;font-size:27px;display:flex;align-items:center;justify-content:center}
+.a3 h4{margin-bottom:3px!important}
+.tight .card{padding:15px 27px}
+.tight .card h4{font-size:24px;margin-bottom:3px}
+.tight .card p{font-size:21.75px;line-height:1.55}
+.tight .note{font-size:19.5px;line-height:1.6}
+.mobile .slide.hasbr .body{top:auto}
+/* ===== S1-01：攻撃の形の表は、スマホでは3列目を隠して折り返す ===== */
+.mobile .atk th:nth-child(3),.mobile .atk td:nth-child(3){display:none}
+.mobile .atk td{white-space:normal!important;padding:15px 12px!important;font-size:22.5px!important}
+.mobile .atk td:first-child{width:62%}
+/* ===== 文字だけのページは字を大きくして余白を埋める ===== */
+.bt .card p{font-size:25.5px!important;line-height:1.8}
+.bt .card h4{font-size:28.5px!important;margin-bottom:9px}
+.bt .card{padding:27px 33px}
+.bt .fs{min-height:255px;font-size:27px}
+.bt .note{font-size:22.5px}
+.bt .atk td{padding:27px 24px!important;font-size:27px!important}
+.mobile .bt .card p{font-size:22.5px!important}
+.mobile .bt .fs{min-height:0;font-size:22.5px}
+.mobile .bt .atk td{padding:15px 12px!important;font-size:22.5px!important}
+.bt.tight .card p{font-size:24px!important;line-height:1.65}
+.bt.tight .fs{min-height:195px;font-size:24px}
+.bt.tight{gap:15px!important}
+/* S1-02 p6：4列表。スマホでは列3（入口の数）を残し、列4（ひとこと）を隠す */
+.mobile .atk4 th:nth-child(3),.mobile .atk4 td:nth-child(3){display:table-cell}
+.mobile .atk4 th:nth-child(4),.mobile .atk4 td:nth-child(4){display:none}
+.mobile .atk4 td:first-child{width:38%}
+.mobile .atk4 td{font-size:21px!important}
+/* S1-03 p4：2列表。スマホでも2列とも見せる */
+.mobile .at2 th:nth-child(3),.mobile .at2 td:nth-child(3){display:table-cell}
+.mobile .at2 td:first-child{width:70%}
+.bt.tight .atk td{padding:16.5px 21px!important;font-size:24.75px!important}
+/* S1-04 p7：3列表。スマホでは理由の列も残し、順の列を細く */
+.mobile .at3 th:nth-child(3),.mobile .at3 td:nth-child(3){display:table-cell}
+.mobile .at3 td:first-child{width:12%}
+.mobile .at3 td{font-size:19.5px!important}
+
+</style>
+</head>
+<body class="theme-photo noimg">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<section id="p1" class="slide page" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">TriFuse 情報セキュリティ ｜ L1 基礎 ｜ S1-04</div>
+      <div class="cover-q fade d2">OSとアプリを更新する意味 ｜ 今日の問い</div>
+      <h1 class="head fade d2">更新の通知は<span class="hl2">どれくらい後回し</span>にしてよいか</h1>
+      <p class="sub fade d3">S1-01 から S1-03 で、田中さんは鍵を整えてきました。それでも、スマホやパソコンがすでに乗っ取られている場合が残っています。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>後回しにしている2つの通知</button><button data-go="2"><span class="n">03</span>更新が塞いでいるもの</button><button data-go="3"><span class="n">04</span>修正と一緒に公開されるもの</button><button data-go="4"><span class="n">05</span>時間とともに増える危険</button><button data-go="5"><span class="n">06</span>更新が終わった端末</button><button data-go="6"><span class="n">07</span>何から更新するか</button><button data-go="7"><span class="n">08</span>更新できない端末の扱い</button><button data-go="8"><span class="n">09</span>問いへの答えと出典</button></div>
+      <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
+    </div>
+    <div class="cover-ill" style="background:#fff;border-radius:33px;padding:30px"><svg viewBox="0 0 600 400" style="width:100%;height:600px" aria-label="更新の通知が出たままのスマホと、古いノートパソコン">
+<rect x="50" y="30" width="170" height="300" rx="24" fill="#16233A"/><rect x="60" y="44" width="150" height="272" rx="16" fill="#F7F9FC"/>
+<rect x="70" y="70" width="130" height="64" rx="10" fill="#fff" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="202.5" y="144" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">アップデートが</text></g><g transform="scale(0.666667)"><text x="202.5" y="174" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">あります</text></g>
+<g><g transform="scale(0.666667)"><text x="202.5" y="543" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">3週間前から通知が出たまま</text></g></g>
+<rect x="320" y="90" width="230" height="150" rx="10" fill="#16233A"/><rect x="332" y="102" width="206" height="126" rx="4" fill="#F7F9FC"/><path d="M296 240H574L556 262H314Z" fill="#8A9AB0"/>
+<g transform="scale(0.666667)"><text x="652.5" y="258" text-anchor="middle" font-size="21" font-weight="700" fill="#5A6B82">証券口座の画面</text></g>
+<g><g transform="scale(0.666667)"><text x="652.5" y="450" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">6年前に買ったノートパソコン</text></g><g transform="scale(0.666667)"><text x="652.5" y="486" text-anchor="middle" font-size="19.5" font-weight="400" fill="#5A6B82">週末に証券口座を大きく見る</text></g></g>
+<g transform="scale(0.666667)"><text x="450" y="588" text-anchor="middle" font-size="18" font-weight="400" fill="#8A9AB0">説明のための例</text></g>
+</svg></div>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<section id="p2" class="slide page hasbr" data-n="s1" data-steps="2">
+  <header class="hd"><span class="chap">1. 後回しにしている2つの通知</span><h2 class="head">鍵が強くても、端末に穴があれば、相手は鍵を通らずに入る</h2><span class="num">02</span></header><p class="bridge"><b class="bk">今日の問い</b><span>田中さんは、更新の通知をどれくらい後回しにしてよいのか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">田中さんの端末を見る</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 400" style="width:100%;height:600px" aria-label="更新の通知が出たままのスマホと、古いノートパソコン">
+<rect x="50" y="30" width="170" height="300" rx="24" fill="#16233A"/><rect x="60" y="44" width="150" height="272" rx="16" fill="#F7F9FC"/>
+<rect x="70" y="70" width="130" height="64" rx="10" fill="#fff" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="202.5" y="144" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">アップデートが</text></g><g transform="scale(0.666667)"><text x="202.5" y="174" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">あります</text></g>
+<g class="sv" data-s="1"><g transform="scale(0.666667)"><text x="202.5" y="543" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">3週間前から通知が出たまま</text></g></g>
+<rect x="320" y="90" width="230" height="150" rx="10" fill="#16233A"/><rect x="332" y="102" width="206" height="126" rx="4" fill="#F7F9FC"/><path d="M296 240H574L556 262H314Z" fill="#8A9AB0"/>
+<g transform="scale(0.666667)"><text x="652.5" y="258" text-anchor="middle" font-size="21" font-weight="700" fill="#5A6B82">証券口座の画面</text></g>
+<g class="sv" data-s="1"><g transform="scale(0.666667)"><text x="652.5" y="450" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">6年前に買ったノートパソコン</text></g><g transform="scale(0.666667)"><text x="652.5" y="486" text-anchor="middle" font-size="19.5" font-weight="400" fill="#5A6B82">週末に証券口座を大きく見る</text></g></g>
+<g transform="scale(0.666667)"><text x="450" y="588" text-anchor="middle" font-size="18" font-weight="400" fill="#8A9AB0">説明のための例</text></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>S1-01 から S1-03 で整えたこと</h4><p>パスワードを全部違うものにし、多要素認証を足し、偽の画面に自分で入力しない手順も決めた。</p></div>
+      <div class="card sv" data-s="2" style="border-left:7.5px solid var(--warn)"><h4>S1-01 で残った道の1つ</h4><p>スマホやパソコンが、すでに乗っ取られている場合。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p3" class="slide page hasbr" data-n="s2" data-steps="3">
+  <header class="hd"><span class="chap">2. 更新が塞いでいるもの</span><h2 class="head">更新の中身の中心は、新しい機能ではなく、見つかった穴を塞ぐこと</h2><span class="num">03</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>端末に穴が開いていれば、鍵を通らずに入られる</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>更新が何をしているか</span></p>
+  <div class="body bt" style="display:flex;flex-direction:column;gap:21px">
+    <div class="stepbar"><b style="font-size:22.5px">更新の中身を見る</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="vs-row">
+      <div class="card fade d1"><h4>田中さんの考え</h4><p>特に困ったことがないので、更新を急ぐ理由が分からない。新しい機能が欲しいわけでもない。</p></div>
+      <div class="card sv" data-s="1"><h4>脆弱性</h4><p>ソフトウェアの作りに残っていた欠陥のうち、悪用されると、本来できないはずの操作ができてしまうもの。</p></div>
+    </div>
+    <div class="card sv" data-s="2" style="border-left:7.5px solid var(--safe)"><h4>OS やアプリの更新</h4><p>見つかった脆弱性を塞ぐために、作り手が配る修正。国の手引きも、弱点は日々見つかるので、修正のための更新を適用し続けるよう求めている（出典2）。</p></div>
+    <div class="keymsg sv" data-s="3" style="font-size:30px;padding:18px 24px">穴が開いていても使い勝手は変わらない。困っていないことは、穴がないことの証拠にはならない</div>
+  </div>
+</section>
+
+<section id="p4" class="slide page hasbr" data-n="s3" data-steps="3">
+  <header class="hd"><span class="chap">3. 修正と一緒に公開されるもの</span><h2 class="head">修正が出た後は、穴の場所を誰でも知ることができる</h2><span class="num">04</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>更新は穴を塞ぐ修正</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>修正の配られ方</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">前と後を比べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 400" style="width:100%;height:600px" aria-label="修正の前と後で、穴の場所を知る人の範囲が変わる">
+<path d="M30 70H570" stroke="#D8DFE8" stroke-width="4"/><circle cx="300" cy="70" r="10" fill="#2B5FA8"/><g transform="scale(0.666667)"><text x="450" y="66" text-anchor="middle" font-size="22.5" font-weight="900" fill="#2B5FA8">修正が配られ、何を直したかも公表される</text></g>
+<g transform="scale(0.666667)"><text x="240" y="156" text-anchor="middle" font-size="22.5" font-weight="700" fill="#5A6B82">修正の前</text></g><g transform="scale(0.666667)"><text x="660" y="156" text-anchor="middle" font-size="22.5" font-weight="700" fill="#5A6B82">修正の後</text></g>
+<g class="sv" data-s="1"><rect x="40" y="124" width="240" height="120" rx="14" fill="#F7F9FC" stroke="#D8DFE8" stroke-width="2"/>
+<circle cx="70" cy="170" r="8" fill="#F88039"/>
+<circle cx="92" cy="170" r="8" fill="#F88039"/>
+<circle cx="114" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="136" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="158" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="180" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="202" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="224" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="246" cy="170" r="8" fill="#D8DFE8"/>
+<circle cx="268" cy="170" r="8" fill="#D8DFE8"/>
+<g transform="scale(0.666667)"><text x="240" y="321" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">穴を知っているのは一部の人</text></g></g>
+<g class="sv" data-s="1"><rect x="320" y="124" width="240" height="120" rx="14" fill="#FFF8F2" stroke="#F88039" stroke-width="2"/>
+<circle cx="350" cy="170" r="8" fill="#F88039"/>
+<circle cx="372" cy="170" r="8" fill="#F88039"/>
+<circle cx="394" cy="170" r="8" fill="#F88039"/>
+<circle cx="416" cy="170" r="8" fill="#F88039"/>
+<circle cx="438" cy="170" r="8" fill="#F88039"/>
+<circle cx="460" cy="170" r="8" fill="#F88039"/>
+<circle cx="482" cy="170" r="8" fill="#F88039"/>
+<circle cx="504" cy="170" r="8" fill="#F88039"/>
+<circle cx="526" cy="170" r="8" fill="#F88039"/>
+<circle cx="548" cy="170" r="8" fill="#F88039"/>
+<g transform="scale(0.666667)"><text x="660" y="321" text-anchor="middle" font-size="21" font-weight="700" fill="#B5500F">どの製品のどこか、誰でも読める</text></g></g>
+<g class="sv" data-s="2"><rect x="320" y="270" width="240" height="50" rx="12" fill="#E7F6F1" stroke="#40B69A" stroke-width="2"/><g transform="scale(0.666667)"><text x="660" y="451.5" text-anchor="middle" font-size="21" font-weight="700" fill="#1F7A63">更新した端末：塞がっている</text></g></g>
+<g class="sv" data-s="3"><rect x="320" y="334" width="240" height="50" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="660" y="535.5" text-anchor="middle" font-size="19.5" font-weight="700" fill="#B5500F">更新していない端末は</text></g><g transform="scale(0.666667)"><text x="660" y="562.5" text-anchor="middle" font-size="19.5" font-weight="700" fill="#B5500F">場所が公開されたまま残る</text></g></g>
+<g class="sv" data-s="3"><g transform="scale(0.666667)"><text x="240" y="534" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">田中さんのスマホは</text></g><g transform="scale(0.666667)"><text x="240" y="567" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">3週間前からこの状態</text></g><path d="M262 362H312" stroke="#F88039" stroke-width="3"/></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>なぜ公表するのか</h4><p>利用者や会社が、自分に関係する修正かどうかを判断できるようにするため。仕組みとして必要な公表。</p></div>
+      <div class="card sv" data-s="1" style="border-left:7.5px solid var(--warn)"><h4>ただし、その説明は誰でも読める</h4><p>修正が出る前は、その穴を知っているのは一部の人に限られていた。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p5" class="slide page hasbr" data-n="s4" data-steps="4">
+  <header class="hd"><span class="chap">4. 時間とともに増える危険</span><h2 class="head">後回しにした期間が長いほど、危険は大きくなる</h2><span class="num">05</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>更新していない端末は、穴の場所が公開されたまま</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>穴を開けたまま使うと、どれくらい危ないか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">時間を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 400" style="width:100%;height:600px" aria-label="時間がたつほど、穴を突く道具と探す試みが増える">
+<path d="M60 320H570M60 320V40" stroke="#8A9AB0" stroke-width="2"/><g transform="scale(0.666667)"><text x="472.5" y="528" text-anchor="middle" font-size="21" font-weight="700" fill="#5A6B82">修正が配られた日から → 時間</text></g><g transform="scale(0.666667)"><text x="60" y="270" text-anchor="end" font-size="21" font-weight="700" fill="#5A6B82">危険</text></g>
+<path class="drawline" data-s="1" d="M60 312C160 308 220 290 290 240S430 110 560 70" fill="none" stroke="#F88039" stroke-width="5"/>
+<g class="sv" data-s="1"><g transform="scale(0.666667)"><text x="300" y="165" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">穴を突く道具が出回る</text></g><g transform="scale(0.666667)"><text x="300" y="201" text-anchor="middle" font-size="21" font-weight="400" fill="#B5500F">更新していない端末を探す試みが増える</text></g></g>
+<g class="sv" data-s="2"><path d="M60 300H200" stroke="#40B69A" stroke-width="10" stroke-linecap="round" opacity=".5"/><g transform="scale(0.666667)"><text x="195" y="429" text-anchor="middle" font-size="22.5" font-weight="900" fill="#1F7A63">早いうちに</text></g></g>
+<g class="sv" data-s="3"><path d="M330 60V320" stroke="#8A9AB0" stroke-width="2" stroke-dasharray="6 6"/><g transform="scale(0.666667)"><text x="495" y="579" text-anchor="middle" font-size="21" font-weight="700" fill="#5A6B82">何日なら安全という線はない</text></g></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card sv" data-s="1"><h4>すぐには広く悪用されないこともある</h4><p>しかし時間がたつにつれて、穴を突く道具が出回り、更新していない端末を探す試みが増えていく（出典1）。</p></div>
+      <div class="card sv" data-s="2" style="border-left:7.5px solid var(--warn)"><h4>選ばれるのは、人より端末の状態</h4><p>S0-01 の「取れる額・成功のしやすさ・かかる手間」で言えば、手間の少ない作業。田中さんの名前を知らなくても、機械的に探せば見つかる。</p></div>
+      <div class="sv" data-s="4"><p class="ans"><b>1つ目の答え</b>配られたら早いうちに。何日なら安全という線はない</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p6" class="slide page hasbr" data-n="s5" data-steps="3">
+  <header class="hd"><span class="chap">5. 更新が終わった端末</span><h2 class="head">配布が終わった端末では、穴が見つかっても二度と塞がらない</h2><span class="num">06</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>修正は早いうちに入れる</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>その修正が、もう配られない端末</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">配布が終わった後を見る</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 400" style="width:100%;height:600px" aria-label="サポート終了の前後で、穴が塞がるかどうかが変わる">
+<path d="M30 120H570" stroke="#D8DFE8" stroke-width="4"/><path d="M300 70V170" stroke="#F88039" stroke-width="4"/><g transform="scale(0.666667)"><text x="450" y="87" text-anchor="middle" font-size="22.5" font-weight="900" fill="#B5500F">修正の配布が終わる</text></g>
+<circle cx="80" cy="120" r="12" fill="#fff" stroke="#F88039" stroke-width="3"/><path d="M72 120H88" stroke="#40B69A" stroke-width="5"/>
+<circle cx="160" cy="120" r="12" fill="#fff" stroke="#F88039" stroke-width="3"/><path d="M152 120H168" stroke="#40B69A" stroke-width="5"/>
+<circle cx="240" cy="120" r="12" fill="#fff" stroke="#F88039" stroke-width="3"/><path d="M232 120H248" stroke="#40B69A" stroke-width="5"/>
+<g transform="scale(0.666667)"><text x="240" y="240" text-anchor="middle" font-size="21" font-weight="700" fill="#1F7A63">穴が見つかる → 修正で塞がる</text></g>
+<g class="sv" data-s="1">
+<circle cx="360" cy="120" r="12" fill="#FFF1E6" stroke="#F88039" stroke-width="3"/>
+<circle cx="440" cy="120" r="12" fill="#FFF1E6" stroke="#F88039" stroke-width="3"/>
+<circle cx="520" cy="120" r="12" fill="#FFF1E6" stroke="#F88039" stroke-width="3"/>
+<g transform="scale(0.666667)"><text x="660" y="240" text-anchor="middle" font-size="21" font-weight="700" fill="#B5500F">穴が見つかっても、塞がらない</text></g></g>
+<g class="sv" data-s="2"><rect x="40" y="200" width="520" height="80" rx="14" fill="#F7F9FC" stroke="#D8DFE8" stroke-width="2"/><g transform="scale(0.666667)"><text x="450" y="348" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A">Windows 10：2025年10月14日（米国時間）にサポート終了</text></g><g transform="scale(0.666667)"><text x="450" y="390" text-anchor="middle" font-size="21" font-weight="400" fill="#5A6B82">セキュリティの更新が配られなくなった（出典4）</text></g></g>
+<g class="sv" data-s="3"><rect x="40" y="300" width="520" height="70" rx="14" fill="#FFF8F2" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="450" y="495" text-anchor="middle" font-size="22.5" font-weight="700" fill="#B5500F">田中さんのノートパソコンも、更新の配布が終わっていた（例）</text></g><g transform="scale(0.666667)"><text x="450" y="531" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">このパソコンで証券口座の画面を開くのをやめる</text></g></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card"><h4>作り手は、いつか配布を終える</h4><p>古い製品への修正の配布は、いつか終わる。終わった後は、新しい穴が見つかっても修正は配られない。</p></div>
+      <div class="card sv" data-s="2"><h4>IPA の呼びかけ</h4><p>セキュリティのリスクが高まるとして、後継の製品などへの移行を呼びかけている（出典4）。</p></div>
+      <div class="card sv" data-s="3" style="border-left:7.5px solid var(--warn)"><h4>古いから遅い、という話ではない</h4><p>穴が見つかっても、二度と塞がらない状態になるということ。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p7" class="slide page hasbr" data-n="s6" data-steps="4">
+  <header class="hd"><span class="chap">6. 何から更新するか</span><h2 class="head">S0-EX で数えた入口を、更新する順に並べ直し、自動更新に任せる</h2><span class="num">07</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>早いうちに入れる。配布が終わった端末では口座を開かない</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>何から更新するか</span></p>
+  <div class="body bt tight" style="display:flex;flex-direction:column;gap:15px">
+    <div class="stepbar"><b style="font-size:22.5px">順に並べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="card fade d1" style="padding:9px 15px">
+      <table class="atk at3" style="width:100%;border-collapse:collapse">
+        <tr><th style="text-align:left;padding:12px 21px;font-size:21px;color:#5A6B82;border-bottom:3px solid #D8DFE8">順</th><th style="text-align:left;padding:12px 21px;font-size:21px;color:#5A6B82;border-bottom:3px solid #D8DFE8">対象</th><th style="text-align:left;padding:12px 21px;font-size:21px;color:#5A6B82;border-bottom:3px solid #D8DFE8">理由</th></tr>
+        <tr class="sv" data-s="1"><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:900;color:#2B5FA8;font-family:var(--mono)">1</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">スマホとパソコンの OS</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;color:#5A6B82">穴が開くと、その上で動く全部に影響が出る</td></tr><tr class="sv" data-s="1"><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:900;color:#2B5FA8;font-family:var(--mono)">2</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">ブラウザ</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;color:#5A6B82">外から届くものを最初に受け取る</td></tr><tr class="sv" data-s="2"><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:900;color:#2B5FA8;font-family:var(--mono)">3</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">証券、銀行、決済、確認コードのアプリ</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;color:#5A6B82">口座への入口そのもの</td></tr><tr class="sv" data-s="2"><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:900;color:#2B5FA8;font-family:var(--mono)">4</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">そのほかのアプリ</td><td style="padding:15px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;color:#5A6B82">使っていないものは、更新するより消すほうが早い</td></tr>
+      </table>
+    </div>
+    <div class="vs-row">
+      <div class="card sv" data-s="3"><h4>使っていないアプリは消す</h4><p>消してしまえば、更新する必要もなくなる。持っているアプリを減らす考え方は S1-05 で扱う。</p></div>
+      <div class="card sv" data-s="4" style="border-left:7.5px solid var(--ok)"><h4>自動更新を有効にした</h4><p>毎回「今やるか」を決めていると、忙しい日には後回しになる。S1-03 の「知らせのリンクからは入らない」と同じく、その場で判断しなくても同じように動く仕組み。</p></div>
+    </div>
+    <div class="sv" data-s="4"><p class="ans"><b>2つ目の答え</b>入口の順に並べ、自動更新でその場の判断に頼らない</p></div>
+  </div>
+</section>
+
+<section id="p8" class="slide page hasbr" data-n="s7" data-steps="3">
+  <header class="hd"><span class="chap">7. 更新できない端末の扱い</span><h2 class="head">防げない穴が残るなら、その穴から届く範囲を決めておく</h2><span class="num">08</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>更新する順と仕組みができた</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>すぐには更新できない端末をどうするか</span></p>
+  <div class="body bt tight" style="display:flex;flex-direction:column;gap:15px">
+    <div class="stepbar"><b style="font-size:22.5px">使い方を決める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="card fade d1" style="border-left:7.5px solid var(--warn)"><h4>様子を見るだけで済ませない</h4><p>仕事で使う機械などでは、更新すると別のソフトが動かなくなることもある。様子を見るだけだと、穴を開けたままにしたことを忘れてしまう。</p></div>
+    <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:21px">
+      <div class="card sv" data-s="1" style="border-top:7.5px solid var(--safe)"><h4>開かない</h4><p>証券口座、銀行、メールを、その端末から開かない。</p></div>
+      <div class="card sv" data-s="1" style="border-top:7.5px solid var(--safe)"><h4>分ける</h4><p>資産に関わる操作は、別の端末に分ける。</p></div>
+      <div class="card sv" data-s="1" style="border-top:7.5px solid var(--safe)"><h4>期限を決める</h4><p>いつまでにこの状態を終わらせるかを決める。</p></div>
+    </div>
+    <div class="vs-row">
+      <div class="card sv" data-s="2"><h4>田中さんの場合</h4><p>ノートパソコンを、動画を見るためだけに使うことにした。</p></div>
+      <div class="card sv" data-s="3"><h4>次の S1-05</h4><p>画面のロック、家の Wi-Fi の機器、アプリに渡している権限など、端末のまわりの手入れを扱う。</p></div>
+    </div>
+    <div class="sv" data-s="3"><p class="ans"><b>3つ目の答え</b>更新できない端末は、資産に関わる操作から切り離す</p></div>
+  </div>
+</section>
+
+<section id="p9" class="slide page hasbr" data-n="sum">
+  <header class="hd"><span class="chap">問いへの答えと出典</span><h2 class="head">配られたら早いうちに。仕組みに任せ、塞げない端末は切り離す</h2><span class="num">09</span></header><p class="bridge"><b class="bk">今日の問い</b><span>田中さんは、更新の通知をどれくらい後回しにしてよいのか</span></p>
+  <div class="body sumb" style="display:grid;grid-template-columns:1.15fr 1fr;gap:33px">
+    <div class="kp" style="gap:15px">
+      <div class="card fade d1 a3"><span class="no">1</span><div><h4>配られたら早いうちに</h4><p>修正と一緒に穴の場所が公開され、時間とともに危険が増える（3〜4節）</p></div></div><div class="card fade d2 a3"><span class="no">2</span><div><h4>順に並べて自動更新に任せる</h4><p>OS、ブラウザ、口座のアプリの順。使わないアプリは消す（6節）</p></div></div><div class="card fade d3 a3"><span class="no">3</span><div><h4>塞げない端末は切り離す</h4><p>配布が終わった端末や更新できない端末で、資産に関わる操作をしない（5節・7節）</p></div></div>
+      <p class="note fade d4">この資料は事実と構造の説明であって、推奨ではありません。どの製品やサービスを使うか、いまの環境が安全かどうかの判定は、この資料の外にあります。決めるのはあなたです。</p>
+    </div>
+    <div class="card fade d5" style="display:flex;flex-direction:column;gap:12px;align-self:start">
+      <h4 style="font-size:24px">出典</h4>
+      <p class="note"><b style="color:var(--ink)">情報処理推進機構（IPA）「更新プログラムの適用（脆弱性対策）」</b><br>2〜4節（脆弱性と更新、公開後に悪用が広がること）</p><p class="note"><b style="color:var(--ink)">国家サイバー統括室（NCO）「インターネットの安全・安心ハンドブック」</b><br>2節（弱点は日々見つかる。修正の更新を適用し続ける）</p><p class="note"><b style="color:var(--ink)">総務省「国民のためのサイバーセキュリティサイト」</b><br>5〜7節（サポート終了・端末の使い分け）</p><p class="note"><b style="color:var(--ink)">情報処理推進機構（IPA）「Windows 10 のサポート終了に伴う注意喚起」</b><br>5節（2025年10月14日（米国時間）のサポート終了）</p>
+      <p class="note" style="border-top:1.5px dashed var(--rule);padding-top:12px">出典の突き合わせは未了です。田中さんの端末は、説明のための架空の例です。疑問があれば、原典の公的資料を直接確かめてください。</p>
+    </div>
+  </div>
+</section>
+</div></div>
+
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bToc" title="目次（O）">目次</button><button class="wide" id="bNotes" title="解説（N）">解説</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">解説</h4><div id="notesBody"></div></div>
+<div id="help">← → でページ移動・N で解説・O で目次・F で全画面</div>
+<div class="notes-src" id="notes-title"><pre style="white-space:pre-wrap;font-size:13px;line-height:1.7">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ノードID】 S1-04 ／ OSとアプリを更新する意味
+【レーン】   S 情報セキュリティ（資産を守る）
+【レベル】   L1 基礎
+【前提知識】 S0-EX 卒業課題：資産への入口を数える
+【この先へ】 S1-05 端末・ネットワーク・アプリ権限の衛生管理
+【到達目標】 更新が「新機能を入れる作業」ではなく「公開済みの弱点を塞ぐ作業」であることを説明できる。
+             修正が公開されてから攻撃が広がるまでの時間差を知り、後回しの危険度を自分で評価できる。
+【読了目安】 読み上げ約10分（黙読約6分）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 後回しにしている2つの通知</h5>
+<p>S1-01 から S1-03 で、田中さんは鍵を整えてきました。パスワードを全部違うものにし、多要素認証を足し、偽の画面に自分で入力しない手順も決めました。それでも S1-01 で残った道の1つに、スマホやパソコンがすでに乗っ取られている場合があります。鍵がどれだけ強くても、鍵を使う端末そのものに穴が開いていれば、相手は鍵を通らずに入ってきます。</p>
+<p>今日の問いは「田中さんは、更新の通知をどれくらい後回しにしてよいのか」です。</p>
+<p>田中さんのスマホには、3週間前から「ソフトウェア・アップデートがあります」という通知が出ています。夜に入れようとして、そのたびに忘れています。家には、6年前に買ったノートパソコンもあり、週末に証券口座の画面を大きく見たいときに使っています（説明のための例）。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 更新が塞いでいるもの</h5>
+<p>田中さんは、スマホに特に困ったことがないので、更新を急ぐ理由が分かりませんでした。新しい機能が欲しいわけでもありません。</p>
+<p>ソフトウェアの作りに残っていた欠陥のうち、悪用されると、本来できないはずの操作ができてしまうものを、<b>脆弱性</b>と呼びます。OS（スマホやパソコンの基本のソフト）やアプリの更新は、見つかった脆弱性を塞ぐために、作り手が配る修正です。新しい機能が一緒に入ることもありますが、更新の中身の中心は、穴を塞ぐことのほうです。国の手引きも、弱点は日々見つかるので、修正のための更新を適用し続けるよう求めています（出典2）。</p>
+<p>穴が開いていても、スマホの使い勝手は何も変わりません。田中さんが困っていないことは、穴がないことの証拠にはなりません。更新を後回しにするのは、新しい機能を待ってもらうことではなく、見つかった穴を開けたまま使い続けることです。</p></div>
+<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 修正と一緒に公開されるもの</h5>
+<p>では、穴を開けたまま3週間使うことは、どれくらい危ないのでしょうか。ここで、修正の配られ方を見ておきます。</p>
+<p>作り手が修正を配るときには、何を直したのかも公表されます。利用者や会社が、自分に関係する修正かどうかを判断できるようにするためで、仕組みとして必要な公表です。</p>
+<p>ただし、その説明は誰でも読めます。修正が出る前は、その穴を知っているのは一部の人に限られていました。修正が出た後は、どの製品のどこに穴があったのかを、誰でも知ることができます。</p>
+<p>更新した端末では、穴は塞がっています。更新していない端末は、どこに穴があるかが公開されたまま残っています。田中さんのスマホも、3週間前からこの状態です。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 時間とともに増える危険</h5>
+<p>公表された穴は、すぐには広く悪用されないこともあります。しかし、時間がたつにつれて、その穴を突く道具が出回り、更新していない端末を探す試みが増えていきます（出典1）。後回しにした期間が長いほど、危険は大きくなります。</p>
+<p>S0-01 で見た「取れる額・成功のしやすさ・かかる手間」で考えると、場所も中身も公開された穴を突くのは、相手にとって手間の少ない作業です。田中さんの名前を知らなくても、更新していない端末を機械的に探せば、田中さんのスマホは見つかります。選ばれるのは、田中さんという人よりも、更新していないという端末の状態です。</p>
+<p>後回しにできる時間は、修正が配られた日から短くなっていきます。田中さんの問いへの答えは、「配られたら早いうちに」です。具体的に何日なら安全という線はありません。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 更新が終わった端末</h5>
+<p>週末に使っているノートパソコンには、もう1つ別の問題がありました。</p>
+<p>作り手は、古い製品への修正の配布を、いつか終えます。終わった後は、新しい穴が見つかっても、修正は配られません。実際に、パソコンの OS の1つである Windows 10 は、2025年10月14日（米国時間）にサポートが終わり、セキュリティの更新が配られなくなりました。情報処理推進機構（IPA）は、セキュリティのリスクが高まるとして、後継の製品などへの移行を呼びかけています（出典4）。</p>
+<p>これは、古いから動きが遅いという話ではありません。穴が見つかっても、二度と塞がらない状態になるということです。田中さんが調べると、ノートパソコンの OS も、更新の配布が終わっていました（説明のための例）。田中さんは、このパソコンで証券口座の画面を開くのをやめることにしました。</p></div>
+<div class="notes-src" id="notes-s6"><h5 style="font-size:15px;margin:8px 0 6px">6. 何から更新するか</h5>
+<p>田中さんは、S0-EX で数えた入口を、更新する順に並べ直しました。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">順</th><th style="border:1px solid #D8DFE8;padding:3px 8px">対象</th><th style="border:1px solid #D8DFE8;padding:3px 8px">理由</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">1</td><td style="border:1px solid #D8DFE8;padding:3px 8px">スマホとパソコンの OS</td><td style="border:1px solid #D8DFE8;padding:3px 8px">穴が開くと、その上で動く全部に影響が出る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">2</td><td style="border:1px solid #D8DFE8;padding:3px 8px">ブラウザ</td><td style="border:1px solid #D8DFE8;padding:3px 8px">外から届くものを最初に受け取る</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">3</td><td style="border:1px solid #D8DFE8;padding:3px 8px">証券、銀行、決済、確認コードのアプリ</td><td style="border:1px solid #D8DFE8;padding:3px 8px">口座への入口そのもの</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">4</td><td style="border:1px solid #D8DFE8;padding:3px 8px">そのほかのアプリ</td><td style="border:1px solid #D8DFE8;padding:3px 8px">使っていないものは、更新するより消すほうが早い</td></tr></table>
+<p>4行目のとおり、使っていないアプリは、消してしまえば更新する必要もなくなります。持っているアプリを減らす考え方は、次の S1-05 で詳しく扱います。</p>
+<p>毎回「今やるか」を決めていると、忙しい日には必ず後回しになります。田中さんは、スマホとパソコンの自動更新を有効にしました。S1-03 で決めた「知らせのリンクからは入らない」と同じく、その場で判断しなくても同じように動く仕組みです。</p></div>
+<div class="notes-src" id="notes-s7"><h5 style="font-size:15px;margin:8px 0 6px">7. 更新できない端末の扱い</h5>
+<p>仕事で使う機械などでは、更新すると別のソフトが動かなくなり、すぐには更新できないこともあります。そのときに、様子を見るだけで済ませると、穴を開けたままにしたことを忘れてしまいます。</p>
+<p>更新できない端末を使い続けるなら、その端末で何をして、何をしないかを決めておきます。証券口座、銀行、メールをその端末から開かないこと、資産に関わる操作は別の端末に分けること、いつまでにこの状態を終わらせるかを決めること、の3点です。</p>
+<p>田中さんは、ノートパソコンを、動画を見るためだけに使うことにしました。防げない穴が残るなら、その穴から届く範囲を決めておく、という考え方です。</p>
+<p>ここまでで、端末の穴を塞ぐ手順ができました。次の S1-05 では、端末の画面のロック、家の Wi-Fi の機器、アプリに渡している権限など、端末のまわりの手入れを扱います。</p></div>
+<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
+<p>引き受けたのは、次の一点だけです。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px">更新が「新機能を入れる作業」ではなく「公開済みの弱点を塞ぐ作業」であることを説明できる。修正が公開されてから攻撃が広がるまでの時間差を知り、後回しの危険度を自分で評価できる。</p>
+<p>そこから先——どの製品やサービスを使うか、いまのあなたの環境が安全かどうかの判定——は、このノートの外にあります。</p>
+<p>同じ材料を見ても、資金の量も、使える時間も、目的も、人によって違います。</p>
+<p>私はあなたのそれを知りません。だから決めるのはあなたです。</p>
+<p>出典に挙げた資料は、私の説明を信じるためではなく、<b>私の説明を疑うために</b>置いてあります。</p>
+<p>おかしいと思ったら、そちらを先に見てください。</p></div>
+<script>
+// 数字の台帳（点検の道具が読む）：ページの数だけ
+const DATA = {pages: 9};
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('section.page')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  const FOOT="TriFuse 情報セキュリティ L1 基礎 ｜ S1-04 OSとアプリを更新する意味";
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>'+FOOT+'</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('on',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='解説　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    onEnter(slides[i]);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#p'+(i+1))}catch(e){}
+  }
+  // 段階表示：data-s の要素は段階の数が届くと .on になり、スライドに s1..sN が付く
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+    const max=+s.dataset.steps||0;
+    s.querySelectorAll('[data-next]').forEach(b=>{b.textContent=n>=max?'もう一度見る ↺':'次の段階 ▶'});
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  document.getElementById('bToc').onclick=()=>go(0);
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='o'||e.key==='O')go(0);
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=b.closest('.slide');if(!step(s))setStep(s,0)});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=e=>{e.stopPropagation();setStep(b.closest('.slide'),0)});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  document.querySelectorAll('.tap').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  function onEnter(s){
+    s.querySelectorAll('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to),dec=+el.dataset.dec||0,t0=performance.now(),d=1300;
+      (function tick(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=(to*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});if(p<1)requestAnimationFrame(tick)})(t0);
+    });
+  }
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  // #p3 と #3 のどちらでも、そのページを開く
+  function fromHash(){const m=/^#p?(\d+)$/.exec(location.hash);return m?Math.max(1,Math.min(total,+m[1])):1}
+  addEventListener('hashchange',()=>{const n=fromHash();if(n-1!==cur)go(n-1)});
+  go(fromHash()-1);
+})();
+
+</script>
+</body>
+</html>

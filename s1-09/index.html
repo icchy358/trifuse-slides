@@ -1,0 +1,680 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S1-09 被害に気づいた直後の初動</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 15px 75px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(39px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-39px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:156px;background:var(--navy);color:#fff;padding:0 84px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:var(--brand)}
+.hd .chap{font-size:22.5px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:6px}
+.hd h2{font-size:46.5px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:21px;bottom:15px;font-size:15px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:84px;right:84px;top:192px;bottom:87px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1.5px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 84px;font-size:18px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1.5px solid var(--cardline);border-radius:21px;padding:27px 30px}
+.theme-trifuse .card{box-shadow:0 3px 15px rgba(15,27,45,.05)}
+.lead{font-size:25.5px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:28.5px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:15px}
+.tag{display:inline-block;font-size:19.5px;font-weight:700;padding:4.5px 15px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:27px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:27px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:21px}
+.fade{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:2.25px solid var(--rule);border-radius:12px;padding:10.5px 21px;font-size:21px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:18px;color:var(--muted)}
+.quote{border-left:7.5px solid var(--safe);background:var(--card);border-radius:0 18px 18px 0;padding:21px 30px;font-size:27px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:2.25px solid var(--cardline);border-radius:18px;padding:18px 15px;text-align:center;font-size:24px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:198px}
+.fs .n{font-family:var(--mono);font-size:18px;color:var(--muted);margin-bottom:6px}
+.fs .ico{width:51px;height:51px;color:var(--muted);margin-bottom:9px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 12px 36px -18px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:42px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:30px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+
+
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:6px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:138px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:24px 24px 27px}
+.mobile .hd h2{font-size:31.5px}
+.mobile .hd .chap{font-size:18px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:24px 21px 12px;display:flex!important;flex-direction:column;gap:21px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:18px 21px;font-size:16.5px;gap:12px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .quote{font-size:24px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:6px 0 0;height:90px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:30px}
+.mobile .cover-photos{position:relative;height:300px}
+.mobile .cover-vs{top:105px;width:69px;height:69px;font-size:22.5px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:33px 27px 15px;gap:18px!important}
+.mobile .cover h1{font-size:45px!important}
+.mobile .cover .sub{font-size:22.5px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 54px);height:auto;margin:9px 27px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .cph .lbl{font-size:19.5px;left:15px;bottom:15px}
+
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== F1 live-slides 共通（oil100 の部品に足した分） ===== */
+.hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.hd .num{position:absolute;right:84px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:66px;font-weight:700;color:rgba(255,255,255,.14)}
+.ft{justify-content:space-between}
+.ex{font-size:18px;font-weight:700;color:var(--ink2);background:#EEF2F7;border-radius:6px;padding:1.5px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+svg .ex-t{font-size:18px;fill:#5A6B82;font-family:var(--font)}
+.big{font-family:var(--mono);font-weight:700;color:var(--safe);font-size:69px;line-height:1.1}
+.big small{font-family:var(--font);font-size:27px;color:var(--ink2);margin-left:6px}
+.big.w{color:var(--warnT)}.big.g{color:var(--okT)}
+.kp{display:flex;flex-direction:column;gap:18px}
+.kp .card h4{font-size:25.5px;margin-bottom:6px}
+.kp .card p{font-size:22.5px;color:var(--ink2);line-height:1.65}
+.stepbar{display:flex;align-items:center;gap:15px}
+.swap{position:relative}
+.swap>*{transition:opacity .45s ease}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+.grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.grow.on,.slide.active .grow.g0{transform:scaleY(1)}
+.slide.active .grow.g0{transition-delay:.3s}
+svg .sv{transition:opacity .5s ease}
+.gone{transition:opacity .5s ease}
+.note{font-size:19.5px;color:var(--ink2);line-height:1.6}
+.pill{display:inline-flex;align-items:center;gap:9px;font-size:21px;font-weight:900;padding:7.5px 18px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.pill.w{background:#FFF1E6;color:var(--warnT)}
+.pill.g{background:#E7F6F1;color:var(--okT)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:21px}
+.keymsg{text-align:center;font-size:39px;font-weight:900;line-height:1.5;padding:27px;border-radius:21px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.keymsg::after{content:"";display:block;width:330px;height:9px;margin:15px auto 0;border-radius:4.5px;background:var(--brand)}
+
+/* ===== 表紙（目次つき） ===== */
+.cover{position:absolute;inset:0;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:21px;background:var(--brand)}
+.cover-text{position:absolute;left:96px;top:96px;width:960px;display:flex;flex-direction:column;gap:24px}
+.cover .kicker{font-size:22.5px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:69px;font-weight:900;line-height:1.25;color:var(--ink)}
+.cover h1 .hl2{color:var(--safe)}
+.cover h1 small{display:block;font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:9px}
+.cover .sub{font-size:25.5px;color:var(--ink2);line-height:1.75;font-weight:500}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin-top:6px}
+.toc button{display:flex;gap:15px;align-items:center;text-align:left;background:#fff;border:1.5px solid var(--rule);border-radius:15px;padding:12px 18px;font-size:21px;font-weight:700;color:var(--ink);line-height:1.4}
+.toc button:hover{border-color:var(--safe)}
+.toc button .n{font-family:var(--mono);color:var(--safe);font-size:19.5px;min-width:30px}
+.cover .start{align-self:flex-start;margin-top:9px;font-size:24px;padding:15px 33px}
+.cover-ill{position:absolute;right:84px;top:144px;width:690px;height:750px}
+
+/* ===== スマホ縦向き ===== */
+.mobile .cover{position:relative;inset:auto;padding-bottom:36px}
+.mobile .cover-text{position:relative;left:auto;top:auto;width:auto;padding:33px 24px 9px}
+.mobile .cover h1{font-size:42px}
+.mobile .cover h1 small{font-size:24px}
+.mobile .cover .sub{font-size:22.5px}
+.mobile .toc{grid-template-columns:1fr}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 48px);height:auto;margin:12px 24px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .hd .num{display:none}
+.mobile .big{font-size:51px}
+.mobile .vs-row{grid-template-columns:1fr}
+.mobile .keymsg{font-size:28.5px;padding:21px}
+.mobile .g2,.mobile .g3{grid-template-columns:1fr!important}
+.mobile .row{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .ft span:first-child{display:none}
+.sv{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.sv.on{opacity:1;transform:none}
+svg .sv{transform:none}
+.swap{display:grid}
+.swap>*{grid-area:1/1}
+.ft{padding-right:510px}
+.mobile .ft{padding-right:21px}
+#notes:not(.show){visibility:hidden}
+
+/* ===== v4.0：表紙の見出しを1行に（点検の道具：1ページ1つの .head・1行） ===== */
+.cover .cover-q{font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:-15px}
+.cover h1.head{font-size:48px;white-space:nowrap}
+.mobile .cover h1.head{white-space:normal}
+.mobile .cover .cover-q{font-size:24px}
+/* ===== v4.0：台紙は 1920x1080 で組む（build.py が px を 1.5 倍にする）。スマホでは台紙を 2/3 に縮めて元の大きさに戻す ===== */
+.mobile #stage{zoom:calc(2/3);min-height:150vh}
+/* 台紙は縮めない（#viewport は flex。画面が 1920 より狭いと、台紙の幅が画面の幅まで縮んでしまう） */
+#stage{flex:none}
+
+/* ===== F1-10 だけの部品 ===== */
+/* 線を段階ごとに描く（長さ1400まで描き切る） */
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.drawline.on,.slide.active .drawline.g0{stroke-dashoffset:0}
+.slide.active .drawline.g0{transition:stroke-dashoffset 2.2s ease .4s}
+/* 横向きに伸びる棒 */
+.growx{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.growx.on,.slide.active .growx.g0{transform:scaleX(1)}
+/* 流れ図は、まだの段階を薄く見せずに隠す（段階ごとにフェードイン） */
+.fs:not(.on),.fa:not(.on){opacity:0}
+.fa.on{opacity:1}
+/* 72の法則：答えが出たら「？」を消す */
+.q6{transition:opacity .4s ease}
+.slide.s4 .q6{opacity:0}
+.mobile .keymsg{font-size:25.5px!important}
+.sumb .kp .card h4{font-size:30px}
+.sumb .kp .card p{font-size:25.5px;line-height:1.8}
+.sumb .note{font-size:21px;line-height:1.75}
+.sumb>.card h4{font-size:27px!important}
+.mobile .r72{grid-template-columns:93px 1fr 114px!important;gap:15px!important;padding:24px 21px!important}
+.mobile .r72 .big{font-size:42px!important}
+/* ===== v3.0：橋渡しの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:84px;right:84px;top:168px;margin:0;display:flex;align-items:center;gap:12px;font-size:22.5px;font-weight:700;color:var(--ink);line-height:1.4;white-space:nowrap}
+.bridge .bk{font-size:18px;font-weight:700;color:#5A6B82;background:#EEF2F7;border-radius:6px;padding:3px 12px;flex:none}
+.bridge .bk.now{color:#fff;background:#2B5FA8}
+.bridge .ar{font-style:normal;color:#8A9AB0;padding:0 6px}
+.slide.hasbr .body{top:219px}
+.mobile .bridge{position:static;flex-wrap:wrap;white-space:normal;padding:18px 21px 0;font-size:21px;row-gap:6px}
+/* 問いへの答え */
+.ans{margin:0;display:flex;align-items:center;gap:18px;padding:15px 24px;border-radius:18px;background:#EAF4FF;border:2.25px solid #2B5FA8;font-size:27px;font-weight:900;color:#16233A;line-height:1.4}
+.ans b{flex:none;font-size:19.5px;font-weight:700;color:#fff;background:#2B5FA8;border-radius:6px;padding:4.5px 12px}
+.mobile .ans{font-size:24px}
+.a3{display:flex;gap:21px;align-items:center;padding:18px 27px!important}
+.a3 .no{flex:none;width:51px;height:51px;border-radius:50%;background:#2B5FA8;color:#fff;font-family:var(--mono);font-weight:700;font-size:27px;display:flex;align-items:center;justify-content:center}
+.a3 h4{margin-bottom:3px!important}
+.tight .card{padding:15px 27px}
+.tight .card h4{font-size:24px;margin-bottom:3px}
+.tight .card p{font-size:21.75px;line-height:1.55}
+.tight .note{font-size:19.5px;line-height:1.6}
+.mobile .slide.hasbr .body{top:auto}
+/* ===== S1-01：攻撃の形の表は、スマホでは3列目を隠して折り返す ===== */
+.mobile .atk th:nth-child(3),.mobile .atk td:nth-child(3){display:none}
+.mobile .atk td{white-space:normal!important;padding:15px 12px!important;font-size:22.5px!important}
+.mobile .atk td:first-child{width:62%}
+/* ===== 文字だけのページは字を大きくして余白を埋める ===== */
+.bt .card p{font-size:25.5px!important;line-height:1.8}
+.bt .card h4{font-size:28.5px!important;margin-bottom:9px}
+.bt .card{padding:27px 33px}
+.bt .fs{min-height:255px;font-size:27px}
+.bt .note{font-size:22.5px}
+.bt .atk td{padding:27px 24px!important;font-size:27px!important}
+.mobile .bt .card p{font-size:22.5px!important}
+.mobile .bt .fs{min-height:0;font-size:22.5px}
+.mobile .bt .atk td{padding:15px 12px!important;font-size:22.5px!important}
+.bt.tight .card p{font-size:24px!important;line-height:1.65}
+.bt.tight .fs{min-height:195px;font-size:24px}
+.bt.tight{gap:15px!important}
+/* S1-02 p6：4列表。スマホでは列3（入口の数）を残し、列4（ひとこと）を隠す */
+.mobile .atk4 th:nth-child(3),.mobile .atk4 td:nth-child(3){display:table-cell}
+.mobile .atk4 th:nth-child(4),.mobile .atk4 td:nth-child(4){display:none}
+.mobile .atk4 td:first-child{width:38%}
+.mobile .atk4 td{font-size:21px!important}
+/* S1-03 p4：2列表。スマホでも2列とも見せる */
+.mobile .at2 th:nth-child(3),.mobile .at2 td:nth-child(3){display:table-cell}
+.mobile .at2 td:first-child{width:70%}
+.bt.tight .atk td{padding:16.5px 21px!important;font-size:24.75px!important}
+/* S1-04 p7：3列表。スマホでは理由の列も残し、順の列を細く */
+.mobile .at3 th:nth-child(3),.mobile .at3 td:nth-child(3){display:table-cell}
+.mobile .at3 td:first-child{width:12%}
+.mobile .at3 td{font-size:19.5px!important}
+.mobile .at2 td:first-child{width:36%!important}
+.sumb>.card{gap:6px!important}.sumb>.card .note{font-size:19.5px;line-height:1.6}
+
+</style>
+</head>
+<body class="theme-photo noimg">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<section id="p1" class="slide page" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">TriFuse 情報セキュリティ ｜ L1 基礎 ｜ S1-09</div>
+      <div class="cover-q fade d2">被害に気づいた直後の初動 ｜ 今日の問い</div>
+      <h1 class="head fade d2">通知を見てから30分、<span class="hl2">何をどの順番で</span>するか</h1>
+      <p class="sub fade d3">S1-07 で、田中さんは口座の通知を設定し、毎晩寝る前に見ると決めました。この回は、その通知に身に覚えのない記録が出た夜を扱います。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>通知が届いた夜</button><button data-go="2"><span class="n">03</span>30分の順番</button><button data-go="3"><span class="n">04</span>止める</button><button data-go="4"><span class="n">05</span>届け出る</button><button data-go="5"><span class="n">06</span>残す</button><button data-go="6"><span class="n">07</span>断つ</button><button data-go="7"><span class="n">08</span>次の被害</button><button data-go="8"><span class="n">09</span>問いへの答えと出典</button></div>
+      <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
+    </div>
+    <div class="cover-ill" style="background:#fff;border-radius:33px;padding:30px"><svg viewBox="0 0 600 380" style="width:100%;height:570px" aria-label="夜に届いた、身に覚えのない取引通知">
+<rect x="40" y="20" width="200" height="340" rx="26" fill="#16233A"/><rect x="50" y="34" width="180" height="312" rx="18" fill="#F7F9FC"/>
+<rect x="62" y="70" width="156" height="110" rx="12" fill="#fff" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="210" y="144" text-anchor="middle" font-size="19.5" font-weight="900" fill="#B5500F">取引通知</text></g><g transform="scale(0.666667)"><text x="210" y="183" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">売りの注文が</text></g><g transform="scale(0.666667)"><text x="210" y="213" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">約定しました</text></g><g transform="scale(0.666667)"><text x="210" y="249" text-anchor="middle" font-size="18" font-weight="700" fill="#B5500F">（出していない）</text></g>
+<g transform="scale(0.666667)"><text x="210" y="495" text-anchor="middle" font-size="16.5" font-weight="400" fill="#8A9AB0">説明のための例</text></g>
+<g><rect x="270" y="50" width="310" height="70" rx="12" fill="#fff" stroke="#D8DFE8" stroke-width="2"/>
+<g transform="scale(0.666667)"><text x="637.5" y="120" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">慌てて、</text></g><g transform="scale(0.666667)"><text x="637.5" y="153" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">何から手をつけるか分からなくなる</text></g></g>
+<g><rect x="270" y="140" width="310" height="70" rx="12" fill="#fff" stroke="#D8DFE8" stroke-width="2"/>
+<g transform="scale(0.666667)"><text x="637.5" y="255" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">確かめようとして触り、</text></g><g transform="scale(0.666667)"><text x="637.5" y="288" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">記録が消える</text></g></g>
+<g><rect x="270" y="230" width="310" height="70" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/>
+<g transform="scale(0.666667)"><text x="637.5" y="390" text-anchor="middle" font-size="19.5" font-weight="700" fill="#B5500F">自分の落ち度だと感じて、</text></g><g transform="scale(0.666667)"><text x="637.5" y="423" text-anchor="middle" font-size="19.5" font-weight="700" fill="#B5500F">誰にも言わずに時間が過ぎる</text></g></g>
+<g><g transform="scale(0.666667)"><text x="637.5" y="504" text-anchor="middle" font-size="21" font-weight="900" fill="#B5500F">最後の1つが、損を最も大きくしがち</text></g></g>
+</svg></div>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<section id="p2" class="slide page hasbr" data-n="s1" data-steps="2">
+  <header class="hd"><span class="chap">1. 通知が届いた夜</span><h2 class="head">気づいた瞬間がいちばん判断しにくいので、順番を前もって決めておく</h2><span class="num">02</span></header><p class="bridge"><b class="bk">今日の問い</b><span>この通知を見てから30分のあいだに、田中さんは何をどの順番でするのか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.4fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">その夜に起こること</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 380" style="width:100%;height:570px" aria-label="夜に届いた、身に覚えのない取引通知">
+<rect x="40" y="20" width="200" height="340" rx="26" fill="#16233A"/><rect x="50" y="34" width="180" height="312" rx="18" fill="#F7F9FC"/>
+<rect x="62" y="70" width="156" height="110" rx="12" fill="#fff" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="210" y="144" text-anchor="middle" font-size="19.5" font-weight="900" fill="#B5500F">取引通知</text></g><g transform="scale(0.666667)"><text x="210" y="183" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">売りの注文が</text></g><g transform="scale(0.666667)"><text x="210" y="213" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">約定しました</text></g><g transform="scale(0.666667)"><text x="210" y="249" text-anchor="middle" font-size="18" font-weight="700" fill="#B5500F">（出していない）</text></g>
+<g transform="scale(0.666667)"><text x="210" y="495" text-anchor="middle" font-size="16.5" font-weight="400" fill="#8A9AB0">説明のための例</text></g>
+<g class="sv" data-s="1"><rect x="270" y="50" width="310" height="70" rx="12" fill="#fff" stroke="#D8DFE8" stroke-width="2"/>
+<g transform="scale(0.666667)"><text x="637.5" y="120" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">慌てて、</text></g><g transform="scale(0.666667)"><text x="637.5" y="153" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">何から手をつけるか分からなくなる</text></g></g>
+<g class="sv" data-s="1"><rect x="270" y="140" width="310" height="70" rx="12" fill="#fff" stroke="#D8DFE8" stroke-width="2"/>
+<g transform="scale(0.666667)"><text x="637.5" y="255" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">確かめようとして触り、</text></g><g transform="scale(0.666667)"><text x="637.5" y="288" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">記録が消える</text></g></g>
+<g class="sv" data-s="2"><rect x="270" y="230" width="310" height="70" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/>
+<g transform="scale(0.666667)"><text x="637.5" y="390" text-anchor="middle" font-size="19.5" font-weight="700" fill="#B5500F">自分の落ち度だと感じて、</text></g><g transform="scale(0.666667)"><text x="637.5" y="423" text-anchor="middle" font-size="19.5" font-weight="700" fill="#B5500F">誰にも言わずに時間が過ぎる</text></g></g>
+<g class="sv" data-s="2"><g transform="scale(0.666667)"><text x="637.5" y="504" text-anchor="middle" font-size="21" font-weight="900" fill="#B5500F">最後の1つが、損を最も大きくしがち</text></g></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card" style="border-left:7.5px solid var(--safe)"><h4>初動対応</h4><p>被害に気づいた直後に、被害の広がりを止め、何が起きたかの記録を残すために取る行動。</p></div>
+      <div class="card sv" data-s="2"><h4>その場の判断に頼らない</h4><p>S1-04 の自動更新や S1-07 の毎晩の確認と同じく、決めた順に動ける形にしておく。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p3" class="slide page hasbr" data-n="s2" data-steps="4">
+  <header class="hd"><span class="chap">2. 30分の順番</span><h2 class="head">止める、届け出る、残す、断つ。ただし消さないことは最初から守る</h2><span class="num">03</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>順番を前もって決めておく</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>田中さんが決めておいた順番</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.4fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">順に並べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 380" style="width:100%;height:570px" aria-label="止める、届け出る、残す、断つの順番と、最初から守る「消さない」">
+<g class="sv" data-s="1"><rect x="20" y="50" width="130" height="90" rx="14" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><g transform="scale(0.666667)"><text x="127.5" y="60" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">1</text></g><g transform="scale(0.666667)"><text x="127.5" y="153" text-anchor="middle" font-size="30" font-weight="900" fill="#16233A">止める</text></g><g transform="scale(0.666667)"><text x="127.5" y="255" text-anchor="middle" font-size="19.5" font-weight="700" fill="#5A6B82">回数を0に</text></g><path d="M152 95H163" stroke="#2B5FA8" stroke-width="3"/></g>
+<g class="sv" data-s="2"><rect x="165" y="50" width="130" height="90" rx="14" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><g transform="scale(0.666667)"><text x="345" y="60" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">2</text></g><g transform="scale(0.666667)"><text x="345" y="153" text-anchor="middle" font-size="30" font-weight="900" fill="#16233A">届け出る</text></g><g transform="scale(0.666667)"><text x="345" y="255" text-anchor="middle" font-size="19.5" font-weight="700" fill="#5A6B82">口座を止めた後に</text></g><path d="M297 95H308" stroke="#2B5FA8" stroke-width="3"/></g>
+<g class="sv" data-s="3"><rect x="310" y="50" width="130" height="90" rx="14" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><g transform="scale(0.666667)"><text x="562.5" y="60" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">3</text></g><g transform="scale(0.666667)"><text x="562.5" y="153" text-anchor="middle" font-size="30" font-weight="900" fill="#16233A">残す</text></g><g transform="scale(0.666667)"><text x="562.5" y="255" text-anchor="middle" font-size="19.5" font-weight="700" fill="#5A6B82">作業は3番目</text></g><path d="M442 95H453" stroke="#2B5FA8" stroke-width="3"/></g>
+<g class="sv" data-s="4"><rect x="455" y="50" width="130" height="90" rx="14" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2"/><g transform="scale(0.666667)"><text x="780" y="60" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">4</text></g><g transform="scale(0.666667)"><text x="780" y="153" text-anchor="middle" font-size="30" font-weight="900" fill="#16233A">断つ</text></g><g transform="scale(0.666667)"><text x="780" y="255" text-anchor="middle" font-size="19.5" font-weight="700" fill="#5A6B82">他の口座へ広げない</text></g></g>
+<g class="sv" data-s="3"><rect x="20" y="210" width="565" height="54" rx="12" fill="#E7F6F1" stroke="#40B69A" stroke-width="2"/><g transform="scale(0.666667)"><text x="453" y="364.5" text-anchor="middle" font-size="24" font-weight="900" fill="#1F7A63">消さないことは、1番目の作業の最中から守る</text></g></g>
+<g class="sv" data-s="4"><rect x="20" y="290" width="565" height="64" rx="12" fill="#F7F9FC" stroke="#D8DFE8" stroke-width="2"/><g transform="scale(0.666667)"><text x="453" y="477" text-anchor="middle" font-size="21" font-weight="700" fill="#5A6B82">S1-04 の自動更新や S1-07 の毎晩の確認と同じく、</text></g><g transform="scale(0.666667)"><text x="453" y="510" text-anchor="middle" font-size="21" font-weight="700" fill="#5A6B82">その場の判断に頼らず、決めた順に動ける形にしておく</text></g></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card sv" data-s="1"><h4>止めるのが最初</h4><p>被害がいま進んでいるかもしれない。S1-07 で、被害の大きさは気づくまでに何回動かされたかで決まると見た。気づいた後の回数を0にする。</p></div>
+      <div class="card sv" data-s="2"><h4>届け出るのは止めた後</h4><p>警察や公的な相談窓口への相談は大切だが、口座を止められるのは、その口座の事業者だけ。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p4" class="slide page hasbr" data-n="s3" data-steps="3">
+  <header class="hd"><span class="chap">3. 止める</span><h2 class="head">口座を止められるのは事業者だけ。自分で控えた番号から連絡する</h2><span class="num">04</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>最初の仕事は止めること</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>止める作業と、その最中にやらないこと</span></p>
+  <div class="body bt tight" style="display:flex;flex-direction:column;gap:15px">
+    <div class="stepbar"><b style="font-size:22.5px">止める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px">
+      <div class="card fade d1" style="border-top:7.5px solid var(--safe)"><h4>証券会社の問い合わせ窓口へ</h4><p>番号はその場で検索しない（S1-03）。口座を開いたときの書類にある番号を、前もって控えていた。金融庁も、窓口への連絡とパスワードの変更を呼びかけている（出典6）。</p></div>
+      <div class="card sv" data-s="1" style="border-top:7.5px solid var(--safe)"><h4>メールを先に変える</h4><p>メールは多くの口座の再設定先（S1-01）。取られている疑いがあるなら、他より先に。先に他を変えても、再設定の連絡が相手の見ているメールに届く。</p></div>
+      <div class="card sv" data-s="1" style="border-top:7.5px solid var(--safe)"><h4>管理ツールで作り、機器を外す</h4><p>新しいパスワードは S1-02 の管理ツールで作る。使っていない機器のログインがあれば、設定画面から外す。</p></div>
+    </div>
+    <div class="card sv" data-s="2" style="border-left:7.5px solid var(--warn)"><h4>やらないこと：不審なアプリを消す、端末を初期化する、通知やメールを消す</h4><p>消すことは止めることにならない。何が起きたかを示す、ただ1つの記録のこともある。開かず、触らず、そのまま置いておく。</p></div>
+    <div class="sv" data-s="3"><p class="ans"><b>1つ目の答え</b>控えた番号で事業者に止めてもらい、メールから鍵を変える。何も消さない</p></div>
+  </div>
+</section>
+
+<section id="p5" class="slide page hasbr" data-n="s4" data-steps="3">
+  <header class="hd"><span class="chap">4. 届け出る</span><h2 class="head">相手ごとに役目が違う。伝える4つの項目を決めておく</h2><span class="num">05</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>口座は止めた</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>届け出と相談の相手</span></p>
+  <div class="body bt tight" style="display:flex;flex-direction:column;gap:15px">
+    <div class="stepbar"><b style="font-size:22.5px">伝えることを並べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="card fade d1" style="padding:9px 15px">
+      <table class="atk at2" style="width:100%;border-collapse:collapse">
+        <tr><th style="text-align:left;padding:12px 21px;font-size:21px;color:#5A6B82;border-bottom:3px solid #D8DFE8">相手</th><th style="text-align:left;padding:12px 21px;font-size:21px;color:#5A6B82;border-bottom:3px solid #D8DFE8">役目</th></tr>
+        <tr><td style="padding:16.5px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">その口座やカードの事業者</td><td style="padding:16.5px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px">止めること。事業者にしかできない（3節で済ませた）</td></tr><tr><td style="padding:16.5px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">警察</td><td style="padding:16.5px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px">被害の届け出。都道府県の警察に、サイバー犯罪の相談窓口がある（出典1）</td></tr><tr><td style="padding:16.5px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px;font-weight:700">公的な相談窓口</td><td style="padding:16.5px 24px;border-bottom:1.5px solid #D8DFE8;font-size:24px">何をすればよいか分からないときの整理</td></tr>
+      </table>
+    </div>
+    <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:15px"><div class="card sv" data-s="1" style="padding:15px 24px"><p style="color:var(--ink);font-weight:700">いつ気づいたか</p></div><div class="card sv" data-s="1" style="padding:15px 24px"><p style="color:var(--ink);font-weight:700">何を見て気づいたか（どの通知か、明細のどの行か）</p></div><div class="card sv" data-s="1" style="padding:15px 24px"><p style="color:var(--ink);font-weight:700">自分がすでにしたこと（パスワードを変えた、など）</p></div><div class="card sv" data-s="2" style="padding:15px 24px;border-left:7.5px solid var(--warn)"><p style="color:var(--ink);font-weight:700">同じパスワードやメールを使っている口座が他にあるか</p></div></div>
+    <p class="note sv" data-s="3">最後の項目は抜けやすい。使い回していると、被害は1か所で終わらない（S1-01）。窓口の名前や番号は変わることがあるので、この資料には書かない。いま使える連絡先は S1-EX の点検表で自分で控える。</p>
+  </div>
+</section>
+
+<section id="p6" class="slide page hasbr" data-n="s5" data-steps="2">
+  <header class="hd"><span class="chap">5. 残す</span><h2 class="head">記録するのは、起きたことだけ</h2><span class="num">06</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>止めて、届け出た</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>何を残すか</span></p>
+  <div class="body bt" style="display:flex;flex-direction:column;gap:21px">
+    <div class="stepbar"><b style="font-size:22.5px">残すものを並べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="card fade d1" style="border-top:7.5px solid var(--safe)"><h4>気づいた日時</h4></div>
+      <div class="card fade d2" style="border-top:7.5px solid var(--safe)"><h4>通知や明細の画面</h4></div>
+      <div class="card fade d3" style="border-top:7.5px solid var(--safe)"><h4>事業者や警察とのやり取り</h4><p>いつ、誰に、何を伝えたか。</p></div>
+      <div class="card fade d4" style="border-top:7.5px solid var(--warn)"><h4>自分がした操作とその順番</h4><p>メモと画面の記録で。</p></div>
+    </div>
+    <div class="card sv" data-s="1" style="border-left:7.5px solid var(--warn)"><h4>自分の操作を残すのは</h4><p>後で調べるとき、どれが本人の操作で、どれがそうでないかを分けるため。分けられないと、何が起きたのかが確かめにくくなる。</p></div>
+    <div class="sv" data-s="2"><p class="ans"><b>2つ目の答え</b>起きたことと自分の操作を残す。形は連絡した先の指示に従う</p></div>
+  </div>
+</section>
+
+<section id="p7" class="slide page hasbr" data-n="s6" data-steps="3">
+  <header class="hd"><span class="chap">6. 断つ</span><h2 class="head">同じ入口でつながっている口座をたどり、つながりを切る</h2><span class="num">07</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>起きたことを残した</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>被害を他の口座へ広げない</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.3fr 1fr;gap:33px">
+    <div class="card fade d1" style="display:flex;flex-direction:column;gap:9px">
+      <div class="stepbar"><b style="font-size:22.5px">つながりをたどる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+      <svg viewBox="0 0 600 360" style="width:100%;height:540px" aria-label="取られたパスワードと再設定先のメールから、つながる口座をたどる">
+<rect x="20" y="140" width="150" height="70" rx="14" fill="#FFF1E6" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="142.5" y="255" text-anchor="middle" font-size="22.5" font-weight="900" fill="#B5500F">取られた口座</text></g><g transform="scale(0.666667)"><text x="142.5" y="288" text-anchor="middle" font-size="18" font-weight="400" fill="#5A6B82">（証券口座）</text></g>
+<g class="sv" data-s="1"><path d="M170 160L240 80" stroke="#F88039" stroke-width="3"/><rect x="240" y="50" width="150" height="56" rx="12" fill="#fff" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="472.5" y="126" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">同じパスワード</text></g><path d="M390 78H440" stroke="#F88039" stroke-width="3"/><rect x="440" y="50" width="140" height="56" rx="12" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><g transform="scale(0.666667)"><text x="765" y="126" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">それを使う口座</text></g></g>
+<g class="sv" data-s="2"><path d="M170 190L240 270" stroke="#F88039" stroke-width="3"/><rect x="240" y="244" width="150" height="56" rx="12" fill="#fff" stroke="#F88039" stroke-width="2"/><g transform="scale(0.666667)"><text x="472.5" y="405" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">再設定先の</text></g><g transform="scale(0.666667)"><text x="472.5" y="435" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">メール</text></g><path d="M390 272H440" stroke="#F88039" stroke-width="3"/><rect x="440" y="244" width="140" height="56" rx="12" fill="#fff" stroke="#D8DFE8" stroke-width="2"/><g transform="scale(0.666667)"><text x="765" y="405" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">そのメールで</text></g><g transform="scale(0.666667)"><text x="765" y="435" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">再設定できる口座</text></g></g>
+<g class="sv" data-s="3"><g transform="scale(0.666667)"><text x="600" y="255" text-anchor="middle" font-size="21" font-weight="700" fill="#2B5FA8">S0-EX で数えた入口の一覧で</text></g><g transform="scale(0.666667)"><text x="600" y="288" text-anchor="middle" font-size="21" font-weight="700" fill="#2B5FA8">順にたどり、つながりを切る</text></g></g>
+</svg>
+    </div>
+    <div class="kp fade d2">
+      <div class="card sv" data-s="3"><h4>一覧がなければ</h4><p>この場で一から数えることになる。S0-EX で数えた入口の一覧が、ここで役に立つ。</p></div>
+      <div class="card sv" data-s="3" style="border-left:7.5px solid var(--warn)"><h4>止める相手がいない資産</h4><p>S1-08 の、鍵を持つ人が動かせる資産。できることは、残すことと断つことに寄っていく。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p8" class="slide page hasbr" data-n="s7" data-steps="3">
+  <header class="hd"><span class="chap">7. 次の被害</span><h2 class="head">被害の直後は、次の被害にとって条件のそろった時間でもある</h2><span class="num">08</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>止める・届け出る・残す・断つ</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>直後に来る、取り戻せるという連絡</span></p>
+  <div class="body bt tight" style="display:flex;flex-direction:column;gap:15px">
+    <div class="stepbar"><b style="font-size:22.5px">決めておくこと</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div>
+    <div class="card fade d1" style="border-left:7.5px solid var(--warn)"><h4>被害を取り戻せると持ちかける連絡</h4><p>消費者庁は、被害の回復を持ちかける連絡が、さらに被害を重ねる二次被害につながるおそれがあると注意している（出典5）。急いでいて、判断しにくく、取り戻したいと思っている時間。</p></div>
+    <div class="g3 sv" data-s="1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div class="card" style="border-top:7.5px solid var(--safe)"><h4>応じない</h4><p>「取り戻せます」という連絡に。</p></div>
+      <div class="card" style="border-top:7.5px solid var(--safe)"><h4>突き止めない</h4><p>相手を自分で。</p></div>
+      <div class="card" style="border-top:7.5px solid var(--safe)"><h4>遅らせない</h4><p>恥ずかしさで連絡を。</p></div>
+    </div>
+    <div class="sv" data-s="2"><p class="ans"><b>3つ目の答え</b>つながりを断ち、取り戻せるという連絡には応じない</p></div>
+    <div class="vs-row">
+      <div class="card sv" data-s="2"><h4>持ちかけの型</h4><p>真贋のレーンの A1-08 で詳しく扱う。</p></div>
+      <div class="card sv" data-s="3"><h4>次の S1-EX</h4><p>前もって用意していなければ、その夜には使えない。ここまでの守りを1枚の点検表にまとめる。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="p9" class="slide page hasbr" data-n="sum">
+  <header class="hd"><span class="chap">問いへの答えと出典</span><h2 class="head">止める、届け出る、残す、断つ。消さず、次の被害に応じない</h2><span class="num">09</span></header><p class="bridge"><b class="bk">今日の問い</b><span>この通知を見てから30分のあいだに、田中さんは何をどの順番でするのか</span></p>
+  <div class="body sumb" style="display:grid;grid-template-columns:1.15fr 1fr;gap:33px">
+    <div class="kp" style="gap:15px">
+      <div class="card fade d1 a3"><span class="no">1</span><div><h4>控えた番号で事業者に止めてもらう</h4><p>メールから鍵を変える。何も消さない（2〜3節）</p></div></div><div class="card fade d2 a3"><span class="no">2</span><div><h4>4つの項目を伝え、起きたことを残す</h4><p>自分の操作も、順番ごと残す（4〜5節）</p></div></div><div class="card fade d3 a3"><span class="no">3</span><div><h4>つながりを断ち、次の被害に応じない</h4><p>取り戻せるという連絡には応じない（6〜7節）</p></div></div>
+      <p class="note fade d4">この資料は事実と構造の説明であって、推奨ではありません。どの製品やサービスを使うか、いまの環境が安全かどうかの判定は、この資料の外にあります。決めるのはあなたです。</p>
+    </div>
+    <div class="card fade d5" style="display:flex;flex-direction:column;gap:12px;align-self:start">
+      <h4 style="font-size:24px">出典</h4>
+      <p class="note"><b style="color:var(--ink)">警察庁「サイバー犯罪対策」</b><br>4節（都道府県の相談窓口）</p><p class="note"><b style="color:var(--ink)">情報処理推進機構（IPA）「情報セキュリティ安心相談窓口」</b><br>3・5節（初動・記録の残し方）</p><p class="note"><b style="color:var(--ink)">金融庁「インターネットバンキングによる預金等の不正な払戻しへの対応」</b><br>3節（事業者への連絡）</p><p class="note"><b style="color:var(--ink)">国民生活センター「全国の消費生活センター等」</b><br>4節（公的な相談窓口）</p><p class="note"><b style="color:var(--ink)">消費者庁「投資系トラブルの二次被害にご注意ください！」</b><br>7節（二次被害）</p><p class="note"><b style="color:var(--ink)">金融庁「インターネット取引サービスへの不正アクセス・不正取引による被害が急増しています」</b><br>3節（窓口への連絡とパスワードの変更）</p>
+      <p class="note" style="border-top:1.5px dashed var(--rule);padding-top:12px">出典の突き合わせは未了です。窓口の名前や電話番号は、変わることがあるので載せていません。疑問があれば、原典の公的資料を直接確かめてください。</p>
+    </div>
+  </div>
+</section>
+</div></div>
+
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bToc" title="目次（O）">目次</button><button class="wide" id="bNotes" title="解説（N）">解説</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">解説</h4><div id="notesBody"></div></div>
+<div id="help">← → でページ移動・N で解説・O で目次・F で全画面</div>
+<div class="notes-src" id="notes-title"><pre style="white-space:pre-wrap;font-size:13px;line-height:1.7">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ノードID】 S1-09 ／ 被害に気づいた直後の初動
+【レーン】   S 情報セキュリティ（資産を守る）
+【レベル】   L1 基礎
+【前提知識】 S1-07 口座の通知と監視を設定する
+【この先へ】 S1-EX 卒業課題：自衛装備の点検表
+【到達目標】 気づいてから最初の30分で、何を止め、どこへ連絡するかを順番で言える。
+             証拠を消さない操作と、二次被害を止める操作の優先順位を判断できる。
+【読了目安】 読み上げ約11分（黙読約6分）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 通知が届いた夜</h5>
+<p>S1-07 で、田中さんは口座の通知を設定し、毎晩寝る前に見ると決めました。この回は、その通知に身に覚えのない記録が出た夜を扱います。</p>
+<p>ある夜、田中さんのスマホに、出していない売りの注文が約定したという取引通知が届きました（説明のための例）。今日の問いは「この通知を見てから30分のあいだに、田中さんは何をどの順番でするのか」です。</p>
+<p>被害に気づいた直後に、被害の広がりを止め、何が起きたかの記録を残すために取る行動を、<b>初動対応</b>と呼びます。</p>
+<p>順番を前もって決めておくのは、気づいた瞬間がいちばん判断しにくい時間だからです。慌てて何から手をつけるか分からなくなる、確かめようとして触ってしまい記録が消える、自分の落ち度だと感じて誰にも言わずに時間が過ぎる、ということが起こります。最後の1つが、損を最も大きくしがちです。S1-04 の自動更新や S1-07 の毎晩の確認と同じく、その場の判断に頼らず、決めた順に動ける形にしておきます。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 30分の順番</h5>
+<p>田中さんが決めておいた順番は、止める、届け出る、残す、断つ、の4つです。</p>
+<p>止めるのが最初なのは、被害がいま進んでいるかもしれないからです。S1-07 で、被害の大きさは気づくまでに何回動かされたかで決まる、と見ました。気づいた後の回数を0にするのが、最初の仕事です。</p>
+<p>届け出るのは、止めた後です。警察や公的な相談窓口への相談は大切ですが、口座を止められるのは、その口座の事業者だけです。</p>
+<p>残すのは3番目ですが、消さないことは最初から守ります。記録を取る作業は後でも、記録を消さないことは、1番目の作業の最中から効いています。</p>
+<p>断つのは最後です。同じ入口を使っている他の口座へ被害が広がらないように、つながりを切ります。</p></div>
+<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 止める</h5>
+<p>田中さんは、まず証券会社の問い合わせ窓口に連絡しました。金融庁は、不審な取引の心配がある場合は、証券会社などの問い合わせ窓口に連絡し、すぐにパスワードなどを変えるよう呼びかけています（出典6）。口座の取引や出金を止められるのは、事業者だけです。</p>
+<p>窓口の電話番号は、その場で検索しませんでした。急いでいるときに検索すると、偽の連絡先にたどり着くことがあります。S1-03 で、連絡や検索の結果から入らず、自分で控えた入口から入ると決めました。田中さんは、口座を開いたときの書類にある番号を、前もって控えていました。</p>
+<p>パスワードを変える順番にも注意が要ります。S1-01 で、メールは多くの口座の再設定先になっているので最初に守る、と見ました。メールが取られている疑いがあるなら、他のパスワードより先にメールを変えます。先に他を変えても、再設定の連絡が相手の見ているメールに届くからです。パスワードは S1-02 の管理ツールで新しく作り、使っていない機器のログインがあれば、設定画面から外します。</p>
+<p>止める作業の最中に、やらないこともあります。不審なアプリを消すこと、端末を初期化すること、通知やメールを消すことです。どれも消したくなりますが、消すことは止めることになりません。それが何が起きたかを示す、ただ1つの記録のこともあります。開かず、触らず、そのまま置いておきます。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 届け出る</h5>
+<p>口座を止めたら、届け出と相談に移ります。相手は、次の表のように分かれます。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">相手</th><th style="border:1px solid #D8DFE8;padding:3px 8px">役目</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">その口座やカードの事業者</td><td style="border:1px solid #D8DFE8;padding:3px 8px">止めること。事業者にしかできない（3節で済ませた）</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">警察</td><td style="border:1px solid #D8DFE8;padding:3px 8px">被害の届け出。都道府県の警察に、サイバー犯罪の相談窓口がある（出典1）</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">公的な相談窓口</td><td style="border:1px solid #D8DFE8;padding:3px 8px">何をすればよいか分からないときの整理</td></tr></table>
+<p>田中さんは、窓口に伝えることも決めていました。いつ気づいたか、何を見て気づいたか（どの通知か、明細のどの行か）、自分がすでにしたこと（パスワードを変えた、など）、同じパスワードやメールを使っている口座が他にあるか、です。</p>
+<p>最後の項目は抜けやすいものです。S1-01 で見たとおり、パスワードを使い回していると、被害は1か所で終わりません。</p>
+<p>この回では、窓口の名前や電話番号を書いていません。連絡先は変わることがあり、古い番号が残ると初動が遅れるからです。いま使える連絡先は、S1-EX の点検表で、自分で控えます。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 残す</h5>
+<p>記録するのは、起きたことだけです。気づいた日時、通知や明細の画面、事業者や警察とのやり取り（いつ、誰に、何を伝えたか）、自分がした操作とその順番を、メモと画面の記録で残します。</p>
+<p>自分がした操作を残すのは、後で調べるとき、どれが本人の操作で、どれがそうでないかを分けるためです。分けられないと、何が起きたのかが確かめにくくなります。何をどの形で残すかは、連絡した先から指示があれば、そちらに従います。</p></div>
+<div class="notes-src" id="notes-s6"><h5 style="font-size:15px;margin:8px 0 6px">6. 断つ</h5>
+<p>最後に、同じ入口でつながっている口座をたどります。取られたパスワードを他に使っていないか、取られた口座の再設定先になっているメールはどれか、そのメールで再設定できる口座はどれか、と順に見ていきます。</p>
+<p>S0-EX で数えた入口の一覧が、ここで役に立ちます。一覧がなければ、この場で一から数えることになります。</p>
+<p>S1-08 で見たように、鍵を持つ人が動かせる資産では、止める作業を頼める相手がいないことがあります。その場合、できることは、残すことと断つことに寄っていきます。</p></div>
+<div class="notes-src" id="notes-s7"><h5 style="font-size:15px;margin:8px 0 6px">7. 次の被害</h5>
+<p>被害の直後には、被害を取り戻せると持ちかける連絡が来ることがあります。消費者庁は、被害の回復を持ちかける連絡が、さらに被害を重ねる二次被害につながるおそれがあると注意しています（出典5）。</p>
+<p>被害の直後は、急いでいて、判断しにくく、取り戻したいと思っている時間です。次の被害にとっては、条件のそろった時間でもあります。「取り戻せます」という連絡に応じないこと、相手を自分で突き止めようとしないこと、恥ずかしさで連絡を遅らせないことも、順番と一緒に決めておくと迷わずに済みます。こうした持ちかけの型は、真贋のレーンの A1-08 で詳しく扱います。</p>
+<p>田中さんは、30分の順番と、控えておく連絡先と、伝える4つの項目を持ちました。ただ、どれも前もって用意していなければ、その夜には使えません。次の S1-EX では、ここまでの守りを1枚の点検表にまとめ、足りないところを洗い出します。</p></div>
+<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
+<p>引き受けたのは、次の一点だけです。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px">気づいてから最初の30分で、何を止め、どこへ連絡するかを順番で言える。証拠を消さない操作と、二次被害を止める操作の優先順位を判断できる。</p>
+<p>そこから先——どの製品やサービスを使うか、いまのあなたの環境が安全かどうかの判定——は、このノートの外にあります。</p>
+<p>同じ材料を見ても、資金の量も、使える時間も、目的も、人によって違います。</p>
+<p>私はあなたのそれを知りません。だから決めるのはあなたです。</p>
+<p>出典に挙げた資料は、私の説明を信じるためではなく、<b>私の説明を疑うために</b>置いてあります。</p>
+<p>おかしいと思ったら、そちらを先に見てください。</p></div>
+<script>
+// 数字の台帳（点検の道具が読む）：ページの数だけ
+const DATA = {pages: 9};
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('section.page')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  const FOOT="TriFuse 情報セキュリティ L1 基礎 ｜ S1-09 被害に気づいた直後の初動";
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>'+FOOT+'</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('on',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='解説　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    onEnter(slides[i]);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#p'+(i+1))}catch(e){}
+  }
+  // 段階表示：data-s の要素は段階の数が届くと .on になり、スライドに s1..sN が付く
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+    const max=+s.dataset.steps||0;
+    s.querySelectorAll('[data-next]').forEach(b=>{b.textContent=n>=max?'もう一度見る ↺':'次の段階 ▶'});
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  document.getElementById('bToc').onclick=()=>go(0);
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='o'||e.key==='O')go(0);
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=b.closest('.slide');if(!step(s))setStep(s,0)});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=e=>{e.stopPropagation();setStep(b.closest('.slide'),0)});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  document.querySelectorAll('.tap').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  function onEnter(s){
+    s.querySelectorAll('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to),dec=+el.dataset.dec||0,t0=performance.now(),d=1300;
+      (function tick(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=(to*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});if(p<1)requestAnimationFrame(tick)})(t0);
+    });
+  }
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  // #p3 と #3 のどちらでも、そのページを開く
+  function fromHash(){const m=/^#p?(\d+)$/.exec(location.hash);return m?Math.max(1,Math.min(total,+m[1])):1}
+  addEventListener('hashchange',()=>{const n=fromHash();if(n-1!==cur)go(n-1)});
+  go(fromHash()-1);
+})();
+
+</script>
+</body>
+</html>
