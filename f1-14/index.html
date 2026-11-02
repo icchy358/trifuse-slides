@@ -1,0 +1,536 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F1-14 保険の構造</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 15px 75px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(39px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-39px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:156px;background:var(--navy);color:#fff;padding:0 84px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:var(--brand)}
+.hd .chap{font-size:22.5px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:6px}
+.hd h2{font-size:46.5px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:21px;bottom:15px;font-size:15px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:84px;right:84px;top:192px;bottom:87px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1.5px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 84px;font-size:18px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1.5px solid var(--cardline);border-radius:21px;padding:27px 30px}
+.theme-trifuse .card{box-shadow:0 3px 15px rgba(15,27,45,.05)}
+.lead{font-size:25.5px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:28.5px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:15px}
+.tag{display:inline-block;font-size:19.5px;font-weight:700;padding:4.5px 15px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:27px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:27px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:21px}
+.fade{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:2.25px solid var(--rule);border-radius:12px;padding:10.5px 21px;font-size:21px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:18px;color:var(--muted)}
+.quote{border-left:7.5px solid var(--safe);background:var(--card);border-radius:0 18px 18px 0;padding:21px 30px;font-size:27px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:2.25px solid var(--cardline);border-radius:18px;padding:18px 15px;text-align:center;font-size:24px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:198px}
+.fs .n{font-family:var(--mono);font-size:18px;color:var(--muted);margin-bottom:6px}
+.fs .ico{width:51px;height:51px;color:var(--muted);margin-bottom:9px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 12px 36px -18px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:42px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:30px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+
+
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:6px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:138px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:24px 24px 27px}
+.mobile .hd h2{font-size:31.5px}
+.mobile .hd .chap{font-size:18px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:24px 21px 12px;display:flex!important;flex-direction:column;gap:21px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:18px 21px;font-size:16.5px;gap:12px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .quote{font-size:24px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:6px 0 0;height:90px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:30px}
+.mobile .cover-photos{position:relative;height:300px}
+.mobile .cover-vs{top:105px;width:69px;height:69px;font-size:22.5px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:33px 27px 15px;gap:18px!important}
+.mobile .cover h1{font-size:45px!important}
+.mobile .cover .sub{font-size:22.5px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 54px);height:auto;margin:9px 27px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .cph .lbl{font-size:19.5px;left:15px;bottom:15px}
+
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== F1 live-slides 共通（oil100 の部品に足した分） ===== */
+.hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.hd .num{position:absolute;right:84px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:66px;font-weight:700;color:rgba(255,255,255,.14)}
+.ft{justify-content:space-between}
+.ex{font-size:18px;font-weight:700;color:var(--ink2);background:#EEF2F7;border-radius:6px;padding:1.5px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+svg .ex-t{font-size:18px;fill:#5A6B82;font-family:var(--font)}
+.big{font-family:var(--mono);font-weight:700;color:var(--safe);font-size:69px;line-height:1.1}
+.big small{font-family:var(--font);font-size:27px;color:var(--ink2);margin-left:6px}
+.big.w{color:var(--warnT)}.big.g{color:var(--okT)}
+.kp{display:flex;flex-direction:column;gap:18px}
+.kp .card h4{font-size:25.5px;margin-bottom:6px}
+.kp .card p{font-size:22.5px;color:var(--ink2);line-height:1.65}
+.stepbar{display:flex;align-items:center;gap:15px}
+.swap{position:relative}
+.swap>*{transition:opacity .45s ease}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+.grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.grow.on,.slide.active .grow.g0{transform:scaleY(1)}
+.slide.active .grow.g0{transition-delay:.3s}
+svg .sv{transition:opacity .5s ease}
+.gone{transition:opacity .5s ease}
+.note{font-size:19.5px;color:var(--ink2);line-height:1.6}
+.pill{display:inline-flex;align-items:center;gap:9px;font-size:21px;font-weight:900;padding:7.5px 18px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.pill.w{background:#FFF1E6;color:var(--warnT)}
+.pill.g{background:#E7F6F1;color:var(--okT)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:21px}
+.keymsg{text-align:center;font-size:39px;font-weight:900;line-height:1.5;padding:27px;border-radius:21px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.keymsg::after{content:"";display:block;width:330px;height:9px;margin:15px auto 0;border-radius:4.5px;background:var(--brand)}
+
+/* ===== 表紙（目次つき） ===== */
+.cover{position:absolute;inset:0;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:21px;background:var(--brand)}
+.cover-text{position:absolute;left:96px;top:96px;width:960px;display:flex;flex-direction:column;gap:24px}
+.cover .kicker{font-size:22.5px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:69px;font-weight:900;line-height:1.25;color:var(--ink)}
+.cover h1 .hl2{color:var(--safe)}
+.cover h1 small{display:block;font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:9px}
+.cover .sub{font-size:25.5px;color:var(--ink2);line-height:1.75;font-weight:500}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin-top:6px}
+.toc button{display:flex;gap:15px;align-items:center;text-align:left;background:#fff;border:1.5px solid var(--rule);border-radius:15px;padding:12px 18px;font-size:21px;font-weight:700;color:var(--ink);line-height:1.4}
+.toc button:hover{border-color:var(--safe)}
+.toc button .n{font-family:var(--mono);color:var(--safe);font-size:19.5px;min-width:30px}
+.cover .start{align-self:flex-start;margin-top:9px;font-size:24px;padding:15px 33px}
+.cover-ill{position:absolute;right:84px;top:144px;width:690px;height:750px}
+
+/* ===== スマホ縦向き ===== */
+.mobile .cover{position:relative;inset:auto;padding-bottom:36px}
+.mobile .cover-text{position:relative;left:auto;top:auto;width:auto;padding:33px 24px 9px}
+.mobile .cover h1{font-size:42px}
+.mobile .cover h1 small{font-size:24px}
+.mobile .cover .sub{font-size:22.5px}
+.mobile .toc{grid-template-columns:1fr}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 48px);height:auto;margin:12px 24px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .hd .num{display:none}
+.mobile .big{font-size:51px}
+.mobile .vs-row{grid-template-columns:1fr}
+.mobile .keymsg{font-size:28.5px;padding:21px}
+.mobile .g2,.mobile .g3{grid-template-columns:1fr!important}
+.mobile .row{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .ft span:first-child{display:none}
+.sv{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.sv.on{opacity:1;transform:none}
+svg .sv{transform:none}
+.swap{display:grid}
+.swap>*{grid-area:1/1}
+.ft{padding-right:510px}
+.mobile .ft{padding-right:21px}
+#notes:not(.show){visibility:hidden}
+
+/* ===== v4.0：表紙の見出しを1行に（点検の道具：1ページ1つの .head・1行） ===== */
+.cover .cover-q{font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:-15px}
+.cover h1.head{font-size:48px;white-space:nowrap}
+.mobile .cover h1.head{white-space:normal}
+.mobile .cover .cover-q{font-size:24px}
+/* ===== v4.0：台紙は 1920x1080 で組む（build.py が px を 1.5 倍にする）。スマホでは台紙を 2/3 に縮めて元の大きさに戻す ===== */
+.mobile #stage{zoom:calc(2/3);min-height:150vh}
+/* 台紙は縮めない（#viewport は flex。画面が 1920 より狭いと、台紙の幅が画面の幅まで縮んでしまう） */
+#stage{flex:none}
+
+/* ===== F1-10 だけの部品 ===== */
+/* 線を段階ごとに描く（長さ1400まで描き切る） */
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.drawline.on,.slide.active .drawline.g0{stroke-dashoffset:0}
+.slide.active .drawline.g0{transition:stroke-dashoffset 2.2s ease .4s}
+/* 横向きに伸びる棒 */
+.growx{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.growx.on,.slide.active .growx.g0{transform:scaleX(1)}
+/* 流れ図は、まだの段階を薄く見せずに隠す（段階ごとにフェードイン） */
+.fs:not(.on),.fa:not(.on){opacity:0}
+.fa.on{opacity:1}
+/* 72の法則：答えが出たら「？」を消す */
+.q6{transition:opacity .4s ease}
+.slide.s4 .q6{opacity:0}
+.mobile .keymsg{font-size:25.5px!important}
+.sumb .kp .card h4{font-size:30px}
+.sumb .kp .card p{font-size:25.5px;line-height:1.8}
+.sumb .note{font-size:21px;line-height:1.75}
+.sumb>.card h4{font-size:27px!important}
+.mobile .r72{grid-template-columns:93px 1fr 114px!important;gap:15px!important;padding:24px 21px!important}
+.mobile .r72 .big{font-size:42px!important}
+/* ===== v3.0：橋渡しの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:84px;right:84px;top:168px;margin:0;display:flex;align-items:center;gap:12px;font-size:22.5px;font-weight:700;color:var(--ink);line-height:1.4;white-space:nowrap}
+.bridge .bk{font-size:18px;font-weight:700;color:#5A6B82;background:#EEF2F7;border-radius:6px;padding:3px 12px;flex:none}
+.bridge .bk.now{color:#fff;background:#2B5FA8}
+.bridge .ar{font-style:normal;color:#8A9AB0;padding:0 6px}
+.slide.hasbr .body{top:219px}
+.mobile .bridge{position:static;flex-wrap:wrap;white-space:normal;padding:18px 21px 0;font-size:21px;row-gap:6px}
+/* 問いへの答え */
+.ans{margin:0;display:flex;align-items:center;gap:18px;padding:15px 24px;border-radius:18px;background:#EAF4FF;border:2.25px solid #2B5FA8;font-size:27px;font-weight:900;color:#16233A;line-height:1.4}
+.ans b{flex:none;font-size:19.5px;font-weight:700;color:#fff;background:#2B5FA8;border-radius:6px;padding:4.5px 12px}
+.mobile .ans{font-size:24px}
+.a3{display:flex;gap:21px;align-items:center;padding:18px 27px!important}
+.a3 .no{flex:none;width:51px;height:51px;border-radius:50%;background:#2B5FA8;color:#fff;font-family:var(--mono);font-weight:700;font-size:27px;display:flex;align-items:center;justify-content:center}
+.a3 h4{margin-bottom:3px!important}
+.tight .card{padding:15px 27px}
+.tight .card h4{font-size:24px;margin-bottom:3px}
+.tight .card p{font-size:21.75px;line-height:1.55}
+.tight .note{font-size:19.5px;line-height:1.6}
+.mobile .slide.hasbr .body{top:auto}
+/* ===== S1-01：攻撃の形の表は、スマホでは3列目を隠して折り返す ===== */
+.mobile .atk th:nth-child(3),.mobile .atk td:nth-child(3){display:none}
+.mobile .atk td{white-space:normal!important;padding:15px 12px!important;font-size:22.5px!important}
+.mobile .atk td:first-child{width:62%}
+/* ===== Fレーン：横に並べるカード ===== */
+.rowc{display:grid;gap:18px}
+.rowc .card h4{font-size:25.5px;margin-bottom:6px}
+.rowc .card p{font-size:22.5px;color:var(--ink2);line-height:1.6}
+.mobile .rowc{grid-template-columns:1fr!important}
+.mobile .ftab{font-size:19.5px!important}
+.mobile .ftab td,.mobile .ftab th{padding:9px 7.5px!important}
+
+
+</style>
+</head>
+<body class="theme-photo noimg">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<section id="p1" class="slide page" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-14</div>
+      <div class="cover-q fade d2">保険の構造 ｜ 今日の問い</div>
+      <h1 class="head fade d2">払う方が多い<span class="hl2">保険</span>に入る意味</h1>
+      <p class="sub fade d3">保険は、ほかの金融商品とお金の向きが逆の道具です。10万世帯の架空の火災保険を、最後まで1つの例として追います。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>向きが逆の道具</button><button data-go="2"><span class="n">03</span>集まると予測できる</button><button data-go="3"><span class="n">04</span>掛金の内訳</button><button data-go="4"><span class="n">05</span>期待値では赤字でも</button><button data-go="5"><span class="n">06</span>民間保険の前に数える</button><button data-go="6"><span class="n">07</span>問いへの答えと出典</button></div>
+      <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
+    </div>
+    <svg class="cover-ill" viewBox="0 0 460 500" aria-label="10万世帯の火災保険"><rect width="460" height="500" rx="22" fill="#fff" opacity=".85"/><g transform="scale(0.666667)"><text x="45" y="69" text-anchor="start" font-size="22.5" font-weight="700" fill="#5A6B82">10万世帯の火災保険（例）</text></g><g transform="scale(0.666667)"><text x="45" y="108" text-anchor="start" font-size="18" fill="#5A6B82">1マスを世帯に見立てた模式図</text></g><rect x="40" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="90" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="109" width="14" height="14" rx="3" fill="#F88039"/><rect x="382" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="109" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="128" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="147" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="166" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="185" width="14" height="14" rx="3" fill="#F88039"/><rect x="287" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="185" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="204" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="223" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="242" width="14" height="14" rx="3" fill="#F88039"/><rect x="268" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="242" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="40" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="59" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="78" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="97" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="116" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="135" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="154" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="173" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="192" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="211" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="230" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="249" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="268" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="287" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="306" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="325" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="344" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="363" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="382" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><rect x="401" y="261" width="14" height="14" rx="3" fill="#D8DFE8"/><g transform="scale(0.666667)"><text x="345" y="510" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">1軒のことは分からない</text></g><g transform="scale(0.666667)"><text x="345" y="558" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">全体では、およそ20軒と見込める</text></g><g transform="scale(0.666667)"><text x="345" y="645" text-anchor="middle" font-size="24" font-weight="700" fill="#5A6B82">毎月1,000円ずつ払う</text></g></svg>
+    <div class="brandbar"></div>
+  </div>
+</section>
+<section id="p2" class="slide page hasbr" data-n="s1" data-steps="3">
+  <header class="hd"><span class="chap">1. ほかの金融商品と向きが逆の道具</span><h2 class="head">保険は、大きな損失を、対価を払って保険会社に引き受けてもらう</h2><span class="num">02</span></header><p class="bridge"><b class="bk">今日の問い</b><span>加入者全体では払う方が多い保険に、なぜお金を払う意味があるのか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.45fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">比べる点を足す</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><table class="ftab " style="border-collapse:collapse;width:100%;font-size:24px"><tr><th style="text-align:left;padding:12px 15px;border-bottom:3px solid #2B5FA8;color:#5A6B82;font-size:21px;width:18%">比べる点</th><th style="text-align:left;padding:12px 15px;border-bottom:3px solid #2B5FA8;color:#5A6B82;font-size:21px;width:38%">株式・債券・投資信託</th><th style="text-align:left;padding:12px 15px;border-bottom:3px solid #2B5FA8;color:#5A6B82;font-size:21px;width:44%">保険</th></tr><tr class="sv" data-s="1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">振れ幅の扱い</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">自分で引き受ける</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">大きな損失の振れ幅を保険会社に渡す</td></tr><tr class="sv" data-s="1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">お金の向き</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">お金を投じ、将来の利益を見込む</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">掛金を保険会社に払う</td></tr><tr class="sv" data-s="2" style="background:#FFF1E6"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">期待値</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">リスクの対価により、プラスを見込む</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">運営の費用が引かれ、加入者全体では払う方が多い</td></tr><tr class="sv" data-s="3" style="background:#E7F6F1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">目的</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">余裕のあるお金を時間をかけて増やす</td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">めったに起きないが、起きたら生活が壊れる事態に備える</td></tr></table></div><div class="kp fade d2 "><div class="card "><h4>リスク移転</h4><p>自分が抱える振れ幅を、対価を払って他者に引き受けてもらう契約。対価が掛金（保険料）。</p></div><div class="card sv " data-s="2"><h4>立場が入れ替わる</h4><p>株式や債券ではリスクの見返りを受け取る側。保険では、引き取ってもらうために払う側（F1-08 の物差し）。</p></div><p class="ans sv" data-s="3"><b>1つ目の答え</b>保険は増やす道具ではなく、生活が止まるのを防ぐ備え</p></div></div>
+</section>
+<section id="p3" class="slide page hasbr" data-n="s2" data-steps="3">
+  <header class="hd"><span class="chap">2. 集まると予測できるようになる</span><h2 class="head">1軒のことは分からなくても、10万世帯の割合は見込める</h2><span class="num">03</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>保険は損失を保険会社に渡す</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>なぜ保険会社は引き受けられるのか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 340" style="width:100%;height:510px" aria-label="大数の法則の模式図"><g class="sv " data-s="1"><g transform="scale(0.666667)"><text x="195" y="45" text-anchor="middle" font-size="22.5" font-weight="900" fill="#16233A">契約者が1軒や2軒</text></g><rect x="60" y="70" width="30" height="30" rx="4" fill="#D8DFE8"/><rect x="100" y="70" width="30" height="30" rx="4" fill="#F88039"/><g transform="scale(0.666667)"><text x="195" y="210" text-anchor="middle" font-size="21" font-weight="700" fill="#B5500F">1軒の全焼で払いきれない</text></g></g><g class="sv " data-s="2"><g transform="scale(0.666667)"><text x="675" y="45" text-anchor="middle" font-size="22.5" font-weight="900" fill="#16233A">10万世帯を集める</text></g><rect x="320.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="50.0" width="8" height="8" rx="2" fill="#F88039"/><rect x="467.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="50.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="60.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="71.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="81.5" width="8" height="8" rx="2" fill="#F88039"/><rect x="351.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="81.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="92.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="102.5" width="8" height="8" rx="2" fill="#F88039"/><rect x="488.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="102.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="113.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="123.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="123.5" width="8" height="8" rx="2" fill="#F88039"/><rect x="320.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="134.0" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="320.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="330.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="341.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="351.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="362.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="372.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="383.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="393.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="404.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="414.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="425.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="435.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="446.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="456.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="467.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="477.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="488.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="498.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="509.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="519.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="530.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="540.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="551.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="561.5" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><rect x="572.0" y="144.5" width="8" height="8" rx="2" fill="#D8DFE8"/><g transform="scale(0.666667)"><text x="675" y="285" text-anchor="middle" font-size="21" font-weight="700" fill="#2B5FA8">今年の火事は、およそ20軒と見込める</text></g></g><g class="sv " data-s="3"><rect x="20" y="230" width="560" height="90" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="408" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">大数の法則</text></g><g transform="scale(0.666667)"><text x="450" y="439.5" text-anchor="middle" font-size="18" fill="#5A6B82">数を多く集めると、全体の割合は一定の値に近づく</text></g></g></svg><p class="note">マスの数は模式で、実際の世帯数ではありません。</p></div><div class="kp fade d2 "><div class="card sv " data-s="1" style="border-left:7.5px solid var(--warn)"><h4>1軒の火事は言い当てられない</h4><p>契約者が1軒や2軒だけなら、1軒が全焼しただけで保険金を払いきれなくなる。</p></div><div class="card sv " data-s="2"><h4>10万世帯なら</h4><p>過去の記録から、今年火事に遭うのはおよそ20軒という見込みが立つ。</p></div><div class="card sv " data-s="3" style="border-left:7.5px solid var(--safe)"><h4>ただし</h4><p>全体の割合が安定しても、ある1軒に次に何が起きるかは分からない。地震のように同時に被害を受ける場合は A2-11 で確かめる。</p></div></div></div>
+</section>
+<section id="p4" class="slide page hasbr" data-n="s3" data-steps="3">
+  <header class="hd"><span class="chap">3. 掛金の内訳</span><h2 class="head">掛金は、保障の対価・運営の費用・積み立ての3つに分けて読む</h2><span class="num">04</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>保険は数を集めて損失を薄める</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>払った掛金は、何に使われているか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="掛金の内訳"><g transform="scale(0.666667)"><text x="450" y="39" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A">掛金を3つに分ける</text></g><g class="sv " data-s="1"><rect x="20" y="50" width="200" height="70" rx="8" fill="#2B5FA8"/><g transform="scale(0.666667)"><text x="180" y="138" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">保障の対価</text></g></g><g class="sv " data-s="1"><rect x="224" y="50" width="120" height="70" rx="8" fill="#8A9AB0"/><g transform="scale(0.666667)"><text x="426" y="138" text-anchor="middle" font-size="22.5" font-weight="900" fill="#fff">運営の費用</text></g></g><g class="sv " data-s="2"><rect x="348" y="50" width="232" height="70" rx="8" fill="#40B69A"/><g transform="scale(0.666667)"><text x="696" y="138" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">積み立て</text></g></g><g class="sv " data-s="1"><g transform="scale(0.666667)"><text x="273" y="225" text-anchor="middle" font-size="21" font-weight="700" fill="#2B5FA8">掛け捨て型＝この2つだけ</text></g><path d="M20 132H344" stroke="#2B5FA8" stroke-width="2"/></g><g class="sv " data-s="2"><g transform="scale(0.666667)"><text x="450" y="285" text-anchor="middle" font-size="21" font-weight="700" fill="#1F7A63">貯蓄型＝3つ目の積み立てが入る</text></g><path d="M20 172H580" stroke="#40B69A" stroke-width="2"/></g><g class="sv " data-s="3"><rect x="20" y="220" width="560" height="90" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="393" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">運営の費用がいくら引かれているか、外から分けて見えない</text></g><g transform="scale(0.666667)"><text x="450" y="424.5" text-anchor="middle" font-size="18" fill="#5A6B82">保障と運用が1つの契約に入ると、それぞれにいくら払っているか比べにくい</text></g></g></svg><p class="note">棒の長さは模式で、実際の割合ではありません。</p></div><div class="kp fade d2 "><div class="card sv " data-s="1"><h4>純保険料と付加保険料</h4><p>生命保険の保険料は、保険金を払うための純保険料と、運営に使う付加保険料に分けて説明される。</p></div><div class="card sv " data-s="2"><h4>純保険料の中身</h4><p>事故や病気の人への支払いに充てる部分と、満期金や解約時に戻るお金の積み立て。</p></div><div class="card sv " data-s="3" style="border-left:7.5px solid var(--warn)"><h4>費用は複利で手取りを減らす（F1-11）</h4><p>保障と運用をまとめるか分けるかを考える前に、内訳を分けて読む。</p></div></div></div>
+</section>
+<section id="p5" class="slide page hasbr" data-n="s4" data-steps="4">
+  <header class="hd"><span class="chap">4. 期待値では赤字でも合理になる理由</span><h2 class="head">期待値では払い超しでも、効用で考えると備える意味がある</h2><span class="num">05</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>掛金には運営の費用が入る</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>払う方が多いのに、なぜ入るのか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">計算を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 350" style="width:100%;height:525px" aria-label="火災保険の期待値"><path d="M40 280H560" stroke="#D8DFE8" stroke-width="2"/><g class="sv " data-s="1"><rect x="90" y="40" width="150" height="240" rx="6" fill="#2B5FA8"/><g transform="scale(0.666667)"><text x="247.5" y="249" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">払う合計</text></g><g transform="scale(0.666667)"><text x="247.5" y="459" text-anchor="middle" font-size="19.5" font-weight="700" fill="#5A6B82">年1万2,000円×10万世帯</text></g></g><g class="sv " data-s="2"><rect x="360" y="80" width="150" height="200" rx="6" fill="#40B69A"/><g transform="scale(0.666667)"><text x="652.5" y="279" text-anchor="middle" font-size="24" font-weight="900" fill="#fff">保険金</text></g><g transform="scale(0.666667)"><text x="652.5" y="315" text-anchor="middle" font-size="19.5" font-weight="700" fill="#fff">20軒×500万円</text></g><rect x="360" y="40" width="150" height="38" rx="6" fill="#8A9AB0"/><g transform="scale(0.666667)"><text x="652.5" y="97.5" text-anchor="middle" font-size="19.5" font-weight="700" fill="#fff">運営の費用</text></g><g transform="scale(0.666667)"><text x="652.5" y="459" text-anchor="middle" font-size="19.5" font-weight="700" fill="#5A6B82">保険金として払える額</text></g></g><g class="sv " data-s="3"><path d="M250 40H350M250 80H350" stroke="#F88039" stroke-width="2" stroke-dasharray="5 4"/><g transform="scale(0.666667)"><text x="450" y="99" text-anchor="middle" font-size="21" font-weight="900" fill="#B5500F">2,000万円</text></g></g><g class="sv " data-s="4"><g transform="scale(0.666667)"><text x="450" y="510" text-anchor="middle" font-size="24" font-weight="900" fill="#B5500F">加入者全体では、2,000万円の払い超し</text></g></g></svg></div><div class="kp fade d2 "><div class="card sv " data-s="1"><h4>10万世帯が毎月1,000円</h4><p>年1万2,000円ずつ払う。保険会社が運営の費用として2,000万円を取り、残りを保険金にする。</p></div><div class="card sv " data-s="2" style="border-left:7.5px solid var(--warn)"><h4>20軒に1軒あたり500万円</h4><p>加入者全体では、払った額より受け取る額が2,000万円少ない。</p></div><div class="card sv " data-s="3" style="border-left:7.5px solid var(--safe)"><h4>効用（満足や痛みの大きさ）</h4><p>年1万2,000円で生活が立ち行かなくなる人はまずいない。500万円の損失を自分で埋めると、多くの家庭の暮らしが崩れる。</p></div><p class="ans sv" data-s="4"><b>2つ目の答え</b>保険は得をする投資ではなく、生活を続けられなくなる事態を避ける費用</p></div></div>
+</section>
+<section id="p6" class="slide page hasbr" data-n="s5" data-steps="3">
+  <header class="hd"><span class="chap">5. 民間の保険を考える前に数えること</span><h2 class="head">公的な保障と手元のお金で足りない、大きな損失に絞る</h2><span class="num">06</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>保険は大きな損失を避けるための費用</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>見直すとき、最初に何を数えるか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="民間の保険を考える前に数える順番"><g class="sv " data-s="1"><rect x="2.0" y="10" width="181.3" height="110" rx="12" fill="#fff" stroke="#40B69A" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="139" y="91.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">1 公的な保障</text></g><g transform="scale(0.666667)"><text x="139" y="124.5" text-anchor="middle" font-size="19.5" fill="#5A6B82">どこまで備えられているか</text></g></g><g class="sv " data-s="2"><rect x="209.3" y="10" width="181.3" height="110" rx="12" fill="#fff" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="91.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">2 手元の預貯金</text></g><g transform="scale(0.666667)"><text x="450" y="124.5" text-anchor="middle" font-size="19.5" fill="#5A6B82">耐えられる小さな損失</text></g><path d="M188.3 65.0H203.3" stroke="#8A9AB0" stroke-width="3"/><path d="M197.3 59.0L204.3 65.0L197.3 71.0" fill="none" stroke="#8A9AB0" stroke-width="3"/></g><g class="sv " data-s="3"><rect x="416.7" y="10" width="181.3" height="110" rx="12" fill="#fff" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="761" y="91.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">3 民間の保険</text></g><g transform="scale(0.666667)"><text x="761" y="124.5" text-anchor="middle" font-size="19.5" fill="#5A6B82">足りない大きな損失だけ</text></g><path d="M395.7 65.0H410.7" stroke="#8A9AB0" stroke-width="3"/><path d="M404.7 59.0L411.7 65.0L404.7 71.0" fill="none" stroke="#8A9AB0" stroke-width="3"/></g><g class="sv " data-s="3"><g transform="scale(0.666667)"><text x="450" y="270" text-anchor="middle" font-size="22.5" font-weight="900" fill="#16233A">民間の保険で確かめる3点</text></g><rect x="10" y="200" width="185" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="153.75" y="367.5" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">何が起きたら支払われるか</text></g><rect x="207" y="200" width="185" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="449.25" y="367.5" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">いくら支払われるか</text></g><rect x="404" y="200" width="185" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="744.75" y="367.5" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">大きな損失に絞られているか</text></g></g></svg></div><div class="kp fade d2 "><div class="card sv " data-s="1" style="border-left:7.5px solid var(--ok)"><h4>最初はパンフレットではない</h4><p>日本に住む人は原則として公的医療保険に入っている。自己負担を一定の額に抑える仕組みもある（F1-14）。</p></div><div class="card sv " data-s="2" style="border-left:7.5px solid var(--warn)"><h4>同じ中身を重ねると</h4><p>使う見込みの小さい掛金を毎月払い続けることになる。</p></div><p class="ans sv" data-s="3"><b>3つ目の答え</b>自分で耐えられる損失と、保険でなければ防げない損失を分ける</p></div></div>
+</section>
+<section id="p7" class="slide page hasbr" data-n="sum">
+  <header class="hd"><span class="chap">問いへの答えと出典</span><h2 class="head">保険は期待値で払い超しでも、生活が壊れる損失を避けるために払う</h2><span class="num">07</span></header><p class="bridge"><b class="bk">今日の問い</b><span>加入者全体では払う方が多い保険に、なぜお金を払う意味があるのか</span></p>
+  <div class="body sumb" style="display:grid;grid-template-columns:1.15fr 1fr;gap:33px">
+    <div class="kp" style="gap:15px">
+      <div class="card fade d1 a3"><span class="no">1</span><div><h4>お金の向きが逆の道具</h4><p>大きな損失の振れ幅を、掛金を払って保険会社に渡す（1〜2節）。</p></div></div><div class="card fade d2 a3"><span class="no">2</span><div><h4>掛金を3つに分けて読む</h4><p>保障の対価・運営の費用・積み立て（3節）。</p></div></div><div class="card fade d3 a3"><span class="no">3</span><div><h4>効用で考える</h4><p>加入者全体では2,000万円の払い超し。それでも500万円の損失を避ける意味がある（4〜5節）。</p></div></div>
+      <p class="note fade d4">この資料は事実と構造の説明であって、推奨ではありません。どの製品やサービスを使うか、いまの環境が安全かどうかの判定は、この資料の外にあります。決めるのはあなたです。</p>
+    </div>
+    <div class="card fade d5" style="display:flex;flex-direction:column;gap:12px;align-self:start">
+      <h4 style="font-size:24px">出典</h4>
+      <p class="note"><b style="color:var(--ink)">生命保険文化センター「生命保険の基礎知識」</b><br>保険料の内訳</p><p class="note"><b style="color:var(--ink)">日本損害保険協会「損害保険の基礎知識」</b><br>大数の法則と損害保険</p><p class="note"><b style="color:var(--ink)">金融庁「基礎から学べる金融ガイド」</b><br>公的な保障と民間の保険</p>
+      <p class="note" style="border-top:1.5px dashed var(--rule);padding-top:12px">出典の突き合わせ（社長による確認日の記入）は未了です。火災保険の数字は説明のための架空の例です。</p>
+    </div>
+  </div>
+</section>
+</div></div>
+
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bToc" title="目次（O）">目次</button><button class="wide" id="bNotes" title="解説（N）">解説</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">解説</h4><div id="notesBody"></div></div>
+<div id="help">← → でページ移動・N で解説・O で目次・F で全画面</div>
+<div class="notes-src" id="notes-title"><pre style="white-space:pre-wrap;font-size:13px;line-height:1.7">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ノードID】 F1-14 ／ 保険の構造——リスク移転と掛金の内訳
+【レーン】   F 金融（お金の道具を知る）
+【レベル】   L1 基礎
+【前提知識】 F1-08 リスクとリターンの関係 ／ F1-11 コストの複利
+【この先へ】 F1-15 公的医療保険と高額療養費 ／ A2-11 大数の法則——回数で何が収束するか
+【到達目標】 保険が「リスクを他者へ移す」商品であることを、他の金融商品との対比で説明できる。
+             掛金のどこまでが保障の対価で、どこからが運用と手数料かを分離して読める。
+             期待値では支払超過でも保険が合理になりうる理由を言える。
+【読了目安】 10分
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. ほかの金融商品と向きが逆の道具</h5>
+<p>保険は、お金の流れと目的の向きが、ほかの金融商品と逆です。</p>
+<p>預金や株式、債券では、自分でお金を出したり貸したりして、結果の振れ幅を自分で引き受けます。その見返りに、利息や配当、値上がり益を受け取ります。保険では逆に、自分が抱えている大きな損失の可能性を、お金を払って保険会社に引き受けてもらいます。自分が抱える振れ幅を、対価を払って他者に引き受けてもらう契約を<b>リスク移転</b>と呼びます。</p>
+<p>その対価として、加入者が保険会社に払い込むお金が<b>掛金</b>（保険料）です。</p>
+<p>保険の目的は、お金を増やすことではなく、起きたら生活が立ち行かなくなるほどの損失を避けることです。F1-08 の物差しで見ると、株式や債券ではリスクを引き受ける見返りを受け取る側にいた投資家が、保険ではリスクを引き取ってもらうために対価を払う側に回ります。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">比べる点</th><th style="border:1px solid #D8DFE8;padding:3px 8px">株式・債券・投資信託</th><th style="border:1px solid #D8DFE8;padding:3px 8px">保険（生命保険・損害保険）</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">振れ幅の扱い</td><td style="border:1px solid #D8DFE8;padding:3px 8px">値動きや倒産の振れ幅を自分で引き受ける</td><td style="border:1px solid #D8DFE8;padding:3px 8px">自分が抱える大きな損失の振れ幅を保険会社に渡す</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">お金の向き</td><td style="border:1px solid #D8DFE8;padding:3px 8px">お金を投じ、将来の利益を見込む</td><td style="border:1px solid #D8DFE8;padding:3px 8px">掛金を保険会社に払う</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">期待値</td><td style="border:1px solid #D8DFE8;padding:3px 8px">リスクの対価により、プラスを見込む</td><td style="border:1px solid #D8DFE8;padding:3px 8px">運営の費用が引かれるため、加入者全体では払う方が多い</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px">目的</td><td style="border:1px solid #D8DFE8;padding:3px 8px">余裕のあるお金を時間をかけて増やす</td><td style="border:1px solid #D8DFE8;padding:3px 8px">めったに起きないが、起きたら生活が壊れる事態に備える</td></tr></table>
+<p>保険は増やすための道具ではなく、いちばん悪い事態で生活が止まるのを防ぐための備えです。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 集まると予測できるようになる</h5>
+<p>一人ひとりにとっては、火事や大病がいつ起きるかは分かりません。それでも保険会社が引き受けられるのはなぜでしょうか。</p>
+<p>この章では、10万世帯が入る架空の火災保険を最後まで例に使います。ある1軒が今年火事に遭うかどうかは、前もって言い当てられません。契約者が1軒や2軒だけなら、1軒が全焼しただけで保険金を払いきれなくなります。しかし10万世帯を集めると、過去の記録から、今年火事に遭うのはおよそ20軒という見込みが立ちます。一人ひとりのことは分からないままでも、数を多く集めると全体の割合は一定の値に近づきます。この規則性を<b>大数の法則</b>と呼びます。ただし、全体の割合が安定しても、ある1軒に次に何が起きるかが分かるようになるわけではありません。</p>
+<p>保険会社は、一人では抱えきれない損失を、10万世帯の契約者全体に薄めて引き受けています。</p>
+<p>大数の法則が何に対して成り立ち、何に対しては成り立たないのか（たとえば、地震のように多くの家が同時に被害を受ける場合）は、A2-11 で確かめます。</p></div>
+<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 掛金の内訳</h5>
+<p>払っている掛金の全額が、保険金の支払いに充てられているわけではありません。</p>
+<p>生命保険の保険料は、一般に、保険金を払うための純保険料と、保険会社の運営に使う付加保険料に分けて説明されます。純保険料はさらに、事故や病気の人への支払いに充てる部分と、満期金や解約したときに戻るお金のために積み立てる部分に分かれます。掛金を3つに分けると、保障の対価、運営の費用、積み立ての3つです。掛け捨て型の保険は、このうち保障の対価と運営の費用だけでできています。</p>
+<p>貯蓄型と呼ばれる保険には、3つ目の積み立ての部分が入っています。</p>
+<p>積み立ての部分は保険会社が運用しますが、運営の費用がいくら差し引かれているかは、保障の部分と一緒に払う掛金の中に入っていて、外から分けて見えません。F1-11 で見たとおり、費用は複利で手取りを減らします。保障と運用が1つの契約に入っていると、それぞれにいくら払っているのかを比べにくくなります。保障と運用を1つの契約にまとめるか、別々の道具に分けるかを考える前に、掛金の内訳を分けて読みます。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 期待値では赤字でも合理になる理由</h5>
+<p>F1-08 などで使ってきた<b>期待値</b>を当てはめると、保険は加入者の側にとってマイナスの取引です。</p>
+<p>2節の火災保険で、10万世帯が毎月1,000円（年1万2,000円）ずつ、合わせて年1億2,000万円を払うとします。保険会社が運営の費用として2,000万円を取ると、保険金として払える額は合計1億円です。火事に遭う20軒に、1軒あたり500万円が払われる計算です。加入者全体では、1億2,000万円を払って1億円を受け取るので、2,000万円の払い超しになります。</p>
+<p>それでも保険に入ることが合理的になりうるのは、金額の大きさだけでなく、<b>効用</b>（その人にとっての満足や痛みの大きさ）で考えるからです。</p>
+<p>年1万2,000円が出ていっても、生活が立ち行かなくなる人はまずいません。しかし火事で500万円の損失を自分のお金だけで埋めることになれば、多くの家庭の暮らしは大きく崩れます。期待値の計算では、小さな出費も大きな損失も、確率を掛けて同じ物差しで並べます。実際の暮らしでは、両者の痛みの重さは比べものになりません。保険は、期待値で得をするための投資ではなく、生活を続けられなくなる事態を避けるために払う費用です。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 民間の保険を考える前に数えること</h5>
+<p>保険を見直すとき、最初にすることは、民間の保険のパンフレットを開くことではありません。</p>
+<p>F1-14 で見たとおり、日本に住む人は原則として公的医療保険に入っていて、医療費が高くなっても自己負担を一定の額に抑える仕組みがあります。民間の生命保険や医療保険を考える前に、こうした公的な保障ですでにどこまで備えられているかを数えます。</p>
+<p>公的な保障で備えられている部分に、同じ中身の民間保険を重ねると、使う見込みの小さい掛金を毎月払い続けることになります。</p>
+<p>民間の保険を見るときは、何が起きたときに支払われるのか、いくら支払われるのか、公的な保障や手元の預貯金では足りない大きな損失に絞られているか、の3点を確かめます。自分のお金で耐えられる小さな損失と、保険でなければ防げない大きな損失を分けて考えることが、保険を選ぶときの出発点です。</p></div>
+<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
+<p>引き受けたのは、次の一点だけです。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px">保険が「リスクを他者へ移す」商品であることを、他の金融商品との対比で説明できる。掛金のどこまでが保障の対価で、どこからが運用と手数料かを分離して読める。期待値では支払超過でも保険が合理になりうる理由を言える。</p>
+<p>そこから先——どの保険商品を選ぶか、加入すべきか解約すべきか、掛金をいくらに設定するか——は、このノートの外にあります。</p>
+<p>同じ材料を見ても、家族構成も、手元の蓄えの厚みも、健康状態も、人によってまったく異なります。</p>
+<p>それはあなた自身が決める領域に属します。</p>
+<p>出典に挙げた資料は、説明を鵜呑みにするためではなく、<b>説明の正確性を批判的に検証するために</b>置いてあります。</p>
+<p>疑問が生じた際は、原典となる公的資料を直接確認してください。</p></div>
+<script>
+// 数字の台帳（点検の道具が読む）：ページの数だけ
+const DATA = {pages: 7};
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('section.page')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  const FOOT="TriFuse 金融 L1 基礎 ｜ F1-14 保険の構造";
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>'+FOOT+'</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('on',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='解説　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    onEnter(slides[i]);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#p'+(i+1))}catch(e){}
+  }
+  // 段階表示：data-s の要素は段階の数が届くと .on になり、スライドに s1..sN が付く
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+    const max=+s.dataset.steps||0;
+    s.querySelectorAll('[data-next]').forEach(b=>{b.textContent=n>=max?'もう一度見る ↺':'次の段階 ▶'});
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  document.getElementById('bToc').onclick=()=>go(0);
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='o'||e.key==='O')go(0);
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=b.closest('.slide');if(!step(s))setStep(s,0)});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=e=>{e.stopPropagation();setStep(b.closest('.slide'),0)});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  document.querySelectorAll('.tap').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  function onEnter(s){
+    s.querySelectorAll('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to),dec=+el.dataset.dec||0,t0=performance.now(),d=1300;
+      (function tick(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=(to*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});if(p<1)requestAnimationFrame(tick)})(t0);
+    });
+  }
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  // #p3 と #3 のどちらでも、そのページを開く
+  function fromHash(){const m=/^#p?(\d+)$/.exec(location.hash);return m?Math.max(1,Math.min(total,+m[1])):1}
+  addEventListener('hashchange',()=>{const n=fromHash();if(n-1!==cur)go(n-1)});
+  go(fromHash()-1);
+})();
+
+</script>
+</body>
+</html>

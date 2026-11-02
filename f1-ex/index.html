@@ -1,0 +1,546 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F1-EX 卒業課題：「元本保証・月利5%」の検証</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 15px 75px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(39px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-39px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:156px;background:var(--navy);color:#fff;padding:0 84px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:var(--brand)}
+.hd .chap{font-size:22.5px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:6px}
+.hd h2{font-size:46.5px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:21px;bottom:15px;font-size:15px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:84px;right:84px;top:192px;bottom:87px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1.5px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 84px;font-size:18px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1.5px solid var(--cardline);border-radius:21px;padding:27px 30px}
+.theme-trifuse .card{box-shadow:0 3px 15px rgba(15,27,45,.05)}
+.lead{font-size:25.5px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:28.5px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:15px}
+.tag{display:inline-block;font-size:19.5px;font-weight:700;padding:4.5px 15px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:27px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:27px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:21px}
+.fade{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:2.25px solid var(--rule);border-radius:12px;padding:10.5px 21px;font-size:21px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:18px;color:var(--muted)}
+.quote{border-left:7.5px solid var(--safe);background:var(--card);border-radius:0 18px 18px 0;padding:21px 30px;font-size:27px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:2.25px solid var(--cardline);border-radius:18px;padding:18px 15px;text-align:center;font-size:24px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:198px}
+.fs .n{font-family:var(--mono);font-size:18px;color:var(--muted);margin-bottom:6px}
+.fs .ico{width:51px;height:51px;color:var(--muted);margin-bottom:9px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 12px 36px -18px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:42px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:30px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+
+
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:6px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:138px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:24px 24px 27px}
+.mobile .hd h2{font-size:31.5px}
+.mobile .hd .chap{font-size:18px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:24px 21px 12px;display:flex!important;flex-direction:column;gap:21px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:18px 21px;font-size:16.5px;gap:12px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .quote{font-size:24px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:6px 0 0;height:90px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:30px}
+.mobile .cover-photos{position:relative;height:300px}
+.mobile .cover-vs{top:105px;width:69px;height:69px;font-size:22.5px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:33px 27px 15px;gap:18px!important}
+.mobile .cover h1{font-size:45px!important}
+.mobile .cover .sub{font-size:22.5px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 54px);height:auto;margin:9px 27px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .cph .lbl{font-size:19.5px;left:15px;bottom:15px}
+
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== F1 live-slides 共通（oil100 の部品に足した分） ===== */
+.hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.hd .num{position:absolute;right:84px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:66px;font-weight:700;color:rgba(255,255,255,.14)}
+.ft{justify-content:space-between}
+.ex{font-size:18px;font-weight:700;color:var(--ink2);background:#EEF2F7;border-radius:6px;padding:1.5px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+svg .ex-t{font-size:18px;fill:#5A6B82;font-family:var(--font)}
+.big{font-family:var(--mono);font-weight:700;color:var(--safe);font-size:69px;line-height:1.1}
+.big small{font-family:var(--font);font-size:27px;color:var(--ink2);margin-left:6px}
+.big.w{color:var(--warnT)}.big.g{color:var(--okT)}
+.kp{display:flex;flex-direction:column;gap:18px}
+.kp .card h4{font-size:25.5px;margin-bottom:6px}
+.kp .card p{font-size:22.5px;color:var(--ink2);line-height:1.65}
+.stepbar{display:flex;align-items:center;gap:15px}
+.swap{position:relative}
+.swap>*{transition:opacity .45s ease}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+.grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.grow.on,.slide.active .grow.g0{transform:scaleY(1)}
+.slide.active .grow.g0{transition-delay:.3s}
+svg .sv{transition:opacity .5s ease}
+.gone{transition:opacity .5s ease}
+.note{font-size:19.5px;color:var(--ink2);line-height:1.6}
+.pill{display:inline-flex;align-items:center;gap:9px;font-size:21px;font-weight:900;padding:7.5px 18px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.pill.w{background:#FFF1E6;color:var(--warnT)}
+.pill.g{background:#E7F6F1;color:var(--okT)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:21px}
+.keymsg{text-align:center;font-size:39px;font-weight:900;line-height:1.5;padding:27px;border-radius:21px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.keymsg::after{content:"";display:block;width:330px;height:9px;margin:15px auto 0;border-radius:4.5px;background:var(--brand)}
+
+/* ===== 表紙（目次つき） ===== */
+.cover{position:absolute;inset:0;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:21px;background:var(--brand)}
+.cover-text{position:absolute;left:96px;top:96px;width:960px;display:flex;flex-direction:column;gap:24px}
+.cover .kicker{font-size:22.5px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:69px;font-weight:900;line-height:1.25;color:var(--ink)}
+.cover h1 .hl2{color:var(--safe)}
+.cover h1 small{display:block;font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:9px}
+.cover .sub{font-size:25.5px;color:var(--ink2);line-height:1.75;font-weight:500}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin-top:6px}
+.toc button{display:flex;gap:15px;align-items:center;text-align:left;background:#fff;border:1.5px solid var(--rule);border-radius:15px;padding:12px 18px;font-size:21px;font-weight:700;color:var(--ink);line-height:1.4}
+.toc button:hover{border-color:var(--safe)}
+.toc button .n{font-family:var(--mono);color:var(--safe);font-size:19.5px;min-width:30px}
+.cover .start{align-self:flex-start;margin-top:9px;font-size:24px;padding:15px 33px}
+.cover-ill{position:absolute;right:84px;top:144px;width:690px;height:750px}
+
+/* ===== スマホ縦向き ===== */
+.mobile .cover{position:relative;inset:auto;padding-bottom:36px}
+.mobile .cover-text{position:relative;left:auto;top:auto;width:auto;padding:33px 24px 9px}
+.mobile .cover h1{font-size:42px}
+.mobile .cover h1 small{font-size:24px}
+.mobile .cover .sub{font-size:22.5px}
+.mobile .toc{grid-template-columns:1fr}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 48px);height:auto;margin:12px 24px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .hd .num{display:none}
+.mobile .big{font-size:51px}
+.mobile .vs-row{grid-template-columns:1fr}
+.mobile .keymsg{font-size:28.5px;padding:21px}
+.mobile .g2,.mobile .g3{grid-template-columns:1fr!important}
+.mobile .row{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .ft span:first-child{display:none}
+.sv{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.sv.on{opacity:1;transform:none}
+svg .sv{transform:none}
+.swap{display:grid}
+.swap>*{grid-area:1/1}
+.ft{padding-right:510px}
+.mobile .ft{padding-right:21px}
+#notes:not(.show){visibility:hidden}
+
+/* ===== v4.0：表紙の見出しを1行に（点検の道具：1ページ1つの .head・1行） ===== */
+.cover .cover-q{font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:-15px}
+.cover h1.head{font-size:48px;white-space:nowrap}
+.mobile .cover h1.head{white-space:normal}
+.mobile .cover .cover-q{font-size:24px}
+/* ===== v4.0：台紙は 1920x1080 で組む（build.py が px を 1.5 倍にする）。スマホでは台紙を 2/3 に縮めて元の大きさに戻す ===== */
+.mobile #stage{zoom:calc(2/3);min-height:150vh}
+/* 台紙は縮めない（#viewport は flex。画面が 1920 より狭いと、台紙の幅が画面の幅まで縮んでしまう） */
+#stage{flex:none}
+
+/* ===== F1-10 だけの部品 ===== */
+/* 線を段階ごとに描く（長さ1400まで描き切る） */
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.drawline.on,.slide.active .drawline.g0{stroke-dashoffset:0}
+.slide.active .drawline.g0{transition:stroke-dashoffset 2.2s ease .4s}
+/* 横向きに伸びる棒 */
+.growx{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.growx.on,.slide.active .growx.g0{transform:scaleX(1)}
+/* 流れ図は、まだの段階を薄く見せずに隠す（段階ごとにフェードイン） */
+.fs:not(.on),.fa:not(.on){opacity:0}
+.fa.on{opacity:1}
+/* 72の法則：答えが出たら「？」を消す */
+.q6{transition:opacity .4s ease}
+.slide.s4 .q6{opacity:0}
+.mobile .keymsg{font-size:25.5px!important}
+.sumb .kp .card h4{font-size:30px}
+.sumb .kp .card p{font-size:25.5px;line-height:1.8}
+.sumb .note{font-size:21px;line-height:1.75}
+.sumb>.card h4{font-size:27px!important}
+.mobile .r72{grid-template-columns:93px 1fr 114px!important;gap:15px!important;padding:24px 21px!important}
+.mobile .r72 .big{font-size:42px!important}
+/* ===== v3.0：橋渡しの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:84px;right:84px;top:168px;margin:0;display:flex;align-items:center;gap:12px;font-size:22.5px;font-weight:700;color:var(--ink);line-height:1.4;white-space:nowrap}
+.bridge .bk{font-size:18px;font-weight:700;color:#5A6B82;background:#EEF2F7;border-radius:6px;padding:3px 12px;flex:none}
+.bridge .bk.now{color:#fff;background:#2B5FA8}
+.bridge .ar{font-style:normal;color:#8A9AB0;padding:0 6px}
+.slide.hasbr .body{top:219px}
+.mobile .bridge{position:static;flex-wrap:wrap;white-space:normal;padding:18px 21px 0;font-size:21px;row-gap:6px}
+/* 問いへの答え */
+.ans{margin:0;display:flex;align-items:center;gap:18px;padding:15px 24px;border-radius:18px;background:#EAF4FF;border:2.25px solid #2B5FA8;font-size:27px;font-weight:900;color:#16233A;line-height:1.4}
+.ans b{flex:none;font-size:19.5px;font-weight:700;color:#fff;background:#2B5FA8;border-radius:6px;padding:4.5px 12px}
+.mobile .ans{font-size:24px}
+.a3{display:flex;gap:21px;align-items:center;padding:18px 27px!important}
+.a3 .no{flex:none;width:51px;height:51px;border-radius:50%;background:#2B5FA8;color:#fff;font-family:var(--mono);font-weight:700;font-size:27px;display:flex;align-items:center;justify-content:center}
+.a3 h4{margin-bottom:3px!important}
+.tight .card{padding:15px 27px}
+.tight .card h4{font-size:24px;margin-bottom:3px}
+.tight .card p{font-size:21.75px;line-height:1.55}
+.tight .note{font-size:19.5px;line-height:1.6}
+.mobile .slide.hasbr .body{top:auto}
+/* ===== S1-01：攻撃の形の表は、スマホでは3列目を隠して折り返す ===== */
+.mobile .atk th:nth-child(3),.mobile .atk td:nth-child(3){display:none}
+.mobile .atk td{white-space:normal!important;padding:15px 12px!important;font-size:22.5px!important}
+.mobile .atk td:first-child{width:62%}
+/* ===== Fレーン：横に並べるカード ===== */
+.rowc{display:grid;gap:18px}
+.rowc .card h4{font-size:25.5px;margin-bottom:6px}
+.rowc .card p{font-size:22.5px;color:var(--ink2);line-height:1.6}
+.mobile .rowc{grid-template-columns:1fr!important}
+.mobile .ftab{font-size:19.5px!important}
+.mobile .ftab td,.mobile .ftab th{padding:9px 7.5px!important}
+
+
+</style>
+</head>
+<body class="theme-photo noimg">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<section id="p1" class="slide page" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">TriFuse 金融 ｜ L1 基礎 ｜ F1-EX</div>
+      <div class="cover-q fade d2">卒業課題：「元本保証・月利5%」の検証 ｜ 今日の問い</div>
+      <h1 class="head fade d2">「元本保証・月利5%」は<span class="hl2">なぜ</span>成り立たないか</h1>
+      <p class="sub fade d3">L1 で揃えた道具を使い、よくある勧誘文が成り立たない理由を、数字と仕組みの言葉で説明します。Fレーン L1 の卒業課題です。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>答えを組み立てる4つの手順</button><button data-go="2"><span class="n">03</span>月利5%を年率に直す</button><button data-go="3"><span class="n">04</span>はたらいていない裁定</button><button data-go="4"><span class="n">05</span>三者で書き出す</button><button data-go="5"><span class="n">06</span>審査の評価軸</button><button data-go="6"><span class="n">07</span>題材の限りと変わらない原理</button><button data-go="7"><span class="n">08</span>問いへの答えと出典</button></div>
+      <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
+    </div>
+    <svg class="cover-ill" viewBox="0 0 460 500" aria-label="月利5%の複利"><rect width="460" height="500" rx="22" fill="#fff" opacity=".85"/><g transform="scale(0.666667)"><text x="45" y="69" text-anchor="start" font-size="22.5" font-weight="700" fill="#5A6B82">100万円を月利5%で増やし続けると</text></g><g transform="translate(20 70)"><path d="M70 234.4H400" stroke="#EEF2F7" stroke-width="1.5"/><g transform="scale(0.666667)"><text x="93" y="359.041" text-anchor="end" font-size="18" fill="#5A6B82">579万円</text></g><path d="M70 52.6H400" stroke="#EEF2F7" stroke-width="1.5"/><g transform="scale(0.666667)"><text x="93" y="86.418" text-anchor="end" font-size="18" fill="#5A6B82">1,868万円</text></g><path d="M70 316H400" stroke="#D8DFE8" stroke-width="2"/><g transform="scale(0.666667)"><text x="402" y="507" text-anchor="middle" font-size="18" fill="#5A6B82">3年後</text></g><g transform="scale(0.666667)"><text x="600" y="507" text-anchor="middle" font-size="18" fill="#5A6B82">5年後</text></g><path class="drawline g0" d="M70.0 301.9 L75.5 301.2 L81.0 300.5 L86.5 299.7 L92.0 298.9 L97.5 298.0 L103.0 297.1 L108.5 296.2 L114.0 295.2 L119.5 294.1 L125.0 293.0 L130.5 291.9 L136.0 290.7 L141.5 289.4 L147.0 288.1 L152.5 286.7 L158.0 285.2 L163.5 283.7 L169.0 282.1 L174.5 280.4 L180.0 278.6 L185.5 276.7 L191.0 274.8 L196.5 272.7 L202.0 270.5 L207.5 268.3 L213.0 265.9 L218.5 263.4 L224.0 260.7 L229.5 258.0 L235.0 255.1 L240.5 252.0 L246.0 248.8 L251.5 245.5 L257.0 241.9 L262.5 238.2 L268.0 234.3 L273.5 230.3 L279.0 226.0 L284.5 221.5 L290.0 216.7 L295.5 211.8 L301.0 206.6 L306.5 201.1 L312.0 195.3 L317.5 189.3 L323.0 183.0 L328.5 176.3 L334.0 169.3 L339.5 162.0 L345.0 154.3 L350.5 146.2 L356.0 137.7 L361.5 128.8 L367.0 119.5 L372.5 109.6 L378.0 99.3 L383.5 88.5 L389.0 77.1 L394.5 65.2 L400.0 52.6" fill="none" stroke="#F88039" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><g><circle cx="400.0" cy="52.6" r="5" fill="#F88039"/><g transform="scale(0.666667)"><text x="588" y="60.935" text-anchor="end" font-size="21" font-weight="700" fill="#F88039">5年後 約1,868万円</text></g></g></g><g transform="scale(0.666667)"><text x="345" y="705" text-anchor="middle" font-size="24" font-weight="900" fill="#B5500F">リスクゼロで保証できる事業はない</text></g></svg>
+    <div class="brandbar"></div>
+  </div>
+</section>
+<section id="p2" class="slide page hasbr" data-n="s2" data-steps="5">
+  <header class="hd"><span class="chap">2. 答えを組み立てる4つの手順</span><h2 class="head">主張を「元本保証」と「月利5%」に分け、順に原理で確かめる</h2><span class="num">02</span></header><p class="bridge"><b class="bk">今日の問い</b><span>「元本保証で、毎月5%の利益が出る」という勧誘文は、なぜ原理的に成り立たないのか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="主張を分けて4つの手順で組み立てる"><g class="sv " data-s="1"><rect x="10" y="10" width="280" height="100" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="225" y="85.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">主張A　元本保証</text></g><g transform="scale(0.666667)"><text x="225" y="117" text-anchor="middle" font-size="19.5" fill="#5A6B82">リスクがゼロ（目安は国債の利回り）</text></g><rect x="310" y="10" width="280" height="100" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="675" y="85.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">主張B　月利5%</text></g><g transform="scale(0.666667)"><text x="675" y="117" text-anchor="middle" font-size="19.5" fill="#5A6B82">毎月元本の5%が支払われる</text></g></g><g class="sv " data-s="2"><g class="sv " data-s="2"><rect x="2.0" y="150" width="129.5" height="96" rx="12" fill="#fff" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="100.125" y="291" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">1 分ける</text></g><g transform="scale(0.666667)"><text x="100.125" y="324" text-anchor="middle" font-size="18" fill="#5A6B82">AとB</text></g></g><g class="sv " data-s="3"><rect x="157.5" y="150" width="129.5" height="96" rx="12" fill="#fff" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="333.375" y="291" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">2 年率に直す</text></g><g transform="scale(0.666667)"><text x="333.375" y="324" text-anchor="middle" font-size="18" fill="#5A6B82">3節</text></g><path d="M136.5 198.0H151.5" stroke="#8A9AB0" stroke-width="3"/><path d="M145.5 192.0L152.5 198.0L145.5 204.0" fill="none" stroke="#8A9AB0" stroke-width="3"/></g><g class="sv " data-s="4"><rect x="313.0" y="150" width="129.5" height="96" rx="12" fill="#fff" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="566.625" y="291" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">3 対価と裁定</text></g><g transform="scale(0.666667)"><text x="566.625" y="324" text-anchor="middle" font-size="18" fill="#5A6B82">4節</text></g><path d="M292.0 198.0H307.0" stroke="#8A9AB0" stroke-width="3"/><path d="M301.0 192.0L308.0 198.0L301.0 204.0" fill="none" stroke="#8A9AB0" stroke-width="3"/></g><g class="sv " data-s="5"><rect x="468.5" y="150" width="129.5" height="96" rx="12" fill="#fff" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="799.875" y="291" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">4 三者で書く</text></g><g transform="scale(0.666667)"><text x="799.875" y="324" text-anchor="middle" font-size="18" fill="#5A6B82">5節</text></g><path d="M447.5 198.0H462.5" stroke="#8A9AB0" stroke-width="3"/><path d="M456.5 192.0L463.5 198.0L456.5 204.0" fill="none" stroke="#8A9AB0" stroke-width="3"/></g></g></svg></div><div class="kp fade d2 "><div class="card "><h4>1. L1 のまとめ</h4><p>預金・株式・債券・投資信託・REIT・保険・年金・暗号資産・デリバティブで揃えた道具を使い、成り立たない理由を数字と仕組みの言葉で示す。</p></div><div class="card sv " data-s="1"><h4>元本保証＝リスクがゼロ</h4><p>何が起きても投じた元本が減らないという約束。</p></div><div class="card sv " data-s="4" style="border-left:7.5px solid var(--warn)"><h4>高い利回りはリスクの対価</h4><p>元本を失うおそれなどを引き受けた対価として支払われる（F1-08）。リスクゼロで高い利回りは、この関係と食い違う。</p></div></div></div>
+</section>
+<section id="p3" class="slide page hasbr" data-n="s3" data-steps="2">
+  <header class="hd"><span class="chap">3. 月利5%を年率に直す</span><h2 class="head">月利5%は年率およそ80%で、約14か月で元本が2倍になる</h2><span class="num">03</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>主張AとBに分ける</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>月利5%は、どれだけ速い増え方か</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">計算を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 320" style="width:100%;height:480px" aria-label="月利5%を年率に直す"><path d="M80 205.9H580" stroke="#EEF2F7" stroke-width="1.5"/><g transform="scale(0.666667)"><text x="108" y="316.411" text-anchor="end" font-size="18" fill="#5A6B82">約579万円</text></g><path d="M80 50.0H580" stroke="#EEF2F7" stroke-width="1.5"/><g transform="scale(0.666667)"><text x="108" y="82.458" text-anchor="end" font-size="18" fill="#5A6B82">約1,868万円</text></g><path d="M80 276H580" stroke="#D8DFE8" stroke-width="2"/><g transform="scale(0.666667)"><text x="570" y="447" text-anchor="middle" font-size="18" fill="#5A6B82">3年後</text></g><g transform="scale(0.666667)"><text x="870" y="447" text-anchor="middle" font-size="18" fill="#5A6B82">5年後</text></g><path class="drawline" d="M80.0 263.9 L88.3 263.3 L96.7 262.7 L105.0 262.0 L113.3 261.3 L121.7 260.6 L130.0 259.8 L138.3 259.0 L146.7 258.1 L155.0 257.2 L163.3 256.3 L171.7 255.3 L180.0 254.3 L188.3 253.2 L196.7 252.0 L205.0 250.8 L213.3 249.6 L221.7 248.3 L230.0 246.9 L238.3 245.4 L246.7 243.9 L255.0 242.3 L263.3 240.6 L271.7 238.8 L280.0 237.0 L288.3 235.0 L296.7 233.0 L305.0 230.8 L313.3 228.6 L321.7 226.2 L330.0 223.7 L338.3 221.1 L346.7 218.3 L355.0 215.5 L363.3 212.4 L371.7 209.3 L380.0 205.9 L388.3 202.4 L396.7 198.7 L405.0 194.9 L413.3 190.8 L421.7 186.6 L430.0 182.1 L438.3 177.4 L446.7 172.5 L455.0 167.3 L463.3 161.8 L471.7 156.1 L480.0 150.1 L488.3 143.9 L496.7 137.2 L505.0 130.3 L513.3 123.0 L521.7 115.4 L530.0 107.3 L538.3 98.9 L546.7 90.1 L555.0 80.8 L563.3 71.0 L571.7 60.7 L580.0 50.0" fill="none" stroke="#F88039" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" data-s="2"/><g class="sv " data-s="1"><rect x="90" y="30" width="230" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="307.5" y="100.5" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">1年で約1.796倍</text></g><g transform="scale(0.666667)"><text x="307.5" y="132" text-anchor="middle" font-size="18" fill="#5A6B82">単利でも年60%、複利で年約80%</text></g></g></svg><p class="note">縦軸は100万円から増えた残高。10年後の額は解説（N）に。</p></div><div class="kp fade d2 "><div class="card sv " data-s="1"><h4>単利なら</h4><p>12か月分を足すだけで年60%。</p></div><div class="card sv " data-s="1"><h4>複利なら</h4><p>1.05の12乗で約1.796倍。年率はおよそ79.6%（約80%）。</p></div><div class="card sv " data-s="2"><h4>72の法則</h4><p>72÷5で約14か月。1年あまりで元本が2倍。</p></div><div class="card sv " data-s="2" style="border-left:7.5px solid var(--warn)"><h4>100万円を増やし続けると</h4><p>3年後に約579万円、5年後に約1,868万円。経済全体の成長率は年に数%ほど。</p></div></div></div>
+</section>
+<section id="p4" class="slide page hasbr" data-n="s4" data-steps="4">
+  <header class="hd"><span class="chap">4. はたらいていない裁定</span><h2 class="head">本当にあれば、借りて投じる人が殺到し、利回りは消える</h2><span class="num">04</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>年率およそ80%</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>そんな運用先が本当にあったら、何が起きるか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="裁定の考え方"><g class="sv " data-s="1"><rect x="10" y="10" width="170" height="80" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="142.5" y="70.5" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">銀行・ファンド</text></g><g transform="scale(0.666667)"><text x="142.5" y="102" text-anchor="middle" font-size="18" fill="#5A6B82">年1%ほどで借りる</text></g></g><g class="sv " data-s="2"><path d="M184.0 50.0L410.0 50.0" stroke="#2B5FA8" stroke-width="3"/><path d="M401.0 54.3L410.0 50.0L401.0 45.7" fill="none" stroke="#2B5FA8" stroke-width="3"/><g transform="scale(0.666667)"><text x="445.5" y="60" text-anchor="middle" font-size="21" font-weight="700" fill="#2B5FA8">全額を投じる</text></g><rect x="420" y="10" width="170" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="757.5" y="70.5" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">年80%・元本保証</text></g><g transform="scale(0.666667)"><text x="757.5" y="102" text-anchor="middle" font-size="18" fill="#5A6B82">（仮にあったら）</text></g></g><g class="sv " data-s="3"><rect x="10" y="120" width="580" height="70" rx="12" fill="#E7F6F1" stroke="#40B69A" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="228" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">大きなお金が集まり、利回りはすぐ市場並みに下がる</text></g><g transform="scale(0.666667)"><text x="450" y="259.5" text-anchor="middle" font-size="19.5" fill="#5A6B82">このような運用先は消える</text></g></g><g class="sv " data-s="4"><rect x="10" y="214" width="580" height="100" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="391.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">なぜ金融機関ではなく、個人に電話や SNS で持ち込まれるのか</text></g><g transform="scale(0.666667)"><text x="450" y="423" text-anchor="middle" font-size="19.5" fill="#5A6B82">裁定がはたらいていないこと自体が、成り立たないことを示す</text></g></g></svg></div><div class="kp fade d2 "><div class="card sv " data-s="2"><h4>裁定</h4><p>借りる金利1%と運用の利回り80%の差を、リスクなしで稼げるなら、大きなお金が集まる。</p></div><div class="card sv " data-s="4" style="border-left:7.5px solid var(--warn)"><h4>元本保証と書いてあっても</h4><p>保証しているのはリスクが無いことではなく、業者がそう言っているという事実だけ。</p></div><p class="ans sv" data-s="4"><b>1つ目の答え</b>裁定がはたらいていないことが、約束どおりには成り立たない証拠</p></div></div>
+</section>
+<section id="p5" class="slide page hasbr" data-n="s5" data-steps="3">
+  <header class="hd"><span class="chap">5. 商品の仕組みを三者で書き出す</span><h2 class="head">発行体・仲介者・投資家と、手数料の流れを書き、欠けている所を並べる</h2><span class="num">05</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>裁定がはたらいていない</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>会社Xの話を、F1-01 の地図に置くと何が欠けるか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="三者とお金の流れ"><rect x="10" y="120" width="170" height="80" rx="12" fill="#fff" stroke="#8A9AB0" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="142.5" y="247.5" text-anchor="middle" font-size="24" font-weight="700" fill="#16233A">投資家</text></g><rect x="215" y="10" width="170" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="70.5" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">会社X（発行体）</text></g><g transform="scale(0.666667)"><text x="450" y="102" text-anchor="middle" font-size="18" fill="#5A6B82">返す約束をする</text></g><rect x="420" y="120" width="170" height="80" rx="12" fill="#F3EEFA" stroke="#7A5AB8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="757.5" y="235.5" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">紹介者Y（仲介者）</text></g><g transform="scale(0.666667)"><text x="757.5" y="267" text-anchor="middle" font-size="18" fill="#5A6B82">SNS で勧誘</text></g><g class="sv " data-s="1"><path d="M130.0 118.0L240.0 94.0" stroke="#8A9AB0" stroke-width="3"/><path d="M232.1 100.2L240.0 94.0L230.3 91.7" fill="none" stroke="#8A9AB0" stroke-width="3"/><g transform="scale(0.666667)"><text x="225" y="147" text-anchor="end" font-size="19.5" font-weight="700" fill="#5A6B82">お金</text></g></g><g class="sv " data-s="2"><path d="M360.0 94.0L470.0 118.0" stroke="#7A5AB8" stroke-width="3" stroke-dasharray="6 5"/><path d="M460.3 120.3L470.0 118.0L462.1 111.8" fill="none" stroke="#7A5AB8" stroke-width="3"/><g transform="scale(0.666667)"><text x="690" y="147" text-anchor="start" font-size="19.5" font-weight="700" fill="#5B3F94">手数料は？</text></g></g><g class="sv " data-s="3"><rect x="10" y="232" width="136" height="86" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="117" y="408" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">1 返す義務</text></g><g transform="scale(0.666667)"><text x="117" y="439.5" text-anchor="middle" font-size="15" fill="#5A6B82">誰が負うか</text></g><rect x="158" y="232" width="136" height="86" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="339" y="408" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">2 裏付け</text></g><g transform="scale(0.666667)"><text x="339" y="439.5" text-anchor="middle" font-size="15" fill="#5A6B82">資産や事業の中身</text></g><rect x="306" y="232" width="136" height="86" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="561" y="408" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">3 Yの手数料</text></g><g transform="scale(0.666667)"><text x="561" y="439.5" text-anchor="middle" font-size="15" fill="#5A6B82">誰から、どこから</text></g><rect x="454" y="232" width="136" height="86" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="783" y="408" text-anchor="middle" font-size="19.5" font-weight="700" fill="#16233A">4 毎月5%の元</text></g><g transform="scale(0.666667)"><text x="783" y="439.5" text-anchor="middle" font-size="15" fill="#5A6B82">どこから来るか</text></g></g></svg></div><div class="kp fade d2 "><div class="card "><h4>架空の例</h4><p>会社Xが「海外の事業に投資して毎月5%を配当し、元本も保証する」と言い、紹介者Yが SNS で勧誘。</p></div><div class="card sv " data-s="3" style="border-left:7.5px solid var(--safe)"><h4>投資信託との違い（F1-06）</h4><p>販売会社・運用会社・信託銀行の役割が分かれ、集めたお金は分けて管理。手数料の名目と料率は目論見書にある。</p></div><p class="ans sv" data-s="3"><b>2つ目の答え</b>4つの項目のどこが書かれていないかを並べることが、仕組みの説明になる</p></div></div>
+</section>
+<section id="p6" class="slide page hasbr" data-n="s6" data-steps="2">
+  <header class="hd"><span class="chap">6. 審査の評価軸</span><h2 class="head">原理・計算・主張の分け方・仕組みの書き出しの4つで審査する</h2><span class="num">06</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>三者で書き出す</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>答えは、何で評価されるか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.5fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">評価軸を見る</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><table class="ftab " style="border-collapse:collapse;width:100%;font-size:24px"><tr><th style="text-align:left;padding:12px 15px;border-bottom:3px solid #2B5FA8;color:#5A6B82;font-size:21px;width:24%">評価項目</th><th style="text-align:left;padding:12px 15px;border-bottom:3px solid #2B5FA8;color:#5A6B82;font-size:21px;width:76%">達成の基準</th></tr><tr class="sv" data-s="1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500"><b>原理の使い方</b></td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">感覚的な怪しさではなく、リスクの対価と裁定の考え方で説明しているか</td></tr><tr class="sv" data-s="1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500"><b>計算の正しさ</b></td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">複利または72の法則で、年率と元本が2倍になる期間を合う形で出しているか</td></tr><tr class="sv" data-s="1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500"><b>主張の分け方</b></td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">元本保証（リスクゼロ）と高い利回り（リスクの対価）を分けて比べているか</td></tr><tr class="sv" data-s="1"><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500"><b>仕組みの書き出し</b></td><td style="text-align:left;padding:12px 15px;border-bottom:1.5px solid #D8DFE8;font-weight:500">三者と、手数料とお金の流れを書き出し、欠けている所を示しているか</td></tr></table></div><div class="kp fade d2 "><div class="card sv " data-s="2" style="border-left:7.5px solid var(--safe)"><h4>評価しないこと</h4><p>文章のうまさ。適法性・違法性の判断（弁護士や所管の官庁の仕事）。</p></div><div class="card sv " data-s="2" style="border-left:7.5px solid var(--safe)"><h4>扱わないこと</h4><p>破綻する時期の計算。相手の数字を最後まで検算する練習は A1-12 で。</p></div></div></div>
+</section>
+<section id="p7" class="slide page hasbr" data-n="s7" data-steps="3">
+  <header class="hd"><span class="chap">7. 題材の限りと、変わらない原理</span><h2 class="head">題材は架空例に限り、言葉が変わっても同じ原理で確かめる</h2><span class="num">07</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>4つの評価軸</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>何を題材にし、何を身につけるか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1 " style="display:flex;flex-direction:column;gap:12px"><div class="stepbar"><b style="font-size:22.5px">話を進める</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="題材の限りと変わらない原理"><g class="sv " data-s="1"><rect x="10" y="10" width="580" height="90" rx="12" fill="#E7F6F1" stroke="#40B69A" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="78" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">使える題材</text></g><g transform="scale(0.666667)"><text x="450" y="109.5" text-anchor="middle" font-size="18" fill="#5A6B82">この課題の架空例・自分で作った架空例（処分事例は名前を伏せる）</text></g></g><g class="sv " data-s="2"><rect x="10" y="120" width="580" height="90" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.5"/><g transform="scale(0.666667)"><text x="450" y="243" text-anchor="middle" font-size="22.5" font-weight="700" fill="#16233A">題材にしないもの</text></g><g transform="scale(0.666667)"><text x="450" y="274.5" text-anchor="middle" font-size="18" fill="#5A6B82">いま受けている勧誘・争いの事案・実在の事業者が分かる情報</text></g></g><g class="sv " data-s="3"><g transform="scale(0.666667)"><text x="450" y="381" text-anchor="middle" font-size="22.5" font-weight="900" fill="#16233A">手口が変わっても、元本保証と高い利回りは同時に成り立たない</text></g><g transform="scale(0.666667)"><text x="450" y="429" text-anchor="middle" font-size="22.5" font-weight="900" fill="#2B5FA8">リスクの対価・複利・裁定で、同じ問いで確かめられる</text></g></g></svg></div><div class="kp fade d2 "><div class="card sv " data-s="1"><h4>題材を限る理由</h4><p>学びの場を守り、争いやプライバシーの侵害を避けるため。</p></div><div class="card sv " data-s="3" style="border-left:7.5px solid var(--safe)"><h4>8. 変わらない原理</h4><p>投資話の手口は新しい言葉をまとって現れる。それでも原理は変わらない。</p></div><p class="ans sv" data-s="3"><b>3つ目の答え</b>仕組みを書き出し、計算して確かめられることが L1 を終えた人の力</p></div></div>
+</section>
+<section id="p8" class="slide page hasbr" data-n="sum">
+  <header class="hd"><span class="chap">問いへの答えと出典</span><h2 class="head">元本保証と月利5%は、リスクの対価と裁定の原理で同時に成り立たない</h2><span class="num">08</span></header><p class="bridge"><b class="bk">今日の問い</b><span>「元本保証で、毎月5%の利益が出る」という勧誘文は、なぜ原理的に成り立たないのか</span></p>
+  <div class="body sumb" style="display:grid;grid-template-columns:1.15fr 1fr;gap:33px">
+    <div class="kp" style="gap:15px">
+      <div class="card fade d1 a3"><span class="no">1</span><div><h4>年率に直すと約80%</h4><p>1.05の12乗で約1.796倍、約14か月で2倍（3節）。</p></div></div><div class="card fade d2 a3"><span class="no">2</span><div><h4>裁定がはたらいていない</h4><p>本当にあれば、低い金利で借りて投じる金融機関が殺到する（4節）。</p></div></div><div class="card fade d3 a3"><span class="no">3</span><div><h4>三者で書き、欠けを並べる</h4><p>返す義務・裏付け・手数料・支払いの元（5節）。</p></div></div>
+      <p class="note fade d4">この資料は事実と構造の説明であって、推奨ではありません。どの製品やサービスを使うか、いまの環境が安全かどうかの判定は、この資料の外にあります。決めるのはあなたです。</p>
+    </div>
+    <div class="card fade d5" style="display:flex;flex-direction:column;gap:12px;align-self:start">
+      <h4 style="font-size:24px">出典</h4>
+      <p class="note"><b style="color:var(--ink)">金融庁「投資詐欺にご注意ください」</b><br>投資詐欺の注意喚起</p><p class="note"><b style="color:var(--ink)">日本証券業協会「投資詐欺の典型的な手口」</b><br>典型的な手口</p><p class="note"><b style="color:var(--ink)">消費者庁「ポンジ・スキームにご注意」</b><br>要差し替え</p>
+      <p class="note" style="border-top:1.5px dashed var(--rule);padding-top:12px">出典の突き合わせ（社長による確認日の記入）は未了です。会社X・紹介者Yは架空の例です。</p>
+    </div>
+  </div>
+</section>
+</div></div>
+
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bToc" title="目次（O）">目次</button><button class="wide" id="bNotes" title="解説（N）">解説</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">解説</h4><div id="notesBody"></div></div>
+<div id="help">← → でページ移動・N で解説・O で目次・F で全画面</div>
+<div class="notes-src" id="notes-title"><pre style="white-space:pre-wrap;font-size:13px;line-height:1.7">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ノードID】 F1-EX ／ 卒業課題：「元本保証・月利5%」の検証
+【レーン】   F 金融（お金の道具を知る）
+【レベル】   L1 基礎 — Fレーン L1 の卒業課題
+【前提知識】 F1-08 リスクとリターンの関係 ／ F1-10 複利の数理 ／ F1-19 デリバティブ入門
+【この先へ】 F2-01 利回り換算の技術（L2へ） ／ A1-12 断定的な勧誘文を確率で書き直す
+【到達目標】 元本保証と高い利回りが同時に成立しない理由を、裁定原理とリスクの対価という
+             言葉を使って、「なぜ原理的に不可能か」という形で説明できる。
+【読了目安】 9分
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">1. L1 のまとめとしての卒業課題</h5>
+<p>金融レーンの L1 では、預金、株式、債券、投資信託、REIT、保険、年金、暗号資産、デリバティブと、主な金融商品の仕組みを1つずつ見てきました。この卒業課題では、そこで揃えた道具を使い、よくある投資の勧誘文が成り立たない理由を、原理から説明します。</p>
+<p>問いは1つです。「元本保証で、毎月確実に5%の利益が出ます」という勧誘文が、なぜ原理的に成り立たないのかを、金融の言葉で説明してください。「怪しいから」「常識外れだから」という感覚ではなく、数字と仕組みの言葉で、成り立たない理由を示します。</p>
+<h5 style="font-size:15px;margin:8px 0 6px">2. 答えを組み立てる4つの手順</h5>
+<p>答えは、次の4つの手順で組み立てます。</p>
+<p>1つ目に、主張を「元本保証」（主張A）と「月利5%」（主張B）の2つに分けます。元本保証とは、何が起きても投じた元本が減らないという約束で、リスクがゼロだと言っているのと同じです。リスクがゼロのときに得られる利回りの目安は、国債の利回りです。月利5%は、毎月元本の5%の利益が確実に支払われるという約束です。</p>
+<p>2つ目に、主張Bを年率に直します（3節）。</p>
+<p>3つ目に、AとBが同時に成り立たない理由を、F1-08 で見たリスクの対価と裁定の考え方で説明します（4節）。高い利回りは、元本を失うおそれなど、何かのリスクを引き受けた対価として支払われます。リスクがゼロなのに高い利回りが出るという組み合わせは、この関係と食い違います。</p>
+<p>4つ目に、その商品の仕組みを、発行体・仲介者・投資家の三者と手数料の流れで書き出します（5節）。</p></div>
+<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 月利5%を年率に直す</h5>
+<p>月利5%を年率に直すと、その増え方の速さが数字で見えます。</p>
+<p>単利で12か月分を足すだけでも年60%です。受け取った利益を元本に入れて増やす複利で計算すると、1年後の元利合計は1.05の12乗で約1.796倍になり、年率はおよそ79.6%（約80%）です。72の法則を月利に当てはめると、72÷5で約14か月、つまり1年あまりで元本が2倍になります。</p>
+<p>100万円をこの条件で増やし続けると、3年後に約579万円、5年後に約1,868万円、10年後には約3億4,900万円になります。経済全体の成長率が年に数%ほどの中で、これほどの増え方を、しかもリスクゼロで保証できる事業はありません。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. はたらいていない裁定</h5>
+<p>答えの中心になるのは、裁定の考え方です。</p>
+<p>仮に、年80%の利回りで元本も保証される運用先が本当にあったとします。その話が知られたら、銀行や大きな投資ファンドは、年1%ほどの低い金利でお金を借り、そのお金をすべてその運用先に投じるはずです。借りる金利1%と運用の利回り80%の差を、リスクなしで稼げるからです。大きなお金が集まれば、利回りはすぐに市場並みまで下がり、このような運用先は消えます。</p>
+<p>それなのに、なぜ大きなお金を動かす金融機関ではなく、個人のところへ電話や SNS で話が持ち込まれるのでしょうか。裁定がはたらいていないこと自体が、この話が約束どおりには成り立たないことを示しています。元本保証と書いてあっても、保証しているのはリスクが無いことではなく、業者がそう言っているという事実だけです。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 商品の仕組みを三者で書き出す</h5>
+<p>最後に、検証する商品を F1-01 の地図に置きます。発行体（お金を受け取り、返す約束をする者）、仲介者（間に立って売る者）、投資家の三者を書き出し、それぞれの間でお金と手数料がどう流れるかを書きます。</p>
+<p>たとえば、架空の会社Xが「海外の事業に投資して毎月5%を配当し、元本も保証する」と言い、紹介者Yが SNS で勧誘しているとします。書き出す項目は、次の4つです。</p>
+<p>1つ目に、元本を返す義務を負っているのは誰か（ここではX）。2つ目に、その義務を守れる裏付けは何か（Xの資産や事業の中身が示されているか）。3つ目に、仲介者Yは誰から、どこから手数料を受け取っているか。4つ目に、毎月5%の支払いの元になるお金はどこから来るのか。</p>
+<p>F1-06 で見た投資信託では、販売会社・運用会社・信託銀行の役割が分かれ、集めたお金は信託銀行で分けて管理されていました。手数料の名目と料率も目論見書に書かれていました。Xの話では、この4つの項目のどこが書かれていないかを並べることが、仕組みの面からの説明になります。</p></div>
+<div class="notes-src" id="notes-s6"><h5 style="font-size:15px;margin:8px 0 6px">6. 審査の評価軸</h5>
+<p>この卒業課題の答えは、次の評価軸で審査します。</p>
+<table style="border-collapse:collapse;font-size:14px;margin:6px 0 10px"><tr><th style="border:1px solid #D8DFE8;padding:3px 8px">評価項目</th><th style="border:1px solid #D8DFE8;padding:3px 8px">達成の基準</th></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px"><b>原理の使い方</b></td><td style="border:1px solid #D8DFE8;padding:3px 8px">感覚的な怪しさではなく、リスクの対価と裁定の考え方を使って説明しているか</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px"><b>計算の正しさ</b></td><td style="border:1px solid #D8DFE8;padding:3px 8px">複利または72の法則を正しく使い、年率と元本が2倍になる期間を合う形で出しているか</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px"><b>主張の分け方</b></td><td style="border:1px solid #D8DFE8;padding:3px 8px">元本保証（リスクゼロ）と高い利回り（リスクの対価）を分けて比べているか</td></tr><tr><td style="border:1px solid #D8DFE8;padding:3px 8px"><b>仕組みの書き出し</b></td><td style="border:1px solid #D8DFE8;padding:3px 8px">発行体・仲介者・投資家の三者と、手数料とお金の流れを書き出し、欠けている所を示しているか</td></tr></table>
+<p>文章のうまさは評価しません。また、適法性・違法性の判断は行いません。個別の勧誘が法律に触れるかどうかの判断は、弁護士や所管の官庁が行う仕事です。この課題が扱うのは、市場の原理にもとづく経済的な中身の説明だけです。</p>
+<p>破綻する時期の計算は、この課題では扱いません。相手が示した数字から主張の食い違いを最後まで検算する練習は、A1-12 で行います。</p></div>
+<div class="notes-src" id="notes-s7"><h5 style="font-size:15px;margin:8px 0 6px">7. 題材の限り</h5>
+<p>学びの場を守り、争いやプライバシーの侵害を避けるため、この課題で扱う題材を限ります。</p>
+<p>使える題材は、この課題が示した「元本保証・月利5%」の架空例と、自分で作った架空例だけです。消費者庁や金融庁が公表した、すでに確定した行政処分の事例を題材にする場合も、会社名や個人名は伏せ、条件の組み立てだけを取り出して書いてください。</p>
+<p>いま自分や知人が受けている勧誘、裁判や争いになっている事案、実在の事業者を特定できる情報は、題材にしません。この課題は、個別の案件の良し悪しを訴える場ではなく、自分の資産を守るための考え方の型を身につける練習です。</p>
+<h5 style="font-size:15px;margin:8px 0 6px">8. 手口が変わっても変わらない原理</h5>
+<p>投資話の手口は、時代とともに姿を変え、新しい言葉をまとって現れます。それでも、元本保証と高い利回りが同時に成り立たないという原理は変わりません。</p>
+<p>リスクの対価、複利、裁定という基本の考え方を当てはめれば、言葉が新しくなっても、同じ問いで確かめられます。自分で仕組みを書き出し、計算して確かめられることが、F レーン L1 を終えた人の身につける力です。</p></div>
+<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
+<p>引き受けたのは、次の一点だけです。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px">元本保証と高い利回りが同時に成立しない理由を、裁定原理とリスクの対価という言葉を使って、「なぜ原理的に不可能か」という形で説明できる。</p>
+<p>そこから先——どの資産に投資するか、どの金融機関と取引するか、どのような資産配分を選択するか——は、このノートの外にあります。</p>
+<p>同じ材料を見ても、運用目的も、資金規模も、リスク選好も、人によってまったく異なります。</p>
+<p>それは学習者自身が決める領域に属します。</p>
+<p>出典に挙げた資料は、説明を鵜呑みにするためではなく、<b>説明の正確性を批判的に検証するために</b>置いてあります。</p>
+<p>疑問が生じた際は、原典となる公的機関の公表資料を直接確認してください。</p></div>
+<script>
+// 数字の台帳（点検の道具が読む）：ページの数だけ
+const DATA = {pages: 8};
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('section.page')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  const FOOT="TriFuse 金融 L1 基礎 ｜ F1-EX 卒業課題：「元本保証・月利5%」の検証";
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>'+FOOT+'</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('on',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='解説　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    onEnter(slides[i]);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#p'+(i+1))}catch(e){}
+  }
+  // 段階表示：data-s の要素は段階の数が届くと .on になり、スライドに s1..sN が付く
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+    const max=+s.dataset.steps||0;
+    s.querySelectorAll('[data-next]').forEach(b=>{b.textContent=n>=max?'もう一度見る ↺':'次の段階 ▶'});
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  document.getElementById('bToc').onclick=()=>go(0);
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='o'||e.key==='O')go(0);
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=b.closest('.slide');if(!step(s))setStep(s,0)});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=e=>{e.stopPropagation();setStep(b.closest('.slide'),0)});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  document.querySelectorAll('.tap').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  function onEnter(s){
+    s.querySelectorAll('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to),dec=+el.dataset.dec||0,t0=performance.now(),d=1300;
+      (function tick(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=(to*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});if(p<1)requestAnimationFrame(tick)})(t0);
+    });
+  }
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  // #p3 と #3 のどちらでも、そのページを開く
+  function fromHash(){const m=/^#p?(\d+)$/.exec(location.hash);return m?Math.max(1,Math.min(total,+m[1])):1}
+  addEventListener('hashchange',()=>{const n=fromHash();if(n-1!==cur)go(n-1)});
+  go(fromHash()-1);
+})();
+
+</script>
+</body>
+</html>
