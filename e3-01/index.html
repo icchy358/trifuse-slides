@@ -1,0 +1,602 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E3-01 因果推論の壁</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 15px 75px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(39px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-39px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:156px;background:var(--navy);color:#fff;padding:0 84px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;background:var(--brand)}
+.hd .chap{font-size:22.5px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:6px}
+.hd h2{font-size:46.5px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:21px;bottom:15px;font-size:15px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:84px;right:84px;top:192px;bottom:87px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1.5px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 84px;font-size:18px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1.5px solid var(--cardline);border-radius:21px;padding:27px 30px}
+.theme-trifuse .card{box-shadow:0 3px 15px rgba(15,27,45,.05)}
+.lead{font-size:25.5px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:28.5px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:15px}
+.tag{display:inline-block;font-size:19.5px;font-weight:700;padding:4.5px 15px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:27px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:27px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:21px}
+.fade{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:2.25px solid var(--rule);border-radius:12px;padding:10.5px 21px;font-size:21px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:18px;color:var(--muted)}
+.quote{border-left:7.5px solid var(--safe);background:var(--card);border-radius:0 18px 18px 0;padding:21px 30px;font-size:27px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:2.25px solid var(--cardline);border-radius:18px;padding:18px 15px;text-align:center;font-size:24px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:198px}
+.fs .n{font-family:var(--mono);font-size:18px;color:var(--muted);margin-bottom:6px}
+.fs .ico{width:51px;height:51px;color:var(--muted);margin-bottom:9px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 12px 36px -18px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:42px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:30px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+
+
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:6px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:138px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:24px 24px 27px}
+.mobile .hd h2{font-size:31.5px}
+.mobile .hd .chap{font-size:18px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:24px 21px 12px;display:flex!important;flex-direction:column;gap:21px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:18px 21px;font-size:16.5px;gap:12px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .quote{font-size:24px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:6px 0 0;height:90px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:30px}
+.mobile .cover-photos{position:relative;height:300px}
+.mobile .cover-vs{top:105px;width:69px;height:69px;font-size:22.5px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:33px 27px 15px;gap:18px!important}
+.mobile .cover h1{font-size:45px!important}
+.mobile .cover .sub{font-size:22.5px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 54px);height:auto;margin:9px 27px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .cph .lbl{font-size:19.5px;left:15px;bottom:15px}
+
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== F1 live-slides 共通（oil100 の部品に足した分） ===== */
+.hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.hd .num{position:absolute;right:84px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:66px;font-weight:700;color:rgba(255,255,255,.14)}
+.ft{justify-content:space-between}
+.ex{font-size:18px;font-weight:700;color:var(--ink2);background:#EEF2F7;border-radius:6px;padding:1.5px 9px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+svg .ex-t{font-size:18px;fill:#5A6B82;font-family:var(--font)}
+.big{font-family:var(--mono);font-weight:700;color:var(--safe);font-size:69px;line-height:1.1}
+.big small{font-family:var(--font);font-size:27px;color:var(--ink2);margin-left:6px}
+.big.w{color:var(--warnT)}.big.g{color:var(--okT)}
+.kp{display:flex;flex-direction:column;gap:18px}
+.kp .card h4{font-size:25.5px;margin-bottom:6px}
+.kp .card p{font-size:22.5px;color:var(--ink2);line-height:1.65}
+.stepbar{display:flex;align-items:center;gap:15px}
+.swap{position:relative}
+.swap>*{transition:opacity .45s ease}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+.grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.grow.on,.slide.active .grow.g0{transform:scaleY(1)}
+.slide.active .grow.g0{transition-delay:.3s}
+svg .sv{transition:opacity .5s ease}
+.gone{transition:opacity .5s ease}
+.note{font-size:19.5px;color:var(--ink2);line-height:1.6}
+.pill{display:inline-flex;align-items:center;gap:9px;font-size:21px;font-weight:900;padding:7.5px 18px;border-radius:45px;background:#EAF4FF;color:var(--safe)}
+.pill.w{background:#FFF1E6;color:var(--warnT)}
+.pill.g{background:#E7F6F1;color:var(--okT)}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:21px}
+.keymsg{text-align:center;font-size:39px;font-weight:900;line-height:1.5;padding:27px;border-radius:21px;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.keymsg::after{content:"";display:block;width:330px;height:9px;margin:15px auto 0;border-radius:4.5px;background:var(--brand)}
+
+/* ===== 表紙（目次つき） ===== */
+.cover{position:absolute;inset:0;background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:21px;background:var(--brand)}
+.cover-text{position:absolute;left:96px;top:96px;width:960px;display:flex;flex-direction:column;gap:24px}
+.cover .kicker{font-size:22.5px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:69px;font-weight:900;line-height:1.25;color:var(--ink)}
+.cover h1 .hl2{color:var(--safe)}
+.cover h1 small{display:block;font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:9px}
+.cover .sub{font-size:25.5px;color:var(--ink2);line-height:1.75;font-weight:500}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin-top:6px}
+.toc button{display:flex;gap:15px;align-items:center;text-align:left;background:#fff;border:1.5px solid var(--rule);border-radius:15px;padding:12px 18px;font-size:21px;font-weight:700;color:var(--ink);line-height:1.4}
+.toc button:hover{border-color:var(--safe)}
+.toc button .n{font-family:var(--mono);color:var(--safe);font-size:19.5px;min-width:30px}
+.cover .start{align-self:flex-start;margin-top:9px;font-size:24px;padding:15px 33px}
+.cover-ill{position:absolute;right:84px;top:144px;width:690px;height:750px}
+
+/* ===== スマホ縦向き ===== */
+.mobile .cover{position:relative;inset:auto;padding-bottom:36px}
+.mobile .cover-text{position:relative;left:auto;top:auto;width:auto;padding:33px 24px 9px}
+.mobile .cover h1{font-size:42px}
+.mobile .cover h1 small{font-size:24px}
+.mobile .cover .sub{font-size:22.5px}
+.mobile .toc{grid-template-columns:1fr}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 48px);height:auto;margin:12px 24px 0}
+.mobile .cover .brandbar{position:relative;margin-top:27px}
+.mobile .hd .num{display:none}
+.mobile .big{font-size:51px}
+.mobile .vs-row{grid-template-columns:1fr}
+.mobile .keymsg{font-size:28.5px;padding:21px}
+.mobile .g2,.mobile .g3{grid-template-columns:1fr!important}
+.mobile .row{flex-direction:column}
+.mobile .card{padding:21px}
+.mobile .lead,.mobile p{font-size:22.5px!important}
+.mobile .t3{font-size:25.5px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .flow{flex-direction:column;gap:3px}
+.mobile .fs{min-height:0;flex-direction:row;gap:15px;text-align:left;justify-content:flex-start;padding:15px 18px;font-size:22.5px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:45px;height:45px}
+.mobile .fs .n{margin:0;min-width:72px}
+.mobile .fa{width:auto;height:24px;transform:rotate(90deg);font-size:21px}
+.mobile .ft span:first-child{display:none}
+.sv{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.sv.on{opacity:1;transform:none}
+svg .sv{transform:none}
+.swap{display:grid}
+.swap>*{grid-area:1/1}
+.ft{padding-right:510px}
+.mobile .ft{padding-right:21px}
+#notes:not(.show){visibility:hidden}
+
+/* ===== v4.0：表紙の見出しを1行に（点検の道具：1ページ1つの .head・1行） ===== */
+.cover .cover-q{font-size:33px;color:var(--ink2);font-weight:700;margin-bottom:-15px}
+.cover h1.head{font-size:48px;white-space:nowrap}
+.mobile .cover h1.head{white-space:normal}
+.mobile .cover .cover-q{font-size:24px}
+/* ===== v4.0：台紙は 1920x1080 で組む（build.py が px を 1.5 倍にする）。スマホでは台紙を 2/3 に縮めて元の大きさに戻す ===== */
+.mobile #stage{zoom:calc(2/3);min-height:150vh}
+/* 台紙は縮めない（#viewport は flex。画面が 1920 より狭いと、台紙の幅が画面の幅まで縮んでしまう） */
+#stage{flex:none}
+/* ===== Eレーン：表 ===== */
+.etab{border-collapse:collapse;width:100%;font-size:25.5px;background:#fff}
+.etab th{background:#EAF4FF;color:#16233A;font-weight:900;text-align:left;padding:15px 21px;border:1.5px solid #D8DFE8}
+.etab td{padding:15px 21px;border:1.5px solid #D8DFE8;line-height:1.55;color:#16233A}
+.mobile .etab{font-size:21px}
+.mobile .etab td,.mobile .etab th{padding:10.5px 12px}
+/* ===== F1-10 だけの部品 ===== */
+/* 線を段階ごとに描く（長さ1400まで描き切る） */
+.drawline{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.4s ease}
+.drawline.on,.slide.active .drawline.g0{stroke-dashoffset:0}
+.slide.active .drawline.g0{transition:stroke-dashoffset 2.2s ease .4s}
+/* 横向きに伸びる棒 */
+.growx{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.growx.on,.slide.active .growx.g0{transform:scaleX(1)}
+/* 流れ図は、まだの段階を薄く見せずに隠す（段階ごとにフェードイン） */
+.fs:not(.on),.fa:not(.on){opacity:0}
+.fa.on{opacity:1}
+/* 72の法則：答えが出たら「？」を消す */
+.q6{transition:opacity .4s ease}
+.slide.s4 .q6{opacity:0}
+.mobile .keymsg{font-size:25.5px!important}
+.sumb .kp .card h4{font-size:30px}
+.sumb .kp .card p{font-size:25.5px;line-height:1.8}
+.sumb .note{font-size:21px;line-height:1.75}
+.sumb>.card h4{font-size:27px!important}
+.mobile .r72{grid-template-columns:93px 1fr 114px!important;gap:15px!important;padding:24px 21px!important}
+.mobile .r72 .big{font-size:42px!important}
+/* ===== v3.0：橋渡しの1行（前で分かったこと → ここで見ること） ===== */
+.bridge{position:absolute;left:84px;right:84px;top:168px;margin:0;display:flex;align-items:center;gap:12px;font-size:22.5px;font-weight:700;color:var(--ink);line-height:1.4;white-space:nowrap}
+.bridge .bk{font-size:18px;font-weight:700;color:#5A6B82;background:#EEF2F7;border-radius:6px;padding:3px 12px;flex:none}
+.bridge .bk.now{color:#fff;background:#2B5FA8}
+.bridge .ar{font-style:normal;color:#8A9AB0;padding:0 6px}
+.slide.hasbr .body{top:219px}
+.mobile .bridge{position:static;flex-wrap:wrap;white-space:normal;padding:18px 21px 0;font-size:21px;row-gap:6px}
+/* 問いへの答え */
+.ans{margin:0;display:flex;align-items:center;gap:18px;padding:15px 24px;border-radius:18px;background:#EAF4FF;border:2.25px solid #2B5FA8;font-size:27px;font-weight:900;color:#16233A;line-height:1.4}
+.ans b{flex:none;font-size:19.5px;font-weight:700;color:#fff;background:#2B5FA8;border-radius:6px;padding:4.5px 12px}
+.mobile .ans{font-size:24px}
+.a3{display:flex;gap:21px;align-items:center;padding:18px 27px!important}
+.a3 .no{flex:none;width:51px;height:51px;border-radius:50%;background:#2B5FA8;color:#fff;font-family:var(--mono);font-weight:700;font-size:27px;display:flex;align-items:center;justify-content:center}
+.a3 h4{margin-bottom:3px!important}
+.tight .card{padding:15px 27px}
+.tight .card h4{font-size:24px;margin-bottom:3px}
+.tight .card p{font-size:21.75px;line-height:1.55}
+.tight .note{font-size:19.5px;line-height:1.6}
+.mobile .slide.hasbr .body{top:auto}
+/* ===== S1-01：攻撃の形の表は、スマホでは3列目を隠して折り返す ===== */
+.mobile .atk th:nth-child(3),.mobile .atk td:nth-child(3){display:none}
+.mobile .atk td{white-space:normal!important;padding:15px 12px!important;font-size:22.5px!important}
+.mobile .atk td:first-child{width:62%}
+/* ===== 文字だけのページは字を大きくして余白を埋める ===== */
+.bt .card p{font-size:25.5px!important;line-height:1.8}
+.bt .card h4{font-size:28.5px!important;margin-bottom:9px}
+.bt .card{padding:27px 33px}
+.bt .fs{min-height:255px;font-size:27px}
+.bt .note{font-size:22.5px}
+.bt .atk td{padding:27px 24px!important;font-size:27px!important}
+.mobile .bt .card p{font-size:22.5px!important}
+.mobile .bt .fs{min-height:0;font-size:22.5px}
+.mobile .bt .atk td{padding:15px 12px!important;font-size:22.5px!important}
+.bt.tight .card p{font-size:24px!important;line-height:1.65}
+.bt.tight .fs{min-height:195px;font-size:24px}
+.bt.tight{gap:15px!important}
+/* S1-02 p6：4列表。スマホでは列3（入口の数）を残し、列4（ひとこと）を隠す */
+.mobile .atk4 th:nth-child(3),.mobile .atk4 td:nth-child(3){display:table-cell}
+.mobile .atk4 th:nth-child(4),.mobile .atk4 td:nth-child(4){display:none}
+.mobile .atk4 td:first-child{width:38%}
+.mobile .atk4 td{font-size:21px!important}
+/* S1-03 p4：2列表。スマホでも2列とも見せる */
+.mobile .at2 th:nth-child(3),.mobile .at2 td:nth-child(3){display:table-cell}
+.mobile .at2 td:first-child{width:70%}
+.bt.tight .atk td{padding:16.5px 21px!important;font-size:24.75px!important}
+/* S1-04 p7：3列表。スマホでは理由の列も残し、順の列を細く */
+.mobile .at3 th:nth-child(3),.mobile .at3 td:nth-child(3){display:table-cell}
+.mobile .at3 td:first-child{width:12%}
+.mobile .at3 td{font-size:19.5px!important}
+.mobile .at2 td:first-child{width:36%!important}
+.sumb>.card{gap:6px!important}.sumb>.card .note{font-size:19.5px;line-height:1.6}
+.bt .etab{font-size:30px}.bt .etab td,.bt .etab th{padding:24px 27px}
+.bt.tight .etab{font-size:27px}.bt.tight .etab td,.bt.tight .etab th{padding:15px 24px}
+.mobile .bt .etab{font-size:21px}.mobile .bt .etab td,.mobile .bt .etab th{padding:10.5px 12px}
+
+
+</style>
+</head>
+<body class="theme-photo noimg">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<section id="p1" class="slide page" data-n="title">
+  <div class="cover">
+    <div class="cover-text">
+      <div class="kicker fade d1">TriFuse 経済 ｜ L3 実践 ｜ E3-01</div>
+      <div class="cover-q fade d2">因果推論の壁——観察データから何が言えるか ｜ 今日の問い</div>
+      <h1 class="head fade d2">政策のあとに数字が変わったら、<span class="hl2">原因といえるか</span></h1>
+      <p class="sub fade d3">E2-EX では、1つの指標から一手だけ先を書きました。L3 の最初のこのノートでは、その一手が本当に原因と結果の関係なのかを点検する道具を持ちます。今日の2つの町と雇用の数字は、すべて説明のための例です。</p>
+      <div class="toc fade d4"><button data-go="1"><span class="n">02</span>最低賃金を上げたら雇用が減ったのか</button><button data-go="2"><span class="n">03</span>一緒に動くことと原因であること</button><button data-go="3"><span class="n">04</span>比べる相手を作る</button><button data-go="4"><span class="n">05</span>識別が置いている前提</button><button data-go="5"><span class="n">06</span>因果を主張してよい条件</button><button data-go="6"><span class="n">07</span>問いへの答えと出典</button></div>
+      <button class="btn pr start fade d5" data-go="1">はじめる ▶</button>
+    </div>
+    <div class="cover-ill" style="background:#fff;border-radius:33px;padding:30px;display:flex;align-items:center"><svg viewBox="0 0 600 278" style="width:100%;height:417px" aria-label="流れ">
+<g><rect x="85.0" y="8.0" width="430" height="70" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="72.9" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A">A町が最低賃金を引き上げる</text></g></g>
+<g><path d="M300.0 80.0L300.0 91.0" stroke="#F88039" stroke-width="3" fill="none"/><path d="M300.0 102.0L306.1 91.0L293.9 91.0Z" fill="#F88039"/><rect x="85.0" y="104.0" width="430" height="70" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="216.9" text-anchor="middle" font-size="24" font-weight="900" fill="#B5500F">翌年、飲食店で働く人が3%減る</text></g></g>
+<g><path d="M300.0 176.0L300.0 187.0" stroke="#8A9AB0" stroke-width="3" fill="none"/><path d="M300.0 198.0L306.1 187.0L293.9 187.0Z" fill="#8A9AB0"/><rect x="85.0" y="200.0" width="430" height="70" rx="12" fill="#F7F9FC" stroke="#8A9AB0" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="347.25" text-anchor="middle" font-size="24" font-weight="900" fill="#5A6B82">「上げたら雇用が減った」？</text></g><g transform="scale(0.666667)"><text x="450" y="378.15" text-anchor="middle" font-size="20.25" font-weight="500" fill="#5A6B82">まだ示されていない</text></g></g>
+</svg></div>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<section id="p2" class="slide page hasbr" data-n="s1" data-steps="3">
+  <header class="hd"><span class="chap">1. 最低賃金を上げたら雇用が減ったのか</span><h2 class="head">2つの事実が並んでいるだけでは、前者が後者の原因だとはまだ示されていない</h2><span class="num">02</span></header><p class="bridge"><b class="bk">今日の問い</b><span>ある政策のあとに数字が変わったとき、その政策が原因だといえるのは、どんな条件がそろったときか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1" style="display:flex;flex-direction:column;gap:9px"><div class="stepbar"><b style="font-size:22.5px">ニュースを読む</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 278" style="width:100%;height:417px" aria-label="流れ">
+<g class="sv" data-s="1"><rect x="85.0" y="8.0" width="430" height="70" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="72.9" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A">事実1：A町が最低賃金を引き上げた</text></g></g>
+<g class="sv" data-s="2"><path d="M300.0 80.0L300.0 91.0" stroke="#F88039" stroke-width="3" fill="none"/><path d="M300.0 102.0L306.1 91.0L293.9 91.0Z" fill="#F88039"/><rect x="85.0" y="104.0" width="430" height="70" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="216.9" text-anchor="middle" font-size="24" font-weight="900" fill="#B5500F">事実2：翌年、飲食店で働く人が3%減った</text></g></g>
+<g class="sv" data-s="3"><path d="M300.0 176.0L300.0 187.0" stroke="#8A9AB0" stroke-width="3" fill="none"/><path d="M300.0 198.0L306.1 187.0L293.9 187.0Z" fill="#8A9AB0"/><rect x="85.0" y="200.0" width="430" height="70" rx="12" fill="#F7F9FC" stroke="#8A9AB0" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="360.9" text-anchor="middle" font-size="24" font-weight="900" fill="#5A6B82">ニュース：「最低賃金を上げたら雇用が減った」</text></g></g>
+</svg></div><div class="kp fade d2" style="gap:15px"><div class="card  sv" data-s="2" style="border-left:7.5px solid var(--safe)"><h4>どちらも事実</h4><p>ただし、前者が後者の原因だということは、まだ示されていない。</p></div>
+<div class="keymsg sv" data-s="3" style="font-size:30px">原因だといえるには、何がそろえばよいか</div></div></div>
+</section>
+
+<section id="p3" class="slide page hasbr" data-n="s2" data-steps="3">
+  <header class="hd"><span class="chap">2. 一緒に動くことと原因であること</span><h2 class="head">一緒に動いたというだけでは足りない。ほかの3つの説明を外せることが要る</h2><span class="num">03</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>2つの事実が並んでいるだけ</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>なぜ原因とはいえないか</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.15fr 1fr;gap:33px"><div class="card fade d1" style="display:flex;flex-direction:column;gap:9px"><div class="stepbar"><b style="font-size:22.5px">3つの説明</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="分かれ道">
+<g><rect x="120.0" y="10.0" width="360" height="80" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="69.75" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A">相関：一緒に動く</text></g><g transform="scale(0.666667)"><text x="450" y="100.65" text-anchor="middle" font-size="20.25" font-weight="500" fill="#5A6B82">相関係数はマイナス1から1の間の数</text></g></g>
+<g class="sv" data-s="1"><path d="M240.0 92.0L106.5 203.0" stroke="#F88039" stroke-width="3" fill="none"/><path d="M98.0 210.0L110.3 207.6L102.6 198.3Z" fill="#F88039"/><rect x="8.0" y="214.0" width="180.0" height="110" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="147" y="398.7" text-anchor="middle" font-size="22.5" font-weight="900" fill="#B5500F">別の要因</text></g><g transform="scale(0.666667)"><text x="147" y="427.65" text-anchor="middle" font-size="18.75" font-weight="500" fill="#5A6B82">同じ年の景気の悪化が両方を動かす</text></g></g>
+<g class="sv" data-s="2"><path d="M300.0 92.0L300.0 199.0" stroke="#F88039" stroke-width="3" fill="none"/><path d="M300.0 210.0L306.1 199.0L293.9 199.0Z" fill="#F88039"/><rect x="210.0" y="214.0" width="180.0" height="110" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="398.7" text-anchor="middle" font-size="22.5" font-weight="900" fill="#B5500F">逆の向き</text></g><g transform="scale(0.666667)"><text x="450" y="427.65" text-anchor="middle" font-size="18.75" font-weight="500" fill="#5A6B82">人手が余る町ほど引き上げを決めやすい</text></g></g>
+<g class="sv" data-s="2"><path d="M360.0 92.0L493.5 203.0" stroke="#8A9AB0" stroke-width="3" fill="none"/><path d="M502.0 210.0L497.4 198.3L489.7 207.6Z" fill="#8A9AB0"/><rect x="412.0" y="214.0" width="180.0" height="110" rx="12" fill="#F7F9FC" stroke="#8A9AB0" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="753" y="398.7" text-anchor="middle" font-size="22.5" font-weight="900" fill="#5A6B82">偶然</text></g><g transform="scale(0.666667)"><text x="753" y="427.65" text-anchor="middle" font-size="18.75" font-weight="500" fill="#5A6B82">たまたまそうなった</text></g></g>
+</svg></div><div class="kp fade d2" style="gap:15px"><div class="card  fade d1"><h4>因果推論</h4><p>観察したデータから、原因と結果の関係を取り出そうとする考え方と手法。</p></div>
+<p class="note sv" data-s="1">ノーベル経済学賞の解説：問題は、その相関が本当の原因と結果の関係を意味するかどうか。</p>
+<div class="sv" data-s="3"><p class="ans"><b>1つ目の答え</b>一緒に動いたというだけでは足りず、別の要因、逆の向き、偶然という3つの説明を外せることが要る</p></div></div></div>
+</section>
+
+<section id="p4" class="slide page hasbr" data-n="s3" data-steps="3">
+  <header class="hd"><span class="chap">3. 比べる相手を作る</span><h2 class="head">原因がなかった場合を映す比べる相手を作り、その差で効果を取り出す</h2><span class="num">04</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>ほかの説明を外す必要がある</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>比べる相手を作る</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1" style="display:flex;flex-direction:column;gap:9px"><div class="stepbar"><b style="font-size:22.5px">2つの町を比べる</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 330" style="width:100%;height:495px" aria-label="2つの町の飲食店で働く人の減り方（説明のための例）">
+<path d="M24 266H576" stroke="#8A9AB0" stroke-width="2"/>
+<rect class="grow g0" x="107.0" y="198.2" width="110.0" height="67.8" rx="6" fill="#2B5FA8"/>
+<g><g transform="scale(0.666667)"><text x="243" y="280.65" text-anchor="middle" font-size="21" font-weight="900" fill="#16233A">3%減</text></g></g>
+<g transform="scale(0.666667)"><text x="243" y="445.35" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">A町（引き上げた）</text></g>
+<rect class="grow" data-s="1" x="383.0" y="175.6" width="110.0" height="90.4" rx="6" fill="#8A9AB0"/>
+<g class="sv" data-s="1"><g transform="scale(0.666667)"><text x="657" y="246.75" text-anchor="middle" font-size="21" font-weight="900" fill="#5A6B82">4%減</text></g></g>
+<g transform="scale(0.666667)"><text x="657" y="445.35" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">B町（上げなかった）</text></g>
+<g transform="scale(0.666667)"><text x="450" y="486" text-anchor="middle" font-size="18.75" font-weight="500" fill="#5A6B82">差の1ポイントが、引き上げに結びつけられる分</text></g>
+</svg></div><div class="kp fade d2" style="gap:15px"><div class="card  fade d1"><h4>自然実験</h4><p>町の最低賃金はくじで決められない。そこで、現実の中でくじに似た状況が偶然に生まれた場面を探す。</p></div>
+<div class="card  sv" data-s="2" style="border-left:7.5px solid var(--safe)"><h4>識別</h4><p>景気の悪化は両方の町にかかる。比べる相手を置いて、ほかの要因の影響を取り除き、原因の効果だけを取り出す。</p></div>
+<div class="sv" data-s="3"><p class="ans"><b>2つ目の答え</b>原因がなかった場合を映す比べる相手を作り、その差で効果を取り出す</p></div></div></div>
+</section>
+
+<section id="p5" class="slide page hasbr" data-n="s4" data-steps="3">
+  <header class="hd"><span class="chap">4. 識別が置いている前提</span><h2 class="head">比べ方は前提に立っていて、結論が届く範囲にも限りがある</h2><span class="num">05</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>比べる相手を作れば効果を取り出せる</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>その方法が置いている前提</span></p>
+  <div class="body" style="display:grid;grid-template-columns:1.25fr 1fr;gap:33px"><div class="card fade d1" style="display:flex;flex-direction:column;gap:9px"><div class="stepbar"><b style="font-size:22.5px">前提と範囲</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><svg viewBox="0 0 600 308" style="width:100%;height:462px" aria-label="流れ">
+<g class="sv" data-s="1"><rect x="85.0" y="8.0" width="430" height="80" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="80.4" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A">前提：違いがなければ、2つの町の雇用は同じように動いたはず</text></g></g>
+<g class="sv" data-s="2"><path d="M300.0 90.0L300.0 101.0" stroke="#F88039" stroke-width="3" fill="none"/><path d="M300.0 112.0L306.1 101.0L293.9 101.0Z" fill="#F88039"/><rect x="85.0" y="114.0" width="430" height="80" rx="12" fill="#FFF1E6" stroke="#F88039" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="225.75" text-anchor="middle" font-size="24" font-weight="900" fill="#B5500F">B町だけで大きな工場が閉まっていたら</text></g><g transform="scale(0.666667)"><text x="450" y="256.65" text-anchor="middle" font-size="20.25" font-weight="500" fill="#5A6B82">4%減に工場の分が入り、比べる相手に使えない</text></g></g>
+<g class="sv" data-s="3"><path d="M300.0 196.0L300.0 207.0" stroke="#8A9AB0" stroke-width="3" fill="none"/><path d="M300.0 218.0L306.1 207.0L293.9 207.0Z" fill="#8A9AB0"/><rect x="85.0" y="220.0" width="430" height="80" rx="12" fill="#F7F9FC" stroke="#8A9AB0" stroke-width="2.2"/><g transform="scale(0.666667)"><text x="450" y="398.4" text-anchor="middle" font-size="24" font-weight="900" fill="#5A6B82">分かるのは、この2つの町の、この年の、この程度の引き上げの効果</text></g></g>
+</svg></div><div class="kp fade d2" style="gap:15px"><div class="card  sv" data-s="2" style="border-left:7.5px solid var(--warn)"><h4>前提が崩れれば</h4><p>差の1ポイントは、最低賃金の効果ではなくなる。</p></div>
+<div class="card  sv" data-s="3"><h4>届く範囲</h4><p>自然実験で推定できるのは、その出来事によって行動を変えた人の中での効果だけ。ほかの国や、もっと大きな引き上げに、そのまま当てはまるとはいえない。</p></div></div></div>
+</section>
+
+<section id="p6" class="slide page hasbr" data-n="s5" data-steps="3">
+  <header class="hd"><span class="chap">5. 因果を主張してよい条件</span><h2 class="head">比べる相手・前提・届く範囲。どれかが欠ければ、相関の話にとどまる</h2><span class="num">06</span></header><p class="bridge"><b class="bk">前で分かったこと</b><span>前提と、結論が届く範囲</span><i class="ar">→</i><b class="bk now">ここで見ること</b><span>因果を主張してよい条件</span></p>
+  <div class="body bt tight" style="display:flex;flex-direction:column;gap:21px"><div class="stepbar"><b style="font-size:22.5px">3つの条件</b><button class="btn pr" data-next>次の段階 ▶</button><button class="btn" data-reset>はじめから</button><span class="hint">→キーでも進みます</span></div><table class="etab"><tr><th>因果を主張してよい条件</th><th>欠けていたら</th></tr><tr class="sv" data-s="1"><td>比べる相手がある</td><td>「一緒に動いた」という相関の話にとどまる</td></tr><tr class="sv" data-s="2"><td>比べる相手が、原因のなかった場合を映しているという前提が書かれている</td><td>差が原因の効果とはいえない</td></tr><tr class="sv" data-s="2"><td>結論が届く範囲が限られている</td><td>ほかの場面に当てはめすぎる</td></tr></table>
+<div class="card  sv" data-s="3"><h4>断定ではなく、欠けた手続きを指摘する</h4><p>「AのせいでBが起きた」に出会ったら、どの手続きが欠けているかを言う。相関を因果として示す側の操作を見抜く作法は、真贋のレーンの A3-01 でも出てくる。</p></div>
+<p class="note sv" data-s="3">最低賃金の引き上げが雇用に与える効果がどれだけかは判定しない。次の E3-02 では、利上げが株価に逆向きの2つの力で効く場面を分解する。</p></div>
+</section>
+
+<section id="p7" class="slide page hasbr" data-n="sum">
+  <header class="hd"><span class="chap">問いへの答えと出典</span><h2 class="head">比べる相手を作って差を取り出し、前提と届く範囲を書いたときに因果を主張できる</h2><span class="num">07</span></header><p class="bridge"><b class="bk">今日の問い</b><span>ある政策のあとに数字が変わったとき、その政策が原因だといえるのは、どんな条件がそろったときか</span></p>
+  <div class="body sumb" style="display:grid;grid-template-columns:1.15fr 1fr;gap:33px">
+    <div class="kp" style="gap:15px">
+      <div class="card fade d1 a3"><span class="no">1</span><div><h4>3つの説明を外す</h4><p>別の要因、逆の向き、偶然（2節）</p></div></div><div class="card fade d2 a3"><span class="no">2</span><div><h4>比べる相手</h4><p>原因がなかった場合を映す相手との差（3節）</p></div></div><div class="card fade d3 a3"><span class="no">3</span><div><h4>前提と範囲</h4><p>欠ければ相関の話にとどまる（4〜5節）</p></div></div>
+      <p class="note fade d4">この資料は事実と構造の説明であって、推奨ではありません。この先の景気や相場がどうなるか、それを受けて何を持つかは、この資料の外にあります。決めるのはあなたです。</p>
+    </div>
+    <div class="card fade d5" style="display:flex;flex-direction:column;gap:12px;align-self:start">
+      <h4 style="font-size:24px">出典</h4>
+      <p class="note"><b style="color:var(--ink)">ノーベル財団 2021年経済学賞の一般向け解説（英語）</b><br>2〜4節</p>
+      <p class="note" style="border-top:1.5px dashed var(--rule);padding-top:12px">出典の突き合わせは未了です。2つの町と雇用の数字は説明のための例です。疑問があれば、原典の資料を直接確かめてください。</p>
+    </div>
+  </div>
+</section>
+</div></div>
+
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bToc" title="目次（O）">目次</button><button class="wide" id="bNotes" title="解説（N）">解説</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">解説</h4><div id="notesBody"></div></div>
+<div id="help">← → でページ移動・N で解説・O で目次・F で全画面</div>
+<div class="notes-src" id="notes-title"><pre style="white-space:pre-wrap;font-size:13px;line-height:1.7">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ノードID】 E3-01 ／ 因果推論の壁——観察データから何が言えるか
+【レーン】   E 経済（世の中の動きを読む）
+【レベル】   L3 実践
+【前提知識】 E2-EX 卒業課題：一つの指標から一手先を書く
+【この先へ】 A3-01 数字の加工を検出する——分母・軸・期間 ／ E3-02 因果の衝突——利上げは株にどう効くか ／ E3-03 矛盾する指標をどう裁くか ／ E3-06 レジーム転換——ルールが変わる瞬間 ／ E3-12 反証の立て方——外れる条件を先に書く
+【到達目標】 観察したデータから「AがBの原因だ」と主張することがなぜ難しいかを説明でき、経済学が比べる相手を作ることで原因の効果を取り出そうとしてきた工夫を整理できる。因果を主張してよい条件と、その結論が届く範囲を言えることで、断定を避ける根拠を持つ。
+【読了目安】 12分
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+<div class="notes-src" id="notes-s1"><h5 style="font-size:15px;margin:8px 0 6px">1. 最低賃金を上げたら雇用が減ったのか</h5>
+<p>今日は、1つの問いを最後まで追います。「ある政策のあとに数字が変わったとき、その政策が原因だといえるのは、どんな条件がそろったときか」という問いです。今日の2つの町と、雇用の数字は、すべて説明のために作った例です。</p>
+<p>E2-EX では、1つの指標から、その結果が次に何へ届くかを一手だけ書きました。経路を名指しして、「この結果は、この経路で、ここに届く」と書く練習でした。L3 の最初のこのノートでは、その一手が、本当に原因と結果の関係なのかを点検する道具を持ちます。</p>
+<p>ある国のA町が、働く人の最低賃金を引き上げたとします。翌年、A町の飲食店で働く人は3%減りました。地元のニュースは「最低賃金を上げたら雇用が減った」と伝えています。</p>
+<p>このニュースは、2つの事実を並べています。最低賃金が上がったことと、飲食店で働く人が減ったことです。どちらも事実ですが、前者が後者の原因だということは、まだ示されていません。原因だといえるには、何がそろえばよいのでしょうか。</p></div>
+<div class="notes-src" id="notes-s2"><h5 style="font-size:15px;margin:8px 0 6px">2. 一緒に動くことと原因であること</h5>
+<p>1節で、2つの事実が並んでいるだけでは原因とはいえないと分かりました。最初に、なぜいえないのかを確かめます。</p>
+<p>2つの数字が一緒に動くことを、相関があるといいます。2つの数字が一緒に動く度合いを、マイナス1から1の間の1つの数で表したものを、相関係数と呼びます。最低賃金を上げた町ほど雇用が減っているなら、2つの間には相関があるということです。ノーベル経済学賞の解説が書くとおり、問題は、その相関が本当の原因と結果の関係を意味するかどうかです。</p>
+<p>相関があっても原因とはいえない理由は、主に3つの形で現れます。1つは、別の要因が両方を動かしている場合です。A町では、同じ年に景気が悪くなっていました。景気が悪くなれば、最低賃金と関係なく、飲食店の客は減り、働く人も減ります。2つ目は、向きが逆の場合です。人手が余っている町ほど賃金の引き上げを決めやすい、ということがあれば、雇用の状態が政策を決めていることになります。3つ目に、たまたまそうなっただけ、という場合もあります。</p>
+<p>観察したデータから、原因と結果の関係を取り出そうとする考え方と手法を、<b>因果推論</b>と呼びます。</p>
+<p>問いへの1つ目の答えは、<b>一緒に動いたというだけでは足りず、別の要因、逆の向き、偶然という3つの説明を外せることが要る</b>ことです。</p></div>
+<div class="notes-src" id="notes-s3"><h5 style="font-size:15px;margin:8px 0 6px">3. 比べる相手を作る</h5>
+<p>2節で、別の要因や逆の向きを外す必要があると分かりました。そのために経済学がとってきた方法の中心は、比べる相手を作ることです。</p>
+<p>本当に知りたいのは、「A町が最低賃金を上げなかったら、雇用はどうなっていたか」です。ところが、A町が上げた世界と上げなかった世界を、同時に見ることはできません。医学の試験では、くじで人を2つの群に分け、片方にだけ薬を渡します。くじで分ければ、2つの群は、薬以外の点ではおおむね同じになります。しかし、町の最低賃金をくじで決めることはできません。</p>
+<p>そこで経済学者は、現実の中で、くじに似た状況が偶然に生まれた場面を探しました。ノーベル経済学賞の解説は、これを自然実験と呼んでいます。A町の隣に、景気の波も、飲食店の数も似ているB町があり、B町は最低賃金を上げなかったとします。同じ年、B町の飲食店で働く人は4%減っていました。景気の悪化は、両方の町にかかっています。景気の悪化の分がB町の4%減に映っているとすれば、A町の3%減との差の1ポイントが、最低賃金の引き上げに結びつけられる分です。この例では、A町の方が減り方は小さかったので、「最低賃金を上げたら雇用が減った」というニュースの読み方は、比べる相手を置くと変わってきます。</p>
+<p>このように、比べる相手を置いて、ほかの要因の影響を取り除き、原因の効果だけを取り出すことを、<b>識別</b>と呼びます。解説によると、実際の研究でも、ある州では最低賃金が上がり、隣の州では上がらなかった場面を使って、ファストフード店の雇用を比べたものがあります。</p>
+<p>問いへの2つ目の答えは、<b>原因がなかった場合を映す比べる相手を作り、その差で効果を取り出すこと</b>です。</p></div>
+<div class="notes-src" id="notes-s4"><h5 style="font-size:15px;margin:8px 0 6px">4. 識別が置いている前提</h5>
+<p>3節で、比べる相手を作れば効果を取り出せると分かりました。ただし、この方法にも、置いている前提があります。</p>
+<p>A町とB町を比べる方法は、「最低賃金の違いがなければ、2つの町の雇用は同じように動いたはずだ」という前提に立っています。もしB町だけで大きな工場が閉まっていたなら、B町の4%減には工場の分が含まれ、比べる相手として使えません。前提が崩れれば、差の1ポイントは、最低賃金の効果ではなくなります。</p>
+<p>結論が届く範囲にも限りがあります。解説は、自然実験の方法で推定できるのは、その出来事によって行動を変えた人の中での効果だけだと書いています。A町とB町の比べ方で分かるのは、この2つの町の、この年の、この程度の引き上げについての効果です。ほかの国や、もっと大きな引き上げに、そのまま当てはまるとはいえません。</p></div>
+<div class="notes-src" id="notes-s5"><h5 style="font-size:15px;margin:8px 0 6px">5. 因果を主張してよい条件</h5>
+<p>2〜4節で、因果を主張するときに要るものがそろいました。最後に、それを1つの形にまとめます。</p>
+<p>ある政策のあとに数字が変わったとき、原因だと主張してよいのは、比べる相手があり、比べる相手が原因のなかった場合を映しているという前提が書かれ、結論が届く範囲が限られているときです。この3つのどれかが欠けていれば、主張は「一緒に動いた」という相関の話にとどまります。L3 では、このあとのノートで、利上げと株価、矛盾する指標、政策の時間差を扱いますが、どれも、この条件に照らして読むことになります。</p>
+<p>この条件を持っていると、「AのせいでBが起きた」という主張に出会ったときに、断定ではなく、どの手続きが欠けているかという形で指摘できます。相関を因果として示す側の操作を見抜く作法は、真贋のレーンの A3-01 でも出てきます。このノートは、最低賃金の引き上げが雇用に与える効果がどれだけかを判定しません。</p>
+<p>ある政策のあとに数字が変わっても、それだけでは原因とはいえません。比べる相手を作って差を取り出し、その前提と、結論が届く範囲を書いたときに、はじめて因果を主張できます。次の E3-02 では、利上げが株価に逆向きの2つの力で効く場面を、この見方で分解します。</p></div>
+<div class="notes-src" id="notes-sum"><h5 style="font-size:15px;margin:8px 0 6px">説明と推奨の分離（G-28）</h5>
+<p><b>このノートは事実と構造の説明であって、推奨ではありません。</b></p>
+<p>引き受けたのは、次の一点だけです。</p>
+<p style="border-left:3px solid #65CCFE;padding-left:10px">観察したデータから「AがBの原因だ」と主張することがなぜ難しいかを説明でき、経済学が比べる相手を作ることで原因の効果を取り出そうとしてきた工夫を整理できる。因果を主張してよい条件と、その結論が届く範囲を言えることで、断定を避ける根拠を持つ。</p>
+<p>そこから先——この先の景気や相場がどうなるか、それを受けて何を持つか——は、このノートの外にあります。</p>
+<p>同じ材料を見ても、資金の量も、使える時間も、目的も、人によって違います。</p>
+<p>私はあなたのそれを知りません。だから決めるのはあなたです。</p>
+<p>出典に挙げた資料は、私の説明を信じるためではなく、<b>私の説明を疑うために</b>置いてあります。</p>
+<p>おかしいと思ったら、そちらを先に見てください。</p></div>
+<script>
+// 数字の台帳（点検の道具が読む）：ページの数だけ
+const DATA = {pages: 7};
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('section.page')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  const FOOT="TriFuse 経済 L3 実践 ｜ E3-01 因果推論の壁";
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>'+FOOT+'</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('on',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='解説　'+(i+1)+' / '+total;
+    setStep(slides[i],0);
+    onEnter(slides[i]);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#p'+(i+1))}catch(e){}
+  }
+  // 段階表示：data-s の要素は段階の数が届くと .on になり、スライドに s1..sN が付く
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+    const max=+s.dataset.steps||0;
+    s.querySelectorAll('[data-next]').forEach(b=>{b.textContent=n>=max?'もう一度見る ↺':'次の段階 ▶'});
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  document.getElementById('bToc').onclick=()=>go(0);
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='o'||e.key==='O')go(0);
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  document.querySelectorAll('[data-next]').forEach(b=>b.onclick=e=>{e.stopPropagation();const s=b.closest('.slide');if(!step(s))setStep(s,0)});
+  document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=e=>{e.stopPropagation();setStep(b.closest('.slide'),0)});
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  document.querySelectorAll('.tap').forEach(el=>el.onclick=()=>step(el.closest('.slide')));
+
+  function onEnter(s){
+    s.querySelectorAll('.count').forEach(el=>{
+      const to=parseFloat(el.dataset.to),dec=+el.dataset.dec||0,t0=performance.now(),d=1300;
+      (function tick(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=(to*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});if(p<1)requestAnimationFrame(tick)})(t0);
+    });
+  }
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  // #p3 と #3 のどちらでも、そのページを開く
+  function fromHash(){const m=/^#p?(\d+)$/.exec(location.hash);return m?Math.max(1,Math.min(total,+m[1])):1}
+  addEventListener('hashchange',()=>{const n=fromHash();if(n-1!==cur)go(n-1)});
+  go(fromHash()-1);
+})();
+
+</script>
+</body>
+</html>
