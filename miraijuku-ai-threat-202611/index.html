@@ -1,0 +1,1855 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIの進化がもたらす新たな脅威｜未来塾 緊急特別ZOOM勉強会</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 10px 50px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(26px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-26px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:104px;background:var(--navy);color:#fff;padding:0 56px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--brand)}
+.hd .chap{font-size:15px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:4px}
+.hd h2{font-size:31px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:14px;bottom:10px;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:56px;right:56px;top:128px;bottom:58px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:44px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 56px;font-size:12px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1px solid var(--cardline);border-radius:14px;padding:18px 20px}
+.theme-trifuse .card{box-shadow:0 2px 10px rgba(15,27,45,.05)}
+.lead{font-size:17px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:19px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fade{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--rule);border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:12px;color:var(--muted)}
+.quote{border-left:5px solid var(--safe);background:var(--card);border-radius:0 12px 12px 0;padding:14px 20px;font-size:18px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:1.5px solid var(--cardline);border-radius:12px;padding:12px 10px;text-align:center;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:132px}
+.fs .n{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:4px}
+.fs .ico{width:34px;height:34px;color:var(--muted);margin-bottom:6px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 8px 24px -12px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:28px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:20px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+
+/* ===== 警告ランプ（点滅）とマーケット・ティッカー ===== */
+.metric.alert{border-color:rgba(248,128,57,.55)}
+.metric .alamp{position:absolute;right:58px;top:18px;width:11px;height:11px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 0 rgba(248,128,57,.7);animation:alamp 1.8s infinite}
+@keyframes alamp{0%{box-shadow:0 0 0 0 rgba(248,128,57,.7)}70%{box-shadow:0 0 0 12px rgba(248,128,57,0)}100%{box-shadow:0 0 0 0 rgba(248,128,57,0)}}
+.ticker{position:absolute;left:0;right:0;height:36px;background:var(--navy);color:#fff;overflow:hidden;display:flex;align-items:center;z-index:4}
+.theme-photo .ticker{top:360px}
+.theme-trifuse .ticker{top:0}
+.ticker .tk-lbl{flex:none;height:100%;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--safe);font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.06em;z-index:1}
+.ticker .tk-lbl i{width:8px;height:8px;border-radius:50%;background:var(--warn);animation:tkblink 1.2s steps(2,start) infinite}
+@keyframes tkblink{to{visibility:hidden}}
+.ticker .tk-track{display:flex;flex:none;white-space:nowrap;animation:tk 32s linear infinite}
+.ticker .tk-run{display:flex;gap:34px;padding-right:34px;font-family:var(--mono);font-size:16px;font-weight:700}
+.ticker .tk-run span{display:inline-flex;gap:8px;align-items:center}
+.ticker .tk-run em{font-style:normal;font-family:var(--font);font-weight:500;font-size:14px;color:#B9C7DA}
+.ticker .up{color:var(--warn)}.ticker .dn{color:var(--sky)}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mobile .ticker{position:relative;top:auto;bottom:auto}
+@media (prefers-reduced-motion:reduce){.ticker .tk-track,.metric .alamp{animation:none}}
+
+/* ===== S00 cover ===== */
+.cover{position:absolute;inset:0}
+.theme-trifuse .cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:14px;background:var(--brand)}
+.cover .kicker{font-size:16px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:50px;font-weight:900;line-height:1.22;color:var(--ink);letter-spacing:.01em}
+.cover h1 .hl2{color:var(--safe)}
+.cover .sub{font-size:19px;color:var(--ink2);line-height:1.7;font-weight:500}
+.theme-trifuse .cover-text{position:absolute;left:72px;top:150px;width:720px;display:flex;flex-direction:column;gap:22px}
+.theme-photo .cover-text{position:absolute;left:64px;right:64px;top:416px;display:flex;flex-direction:column;gap:12px}
+.theme-photo .cover h1{font-size:46px}
+.theme-photo .cover .sub{font-size:17px}
+.cover-ill{position:absolute;right:56px;top:120px;width:440px;height:460px}
+.cover-photos{position:absolute;left:0;right:0;top:0;height:360px;display:grid;grid-template-columns:1fr 1fr}
+.cph{position:relative;overflow:hidden;background:linear-gradient(135deg,#16233A,#2B5FA8)}
+.cph+.cph{background:linear-gradient(135deg,#2B5FA8,#16233A)}
+.noimg .credit{display:none}
+.cph .pbg{position:absolute;inset:0;background-size:cover;background-position:center}
+.cph .pbg.mono{filter:grayscale(1) contrast(1.1)}
+.cph .lbl{position:absolute;left:22px;bottom:18px;background:rgba(255,255,255,.94);color:var(--ink);font-weight:900;font-size:16px;padding:6px 14px;border-radius:30px;z-index:2}
+.cph .lbl small{font-weight:500;color:var(--ink2);margin-left:6px;font-size:13px}
+.cph .credit{bottom:auto;top:10px}
+.cover-vs{position:absolute;left:50%;top:150px;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;background:#fff;border:3px solid var(--warn);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;color:var(--warnT);font-size:19px;z-index:3}
+.cover .date{font-family:var(--mono);font-size:14px;color:var(--muted)}
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:4px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:92px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:16px 16px 18px}
+.mobile .hd h2{font-size:21px}
+.mobile .hd .chap{font-size:12px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:16px 14px 8px;display:flex!important;flex-direction:column;gap:14px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:12px 14px;font-size:11px;gap:8px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:14px}
+.mobile .lead,.mobile p{font-size:15px!important}
+.mobile .quote{font-size:16px!important}
+.mobile .t3{font-size:17px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:2px}
+.mobile .fs{min-height:0;flex-direction:row;gap:10px;text-align:left;justify-content:flex-start;padding:10px 12px;font-size:15px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:30px;height:30px}
+.mobile .fs .n{margin:0;min-width:48px}
+.mobile .fa{width:auto;height:16px;transform:rotate(90deg);font-size:14px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:4px 0 0;height:60px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:20px}
+.mobile .cover-photos{position:relative;height:200px}
+.mobile .cover-vs{top:70px;width:46px;height:46px;font-size:15px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:22px 18px 10px;gap:12px!important}
+.mobile .cover h1{font-size:30px!important}
+.mobile .cover .sub{font-size:15px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 36px);height:auto;margin:6px 18px 0}
+.mobile .cover .brandbar{position:relative;margin-top:18px}
+.mobile .cph .lbl{font-size:13px;left:10px;bottom:10px}
+/* individual slides */
+.mobile .ask{font-size:22px}
+.mobile .wrow{grid-template-columns:52px 1fr 76px}
+.mobile .wrow .v{font-size:16px}
+.mobile .metric .val{font-size:28px}
+.mobile .chain{flex-wrap:wrap;justify-content:center}
+.mobile .cn{flex:0 0 30%}
+.mobile .ca{display:none}
+.mobile .fedbox{margin-top:0}
+.mobile .hist{gap:20px}
+.mobile .hrow{grid-template-columns:30px 1fr 74px;row-gap:6px}
+.mobile .hrow .track{grid-column:1 / -1;height:26px}
+.mobile .hrow .pct{font-size:22px}
+.mobile .hrow .nm{font-size:16px}
+.mobile .half-lb{display:none}
+.mobile .conv{font-size:15px}
+.mobile .card[style*="1fr 230px"]{grid-template-columns:1fr!important;justify-items:center}
+.mobile .card[style*="1fr 230px"] .sandwich{width:240px!important;height:192px!important}
+.mobile .perbox{gap:10px;height:200px;padding-top:24px}
+.mobile .perbox .pb{flex:0 0 64px}
+.mobile .perres{font-size:26px}
+.mobile div:has(>.hint){flex-direction:column;gap:4px}
+.mobile .pcard .big{font-size:32px}
+.mobile .venn{width:540px;zoom:.66}
+.mobile .stage2{min-width:0}.mobile .st .k{flex-shrink:0}
+.mobile .tug{grid-template-columns:1fr;justify-items:center}
+.mobile .tug .side{width:100%}
+.mobile .srow{grid-template-columns:86px 1fr 62px 62px;gap:6px;font-size:13px}
+.mobile .srow .sp,.mobile .shead span:last-child{display:none}
+.mobile .srow .rate{font-size:12px}
+.mobile .srow .after{font-size:14px}.mobile .srow .loss{font-size:12px}
+.mobile .sim-amount input{width:150px;font-size:26px}
+.mobile .recover .big{font-size:15px}.mobile .recover .big b{font-size:18px}
+.mobile .check{grid-template-columns:28px 34px 1fr 30px;padding:12px;gap:10px}
+.mobile .check .ico{width:32px;height:32px}
+.mobile .check h3{font-size:16px}
+.mobile .meter{flex-direction:column;align-items:stretch}
+.mobile .meter .ml{min-width:0;text-align:left}
+.mobile .stock h3{font-size:24px}
+.mobile .stock .bigi{width:52px;height:52px}
+.mobile .theme-photo .stock .sbg,.mobile.theme-photo .stock .sbg{width:100%;opacity:.35}
+.mobile .q{font-size:15px}
+.mobile .keymsg{font-size:21px;padding:16px}
+.mobile .domrow{height:130px;gap:4px;padding:0}
+.mobile .dm .block{width:26px;height:74px}
+.mobile .dm .lb{font-size:11px}
+.mobile .punch{font-size:17px;padding:14px}
+.mobile .mon{flex-wrap:wrap}
+.mobile .si{grid-template-columns:30px 36px 1fr;padding:12px;gap:10px}
+.mobile .si .n{font-size:22px}.mobile .si .ico{width:32px;height:32px}
+.mobile .si h4{font-size:16px}
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== 2026年11月 AIの脅威 追加部品 ===== */
+.small{font-size:13px;color:var(--ink2);line-height:1.6}
+.src{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.disc{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:12px}
+.col{display:flex;flex-direction:column;gap:12px}
+.ctr{text-align:center}
+.red{color:var(--warnT)}
+.st0{opacity:.22;transition:opacity .45s ease,transform .45s ease,box-shadow .45s;transform:translateY(6px)}
+.st0.on{opacity:1;transform:none}
+.card.st0.on{box-shadow:0 10px 26px -16px rgba(15,27,45,.5)}
+.hide0{opacity:0;transition:opacity .45s ease,transform .45s ease;transform:translateY(8px)}
+.hide0.on{opacity:1;transform:none}
+svg .hide0{transform:none}
+.big{font-family:var(--mono);font-weight:700;color:var(--ink);line-height:1.1}
+.big small{font-family:var(--font);font-size:.42em;color:var(--ink2);margin-left:4px;font-weight:700}
+.big.w{color:var(--warnT)}
+.lbl{font-size:14px;font-weight:700;color:var(--ink2)}
+.keymsg{font-size:22px;font-weight:900;line-height:1.55;text-align:center;padding:16px 22px;border-radius:14px;background:#EAF4FF;color:var(--ink);border:1.5px solid #BBD7F5}
+.keymsg.w{background:#FFF5EC;border-color:#F9C9A6}
+.keymsg b{color:var(--safe)}.keymsg.w b{color:var(--warnT)}
+
+/* numbered cards */
+.nc{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:center;padding:14px 18px}
+.nc .nb{width:44px;height:44px;border-radius:50%;background:var(--safe);color:#fff;font-family:var(--mono);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
+.nc.w .nb{background:var(--warn)}
+.nc h4{font-size:19px;font-weight:900;line-height:1.35}
+.nc p{font-size:14.5px;color:var(--ink2);line-height:1.55;margin-top:3px}
+.ic-card{display:flex;flex-direction:column;gap:6px}
+.ic-card .ico{width:44px;height:44px;color:var(--safe)}
+.ic-card.w .ico{color:var(--warnT)}
+.ic-card h4{font-size:18px;font-weight:900;line-height:1.35}
+.ic-card p{font-size:14px;color:var(--ink2);line-height:1.6}
+.ic-card .k{display:inline-block;align-self:flex-start;font-size:13px;font-weight:900;padding:3px 10px;border-radius:20px;background:#FFF1E6;color:var(--warnT)}
+
+/* agenda */
+.ag{display:grid;grid-template-columns:150px 48px 1fr 250px;gap:14px;align-items:center;padding:9px 16px;border-radius:12px;border:1.5px solid var(--rule);background:#fff}
+.ag .tm{font-family:var(--mono);font-weight:700;color:var(--ink2);font-size:16px}
+.ag .no{width:40px;height:40px;border-radius:50%;background:#EAF4FF;color:var(--safe);font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center}
+.ag h4{font-size:20px;font-weight:900}
+.ag .dur{height:16px;background:#EEF2F7;border-radius:8px;overflow:hidden;position:relative}
+.ag .dur i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--brand);transition:width .8s ease}
+.ag.on .dur i{width:var(--w)}
+.ag .mn{font-family:var(--mono);font-size:13px;color:var(--ink2);margin-top:3px}
+.ag.hot{border-color:#F9C9A6;background:#FFFAF5}
+.ag.hot .no{background:var(--warn);color:#fff}
+
+/* horizontal bars */
+.hb{display:grid;grid-template-columns:250px 1fr 150px;gap:14px;align-items:center}
+.hb .nm{font-size:17px;font-weight:900;line-height:1.25}
+.hb .nm small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.hb .tr{height:28px;background:#EEF2F7;border-radius:6px;overflow:hidden}
+.hb .tr i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#FDBA8C,#F88039);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.hb .v{font-family:var(--mono);font-weight:700;font-size:21px;text-align:right;color:var(--warnT)}
+.hb .v small{font-family:var(--font);font-size:12px;color:var(--ink2);margin-left:2px}
+.slide.active .hbs.auto .hb .tr i{width:var(--w)}
+.hb.on .tr i{width:var(--w)}
+.hbs.auto .hb:nth-child(2) i{transition-delay:.12s}.hbs.auto .hb:nth-child(3) i{transition-delay:.24s}.hbs.auto .hb:nth-child(4) i{transition-delay:.36s}.hbs.auto .hb:nth-child(5) i{transition-delay:.48s}.hbs.auto .hb:nth-child(6) i{transition-delay:.6s}.hbs.auto .hb:nth-child(7) i{transition-delay:.72s}.hbs.auto .hb:nth-child(8) i{transition-delay:.84s}.hbs.auto .hb:nth-child(9) i{transition-delay:.96s}
+.hb.blue .tr i{background:linear-gradient(90deg,#65CCFE,#2B5FA8)}
+.hb.blue .v{color:var(--safe)}
+
+/* vertical bars */
+.vb{display:flex;align-items:flex-end;justify-content:center;gap:56px;height:330px;padding-top:40px;border-bottom:2px solid var(--rule)}
+.vb .c{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;width:150px;position:relative}
+.vb .bar{width:120px;height:0;border-radius:10px 10px 0 0;background:linear-gradient(180deg,#F88039,#FDBA8C);transition:height 1.1s cubic-bezier(.2,.8,.2,1)}
+.vb .c.blue .bar{background:linear-gradient(180deg,#2B5FA8,#65CCFE)}
+.vb .c.on .bar{height:var(--h)}
+.vb .val{font-family:var(--mono);font-weight:700;font-size:24px;margin-bottom:6px;opacity:0;transition:opacity .4s .5s;white-space:nowrap}
+.vb .c.on .val{opacity:1}
+.vb .val small{font-family:var(--font);font-size:13px;color:var(--ink2)}
+.vb .yr{position:absolute;bottom:-34px;font-size:15px;font-weight:900;white-space:nowrap}
+.vb .yr small{font-weight:500;color:var(--ink2);font-size:12px}
+.mult{display:inline-block;font-family:var(--mono);font-weight:700;font-size:18px;color:#fff;background:var(--warn);border-radius:30px;padding:3px 12px}
+
+/* 100-cell grid */
+.grid100{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;width:300px}
+.grid100 i{aspect-ratio:1;border-radius:4px;background:#BBD7F5;transition:background .4s}
+.slide.s2 .grid100 i.ai{background:var(--warn)}
+
+/* phone call */
+.call .bubble{transition:opacity .45s,transform .45s}
+.call .wave rect{transform-box:fill-box;transform-origin:center;animation:wv 1s ease-in-out infinite alternate}
+.call .wave rect:nth-child(2n){animation-delay:.25s}.call .wave rect:nth-child(3n){animation-delay:.5s}
+@keyframes wv{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+.ring{animation:ring 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ring{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(-7deg)}20%,40%{transform:rotate(7deg)}}
+.stamp{opacity:0;transform:scale(1.6) rotate(-10deg);transform-box:fill-box;transform-origin:center;transition:all .45s cubic-bezier(.3,1.5,.5,1)}
+.stamp.on{opacity:1;transform:scale(1) rotate(-10deg)}
+.no3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.no3 .card{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:900;position:relative}
+.no3 .ico{width:36px;height:36px;color:var(--ink2)}
+.no3 .xx{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:32px;height:32px;color:var(--warnT);stroke-width:5}
+
+/* case cards */
+.case{display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--warn)}
+.case .hd2{display:flex;align-items:center;gap:10px}
+.case .hd2 .ico{width:38px;height:38px;color:var(--warnT)}
+.case h3{font-size:21px;font-weight:900}
+.case .dt{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.case .num{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--warnT);line-height:1.1}
+.case .num small{font-family:var(--font);font-size:13px;color:var(--ink2)}
+.case ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.case li{font-size:14.5px;line-height:1.55;padding-left:16px;position:relative;color:var(--ink)}
+.case li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.case .lesson{margin-top:auto;font-size:14.5px;font-weight:900;background:#EAF4FF;color:var(--safe);border-radius:8px;padding:7px 10px;line-height:1.5}
+
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:14px;font-weight:900;padding:5px 12px;border-radius:30px;background:#FFF1E6;color:var(--warnT);border:1.5px solid #F9C9A6}
+.chip.b{background:#EAF4FF;color:var(--safe);border-color:#BBD7F5}
+.chip.g{background:#E7F6F1;color:var(--okT);border-color:#B5E3D4}
+
+/* company tiles */
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.tile{text-align:center;padding:14px 10px}
+.tile .ico{width:40px;height:40px;color:var(--warnT);margin:0 auto 6px;display:block}
+.tile b{font-size:17px;display:block}
+.tile .n{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--warnT);margin:4px 0}
+.tile p{font-size:12.5px;color:var(--ink2);line-height:1.5}
+
+/* hot wallet */
+.hw .atk{opacity:0;transition:opacity .4s}
+.slide.s2 .hw .atk{opacity:1}
+.hw .atkline{stroke-dasharray:6 8;animation:mflow2 .8s linear infinite}
+@keyframes mflow2{to{stroke-dashoffset:-14}}
+.hw .coins{transition:transform 1.2s ease,opacity 1.2s}
+.slide.s2 .hw .coins{transform:translate(170px,-6px);opacity:.15}
+.hw .net{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* pump chart */
+.pump .pl{stroke-dasharray:900;stroke-dashoffset:900;transition:stroke-dashoffset 1.1s ease}
+.pump .pl.on{stroke-dashoffset:0}
+
+/* profile merge */
+.merge{display:grid;grid-template-columns:1.25fr 56px 1fr;gap:12px;align-items:center}
+.pieces{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;background:#fff;border:1.5px solid var(--rule);font-size:16px;font-weight:900}
+.pc small{font-size:11.5px;color:var(--muted);font-weight:500;margin-left:auto;white-space:nowrap}
+.pc .ico{width:24px;height:24px;color:var(--warnT)}
+.arrbig{font-size:40px;color:var(--warn);text-align:center;font-weight:900}
+.profile{border:2px solid var(--warn);background:#FFF9F4;border-radius:14px;padding:16px 18px}
+.profile .pr{display:flex;justify-content:space-between;border-bottom:1px dashed #F3C8A8;padding:6px 0;font-size:15.5px}
+.profile .pr span{color:var(--ink2)}
+.profile .pr b{font-family:var(--mono)}
+
+/* hub (email) */
+.hub .spk{stroke:#BBD7F5;stroke-width:4;transition:stroke .4s}
+.hub .nd circle{fill:#fff;stroke:#BBD7F5;stroke-width:3;transition:all .4s}
+.hub .nd use{color:var(--safe);transition:color .4s}
+.hub .nd.on circle{stroke:var(--warn);fill:#FFF1E6}
+.hub .nd.on use{color:var(--warnT)}
+.hub .spk.on{stroke:var(--warn)}
+.hub .center circle{fill:#EAF4FF;stroke:var(--safe);stroke-width:4;transition:all .4s}
+.slide.s2 .hub .center circle{fill:#FFE3CF;stroke:var(--warn)}
+.hub .center use{color:var(--safe)}.slide.s2 .hub .center use{color:var(--warnT)}
+
+/* timeline (later) */
+.later{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;padding-top:12px}
+.later::before{content:"";position:absolute;left:12%;right:12%;top:40px;height:5px;border-radius:3px;background:#EEF2F7}
+.lt{text-align:center;position:relative}
+.lt .dot{width:58px;height:58px;border-radius:50%;margin:0 auto 8px;background:#fff;border:3px solid var(--rule);display:flex;align-items:center;justify-content:center;transition:all .4s}
+.lt .dot .ico{width:30px;height:30px;color:var(--muted)}
+.lt.on .dot{border-color:var(--warn);background:#FFF1E6}.lt.on .dot .ico{color:var(--warnT)}
+.lt b{font-size:18px}
+.lt p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:4px;padding:0 10px}
+
+/* active defense timeline */
+.adt{position:relative;height:150px}
+.adt .ln{position:absolute;left:30px;right:30px;top:62px;height:8px;border-radius:4px;background:linear-gradient(90deg,#BBD7F5,#FDBA8C,#F88039)}
+.adt .pt{position:absolute;top:32px;width:180px;text-align:center;transform:translateX(-50%)}
+.adt .pt .d{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid var(--ink2);margin:20px auto 8px}
+.adt .pt b{font-size:17px}
+.adt .pin{position:absolute;top:0;transform:translateX(-50%);font-size:14px;font-weight:900;padding:4px 12px;border-radius:20px;white-space:nowrap;opacity:0;transition:opacity .4s}
+.adt .pin.on{opacity:1}
+.adt .pin.old{background:#EEF2F7;color:var(--ink2)}
+.adt .pin.new{background:var(--safe);color:#fff}
+
+/* infra ring */
+.infra .nd{transition:all .4s}
+.infra .nd circle{fill:#fff;stroke:var(--rule);stroke-width:3}
+.infra .nd use{color:var(--ink2)}
+.infra .nd.on circle{stroke:var(--warn);fill:#FFF1E6}.infra .nd.on use{color:var(--warnT)}
+.infra .lk{stroke:var(--rule);stroke-width:3;stroke-dasharray:5 6}
+.infra .lk.on{stroke:var(--warn)}
+
+/* php tower */
+.tower .site{transition:transform .6s ease,fill .4s}
+.slide.s1 .tower .crack{opacity:1}
+.tower .crack{opacity:0;transition:opacity .3s}
+.slide.s1 .tower .wob{animation:wob .4s ease-in-out 3}
+@keyframes wob{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.tower .wob{transform-box:view-box}
+.slide.s3 .tower .base{fill:#E7F6F1;stroke:var(--ok)}
+.slide.s3 .tower .crack{opacity:0}
+.tower .patch{opacity:0;transition:opacity .4s}.slide.s3 .tower .patch{opacity:1}
+
+/* seven measures */
+.seven{display:flex;gap:8px}
+.seven span{flex:1;text-align:center;font-size:13.5px;font-weight:900;padding:7px 4px;border-radius:8px;background:#EEF2F7;color:var(--ink2);line-height:1.3}
+.seven span.cur{background:var(--safe);color:#fff}
+
+/* passkey */
+.pk .lnk{stroke:var(--ok);stroke-width:4;stroke-dasharray:8 8;animation:mflow2 1s linear infinite}
+.pk .fake{opacity:.25;transition:opacity .4s}.slide.s2 .pk .fake{opacity:1}
+.pk .no{opacity:0;transition:opacity .4s .3s}.slide.s2 .pk .no{opacity:1}
+.pk .ok{opacity:0;transition:opacity .4s}.slide.s1 .pk .ok{opacity:1}
+
+/* toggles */
+.tg{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:900;padding:12px 16px}
+.tg .sw{width:58px;height:32px;border-radius:16px;background:#D8DFE8;position:relative;transition:background .35s;flex:none}
+.tg .sw::after{content:"";position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .35s;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.tg.on .sw{background:var(--ok)}
+.tg.on .sw::after{transform:translateX(26px)}
+.tg .ico{width:30px;height:30px;color:var(--safe)}
+
+/* password reuse */
+.pw .lkd{transition:all .4s}
+.pw .lkd rect{fill:#fff;stroke:var(--rule);stroke-width:3;transition:all .4s}
+.pw .lkd.on rect{stroke:var(--warn);fill:#FFF1E6}
+.pw .chain{stroke:var(--warn);stroke-width:4;stroke-dasharray:500;stroke-dashoffset:500;transition:stroke-dashoffset 1s ease}
+.pw .chain.on{stroke-dashoffset:0}
+
+/* steps list */
+.sl{display:flex;flex-direction:column;gap:9px}
+.sl .row2{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center;padding:10px 16px;border-radius:12px;border:1.5px solid var(--rule);background:#fff}
+.sl .row2 .nb{width:40px;height:40px;border-radius:50%;background:var(--safe);color:#fff;font-family:var(--mono);font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:center}
+.sl .row2 b{font-size:18.5px}
+.sl .row2.w .nb{background:var(--warn)}
+.sl .row2 p{font-size:13.5px;color:var(--ink2);margin-top:2px}
+
+/* checklist */
+.cl{display:flex;flex-direction:column;gap:12px}
+.cl .ci{display:flex;align-items:center;gap:16px;font-size:21px;font-weight:900;padding:14px 18px}
+.cl .bx{width:36px;height:36px;border-radius:8px;border:3px solid var(--rule);display:flex;align-items:center;justify-content:center;flex:none;transition:all .35s}
+.cl .bx .ico{width:26px;height:26px;color:#fff;stroke-width:6;opacity:0;transition:opacity .3s}
+.cl .ci.on .bx{background:var(--ok);border-color:var(--ok)}
+.cl .ci.on .bx .ico{opacity:1}
+.cl .ci small{font-size:13.5px;color:var(--ink2);font-weight:500;display:block}
+
+/* growth bars */
+.gb{display:flex;align-items:flex-end;gap:12px;height:230px;border-bottom:2px solid var(--rule);padding:0 8px}
+.gb .g{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.gb .g i{display:block;width:100%;border-radius:6px 6px 0 0;height:0;transition:height .7s ease}
+.gb.a .g i{background:linear-gradient(180deg,#65CCFE,#2B5FA8)}
+.gb.b .g i{background:linear-gradient(180deg,#FEDA37,#F88039)}
+.gb .g.on i{height:var(--h)}
+.gb .g span{font-family:var(--mono);font-weight:700;font-size:15px;margin-bottom:4px;opacity:0;transition:opacity .3s .4s}
+.gb .g.on span{opacity:1}
+.gb .g label{position:absolute;bottom:-24px;font-size:12px;color:var(--ink2);white-space:nowrap}
+
+/* framework stack */
+.fw{display:flex;flex-direction:column;gap:6px}
+.fw .lv{display:grid;grid-template-columns:44px 96px 1fr;gap:12px;align-items:center;padding:8px 16px;border-radius:10px;background:#fff;border:1.5px solid var(--rule)}
+.fw .lv .nb{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--safe)}
+.fw .lv b{font-size:20px}
+.fw .lv span{font-size:16px;color:var(--ink2)}
+.fw .lv.on{border-color:var(--c);box-shadow:0 8px 20px -14px var(--c)}
+.fw .lv.on .nb{color:var(--c)}
+
+/* platform merge */
+.plat .pt{transition:transform .9s cubic-bezier(.3,1.1,.5,1)}
+.slide.s1 .plat .pt{transform:translate(0,170px)}
+.plat .box{opacity:0;transition:opacity .5s .5s}.slide.s1 .slide.s1 .plat .pt{transform:translate(0,170px)}
+.plat .box{opacity:1}
+
+/* ARR stack */
+.arr .blk{opacity:0;transform:translateY(-20px);transition:opacity .35s,transform .35s cubic-bezier(.3,1.4,.5,1)}
+.slide.active .arr .blk{opacity:1;transform:none}
+.arr .blk:nth-child(2){transition-delay:.15s}.arr .blk:nth-child(3){transition-delay:.3s}.arr .blk:nth-child(4){transition-delay:.45s}.arr .blk:nth-child(5){transition-delay:.6s}.arr .blk:nth-child(6){transition-delay:.75s}
+
+/* balance (two pillars) */
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.pillar{border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.pillar .ico{width:64px;height:64px}
+.pillar h3{font-size:28px;font-weight:900}
+.pillar p{font-size:15.5px;line-height:1.65;color:var(--ink2)}
+.pillar.grow{background:#EAF4FF;border:2px solid #BBD7F5}.pillar.grow .ico,.pillar.grow h3{color:var(--safe)}
+.pillar.guard{background:#E7F6F1;border:2px solid #B5E3D4}.pillar.guard .ico,.pillar.guard h3{color:var(--okT)}
+
+/* two-side */
+.vs2{display:grid;grid-template-columns:1fr 60px 1fr;align-items:stretch;gap:10px}
+.vs2 .side{border-radius:14px;padding:16px 18px}
+.vs2 .mid{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:22px;color:var(--ink2)}
+.vs2 .good{background:#E7F6F1;border:1.5px solid #B5E3D4}
+.vs2 .bad{background:#FFF1E6;border:1.5px solid #F9C9A6}
+.vs2 h4{font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vs2 h4 .ico{width:30px;height:30px}
+.vs2 .good h4{color:var(--okT)}.vs2 .bad h4{color:var(--warnT)}
+.vs2 p{font-size:15px;line-height:1.6;color:var(--ink)}
+
+/* company table */
+.ct{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.co{padding:16px;display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--rule)}
+.co .tk{font-family:var(--mono);font-weight:700;font-size:28px;color:var(--ink)}
+.co b{font-size:16px;line-height:1.35}
+.co b small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.co p{font-size:14px;color:var(--ink2);line-height:1.55}
+.co.focus{border-top-color:var(--safe);background:#F4F9FF}
+.co.focus .tk{color:var(--safe)}
+
+#notes table{border-collapse:collapse;margin:6px 0 10px;font-size:14px}
+#notes td,#notes th{border:1px solid var(--rule);padding:3px 8px}
+#notes blockquote{border-left:4px solid var(--sky);padding:2px 10px;margin:6px 0;background:#F4F9FF}
+#notes h5{font-size:15px;margin:10px 0 4px;color:var(--safe)}
+
+/* mobile */
+.mobile .ag{grid-template-columns:1fr 40px;row-gap:4px}
+.mobile .ag .tm{grid-column:1/-1;order:-1;font-size:13px}
+.mobile .ag h4{font-size:16px}
+.mobile .ag>div:last-child{grid-column:1/-1}
+.mobile .hb{grid-template-columns:1fr 110px!important;row-gap:4px}
+.mobile .hb .tr{grid-column:1/-1;order:3;height:18px}
+.mobile .hb .nm{font-size:15px}.mobile .hb .v{font-size:17px}
+.mobile .tiles,.mobile .ct{grid-template-columns:1fr 1fr}
+.mobile .no3,.mobile .merge,.mobile .vs2,.mobile .pillars,.mobile .later{grid-template-columns:1fr}
+.mobile .later::before{display:none}
+.mobile .vb{gap:12px;height:260px}.mobile .vb .c{width:90px}.mobile .vb .bar{width:70px}.mobile .vb .val{font-size:15px}
+.mobile .arrbig{transform:rotate(90deg)}
+.mobile .pieces{grid-template-columns:1fr 1fr}
+.mobile .seven{flex-wrap:wrap}.mobile .seven span{flex:0 0 30%}
+.mobile .keymsg{font-size:17px;padding:12px}
+.mobile .big{font-size:34px!important}
+.mobile .fw .lv{grid-template-columns:30px 70px 1fr;padding:8px 10px}.mobile .fw .lv b{font-size:16px}.mobile .fw .lv span{font-size:13px}
+.mobile .cl .ci{font-size:17px}
+.mobile .adt{height:auto;display:flex;flex-direction:column;gap:6px}
+.mobile .adt .ln{display:none}
+.mobile .adt .pt,.mobile .adt .pin{position:static;transform:none;width:auto;opacity:1}
+.mobile .adt .pt .d{display:none}
+.mobile .grid100{width:220px}
+.mobile .st0,.mobile .hide0{opacity:1;transform:none}
+.mobile .pillar h3{font-size:22px}
+.mobile .wide-svg{zoom:.55}
+
+.co[data-s].on{border-top-color:var(--safe);background:#F4F9FF}.co[data-s].on .tk{color:var(--safe)}
+
+.theme-photo .cover h1{font-size:54px}
+.theme-photo .cover .sub{font-size:20px}
+.cover .chaps{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cover .chaps span{font-size:14px;font-weight:900;padding:5px 12px;border-radius:30px;background:#EAF4FF;color:var(--safe);border:1.5px solid #BBD7F5}
+.cover .chaps span.w{background:#FFF1E6;color:var(--warnT);border-color:#F9C9A6}
+</style>
+</head>
+<body class="theme-photo">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-mail" viewBox="0 0 64 64"><rect x="6" y="14" width="52" height="36" rx="4"/><path d="M8 17l24 18 24-18"/></symbol>
+<symbol id="i-phone" viewBox="0 0 64 64"><rect x="18" y="4" width="28" height="56" rx="5"/><path d="M28 10h8"/><circle cx="32" cy="52" r="2.5" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-lock" viewBox="0 0 64 64"><rect x="12" y="28" width="40" height="30" rx="5"/><path d="M20 28v-8a12 12 0 0 1 24 0v8"/><circle cx="32" cy="42" r="4"/><path d="M32 46v5"/></symbol>
+<symbol id="i-key" viewBox="0 0 64 64"><circle cx="20" cy="32" r="11"/><path d="M31 32h27M50 32v9M42 32v6"/></symbol>
+<symbol id="i-mic" viewBox="0 0 64 64"><rect x="23" y="6" width="18" height="32" rx="9"/><path d="M14 30a18 18 0 0 0 36 0M32 48v10M22 58h20"/></symbol>
+<symbol id="i-video" viewBox="0 0 64 64"><rect x="4" y="16" width="40" height="32" rx="4"/><path d="M44 28l16-9v26l-16-9z"/><circle cx="24" cy="29" r="5"/><path d="M15 43c2-5 6-7 9-7s7 2 9 7"/></symbol>
+<symbol id="i-target" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M48 16l8-8M50 8h6v6"/></symbol>
+<symbol id="i-idcard" viewBox="0 0 64 64"><rect x="4" y="12" width="56" height="40" rx="5"/><circle cx="21" cy="29" r="6"/><path d="M11 44c2-5 6-7 10-7s8 2 10 7M38 24h14M38 32h14M38 40h9"/></symbol>
+<symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="25"/><path d="M7 32h50M32 7c-8 8-10 17-10 25s2 17 10 25M32 7c8 8 10 17 10 25s-2 17-10 25"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 64 64"><path d="M36 4 12 36h18l-4 24 24-32H32z"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 64 64"><path d="M52 24A22 22 0 0 0 12 22M12 40a22 22 0 0 0 40 2"/><path d="M52 10v14H38M12 54V40h14"/></symbol>
+<symbol id="i-bell" viewBox="0 0 64 64"><path d="M16 44V30a16 16 0 0 1 32 0v14l5 6H11z"/><path d="M26 54a6 6 0 0 0 12 0"/></symbol>
+<symbol id="i-bookmark" viewBox="0 0 64 64"><path d="M16 6h32v52L32 46 16 58z"/></symbol>
+<symbol id="i-finger" viewBox="0 0 64 64"><path d="M20 50c-3-5-4-11-4-18a16 16 0 0 1 32 0"/><path d="M26 54c-2-6-3-13-3-22a9 9 0 0 1 18 0c0 6 0 11-1 16"/><path d="M32 58c-1-8-2-17-2-26M48 42c0 5-1 9-2 13"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 64 64"><path d="M18 48a12 12 0 0 1-1-24 16 16 0 0 1 31 4 10 10 0 0 1-2 20z"/></symbol>
+<symbol id="i-server" viewBox="0 0 64 64"><rect x="10" y="6" width="44" height="16" rx="3"/><rect x="10" y="24" width="44" height="16" rx="3"/><rect x="10" y="42" width="44" height="16" rx="3"/><path d="M18 14h4M18 32h4M18 50h4"/></symbol>
+<symbol id="i-check" viewBox="0 0 64 64"><path d="M12 34l13 13 27-30"/></symbol>
+<symbol id="i-x" viewBox="0 0 64 64"><path d="M16 16l32 32M48 16 16 48"/></symbol>
+<symbol id="i-robot" viewBox="0 0 64 64"><rect x="12" y="20" width="40" height="32" rx="7"/><path d="M32 20v-9"/><circle cx="32" cy="9" r="3"/><circle cx="24" cy="35" r="4"/><circle cx="40" cy="35" r="4"/><path d="M25 45h14M6 32v10M58 32v10"/></symbol>
+<symbol id="i-hood" viewBox="0 0 64 64"><path d="M10 58c0-16 6-30 22-44 16 14 22 28 22 44"/><path d="M22 40c2-8 6-12 10-12s8 4 10 12c-4 3-16 3-20 0z"/></symbol>
+<symbol id="i-cart2" viewBox="0 0 64 64"><path d="M4 12h8l6 28h30l6-20H15"/><circle cx="22" cy="50" r="4"/><circle cx="44" cy="50" r="4"/></symbol>
+<symbol id="i-plane" viewBox="0 0 64 64"><path d="M6 36l52-22-12 40-12-12-10 10v-14l22-18-30 22z"/></symbol>
+<symbol id="i-hospital" viewBox="0 0 64 64"><rect x="8" y="14" width="48" height="44" rx="3"/><path d="M32 22v20M22 32h20M24 58V48h16v10"/></symbol>
+<symbol id="i-gift" viewBox="0 0 64 64"><rect x="8" y="24" width="48" height="12"/><path d="M12 36v22h40V36M32 24v34"/><path d="M32 24c-4-10-16-12-16-4 0 4 8 4 16 4zM32 24c4-10 16-12 16-4 0 4-8 4-16 4z"/></symbol>
+<symbol id="i-code" viewBox="0 0 64 64"><path d="M22 18 8 32l14 14M42 18l14 14-14 14M36 12 28 52"/></symbol>
+<symbol id="i-water" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/><path d="M24 40a8 8 0 0 0 8 8"/></symbol>
+<symbol id="i-signal" viewBox="0 0 64 64"><path d="M32 58V30"/><circle cx="32" cy="26" r="4"/><path d="M22 16a14 14 0 0 0 0 20M42 16a14 14 0 0 1 0 20M14 8a26 26 0 0 0 0 36M50 8a26 26 0 0 1 0 36"/></symbol>
+<symbol id="i-layers" viewBox="0 0 64 64"><path d="M32 6 4 20l28 14 28-14z"/><path d="M4 32l28 14 28-14M4 44l28 14 28-14"/></symbol>
+<symbol id="i-radar" viewBox="0 0 64 64"><circle cx="32" cy="32" r="25"/><circle cx="32" cy="32" r="15"/><path d="M32 32 50 14"/><circle cx="42" cy="24" r="3" fill="currentColor" stroke="none"/></symbol>
+</defs></svg>
+
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<!-- ================= 表紙 ================= -->
+<section class="slide" data-n="title">
+  <div class="cover">
+    <div class="cover-photos">
+      <div class="cph"><div class="pbg" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80&auto=format&fit=crop')"></div><span class="lbl">AIの進化<small>犯罪の道具にもなる</small></span><span class="credit">Photo: Markus Spiske / Unsplash</span></div>
+      <div class="cph"><div class="pbg" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200&q=80&auto=format&fit=crop')"></div><span class="lbl">資産を守る<small>今日からできる対策</small></span><span class="credit">Photo: FLY:D / Unsplash</span></div>
+    </div>
+    <div class="ticker" aria-label="本日扱う主な数字"><div class="tk-lbl"><i></i>本日の数字</div><div class="tk-track"><div class="tk-run"><span><em>米国ネット犯罪 報告被害額（2025年）</em>約208.8億ドル</span><span><em>AI関与の報告</em>22,364件</span><span><em>佐川急便</em>最大約5,323万件</span><span><em>Binance流出（公表）</em>約63億ドル</span><span><em>証券口座 不正取引（2025年）</em>9,848件</span><span><em>マクニカ集計（2026年）</em>3億6,639万件</span></div><div class="tk-run" aria-hidden="true"><span><em>米国ネット犯罪 報告被害額（2025年）</em>約208.8億ドル</span><span><em>AI関与の報告</em>22,364件</span><span><em>佐川急便</em>最大約5,323万件</span><span><em>Binance流出（公表）</em>約63億ドル</span><span><em>証券口座 不正取引（2025年）</em>9,848件</span><span><em>マクニカ集計（2026年）</em>3億6,639万件</span></div></div></div>
+    <div class="cover-text">
+      <div class="kicker fade d1">未来塾 緊急特別ZOOM勉強会 ｜ 未来塾1.0・2.0 合同特別講義</div>
+      <h1 class="fade d2">AIの進化がもたらす<span class="hl2">新たな脅威</span></h1>
+      <p class="sub fade d3">〜あなたの個人情報と金融資産は本当に安全なのか？〜</p>
+      <div class="chaps fade d4"><span>① AIとサイバー犯罪</span><span>② 大規模ハッキング</span><span>③ 流出すると</span><span>④ 今後の脅威と国の対策</span><span class="w">⑤ 資産を守る方法</span><span>⑥ セキュリティ企業と投資</span></div>
+      <div class="date fade d5">2026.11.3（火・祝）20:00〜 ｜ 講師：岩渕</div>
+    </div>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<!-- ================= 進行表 ================= -->
+<section class="slide" data-n="agenda" data-steps="6">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">本日の進行</span><h2>講義全体の進行表（20:00〜22:00）</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:9px">
+    <div class="ag st0" data-s="1" style="--w:60%"><span class="tm">20:00〜20:15</span><span class="no">①</span><h4>AIの進化とサイバー犯罪</h4><div><div class="dur"><i></i></div><div class="mn">15分</div></div></div>
+    <div class="ag st0" data-s="2" style="--w:100%"><span class="tm">20:15〜20:40</span><span class="no">②</span><h4>国内外で発生した大規模ハッキング</h4><div><div class="dur"><i></i></div><div class="mn">25分</div></div></div>
+    <div class="ag st0" data-s="3" style="--w:60%"><span class="tm">20:40〜20:55</span><span class="no">③</span><h4>個人情報が流出するとどうなるのか</h4><div><div class="dur"><i></i></div><div class="mn">15分</div></div></div>
+    <div class="ag st0" data-s="4" style="--w:60%"><span class="tm">20:55〜21:10</span><span class="no">④</span><h4>今後の脅威と国家レベルの対策</h4><div><div class="dur"><i></i></div><div class="mn">15分</div></div></div>
+    <div class="ag hot st0" data-s="5" style="--w:100%"><span class="tm">21:10〜21:35</span><span class="no">⑤</span><h4>金融資産を守る具体的な方法 <span class="tag w">最重要</span></h4><div><div class="dur"><i></i></div><div class="mn">25分</div></div></div>
+    <div class="ag st0" data-s="6" style="--w:100%"><span class="tm">21:35〜22:00</span><span class="no">⑥</span><h4>セキュリティ企業と株式投資 <span class="tag">投資分析編</span></h4><div><div class="dur"><i></i></div><div class="mn">25分</div></div></div>
+  </div></div>
+</section>
+
+<!-- ================= はじめに ================= -->
+<section class="slide" data-n="intro" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">はじめに</span><h2>本日のテーマ「AIの進化がもたらす新たな脅威」</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="vs2 fade d1">
+      <div class="side good"><h4><svg class="ico"><use href="#i-sprout"/></svg>AIは生活と企業を豊かにする</h4><p>生産性の向上、新しい産業、投資機会。未来塾ではAI・半導体・次世代エネルギーを学んできました。</p></div>
+      <div class="mid">⇄</div>
+      <div class="side bad"><h4><svg class="ico"><use href="#i-hood"/></svg>犯罪者にとっても強力な道具に</h4><p>今回は少し違った角度から、AIについて考えていただきます。</p></div>
+    </div>
+    <div style="font-size:18px;font-weight:900">本日お伝えしたいこと　3つ</div>
+    <div class="g3">
+      <div class="card nc st0" data-s="1"><span class="nb">1</span><div><h4>知る</h4><p>サイバー犯罪がどれほど深刻か、実際の事件で知る</p></div></div>
+      <div class="card nc st0" data-s="2"><span class="nb">2</span><div><h4>守る</h4><p>ご自身とご家族の個人情報・金融資産を守る具体的な方法</p></div></div>
+      <div class="card nc st0" data-s="3"><span class="nb">3</span><div><h4>投資する</h4><p>世界的な問題を解決する企業から、将来成長する投資先を考える</p></div></div>
+    </div>
+    <div class="quote fade d3">実際の企業名や被害規模をご紹介します。ご自身にも起こり得る問題として聞いてください。</div>
+  </div></div>
+</section>
+
+<!-- ================= 第1章 a ================= -->
+<section class="slide" data-n="c1a" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第①章　AIの進化とサイバー犯罪｜20:00〜20:15</span><h2>AIが悪用される、主な4つの犯罪</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="vs2 fade d1" style="grid-template-columns:1fr 60px 1fr">
+      <div class="side" style="background:#EEF2F7"><h4 style="color:var(--ink2)">以前</h4><p>自然な文章・人の声・実在の人物の映像を作るには、<b>高度な専門技術</b>が必要だった</p></div>
+      <div class="mid">▶</div>
+      <div class="side bad"><h4>現在</h4><p><b>生成AI</b>で、はるかに簡単に作れる。企業や私たちの利点は、<b>犯罪者にとっても同じ</b></p></div>
+    </div>
+    <div class="g4">
+      <div class="card ic-card w st0" data-s="1"><svg class="ico"><use href="#i-mail"/></svg><h4>① フィッシング詐欺</h4><p>偽メール・偽サイトでパスワードを盗む</p><span class="k">自然な日本語を大量に作れる</span></div>
+      <div class="card ic-card w st0" data-s="2"><svg class="ico"><use href="#i-mic"/></svg><h4>② ボイスクローン</h4><p>家族や社長の声をまねて送金を要求</p><span class="k">数秒〜数十秒の音声で複製</span></div>
+      <div class="card ic-card w st0" data-s="3"><svg class="ico"><use href="#i-video"/></svg><h4>③ ディープフェイク映像</h4><p>著名人が投資商品を勧めて見える偽広告</p><span class="k">言っていないことを言わせる</span></div>
+      <div class="card ic-card w st0" data-s="4"><svg class="ico"><use href="#i-target"/></svg><h4>④ 標的型詐欺</h4><p>氏名・住所・電話・証券会社を組み合わせ、本物の担当者を装う</p><span class="k">一人ひとりに合わせた会話</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第1章 b ================= -->
+<section class="slide" data-n="c1b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第①章　AIの進化とサイバー犯罪</span><h2>米国では年間3兆円を超える被害</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.25fr 1fr;gap:26px;align-items:center">
+    <div class="col" style="gap:14px">
+      <div class="card fade d1">
+        <div class="lbl">2025年　米国のインターネット犯罪による報告被害額</div>
+        <div class="big" style="font-size:58px;margin-top:6px">約208.8<small>億ドル</small></div>
+        <div style="font-size:22px;font-weight:900;color:var(--safe)">約3兆1,300億円</div>
+        <p class="src">米FBI インターネット犯罪報告書（ic3.gov）／1ドル150円で換算。AI犯罪だけでなく、インターネット犯罪全体の被害額</p>
+      </div>
+      <div class="card hide0" data-s="2" style="border:2px solid #F9C9A6;background:#FFFAF5">
+        <div class="lbl">うち、AIの関与が報告された犯罪だけで</div>
+        <div style="display:flex;gap:26px;align-items:baseline;margin-top:4px"><div class="big w" style="font-size:40px">22,364<small>件</small></div><div class="big w" style="font-size:40px">約8.93<small>億ドル</small></div></div>
+        <div style="font-size:19px;font-weight:900;color:var(--warnT)">日本円で約1,340億円（fbi.gov）</div>
+      </div>
+    </div>
+    <div class="col" style="align-items:center;gap:12px">
+      <div class="grid100 fade d2" id="g100"></div>
+      <div class="small ctr" style="max-width:300px">1マス＝全体の1％。<span class="red" style="font-weight:900">オレンジ</span>がAIの関与が報告された分（約4％）</div>
+      <div class="keymsg w hide0" data-s="3" style="width:100%">AI犯罪は<b>遠い未来の話ではない</b><br>すでに現実の被害につながっている</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第1章 c 問いかけ ================= -->
+<section class="slide" data-n="c1c" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第①章　皆様への問いかけ</span><h2>家族の声で「今すぐ振り込んで」と言われたら？</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1.1fr;gap:26px;align-items:center">
+    <svg class="call" viewBox="0 0 440 400" style="width:100%" aria-label="家族からの電話">
+      <rect x="40" y="30" width="170" height="330" rx="26" fill="#16233A"/><rect x="52" y="62" width="146" height="262" rx="10" fill="#F7F9FC"/>
+      <g class="ring"><circle cx="125" cy="140" r="38" fill="#EAF4FF"/><use href="#i-user" x="99" y="114" width="52" height="52" style="color:#2B5FA8" class="ico"/></g>
+      <text x="125" y="208" text-anchor="middle" font-size="18" font-weight="900" fill="#16233A" font-family="Noto Sans JP">息子</text>
+      <text x="125" y="232" text-anchor="middle" font-size="13" fill="#5A6B82" font-family="Noto Sans JP">着信中…</text>
+      <circle cx="90" cy="290" r="18" fill="#E06A4B"/><circle cx="160" cy="290" r="18" fill="#40B69A"/>
+      <g class="wave" fill="#65CCFE"><rect x="226" y="150" width="7" height="40" rx="3"/><rect x="238" y="140" width="7" height="60" rx="3"/><rect x="250" y="155" width="7" height="30" rx="3"/><rect x="262" y="135" width="7" height="70" rx="3"/><rect x="274" y="150" width="7" height="40" rx="3"/></g>
+      <g class="bubble"><rect x="226" y="40" width="200" height="84" rx="16" fill="#FFF1E6" stroke="#F9C9A6" stroke-width="2"/><text x="326" y="74" text-anchor="middle" font-size="17" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">母さん、急いで</text><text x="326" y="102" text-anchor="middle" font-size="17" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">今すぐ振り込んで！</text></g>
+      <g class="stamp" data-s="2"><rect x="232" y="232" width="190" height="80" rx="10" fill="#fff" stroke="#F88039" stroke-width="5"/><text x="327" y="266" text-anchor="middle" font-size="22" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">AIの声かも</text><text x="327" y="294" text-anchor="middle" font-size="14" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">本人そっくりでも</text></g>
+    </svg>
+    <div class="col" style="gap:14px">
+      <div class="quote st0" data-s="1">その声が本人そっくりだったとしても、<span class="wt">本当に本人であるとは限らない</span>時代が始まっています。</div>
+      <div style="font-size:18px;font-weight:900" class="hide0" data-s="3">これからは、自然だからといって信用しない</div>
+      <div class="no3 hide0" data-s="3" style="grid-template-columns:1fr">
+        <div class="card"><svg class="ico"><use href="#i-mic"/></svg>声<svg class="ico xx"><use href="#i-x"/></svg></div>
+        <div class="card"><svg class="ico"><use href="#i-video"/></svg>映像<svg class="ico xx"><use href="#i-x"/></svg></div>
+        <div class="card"><svg class="ico"><use href="#i-mail"/></svg>メールの自然な文章<svg class="ico xx"><use href="#i-x"/></svg></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 a ================= -->
+<section class="slide" data-n="c2a">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　国内外で発生した大規模ハッキング｜20:15〜20:40</span><h2>日本国内で相次ぐ情報流出</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:8px">
+    <div class="hbs auto col" style="gap:7px">
+      <div class="hb" style="--w:100%"><span class="nm">佐川急便<small>2026年9〜10月</small></span><div class="tr"><i></i></div><span class="v">5,323<small>万件</small></span></div>
+      <div class="hb" style="--w:51.2%"><span class="nm">無印良品<small>2026年10月</small></span><div class="tr"><i></i></div><span class="v">2,726<small>万件</small></span></div>
+      <div class="hb" style="--w:41.7%"><span class="nm">EPARK PeakManager<small>予約システム｜2026年7〜9月｜登録データ数</small></span><div class="tr"><i></i></div><span class="v">2,218<small>万件</small></span></div>
+      <div class="hb" style="--w:22.1%"><span class="nm">カプコン<small>2026年10月</small></span><div class="tr"><i></i></div><span class="v">1,177<small>万件</small></span></div>
+      <div class="hb" style="--w:20.3%"><span class="nm">焼肉きんぐ<small>2026年10月</small></span><div class="tr"><i></i></div><span class="v">1,079<small>万件</small></span></div>
+      <div class="hb" style="--w:4.3%"><span class="nm">アサヒグループ<small>2025年9月</small></span><div class="tr"><i></i></div><span class="v">229<small>万件</small></span></div>
+      <div class="hb" style="--w:2.5%"><span class="nm">アスクル<small>2025年10月</small></span><div class="tr"><i></i></div><span class="v">134<small>万件</small></span></div>
+      <div class="hb" style="--w:1.7%"><span class="nm">GMOリサーチ＆AI<small>2026年10月</small></span><div class="tr"><i></i></div><span class="v">89.4<small>万件</small></span></div>
+      <div class="hb" style="--w:1%"><span class="nm">KADOKAWA<small>2024年6月</small></span><div class="tr"><i></i></div><span class="v">25.4<small>万人</small></span></div>
+    </div>
+    <p class="src">※流出が確認された件数・流出の可能性がある件数・同じ人の重複データなどを含む各社の発表数字。実際の被害人数を単純比較したものではありません。これらは国内事件のほんの一部です。</p>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 b ================= -->
+<section class="slide" data-n="c2b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　国内の代表的な事例</span><h2>佐川急便・アサヒグループ・GMO　3つの事例</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="g3" style="align-items:stretch">
+    <div class="card case st0" data-s="1">
+      <div class="hd2"><svg class="ico"><use href="#i-truck"/></svg><div><h3>佐川急便</h3><div class="dt">2026年9月 不正アクセス／10月23日公表</div></div></div>
+      <div class="num">最大約5,323<small>万件</small></div>
+      <ul><li>同じ人の重複を含む件数。5,323万人分の流出が確定したわけではない</li><li>荷物の配送に関する情報が危険に</li></ul>
+      <div class="lesson">配送会社を装った不在通知の偽SMSに注意</div>
+    </div>
+    <div class="card case st0" data-s="2">
+      <div class="hd2"><svg class="ico"><use href="#i-factory"/></svg><div><h3>アサヒグループ</h3><div class="dt">2025年9月29日 サイバー攻撃</div></div></div>
+      <div class="num" style="font-size:22px">生産・物流・販売に支障</div>
+      <ul><li>ネットワーク機器を経由して社内に侵入</li><li>顧客・従業員・家族・取引先の個人情報が流出したおそれ</li></ul>
+      <div class="lesson">データだけでなく企業活動が止まる。業績・株価に直結するリスク</div>
+    </div>
+    <div class="card case st0" data-s="3">
+      <div class="hd2"><svg class="ico"><use href="#i-gift"/></svg><div><h3>GMOリサーチ＆AI</h3><div class="dt">2026年10月 アンケートサイト「infoQ」</div></div></div>
+      <div class="num">89万4,082<small>件 持ち出し</small></div>
+      <ul><li>611件・約287万円分のポイントが、本人の知らないうちにAmazonギフトコードへ交換</li><li>会社は全額補填の方針</li></ul>
+      <div class="lesson">ITのプロの企業グループでも被害に遭う</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 c ================= -->
+<section class="slide" data-n="c2c" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　私たちの身近な企業でも</span><h2>自分がハッキングされなくても、情報は危険にさらされる</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="tiles fade d1">
+      <div class="card tile"><svg class="ico"><use href="#i-car"/></svg><b>タイムズカー</b><div class="n" style="font-size:15px">免許証など</div><p>会員情報・本人確認書類関連情報</p></div>
+      <div class="card tile"><svg class="ico"><use href="#i-cart2"/></svg><b>リンツ</b><div class="n">約315万件</div><p>会員情報</p></div>
+      <div class="card tile"><svg class="ico"><use href="#i-plane"/></svg><b>JAL</b><div class="n">約9.2万人</div><p>予約情報に流出のおそれ</p></div>
+      <div class="card tile"><svg class="ico"><use href="#i-plane"/></svg><b>ANA</b><div class="n">約3.78万人</div><p>予約情報に流出のおそれ</p></div>
+      <div class="card tile"><svg class="ico"><use href="#i-hospital"/></svg><b>佐賀大学</b><div class="n">約8万人</div><p>付属病院の患者情報も対象のおそれ</p></div>
+    </div>
+    <p class="src" style="margin-top:-8px">JAL・ANAは両社ではなく、利用していた外部の航空予約システムへの不正アクセスが原因。一部のパスポート番号も流出したおそれ。</p>
+    <div class="flow">
+      <div class="fs" data-s="1"><span class="n">STEP 1</span><svg class="ico"><use href="#i-user"/></svg>私たちが<br>氏名・住所・電話・メールを登録</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><span class="n">STEP 2</span><svg class="ico"><use href="#i-server"/></svg>企業が<br>情報を管理</div><div class="fa" data-s="3">▶</div>
+      <div class="fs" data-s="3"><span class="n">STEP 3</span><svg class="ico"><use href="#i-link"/></svg>委託先・外部システムでも<br>管理（利用者には見えない）</div><div class="fa" data-s="4">▶</div>
+      <div class="fs last" data-s="4" style="--c:var(--warn)"><span class="n">STEP 4</span><svg class="ico"><use href="#i-warning"/></svg>どこか1か所が<br>破られると流出</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 d ================= -->
+<section class="slide" data-n="c2d" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　情報流出の件数は急増しているのか？</span><h2>マクニカの集計では、桁違いに増えている</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.3fr 1fr;gap:26px;align-items:center">
+    <div style="padding-bottom:40px">
+      <div class="vb">
+        <div class="c" data-s="1" style="--h:4px"><div class="val">372<small>万件</small></div><div class="bar" style="min-height:0"></div><div class="yr">2024年</div></div>
+        <div class="c" data-s="2" style="--h:26px"><div class="val">3,345<small>万件</small></div><div class="bar"></div><div class="yr">2025年</div></div>
+        <div class="c" data-s="3" style="--h:280px"><div class="val">3億6,639<small>万件</small></div><div class="bar"></div><div class="yr">2026年 <small>10月30日時点</small></div></div>
+      </div>
+    </div>
+    <div class="col" style="gap:14px">
+      <div class="card hide0" data-s="2"><span class="mult">約9倍</span><p class="lead" style="margin-top:6px">2024年 → 2025年</p></div>
+      <div class="card hide0" data-s="3"><span class="mult">約11倍</span><p class="lead" style="margin-top:6px">2025年 → 2026年（10月30日時点）<br>1件で数千万件にのぼる超大規模事件が相次いだ影響も</p></div>
+      <p class="src">セキュリティ企業マクニカの集計。報道された各社の件数を単純合算したもので公式統計ではありません。全体の傾向を見る参考データ。</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 e Binance ================= -->
+<section class="slide" data-n="c2e" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　海外の重大事件</span><h2>Binance（バイナンス）史上最大規模のハッキング</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1.15fr;gap:28px;align-items:center">
+    <div class="col" style="gap:14px">
+      <div class="card fade d1">
+        <div class="lbl">2026年10月29日　世界最大級の暗号資産取引所</div>
+        <div style="font-size:18px;font-weight:900;margin-top:6px">ホットウォレットに不正侵入され、暗号資産が不正に引き出された</div>
+      </div>
+      <div class="card fade d2" style="border:2px solid #F9C9A6;background:#FFFAF5">
+        <div class="lbl">Binance公表の流出額</div>
+        <div class="big w" style="font-size:54px">約63<small>億ドル</small></div>
+        <div style="font-size:22px;font-weight:900;color:var(--warnT)">約9,450億円相当</div>
+        <p class="src">※1ドル150円で換算した概算。事件は調査継続中です。（Binance Support）</p>
+      </div>
+    </div>
+    <div style="padding-bottom:40px">
+      <div class="vb" style="height:340px;gap:70px">
+        <div class="c blue" data-s="1" style="--h:64px"><div class="val">約15<small>億ドル</small></div><div class="bar"></div><div class="yr">Bybit <small>2025年2月</small></div></div>
+        <div class="c" data-s="2" style="--h:270px"><div class="val">約63<small>億ドル</small></div><div class="bar"></div><div class="yr">Binance <small>2026年10月</small></div></div>
+      </div>
+      <div class="ctr hide0" data-s="3" style="margin-top:48px"><span style="font-size:17px;font-weight:900;margin-right:10px">当時の過去最大だったBybit（約2,250億円）の</span><span class="mult" style="font-size:22px">約4.2倍</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 f ホットウォレット ================= -->
+<section class="slide" data-n="c2f" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　ホットウォレットとは何か？</span><h2>ネットに常時つながった「オンラインのお財布」</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.1fr 1fr;gap:26px;align-items:center">
+    <svg class="hw" viewBox="0 0 520 330" style="width:100%" aria-label="ホットウォレットが攻撃される図">
+      <g transform="translate(200 20)"><use href="#i-cloud" width="120" height="120" class="ico" style="color:#65CCFE"/><text x="60" y="88" text-anchor="middle" font-size="15" font-weight="900" fill="#2B5FA8" font-family="Noto Sans JP">インターネット</text></g>
+      <path class="net" d="M260 135 V180" stroke="#65CCFE" stroke-width="5" stroke-dasharray="6 6"/>
+      <g transform="translate(150 175)"><rect width="220" height="120" rx="18" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="3"/><use href="#i-wallet" x="20" y="22" width="60" height="60" class="ico" style="color:#2B5FA8"/><text x="150" y="52" text-anchor="middle" font-size="17" font-weight="900" fill="#16233A" font-family="Noto Sans JP">ホット</text><text x="150" y="76" text-anchor="middle" font-size="17" font-weight="900" fill="#16233A" font-family="Noto Sans JP">ウォレット</text><text x="110" y="108" text-anchor="middle" font-size="12.5" fill="#5A6B82" font-family="Noto Sans JP">すぐ取引・送金できて便利</text></g>
+      <g class="coins"><circle cx="300" cy="230" r="13" fill="#FEDA37" stroke="#B5500F" stroke-width="2"/><circle cx="322" cy="244" r="13" fill="#FEDA37" stroke="#B5500F" stroke-width="2"/><circle cx="306" cy="258" r="13" fill="#FEDA37" stroke="#B5500F" stroke-width="2"/></g>
+      <g class="atk"><g transform="translate(420 60)"><use href="#i-hood" width="76" height="76" class="ico" style="color:#B5500F"/><text x="38" y="96" text-anchor="middle" font-size="14" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">攻撃者</text></g><path class="atkline" d="M420 110 C380 130 360 160 360 200" stroke="#F88039" stroke-width="4" fill="none"/><path class="atkline" d="M310 80 C360 70 390 80 420 95" stroke="#F88039" stroke-width="4" fill="none"/></g>
+      <g transform="translate(20 190)"><text font-size="14" font-weight="900" fill="#B5500F" font-family="Noto Sans JP"><tspan x="0" y="0">つながっている</tspan><tspan x="0" y="22">＝外から狙われ</tspan><tspan x="0" y="44">　やすい</tspan></text></g>
+    </svg>
+    <div class="col" style="gap:12px">
+      <div class="card nc st0" data-s="1"><span class="nb">1</span><div><h4>常時インターネットに接続</h4><p>普段使いの財布のような仕組み。すぐ取引・送金できる</p></div></div>
+      <div class="card nc w st0" data-s="2"><span class="nb">2</span><div><h4>外部からのハッキングの標的に</h4><p>ネットにつながっているぶん、狙われやすい</p></div></div>
+      <div class="card nc st0" data-s="3"><span class="nb">3</span><div><h4>顧客には損失を負担させない方針</h4><p>利用者保護基金と自社の資金で対応。実際の回復状況や事件の全容は引き続き確認が必要</p></div></div>
+      <div class="keymsg w hide0" data-s="3" style="font-size:18px">約9,450億円が、たった一度のハッキングで。<br>価格の上下だけでなく、<b>預けている取引所のセキュリティ</b>もリスク</div>
+    </div>
+  </div></div>
+</section>
+<!-- ================= 第2章 g 証券口座 ================= -->
+<section class="slide" data-n="c2g" data-steps="5">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　株式投資に最も直接関係する問題</span><h2>日本の証券口座乗っ取り事件</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:18px">
+    <div class="g2 fade d1" style="grid-template-columns:1fr 1fr 1.3fr;display:grid">
+      <div class="card"><div class="lbl">2025年　不正アクセス件数</div><div class="big" style="font-size:44px">17,701<small>件</small></div></div>
+      <div class="card" style="border:2px solid #F9C9A6;background:#FFFAF5"><div class="lbl">実際に勝手に売買された不正取引</div><div class="big w" style="font-size:44px">9,848<small>件</small></div></div>
+      <div class="card" style="display:flex;align-items:center"><p style="font-size:16px;line-height:1.6">2025年、日本の証券口座への不正アクセスが<b class="wt">急増</b>しました。<br><span class="src">金融庁の公表データ（fsa.go.jp）</span></p></div>
+    </div>
+    <div style="font-size:18px;font-weight:900">主な手口　5つのステップ</div>
+    <div class="flow">
+      <div class="fs" data-s="1"><span class="n">1</span><svg class="ico"><use href="#i-mail"/></svg>証券会社を<br>装う偽メール</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><span class="n">2</span><svg class="ico"><use href="#i-link"/></svg>リンクから<br>そっくりな偽サイトへ</div><div class="fa" data-s="3">▶</div>
+      <div class="fs" data-s="3"><span class="n">3</span><svg class="ico"><use href="#i-key"/></svg>IDや<br>パスワードを盗む</div><div class="fa" data-s="4">▶</div>
+      <div class="fs" data-s="4"><span class="n">4</span><svg class="ico"><use href="#i-hood"/></svg>なりすまして<br>本物の口座へ</div><div class="fa" data-s="5">▶</div>
+      <div class="fs last" data-s="5" style="--c:var(--warn)"><span class="n">5</span><svg class="ico"><use href="#i-chart-down"/></svg>保有株を売却<br>別銘柄を購入</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第2章 h なぜ別の株 ================= -->
+<section class="slide" data-n="c2h" data-steps="5">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第②章　なぜ犯人は、お金を引き出さずに別の株を買うのか？</span><h2>出金できないから、「株価のつり上げ」で奪う</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.25fr 1fr;gap:24px">
+    <div class="card" style="padding:14px 16px">
+      <svg class="pump" viewBox="0 0 560 360" style="width:100%" aria-label="無名株のつり上げと暴落">
+        <line x1="30" y1="320" x2="550" y2="320" stroke="#D8DFE8" stroke-width="2"/><line x1="30" y1="20" x2="30" y2="320" stroke="#D8DFE8" stroke-width="2"/>
+        <text x="38" y="38" font-size="16" fill="#5A6B82" font-family="Noto Sans JP">無名株の株価</text>
+        <path class="pl" data-s="1" d="M40 292 L80 288 L120 293 L160 286" stroke="#2B5FA8" stroke-width="6" fill="none"/>
+        <path class="pl" data-s="2" d="M160 286 L215 220 L262 140 L300 86" stroke="#F88039" stroke-width="6" fill="none"/>
+        <path class="pl" data-s="4" d="M300 86 L350 140 L400 240 L460 292 L545 300" stroke="#B5500F" stroke-width="6" fill="none"/>
+        <g class="hide0" data-s="1"><circle cx="120" cy="292" r="10" fill="#2B5FA8"/><text x="40" y="262" font-size="19" font-weight="900" fill="#2B5FA8" font-family="Noto Sans JP">① 犯人が安く仕込む</text></g>
+        <g class="hide0" data-s="2"><rect x="40" y="150" width="190" height="64" rx="10" fill="#FFF1E6"/><text x="135" y="176" text-anchor="middle" font-size="17" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">② 乗っ取った口座のお金で</text><text x="135" y="202" text-anchor="middle" font-size="17" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">高値で大量に買わせる</text></g>
+        <g class="hide0" data-s="3"><circle cx="300" cy="86" r="11" fill="#B5500F"/><rect x="320" y="46" width="200" height="42" rx="10" fill="#16233A"/><text x="420" y="74" text-anchor="middle" font-size="19" font-weight="900" fill="#fff" font-family="Noto Sans JP">③ 犯人が売り抜け</text></g>
+        <g class="hide0" data-s="4"><rect x="380" y="160" width="170" height="64" rx="10" fill="#FFF1E6"/><text x="465" y="187" text-anchor="middle" font-size="19" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">④ 直後に暴落</text><text x="465" y="212" text-anchor="middle" font-size="16" font-weight="700" fill="#B5500F" font-family="Noto Sans JP">被害者に大きな損失</text></g>
+      </svg>
+      <p class="small">例：1,000万円の株式資産 → 大切な株を勝手に売られ、無名株を高値で買わされ、直後に暴落。必ず全額を失うわけではないが、知らないうちに資産が大きく損なわれる。</p>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="card fade d1" style="display:flex;gap:12px;align-items:center"><svg class="ico" style="width:46px;height:46px;color:var(--safe)"><use href="#i-lock"/></svg><div><b style="font-size:17px">証券口座の出金先は、本人名義の銀行口座だけ</b><p class="small">犯人の口座へ直接振り込むことはできない仕組み</p></div></div>
+      <div class="card fade d2"><b style="font-size:16px">狙われる株</b><p class="small">普段ほとんど取引されない無名の株（小型株や中国株など）</p></div>
+      <div class="card hide0" data-s="5" style="border:2px solid var(--safe)">
+        <div class="t3" style="font-size:18px"><svg class="ico" style="width:30px;height:30px;color:var(--safe)"><use href="#i-shield"/></svg>証券会社は補償してくれるのか？</div>
+        <p style="font-size:14.5px;line-height:1.6">2025年5月、日本証券業協会と証券会社10社が一定の補償方針を発表。ただし<b class="wt">無条件で全額補償ではない</b>（パスワード管理状況なども含め個別に判断）。</p>
+        <div class="keymsg" style="font-size:17px;margin-top:8px;padding:10px">補償に頼るより、<b>最初から被害を防ぐ設定</b>を</div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第3章 a 組み合わせ ================= -->
+<section class="slide" data-n="c3a" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第③章　個人情報が流出すると何が起こるのか？｜20:40〜20:55</span><h2>個人情報は、組み合わせることで危険性が高まる</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <p class="lead fade d1">氏名や住所だけなら、直ちに資産が盗まれるわけではない。でも、<b class="wt">別々の場所から漏れた情報</b>が、犯罪者の手元で1つに組み合わされたら？</p>
+    <div class="merge">
+      <div class="pieces">
+        <div class="pc st0" data-s="1"><svg class="ico"><use href="#i-user"/></svg>氏名</div>
+        <div class="pc st0" data-s="1"><svg class="ico"><use href="#i-flag"/></svg>生年月日</div>
+        <div class="pc st0" data-s="1"><svg class="ico"><use href="#i-house"/></svg>住所</div>
+        <div class="pc st0" data-s="1"><svg class="ico"><use href="#i-phone"/></svg>電話番号</div>
+        <div class="pc st0" data-s="2"><svg class="ico"><use href="#i-mail"/></svg>メールアドレス</div>
+        <div class="pc st0" data-s="2"><svg class="ico"><use href="#i-bank"/></svg>利用している証券会社</div>
+        <div class="pc st0" data-s="2"><svg class="ico"><use href="#i-chart-up"/></svg>投資している銘柄</div>
+        <div class="pc st0" data-s="2"><svg class="ico"><use href="#i-coins"/></svg>保有資産額の情報</div>
+      </div>
+      <div class="arrbig hide0" data-s="3">▶</div>
+      <div class="profile hide0" data-s="3">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><svg class="ico" style="width:40px;height:40px;color:var(--warnT)"><use href="#i-idcard"/></svg><b style="font-size:19px">犯罪者の手元の「あなたのプロフィール」</b></div>
+        <div class="pr"><span>名前・生年月日</span><b>●●●● ✓</b></div>
+        <div class="pr"><span>住所・電話・メール</span><b>●●●● ✓</b></div>
+        <div class="pr"><span>証券会社・銘柄・資産額</span><b>●●●● ✓</b></div>
+        <p style="font-size:15px;font-weight:900;color:var(--warnT);margin-top:10px">→「本物の担当者だ」と信用させる強力な材料に</p>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第3章 b 偽電話 ================= -->
+<section class="slide" data-n="c3b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第③章　金融機関を装った詐欺</span><h2>相手は、あなたのことを正確に知っている</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.1fr 1fr;gap:26px;align-items:center">
+    <div class="col" style="gap:14px">
+      <div class="card fade d1" style="display:flex;gap:14px;align-items:flex-start;background:#F4F9FF">
+        <svg class="ico ring" style="width:54px;height:54px;color:var(--safe)"><use href="#i-phone"/></svg>
+        <p style="font-size:21px;font-weight:900;line-height:1.6">「〇〇証券のセキュリティ担当です。お客様の口座で不審なアクセスが確認されました」</p>
+      </div>
+      <div class="card st0" data-s="1">
+        <div class="lbl">しかも相手は知っている</div>
+        <div class="chips" style="margin-top:8px"><span class="chip b">あなたの名前 ✓</span><span class="chip b">住所 ✓</span><span class="chip b">実際に使っている証券会社 ✓</span></div>
+        <p class="small" style="margin-top:8px">普段なら警戒する方でも「本物からの連絡だ」と信用してしまうかもしれない</p>
+      </div>
+    </div>
+    <div class="col" style="gap:14px">
+      <div class="card nc w st0" data-s="2"><span class="nb">?</span><div><h4>その情報は、過去の別の流出事件から集められたものかもしれない</h4></div></div>
+      <div class="card nc w st0" data-s="3"><span class="nb"><svg class="ico" style="width:24px;height:24px;color:#fff"><use href="#i-robot"/></svg></span><div><h4>AIを使えば、プロのオペレーターのような自然な受け答えも簡単に</h4></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第3章 c メール ================= -->
+<section class="slide" data-n="c3c" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第③章　メールアカウントが乗っ取られる危険</span><h2>メールは、すべての口座の「鍵の受け皿」</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.05fr 1fr;gap:26px;align-items:center">
+    <svg class="hub" viewBox="0 0 460 400" style="width:100%" aria-label="メールを中心に各サービスがつながる図">
+      <line class="spk" data-s="3" x1="230" y1="200" x2="90" y2="80"/><line class="spk" data-s="3" x1="230" y1="200" x2="370" y2="80"/><line class="spk" data-s="3" x1="230" y1="200" x2="90" y2="320"/><line class="spk" data-s="3" x1="230" y1="200" x2="370" y2="320"/>
+      <g class="center"><circle cx="230" cy="200" r="66"/><use href="#i-mail" x="196" y="160" width="68" height="68" class="ico"/><text x="230" y="250" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">メール</text></g>
+      <g class="nd" data-s="3"><circle cx="90" cy="80" r="46"/><use href="#i-chart-up" x="68" y="54" width="44" height="44" class="ico"/><text x="90" y="146" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" font-family="Noto Sans JP">証券口座</text></g>
+      <g class="nd" data-s="3"><circle cx="370" cy="80" r="46"/><use href="#i-bank" x="348" y="54" width="44" height="44" class="ico"/><text x="370" y="146" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" font-family="Noto Sans JP">銀行口座</text></g>
+      <g class="nd" data-s="3"><circle cx="90" cy="320" r="46"/><use href="#i-cart2" x="68" y="294" width="44" height="44" class="ico"/><text x="90" y="386" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" font-family="Noto Sans JP">通販サイト</text></g>
+      <g class="nd" data-s="3"><circle cx="370" cy="320" r="46"/><use href="#i-users" x="348" y="294" width="44" height="44" class="ico"/><text x="370" y="386" text-anchor="middle" font-size="15" font-weight="900" fill="#16233A" font-family="Noto Sans JP">ネットサービス</text></g>
+    </svg>
+    <div class="col" style="gap:12px">
+      <div class="card nc st0" data-s="1"><span class="nb">1</span><div><h4>パスワード再設定・確認コードはメールに届く</h4><p>証券会社・銀行・ネットサービスの多くが、メールで本人確認をしている</p></div></div>
+      <div class="card nc w st0" data-s="2"><span class="nb">2</span><div><h4>大元のメール（Gmail・Yahoo!メールなど）が乗っ取られると…</h4></div></div>
+      <div class="card nc w st0" data-s="3"><span class="nb">3</span><div><h4>紐づく金融サービスまで芋づる式に</h4><p>口座だけでなく、鍵の受け皿のメールも厳重に守る</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第3章 d 身分証 ================= -->
+<section class="slide" data-n="c3d" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第③章　身分証明書の情報が流出した場合</span><h2>流出は「漏れた瞬間」だけで終わらない</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:18px">
+    <div class="g2" style="grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card fade d1" style="display:flex;gap:16px;align-items:center"><svg class="ico" style="width:64px;height:64px;color:var(--warnT)"><use href="#i-idcard"/></svg><div><b style="font-size:18px">運転免許証・マイナンバーカードの画像が悪用されると</b><p class="small">本人になりすまして、ローンやクレジットカードを勝手に申し込まれる危険</p></div></div>
+      <div class="card fade d2" style="display:flex;gap:16px;align-items:center"><svg class="ico" style="width:64px;height:64px;color:var(--safe)"><use href="#i-search"/></svg><div><b style="font-size:18px">金融機関にも本人確認の審査がある</b><p class="small">画像が流出しただけで必ず不正契約が成立するわけではない。それでも備えは知っておく</p></div></div>
+    </div>
+    <div class="later">
+      <div class="lt" data-s="1"><div class="dot"><svg class="ico"><use href="#i-warning"/></svg></div><b>漏れたその瞬間</b><p>流出が公表される</p></div>
+      <div class="lt" data-s="2"><div class="dot"><svg class="ico"><use href="#i-phone"/></svg></div><b>数ヶ月後</b><p>あなたを狙う詐欺の材料に</p></div>
+      <div class="lt" data-s="3"><div class="dot"><svg class="ico"><use href="#i-idcard"/></svg></div><b>数年後</b><p>不正契約の材料に</p></div>
+    </div>
+    <div class="keymsg w hide0" data-s="3">この章の結論：個人情報の流出は、<b>数ヶ月後・数年後</b>にあなたを狙う材料にされる可能性がある</div>
+  </div></div>
+</section>
+
+<!-- ================= 第4章 a ================= -->
+<section class="slide" data-n="c4a" data-steps="5">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第④章　今後の脅威と国家レベルの対策｜20:55〜21:10</span><h2>AIによって、攻撃はさらに高度化する</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:9px">
+    <div class="sl">
+      <div class="row2 w st0" data-s="1"><span class="nb">1</span><div><b>AIによるリアルタイムの音声・映像偽造</b><p>ビデオ通話でも本人そっくりに化ける</p></div></div>
+      <div class="row2 w st0" data-s="2"><span class="nb">2</span><div><b>個人情報に基づく標的型詐欺</b><p>個人の状況に合わせたオーダーメイド型の詐欺</p></div></div>
+      <div class="row2 w st0" data-s="3"><span class="nb">3</span><div><b>AIエージェントを悪用する攻撃</b><p>人間に代わってパソコンや社内システムを自動操作するAIを乗っ取る</p></div></div>
+      <div class="row2 w st0" data-s="4"><span class="nb">4</span><div><b>ログイン状態の乗っ取り</b><p>パスワードだけでなく、ログイン済みの状態を示すデータそのものを盗む</p></div></div>
+      <div class="row2 w st0" data-s="5"><span class="nb">5</span><div><b>金融・電力・物流など重要インフラへの攻撃</b></div></div>
+    </div>
+    <div class="keymsg hide0" data-s="5" style="font-size:19px;padding:12px">AIが企業や個人のシステムと深く連携するほど、<b>AIに与えた権限をどう守るか</b>が極めて重要に</div>
+  </div></div>
+</section>
+
+<!-- ================= 第4章 b ================= -->
+<section class="slide" data-n="c4b" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第④章　サイバー攻撃は国家安全保障の問題</span><h2>2025年7月「国家サイバー統括室」を設置</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1.1fr;gap:26px;align-items:center">
+    <div class="col" style="gap:14px">
+      <div class="card fade d1" style="border-top:6px solid var(--safe)"><div class="t3"><svg class="ico" style="width:36px;height:36px;color:var(--safe)"><use href="#i-shield"/></svg>国家サイバー統括室</div><p class="lead">政府全体のサイバーセキュリティ政策をまとめる<b class="hl">司令塔</b></p></div>
+      <div class="card st0" data-s="1"><p class="lead">サイバー攻撃は金融機関だけでなく、<b>電力・水道・通信・空港</b>などの社会インフラにも影響しうる</p></div>
+      <div class="keymsg w hide0" data-s="2" style="font-size:18px">大規模な停電や通信障害が起きれば、<b>生活や経済活動に重大な被害</b></div>
+    </div>
+    <svg class="infra" viewBox="0 0 440 380" style="width:100%" aria-label="社会インフラへの影響">
+      <g><circle cx="220" cy="190" r="58" fill="#16233A"/><use href="#i-hood" x="192" y="158" width="56" height="56" class="ico" style="color:#F88039"/><text x="220" y="232" text-anchor="middle" font-size="12" font-weight="900" fill="#fff" font-family="Noto Sans JP">サイバー攻撃</text></g>
+      <line class="lk" data-s="1" x1="220" y1="132" x2="220" y2="70"/><line class="lk" data-s="1" x1="275" y1="170" x2="355" y2="140"/><line class="lk" data-s="1" x1="262" y1="232" x2="330" y2="300"/><line class="lk" data-s="1" x1="178" y1="232" x2="110" y2="300"/><line class="lk" data-s="1" x1="165" y1="170" x2="85" y2="140"/>
+      <g class="nd" data-s="1"><circle cx="220" cy="44" r="38"/><use href="#i-bank" x="200" y="24" width="40" height="40" class="ico"/><text x="220" y="100" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">金融</text></g>
+      <g class="nd" data-s="1"><circle cx="385" cy="130" r="38"/><use href="#i-bolt" x="365" y="110" width="40" height="40" class="ico"/><text x="385" y="186" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">電力</text></g>
+      <g class="nd" data-s="1"><circle cx="345" cy="318" r="38"/><use href="#i-water" x="325" y="298" width="40" height="40" class="ico"/><text x="345" y="374" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">水道</text></g>
+      <g class="nd" data-s="1"><circle cx="95" cy="318" r="38"/><use href="#i-signal" x="75" y="298" width="40" height="40" class="ico"/><text x="95" y="374" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">通信</text></g>
+      <g class="nd" data-s="1"><circle cx="55" cy="130" r="38"/><use href="#i-plane" x="35" y="110" width="40" height="40" class="ico"/><text x="55" y="186" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">空港</text></g>
+    </svg>
+  </div></div>
+</section>
+
+<!-- ================= 第4章 c 能動的 ================= -->
+<section class="slide" data-n="c4c" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第④章　能動的サイバー防御とは？</span><h2>被害が出る「前」に対処する考え方へ</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="card" style="padding:16px 20px">
+      <div class="adt">
+        <div class="ln"></div>
+        <div class="pt" style="left:18%"><div class="d"></div><b>攻撃の予兆</b></div>
+        <div class="pt" style="left:50%"><div class="d"></div><b>攻撃</b></div>
+        <div class="pt" style="left:82%"><div class="d" style="border-color:#B5500F"></div><b class="wt">被害の発生</b></div>
+        <div class="pin old" data-s="1" style="left:82%">これまで：被害が出てから対処（受け身）</div>
+        <div class="pin new" data-s="2" style="left:22%">能動的サイバー防御：予兆を察知して事前に</div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="card nc st0" data-s="2"><span class="nb"><svg class="ico" style="width:24px;height:24px;color:#fff"><use href="#i-radar"/></svg></span><div><h4>予兆を事前に察知</h4><p>被害が発生する前に対処する。2025年に関連法が成立し、制度の整備が進む</p></div></div>
+      <div class="card nc st0" data-s="3"><span class="nb"><svg class="ico" style="width:24px;height:24px;color:#fff"><use href="#i-scale"/></svg></span><div><h4>無制限ではない</h4><p>法律で定めた厳格な条件と、独立機関の監督のもとで運用</p></div></div>
+      <div class="card nc w st0" data-s="4"><span class="nb"><svg class="ico" style="width:24px;height:24px;color:#fff"><use href="#i-globe"/></svg></span><div><h4>国家間のサイバー攻撃も</h4><p>2026年10月、国家サイバー統括室と警察庁が、中国政府関連の攻撃グループを支援する企業について、米国などと共同で注意喚起</p></div></div>
+    </div>
+    <div class="keymsg hide0" data-s="4" style="font-size:19px;padding:12px">サイバー攻撃は、すでに<b>「国と国との防衛問題」</b>になっている</div>
+  </div></div>
+</section>
+
+<!-- ================= 第4章 e PHP ================= -->
+<section class="slide" data-n="c4e" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第④章　PHPの重大な脆弱性（弱点）問題</span><h2>たった一つのプログラムの弱点が、国全体の危機に</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1.1fr;gap:26px;align-items:center">
+    <svg class="tower" viewBox="0 0 440 360" style="width:100%" aria-label="PHPの上に多数のサイトが乗っている図">
+      <g class="wob">
+        <g font-family="Noto Sans JP" font-size="13" font-weight="700" fill="#16233A">
+          <rect class="site" x="40" y="40" width="110" height="64" rx="8" fill="#fff" stroke="#BBD7F5" stroke-width="2.5"/><text x="95" y="78" text-anchor="middle">企業サイト</text>
+          <rect class="site" x="165" y="40" width="110" height="64" rx="8" fill="#fff" stroke="#BBD7F5" stroke-width="2.5"/><text x="220" y="78" text-anchor="middle">ブログ</text>
+          <rect class="site" x="290" y="40" width="110" height="64" rx="8" fill="#fff" stroke="#BBD7F5" stroke-width="2.5"/><text x="345" y="78" text-anchor="middle">ネットショップ</text>
+          <rect class="site" x="40" y="118" width="110" height="64" rx="8" fill="#fff" stroke="#BBD7F5" stroke-width="2.5"/><text x="95" y="156" text-anchor="middle">自治体</text>
+          <rect class="site" x="165" y="118" width="110" height="64" rx="8" fill="#fff" stroke="#BBD7F5" stroke-width="2.5"/><text x="220" y="156" text-anchor="middle">予約サイト</text>
+          <rect class="site" x="290" y="118" width="110" height="64" rx="8" fill="#fff" stroke="#BBD7F5" stroke-width="2.5"/><text x="345" y="156" text-anchor="middle">会員サイト</text>
+        </g>
+        <text x="220" y="212" text-anchor="middle" font-size="13" fill="#5A6B82" font-family="Noto Sans JP">世界中のホームページ・ブログ</text>
+      </g>
+      <rect class="base" x="30" y="226" width="380" height="76" rx="12" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="3"/>
+      <use href="#i-code" x="56" y="240" width="48" height="48" class="ico" style="color:#2B5FA8"/>
+      <text x="236" y="262" text-anchor="middle" font-size="24" font-weight="900" fill="#16233A" font-family="Roboto Mono">PHP</text>
+      <text x="236" y="288" text-anchor="middle" font-size="13" fill="#5A6B82" font-family="Noto Sans JP">裏側で広く使われているプログラム</text>
+      <path class="crack" d="M300 226 l-14 22 16 12 -18 22 10 20" stroke="#B5500F" stroke-width="5" fill="none" stroke-linejoin="round"/>
+      <g class="patch"><rect x="320" y="310" width="110" height="40" rx="20" fill="#2E9A7F"/><text x="375" y="336" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" font-family="Noto Sans JP">修正を適用</text></g>
+    </svg>
+    <div class="col" style="gap:12px">
+      <div class="card nc w st0" data-s="1"><span class="nb">!</span><div><h4>2026年10月21日　重大な脆弱性が報告</h4><p>世界中のホームページを裏側で動かす「PHP」に、重大なセキュリティ上の弱点</p></div></div>
+      <div class="card nc w st0" data-s="2"><span class="nb">!</span><div><h4>高市総理が夜間にSNSで緊急対応を呼びかけ</h4><p>異例の対応。修正プログラムの速やかな適用、間に合わなければウェブサイトの一時停止にまで言及（INTERNET Watch）</p></div></div>
+      <div class="card nc st0" data-s="3"><span class="nb">✓</span><div><h4>AIが起こした問題ではないが…</h4><p>一つの弱点が国全体の危機になり得ることを示した</p></div></div>
+      <div class="keymsg hide0" data-s="3" style="font-size:17px;padding:10px">サイバーセキュリティは、<b>国の安全保障・経済・投資環境</b>に直結する重要課題</div>
+    </div>
+  </div></div>
+</section>
+<!-- ================= 第5章 a パスキー ================= -->
+<section class="slide" data-n="c5a" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　金融資産を守る具体的な対策｜21:10〜21:35・最重要</span><h2>対策1　パスキー認証を利用する</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven fade d1"><span class="cur">1 パスキー</span><span>2 公式から<br>ログイン</span><span>3 パスワード<br>使い回さない</span><span>4 最新の<br>状態に</span><span>5 本人申告<br>制度</span><span>6 家族の<br>合言葉</span><span>7 被害時の<br>初動</span></div>
+    <div class="g2" style="grid-template-columns:1.15fr 1fr;gap:22px;align-items:center">
+      <svg class="pk" viewBox="0 0 520 300" style="width:100%" aria-label="パスキーは本物のサイトとだけペアになる">
+        <g transform="translate(20 70)"><rect width="110" height="190" rx="18" fill="#16233A"/><rect x="10" y="22" width="90" height="146" rx="6" fill="#F7F9FC"/><use href="#i-finger" x="25" y="50" width="60" height="60" class="ico" style="color:#2B5FA8"/><text x="55" y="140" text-anchor="middle" font-size="12.5" font-weight="900" fill="#16233A" font-family="Noto Sans JP">顔・指紋</text><text x="55" y="215" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">ご自身のスマホ</text></g>
+        <path class="lnk" d="M135 120 C220 80 280 70 345 70"/>
+        <g class="ok"><circle cx="240" cy="86" r="18" fill="#2E9A7F"/><use href="#i-key" x="228" y="74" width="24" height="24" class="ico" style="color:#fff"/><text x="240" y="54" text-anchor="middle" font-size="13" font-weight="900" fill="#1F7A63" font-family="Noto Sans JP">ペアで登録</text></g>
+        <g transform="translate(345 20)"><rect width="160" height="100" rx="10" fill="#E7F6F1" stroke="#2E9A7F" stroke-width="3"/><rect width="160" height="22" rx="10" fill="#2E9A7F"/><text x="80" y="58" text-anchor="middle" font-size="16" font-weight="900" fill="#1F7A63" font-family="Noto Sans JP">本物の</text><text x="80" y="82" text-anchor="middle" font-size="16" font-weight="900" fill="#1F7A63" font-family="Noto Sans JP">公式サイト</text></g>
+        <g class="fake"><path d="M135 210 C220 230 280 240 345 230" stroke="#D8DFE8" stroke-width="4" stroke-dasharray="4 8" fill="none"/><g transform="translate(345 180)"><rect width="160" height="100" rx="10" fill="#FFF1E6" stroke="#F88039" stroke-width="3"/><rect width="160" height="22" rx="10" fill="#F88039"/><text x="80" y="58" text-anchor="middle" font-size="16" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">そっくりな</text><text x="80" y="82" text-anchor="middle" font-size="16" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">偽サイト</text></g></g>
+        <g class="no"><circle cx="250" cy="226" r="22" fill="#fff" stroke="#B5500F" stroke-width="4"/><use href="#i-x" x="236" y="212" width="28" height="28" class="ico" style="color:#B5500F;stroke-width:6"/><text x="250" y="276" text-anchor="middle" font-size="13" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">パスキーが作動しない</text></g>
+      </svg>
+      <div class="col" style="gap:10px">
+        <div class="card st0" data-s="1"><b style="font-size:17px">パスワードの代わりに、スマホの顔認証・指紋認証</b><p class="small">「本物の公式サイト」と「ご自身のスマホ」が直接ペアとして登録される</p></div>
+        <div class="card st0" data-s="2" style="border:2px solid #B5E3D4"><b style="font-size:17px">偽サイトを開いても作動せず、情報が盗まれない</b><p class="small">フィッシング詐欺に非常に強い。SBI証券・楽天証券・マネックス証券などが導入・強化（sbisec.co.jp ほか）</p></div>
+        <div class="card st0" data-s="3" style="background:#FFFAF5;border-color:#F9C9A6"><b style="font-size:16px" class="wt">ただし100%万能ではない</b><p class="small">スマホやパソコン自体がウイルス等で乗っ取られる、パスワード再設定など「復旧手続き」の抜け穴を悪用される危険は残る → 次の対策と組み合わせる</p></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第5章 b 公式から ================= -->
+<section class="slide" data-n="c5b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　対策2</span><h2>金融機関の公式アプリ・ブックマークからログインする</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="vs2 fade d1">
+      <div class="side bad"><h4><svg class="ico"><use href="#i-x"/></svg>メール・SMS内のリンク</h4><p>銀行や証券会社を装ったメールやSMSが届いても、<b>リンクからは絶対にログインしない</b></p></div>
+      <div class="mid">▶</div>
+      <div class="side good"><h4><svg class="ico"><use href="#i-check"/></svg>公式アプリ／ブックマーク</h4><p>スマホの<b>公式アプリ</b>か、あらかじめ登録した<b>正しい公式サイトのブックマーク</b>から</p></div>
+    </div>
+    <div style="font-size:18px;font-weight:900">異変にいち早く気づくために、通知を必ずオンに</div>
+    <div class="g2">
+      <div class="card tg" data-s="1"><svg class="ico"><use href="#i-bell"/></svg><span style="flex:1">ログイン通知<br><span class="small">ログインした時にメールが届く</span></span><span class="sw"></span></div>
+      <div class="card tg" data-s="2"><svg class="ico"><use href="#i-bell"/></svg><span style="flex:1">取引通知<br><span class="small">注文が成立した時にメールが届く</span></span><span class="sw"></span></div>
+    </div>
+    <div class="keymsg hide0" data-s="3" style="font-size:18px;padding:12px">入口は<b>いつも同じ正しい場所</b>から。知らない通知が来たら、すぐ気づける</div>
+  </div></div>
+</section>
+
+<!-- ================= 第5章 c パスワード・更新 ================= -->
+<section class="slide" data-n="c5c" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　対策3・対策4</span><h2>パスワードを使い回さない／常に最新の状態に保つ</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.2fr 1fr;gap:22px">
+    <div class="card" style="display:flex;flex-direction:column;gap:8px">
+      <div class="t3"><span class="tag">対策3</span>パスワードを使い回さない</div>
+      <svg class="pw" viewBox="0 0 440 230" style="width:100%" aria-label="同じパスワードで芋づる式に突破される">
+        <g transform="translate(0 70)"><circle cx="46" cy="40" r="42" fill="#FFF1E6"/><use href="#i-key" x="16" y="10" width="60" height="60" class="ico" style="color:#B5500F"/><text x="60" y="108" text-anchor="middle" font-size="16" font-weight="900" fill="#B5500F" font-family="Noto Sans JP">同じパスワード</text></g>
+        <path class="chain" data-s="1" d="M92 110 C130 110 140 40 180 40 M92 110 H180 M92 110 C130 110 140 190 180 190"/>
+        <g class="lkd" data-s="1"><rect x="182" y="12" width="160" height="56" rx="10"/><text x="262" y="48" text-anchor="middle" font-size="19" font-weight="900" fill="#16233A" font-family="Noto Sans JP">通販・アンケート</text></g>
+        <g class="lkd" data-s="1"><rect x="182" y="84" width="160" height="56" rx="10"/><text x="262" y="120" text-anchor="middle" font-size="19" font-weight="900" fill="#16233A" font-family="Noto Sans JP">証券口座</text></g>
+        <g class="lkd" data-s="1"><rect x="182" y="156" width="160" height="56" rx="10"/><text x="262" y="192" text-anchor="middle" font-size="19" font-weight="900" fill="#16233A" font-family="Noto Sans JP">メール</text></g>
+        <g class="hide0" data-s="1" font-size="17" font-weight="900" fill="#B5500F" font-family="Noto Sans JP"><text x="352" y="38">ここから</text><text x="352" y="60">漏れると</text><text x="352" y="120">→ 突破</text><text x="352" y="192">→ 突破</text></g>
+      </svg>
+      <div class="card hide0" data-s="2" style="background:#E7F6F1;border-color:#B5E3D4;padding:12px 14px"><b style="font-size:16px;color:var(--okT)">「証券・銀行」と「メインのメール」には、他と一切かぶらない専用の複雑なパスワード</b><p class="small">覚えきれなければ、スマホ標準のパスワード管理機能や管理アプリを活用</p></div>
+    </div>
+    <div class="card st0" data-s="3" style="display:flex;flex-direction:column;gap:12px;justify-content:center">
+      <div class="t3"><span class="tag">対策4</span>スマホ・パソコンを最新に</div>
+      <svg class="ico" style="width:80px;height:80px;color:var(--ok);align-self:center"><use href="#i-refresh"/></svg>
+      <p class="lead">OSやアプリには、後からセキュリティ上の弱点が見つかることがある。それを塞ぐのが<b class="hl">アップデート（更新）</b>。</p>
+      <div class="quote" style="font-size:16px">PHPの問題も、更新プログラムの適用が最大の防御策でした。「あとで更新する」と放置しない。</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第5章 e 本人申告 ================= -->
+<section class="slide" data-n="c5e" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　対策5　あまり知られていない「最後の盾」</span><h2>信用情報機関の「本人申告制度」を知っておく</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="g3 fade d1">
+      <div class="card co focus" style="border-top-color:var(--b1)"><div class="tk" style="font-size:24px">JICC</div><b>日本信用情報機構</b><p>消費者金融・信販・クレジットなど</p></div>
+      <div class="card co focus" style="border-top-color:var(--b3)"><div class="tk" style="font-size:24px">CIC</div><b>シー・アイ・シー</b><p>クレジットカード・携帯電話の分割払いなど</p></div>
+      <div class="card co focus" style="border-top-color:var(--b6)"><div class="tk" style="font-size:24px">KSC</div><b>全国銀行個人信用情報センター</b><p>銀行・信用金庫などのローン</p></div>
+    </div>
+    <p class="small" style="margin-top:-4px">個人のカードやローンの契約履歴を管理する機関。銀行やカード会社は、審査のときに必ずここを確認します。</p>
+    <div class="flow">
+      <div class="fs" data-s="1"><span class="n">1</span><svg class="ico"><use href="#i-idcard"/></svg>免許証を盗まれた・<br>本人確認情報が漏れた</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2" style="--c:var(--ok)"><span class="n">2</span><svg class="ico"><use href="#i-report"/></svg>「悪用のおそれ」を<br>本人申告で登録</div><div class="fa" data-s="3">▶</div>
+      <div class="fs" data-s="3" style="--c:var(--warn)"><span class="n">3</span><svg class="ico"><use href="#i-hood"/></svg>犯人があなたになりすまし<br>カード・ローンを申込</div><div class="fa" data-s="4">▶</div>
+      <div class="fs last" data-s="4" style="--c:var(--ok)"><span class="n">4</span><svg class="ico"><use href="#i-shield"/></svg>審査の段階で気づき<br>ストップがかかりやすい</div>
+    </div>
+    <p class="src">メールアドレスが漏れた程度で全員がすぐ申告する必要はない。免許証やマイナンバー等の本人確認情報が危ないときの備え。（日本信用情報機構）</p>
+  </div></div>
+</section>
+
+<!-- ================= 第5章 f 家族 ================= -->
+<section class="slide" data-n="c5f" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　対策6</span><h2>家族間の本人確認ルール（かけ直し・合言葉）を決める</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1.15fr;gap:26px;align-items:center">
+    <div class="card fade d1" style="display:flex;flex-direction:column;align-items:center;gap:10px;background:#FFFAF5;border-color:#F9C9A6">
+      <svg class="ico ring" style="width:84px;height:84px;color:var(--warnT)"><use href="#i-phone"/></svg>
+      <b style="font-size:20px;text-align:center">家族や知人から突然<br>「お金」の電話</b>
+      <p class="small ctr">ボイスクローンが広がると、聞き慣れた家族の声だけで本人だと信じるのは危険</p>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="card nc st0" data-s="1"><span class="nb">1</span><div><h4>一度、電話を切る</h4></div></div>
+      <div class="card nc st0" data-s="2"><span class="nb">2</span><div><h4>自分が元から登録している家族の番号へ、かけ直す</h4></div></div>
+      <div class="card nc st0" data-s="3"><span class="nb">3</span><div><h4>家族だけの「合言葉」を決めておく</h4></div></div>
+      <div class="keymsg hide0" data-s="3" style="font-size:19px">このルールを、<b>ご家庭で共有</b>しておく</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第5章 g 初動 ================= -->
+<section class="slide" data-n="c5g" data-steps="6">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　対策7　万が一、被害に遭った場合</span><h2>パニックにならず、この順番で動く</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1fr;gap:12px 18px">
+    <div class="sl">
+      <div class="row2 st0" data-s="1"><span class="nb">1</span><div><b>金融機関・証券会社へ直ちに連絡</b></div></div>
+      <div class="row2 st0" data-s="2"><span class="nb">2</span><div><b>取引や出金の一時停止を依頼</b></div></div>
+      <div class="row2 st0" data-s="3"><span class="nb">3</span><div><b>別の安全な端末から、メールと口座のパスワードを変更</b></div></div>
+    </div>
+    <div class="sl">
+      <div class="row2 st0" data-s="4"><span class="nb">4</span><div><b>不審なログイン履歴・勝手なアプリ連携がないか確認</b></div></div>
+      <div class="row2 st0" data-s="5"><span class="nb">5</span><div><b>スクリーンショット等で、取引履歴や通知メールの証拠を保存</b></div></div>
+      <div class="row2 st0" data-s="6"><span class="nb">6</span><div><b>警察のサイバー犯罪相談窓口などへ相談</b></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第5章 h お願い ================= -->
+<section class="slide" data-n="c5h" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑤章　皆様へのお願い</span><h2>今夜のうちに、証券口座のセキュリティ設定を確認</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.1fr 1fr;gap:26px;align-items:center">
+    <div class="cl">
+      <div class="card ci" data-s="1"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>パスキー<small>使える証券会社なら設定する</small></div></div>
+      <div class="card ci" data-s="2"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>二段階認証<small>オンになっているか</small></div></div>
+      <div class="card ci" data-s="3"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>ログイン通知<small>取引通知とあわせてオンに</small></div></div>
+    </div>
+    <div class="col" style="gap:14px">
+      <div class="vs2" style="grid-template-columns:1fr">
+        <div class="side" style="background:#EEF2F7"><h4 style="color:var(--ink2)">これまでの「資産防衛」</h4><p>現金比率・分散投資</p></div>
+        <div class="side good hide0" data-s="4"><h4><svg class="ico"><use href="#i-shield"/></svg>これからは、さらに</h4><p style="font-size:18px;font-weight:900">デジタル上の資産防衛が必要不可欠</p></div>
+      </div>
+      <p class="lead fade d2">長年かけて築き上げてきた大切な資産を守るために、できることからすぐ始めてください。</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 a ================= -->
+<section class="slide" data-n="c6a" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　セキュリティ企業と株式投資｜21:35〜22:00・投資分析編</span><h2>大きな問題の裏側には、解決する企業の成長機会</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="vs2 fade d1">
+      <div class="side bad"><h4><svg class="ico"><use href="#i-warning"/></svg>世界が直面する問題</h4><p>ここまで見てきた数多くのサイバー攻撃</p></div>
+      <div class="mid">⇄</div>
+      <div class="side good"><h4><svg class="ico"><use href="#i-sprout"/></svg>その問題を解決する企業</h4><p>大きな成長機会が存在する</p></div>
+    </div>
+    <div class="flow">
+      <div class="fs" data-s="1"><svg class="ico"><use href="#i-robot"/></svg>AIの普及</div><div class="fa" data-s="1">＋</div>
+      <div class="fs" data-s="1"><svg class="ico"><use href="#i-cloud"/></svg>クラウドの拡大</div><div class="fa" data-s="1">＋</div>
+      <div class="fs" data-s="1"><svg class="ico"><use href="#i-pc"/></svg>社会のデジタル化</div><div class="fa" data-s="2">▶</div>
+      <div class="fs last" data-s="2"><svg class="ico"><use href="#i-shield"/></svg>企業も国家も<br>セキュリティ支出を<br>減らせない</div>
+    </div>
+    <div class="keymsg w hide0" data-s="3" style="font-size:20px">ただし、「市場が伸びること」と「特定の企業の株価が上がること」は<b>イコールではない</b>。冷静に数字で分析する</div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 b ================= -->
+<section class="slide" data-n="c6b" data-steps="1">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　世界を代表するセキュリティ企業</span><h2>米国に上場する、世界トップクラスの4社</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="ct">
+      <div class="card co fade d1" data-s="1"><div class="tk">PANW</div><b>Palo Alto Networks<small>パロアルト・ネットワークス</small></b><p>総合セキュリティ基盤（業界最大手）</p></div>
+      <div class="card co fade d2" data-s="1"><div class="tk">CRWD</div><b>CrowdStrike<small>クラウドストライク</small></b><p>脅威の検知・パソコンやサーバー等の端末保護</p></div>
+      <div class="card co fade d3"><div class="tk">FTNT</div><b>Fortinet<small>フォーティネット</small></b><p>社内ネットワークの防御機器・システム</p></div>
+      <div class="card co fade d4"><div class="tk">ZS</div><b>Zscaler<small>ジースケイラー</small></b><p>ゼロトラスト（無条件に信用せず毎回確認するクラウド防衛）</p></div>
+    </div>
+    <div class="keymsg hide0" data-s="1" style="font-size:19px">今回は特に代表的な<b>Palo Alto Networks</b>と<b>CrowdStrike</b>の2社を中心に見ていきます</div>
+    <p class="disc">特定の銘柄の売買をお勧めするものではありません。投資の最終的なご判断は、ご自身でお願いいたします。</p>
+  </div></div>
+</section>
+<!-- ================= 第6章 c PANW ================= -->
+<section class="slide" data-n="c6c" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　Palo Alto Networks（PANW）の強み</span><h2>バラバラの機能を「1つにまとめて提供する」</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.1fr 1fr;gap:24px;align-items:center">
+    <div class="card" style="padding:14px 16px">
+      <p class="hide0 on" data-s="0" style="font-size:16px;font-weight:900;color:var(--warnT);margin-bottom:6px">別々の会社の製品 → 管理が複雑・隙間を突かれるリスク</p>
+      <svg class="plat" viewBox="0 0 400 320" style="width:100%;max-height:300px" aria-label="複数の製品を1つの基盤に統合">
+        <g class="box"><rect x="2" y="140" width="396" height="176" rx="16" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="3"/><text x="200" y="168" text-anchor="middle" font-size="19" font-weight="900" fill="#2B5FA8" font-family="Noto Sans JP">1つの統合プラットフォーム</text></g>
+        <g font-family="Noto Sans JP" font-size="19" font-weight="900" fill="#16233A">
+          <g class="pt"><rect x="16" y="10" width="176" height="56" rx="10" fill="#fff" stroke="#8A9AB0" stroke-width="2"/><text x="104" y="45" text-anchor="middle">ネットワーク用</text></g>
+          <g class="pt"><rect x="208" y="10" width="176" height="56" rx="10" fill="#fff" stroke="#8A9AB0" stroke-width="2"/><text x="296" y="45" text-anchor="middle">パソコン用</text></g>
+          <g class="pt"><rect x="16" y="76" width="176" height="56" rx="10" fill="#fff" stroke="#8A9AB0" stroke-width="2"/><text x="104" y="111" text-anchor="middle">クラウド用</text></g>
+          <g class="pt"><rect x="208" y="76" width="176" height="56" rx="10" fill="#fff" stroke="#8A9AB0" stroke-width="2"/><text x="296" y="111" text-anchor="middle">社員のID用</text></g>
+        </g>
+      </svg>
+      <p class="hide0" data-s="1" style="font-size:16px;font-weight:900;color:var(--okT);margin-top:4px">丸ごと統合 → 管理が楽に・トータルのコスト削減</p>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="card fade d1"><p class="lead" style="font-size:16px">企業のネットワーク・クラウド・パソコン端末・社員のIDなどを幅広く守る<b>総合セキュリティ企業</b>。最大の特徴は<b class="hl">統合プラットフォーム化</b>戦略。</p></div>
+      <div class="card hide0" data-s="2">
+        <div class="hbs col" style="gap:10px">
+          <div class="hb blue on" style="--w:81%;grid-template-columns:100px 1fr 160px"><span class="nm">2026年度<small>直近通期の売上高</small></span><div class="tr"><i></i></div><span class="v">114.8<small>億ドル</small></span></div>
+          <div class="hb on" style="--w:100%;grid-template-columns:100px 1fr 160px"><span class="nm">2027年度<small>会社予想</small></span><div class="tr"><i></i></div><span class="v">141〜142<small>億ドル</small></span></div>
+        </div>
+        <p class="src">約1兆7,200億円 → 約2兆1,000億円規模（1ドル150円換算）。出典：Palo Alto Networks</p>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 d CRWD ================= -->
+<section class="slide" data-n="c6d" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　CrowdStrike（CRWD）の強み</span><h2>クラウドを使ったサブスクリプション（継続課金）型</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1fr 1.05fr;gap:24px;align-items:center">
+    <div class="col" style="gap:12px">
+      <div class="card fade d1"><p class="lead" style="font-size:16px">従業員のパソコンや企業のサーバー＝<b>端末（エンドポイント）</b>をAIで監視・防御する技術が中核。クラウドやID保護にも事業を広げる。</p></div>
+      <div class="g2" style="gap:12px">
+        <div class="card st0" data-s="1"><div class="lbl">2026年度 売上高</div><div class="big" style="font-size:36px">48.1<small>億ドル</small></div><div class="small">約7,200億円</div></div>
+        <div class="card st0" data-s="2" style="border:2px solid #BBD7F5"><div class="lbl">年間経常収益（ARR）</div><div class="big" style="font-size:36px;color:var(--safe)">約52.5<small>億ドル</small></div><div class="small">約7,800億円・<b class="hl">前年比24%増</b></div></div>
+      </div>
+      <p class="src">2026年度末時点。出典：CrowdStrike Holdings。円換算は1ドル150円</p>
+      <div class="card hide0" data-s="3" style="background:#FFFAF5;border-color:#F9C9A6"><b class="wt" style="font-size:16px">注視すべきポイント</b><p class="small">2024年7月、ソフトウェアの更新ミスで世界的なシステム障害を起こした過去も。製品の信頼性・運用品質を維持できるか。</p></div>
+    </div>
+    <div class="card st0" data-s="2" style="display:flex;flex-direction:column;gap:10px">
+      <b style="font-size:18px">ARR（年間経常収益）とは？</b>
+      <p class="small">毎年継続して入ってくるサブスク契約の売上が、どれほど積み上がっているかを見る重要な指標</p>
+      <svg class="arr" viewBox="0 0 400 220" style="width:100%" aria-label="契約が積み上がるイメージ">
+        <g><rect class="blk" x="60" y="176" width="280" height="34" rx="6" fill="#2B5FA8"/><rect class="blk" x="60" y="138" width="280" height="34" rx="6" fill="#3F7FC4"/><rect class="blk" x="60" y="100" width="280" height="34" rx="6" fill="#65CCFE"/><rect class="blk" x="60" y="62" width="280" height="34" rx="6" fill="#40B69A"/><rect class="blk" x="60" y="24" width="280" height="34" rx="6" fill="#82D548"/></g>
+        <text x="200" y="198" text-anchor="middle" font-size="14" font-weight="900" fill="#fff" font-family="Noto Sans JP">継続中の契約</text>
+        <text x="200" y="46" text-anchor="middle" font-size="14" font-weight="900" fill="#16233A" font-family="Noto Sans JP">新しい契約が上に積み上がる</text>
+      </svg>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 e 比較 ================= -->
+<section class="slide" data-n="c6e" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　両社の業績比較</span><h2>規模はPalo Alto、成長はCrowdStrikeも20%超</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:18px">
+    <div class="card fade d1">
+      <div class="lbl" style="margin-bottom:10px">年間売上高（直近2026年度決算）</div>
+      <div class="hbs auto col" style="gap:14px">
+        <div class="hb blue" style="--w:100%"><span class="nm">Palo Alto Networks<small>PANW</small></span><div class="tr" style="height:40px"><i></i></div><span class="v">114.8<small>億ドル</small></span></div>
+        <div class="hb blue" style="--w:41.9%"><span class="nm">CrowdStrike<small>CRWD</small></span><div class="tr" style="height:40px"><i></i></div><span class="v">48.1<small>億ドル</small></span></div>
+      </div>
+      <p class="src">約1兆7,200億円 ／ 約7,200億円（1ドル150円換算）。規模ではPalo Altoが2倍以上。CrowdStrikeは年率20%を超える継続収益の成長。</p>
+    </div>
+    <div style="font-size:18px;font-weight:900" class="hide0" data-s="1">投資判断には、売上高や成長率だけでなく</div>
+    <div class="g3">
+      <div class="card nc st0" data-s="1"><span class="nb">1</span><div><h4>競合に対する優位性</h4></div></div>
+      <div class="card nc st0" data-s="1"><span class="nb">2</span><div><h4>利益率</h4></div></div>
+      <div class="card nc w st0" data-s="2"><span class="nb">3</span><div><h4>今の株価は割高か、割安か</h4></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 f 2030 ================= -->
+<section class="slide" data-n="c6f" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　2030年に向けて考える</span><h2>売上が2倍でも、株価が2倍になるとは限らない</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.2fr 1fr;gap:24px;align-items:center">
+    <div class="card">
+      <div class="lbl">仮に売上高が毎年成長し続けた場合の試算（今を1とする）</div>
+      <div class="g2" style="gap:24px;margin-top:10px;padding-bottom:26px">
+        <div><div style="font-weight:900;color:var(--safe);margin-bottom:6px">年平均15%で4年</div>
+          <div class="gb a"><div class="g" data-s="1" style="--h:28%"><span>1.00</span><i></i><label>今</label></div><div class="g" data-s="1" style="--h:33%"><span>1.15</span><i></i><label>1年</label></div><div class="g" data-s="1" style="--h:38%"><span>1.32</span><i></i><label>2年</label></div><div class="g" data-s="1" style="--h:44%"><span>1.52</span><i></i><label>3年</label></div><div class="g" data-s="1" style="--h:50%"><span>1.75</span><i></i><label>4年</label></div></div></div>
+        <div><div style="font-weight:900;color:var(--warnT);margin-bottom:6px">年平均20%で4年</div>
+          <div class="gb b"><div class="g" data-s="2" style="--h:28%"><span>1.00</span><i></i><label>今</label></div><div class="g" data-s="2" style="--h:34%"><span>1.20</span><i></i><label>1年</label></div><div class="g" data-s="2" style="--h:40%"><span>1.44</span><i></i><label>2年</label></div><div class="g" data-s="2" style="--h:48%"><span>1.73</span><i></i><label>3年</label></div><div class="g" data-s="2" style="--h:58%"><span>2.07</span><i></i><label>4年</label></div></div></div>
+      </div>
+      <div class="g2" style="gap:12px"><div class="ctr hide0" data-s="1"><span class="mult" style="background:var(--safe)">約1.75倍</span></div><div class="ctr hide0" data-s="2"><span class="mult">約2.07倍（約2倍）</span></div></div>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="keymsg w hide0" data-s="3" style="font-size:19px">売上が2倍 ≠ 株価も2倍</div>
+      <div class="card hide0" data-s="3"><b style="font-size:16px">株価に大きく影響するもの</b>
+        <div class="chips" style="margin-top:8px"><span class="chip b">売上の成長</span><span class="chip b">利益率の改善</span><span class="chip b">市場の期待度</span><span class="chip b">米国の金利動向</span><span class="chip b">発行済株式数の増減</span><span class="chip b">株価の倍率（PERなど）</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 g フレーム ================= -->
+<section class="slide" data-n="c6g" data-steps="6">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　未来塾の投資フレームで分析する</span><h2>国家 → 世界 → 産業 → 企業 → 株価 → 戦略</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="g2" style="grid-template-columns:1.3fr 1fr;gap:22px;align-items:center">
+    <div class="fw">
+      <div class="lv st0" data-s="1" style="--c:#2B5FA8"><span class="nb">1</span><b>国家</b><span>サイバー防衛政策・法整備の強化</span></div>
+      <div class="lv st0" data-s="2" style="--c:#3F96D8"><span class="nb">2</span><b>世界</b><span>AIの普及・社会のデジタル化</span></div>
+      <div class="lv st0" data-s="3" style="--c:#40B69A"><span class="nb">3</span><b>産業</b><span>サイバーセキュリティ需要の拡大</span></div>
+      <div class="lv st0" data-s="4" style="--c:#5FA83A"><span class="nb">4</span><b>企業</b><span>各社の競争力・売上と利益の成長</span></div>
+      <div class="lv st0" data-s="5" style="--c:#D9A400"><span class="nb">5</span><b>株価</b><span>現在の株価が割高か・割安かの判断</span></div>
+      <div class="lv st0" data-s="6" style="--c:#F88039"><span class="nb">6</span><b>戦略</b><span>どの価格水準で買うか・リスク管理</span></div>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="card hide0" data-s="4"><b style="font-size:17px">どの企業が需要を最も取り込み、利益として成長させられるのか？</b></div>
+      <div class="card hide0" data-s="5"><b style="font-size:17px">将来の成長が「今の株価」にどこまで織り込まれているのか？</b></div>
+      <div class="keymsg hide0" data-s="6" style="font-size:18px">これらを<b>順番に、冷静に</b>判断する</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 第6章 h 会員様へ ================= -->
+<section class="slide" data-n="c6h" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">第⑥章　会員様へ伝えたいこと</span><h2>「企業の成長性」と「株式の投資妙味」は分けて考える</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:18px">
+    <div class="quote fade d1" style="font-size:20px">セキュリティ企業は、非常に重要な成長産業の一つとして注目しています。しかし、<span class="wt">「どんなに高い株価で買ってもよい」というわけではありません。</span></div>
+    <div class="pillars">
+      <div class="pillar grow st0" data-s="1"><svg class="ico"><use href="#i-sprout"/></svg><h3>企業の成長性</h3><p>その企業がこれから成長するかどうか</p></div>
+      <div class="pillar st0" data-s="2" style="background:#FFF5EC;border:2px solid #F9C9A6"><svg class="ico" style="color:var(--warnT)"><use href="#i-scale"/></svg><h3 style="color:var(--warnT)">株式の投資妙味</h3><p>今の株価で買って利益を出しやすいか（お買い得度）</p></div>
+    </div>
+    <p class="lead ctr fade d3">企業の実力と株価の評価を冷静に分析しながら、皆様と一緒に将来の投資機会を見極めていきます。</p>
+  </div></div>
+</section>
+
+<!-- ================= 最後に ================= -->
+<section class="slide" data-n="end" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">最後に：未来塾の皆様へ</span><h2>資産を増やす知識と、資産を守る知識</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:18px">
+    <div class="pillars">
+      <div class="pillar grow st0" data-s="1"><svg class="ico"><use href="#i-chart-up"/></svg><h3>資産を増やす知識</h3><p>世界経済や金融市場を分析し、将来成長する企業を見極める。サイバー問題を解決する企業にも成長の機会。</p></div>
+      <div class="pillar guard st0" data-s="2"><svg class="ico"><use href="#i-shield"/></svg><h3>大切な資産を守る知識</h3><p>AIが生む新たなリスクから、個人情報と金融資産を守る。サイバーセキュリティの正しい知識。</p></div>
+    </div>
+    <div class="keymsg hide0" data-s="2" style="font-size:21px">この二つを身につけることが、<b>これからの時代を生きる投資家</b>にとってますます重要に</div>
+    <p class="lead ctr fade d3">本日学んだ内容を、ご自身と大切なご家族の資産を守るために。本日も最後までご参加いただき、ありがとうございました。</p>
+    <p class="disc">本日の内容は特定の銘柄の売買や売買のタイミングをお勧めするものではありません。投資の最終的なご判断は、ご自身でお願いいたします。</p>
+  </div></div>
+</section>
+
+</div></div>
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bNotes" title="台本（N）">台本</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">台本</h4><div id="notesBody"></div></div>
+<div id="help">← → でスライド移動・N で台本・F で全画面</div>
+<div class="notes-src" id="notes-title"><h5>未来塾 緊急特別ZOOM勉強会</h5>
+<p>2026年11月3日（火・祝）20:00〜</p>
+<h5>AIの進化がもたらす新たな脅威</h5>
+<p>〜あなたの個人情報と金融資産は本当に安全なのか？〜</p>
+<p>未来塾1.0・2.0 合同特別講義</p>
+<p>講師：岩渕</p></div>
+<div class="notes-src" id="notes-agenda"><h5>講義全体の進行表</h5>
+<table><tr><th>時間</th><th>内容</th></tr><tr><td>20:00〜20:15</td><td>① AIの進化とサイバー犯罪</td></tr><tr><td>20:15〜20:40</td><td>② 国内外で発生した大規模ハッキング</td></tr><tr><td>20:40〜20:55</td><td>③ 個人情報が流出するとどうなるのか</td></tr><tr><td>20:55〜21:10</td><td>④ 今後の脅威と国家レベルの対策</td></tr><tr><td>21:10〜21:35</td><td>⑤ 金融資産を守る具体的な方法</td></tr><tr><td>21:35〜22:00</td><td>⑥ セキュリティ企業と株式投資</td></tr></table></div>
+<div class="notes-src" id="notes-intro"><h5>はじめに：本日の勉強会について</h5>
+<p>皆様、本日も未来塾の勉強会にご参加いただき、ありがとうございます。</p>
+<p>また今回は、内容の重要性を考慮し、未来塾1.0の会員様にも特別にご参加いただいております。</p>
+<p>久しぶりにお会いできる皆様もいらっしゃると思います。どうぞよろしくお願いいたします。</p>
+<p>さて、本日のテーマは「<b>AIの進化がもたらす新たな脅威</b>」です。</p>
+<p>これまで未来塾では、AIや半導体、次世代エネルギーなど、世界の成長産業について学んできました。</p>
+<p>しかし今回は、少し違った角度からAIについて考えていただきたいと思います。</p>
+<p>AIの進歩は、私たちの生活を豊かにし、企業の生産性を向上させ、新しい産業や投資機会を生み出しています。</p>
+<p>その一方で、犯罪者にとっても非常に強力な道具となり始めています。</p>
+<p>本日の勉強会で、皆様にお伝えしたいことは大きく3つです。</p>
+<p><b>第一に、現在のサイバー犯罪がどれほど深刻なのか、実際の事件を通じて知っていただくこと。</b></p>
+<p><b>第二に、皆様ご自身とご家族の個人情報や金融資産を守るための具体的な方法を学んでいただくこと。</b></p>
+<p><b>第三に、サイバー犯罪という世界的な問題を解決する企業の中から、将来成長する投資先を考えること。</b></p>
+<p>特に今回は、実際に国内外で発生している事件について、具体的な企業名や被害規模をご紹介します。</p>
+<p>ぜひ、ご自身にも起こり得る問題として聞いていただければと思います。</p></div>
+<div class="notes-src" id="notes-c1a"><h5>第①章 AIの進化によって巧妙化するサイバー犯罪</h5>
+<p><span class="dir">20:00〜20:15 | 15分</span></p>
+<h5>1. AIの進化が犯罪の世界を変えている</h5>
+<p>皆様、この1年間でAIがどれほど進化したか、実感されていますでしょうか。</p>
+<p>以前であれば、自然な文章を作成したり、人間の声を再現したり、実在する人物の映像を作り出したりするには、高度な専門技術が必要でした。</p>
+<p>ところが現在では、生成AIを利用することで、こうした作業を以前よりはるかに簡単に行えるようになっています。</p>
+<p>これは企業や私たちにとって大きな利点ですが、同時に犯罪者にとっても同じことが言えます。</p>
+<h5>AIが悪用される主な犯罪</h5>
+<p><b>① フィッシング詐欺（偽メール・偽サイト詐欺）</b></p>
+<p>銀行や証券会社から送られてきたように見える偽メールを作成し、本物そっくりのログイン画面へ誘導してパスワードなどを盗み取る手口です。</p>
+<p>以前は、不自然な日本語や誤字が多い詐欺メールもよくありました。</p>
+<p>しかしAIを使えば、自然で丁寧な日本語のメールを大量に作ることができます。</p>
+<p>そのため、文章の不自然さだけで偽物を見抜くことは難しくなっています。</p>
+<p><b>② ボイスクローン（AIによる声の複製・なりすまし）</b></p>
+<p>本人の声にそっくりな音声をAIで作る技術です。</p>
+<p>わずか数秒〜数十秒の音声データがあれば、本人そっくりの声を作れてしまいます。例えば、家族や知人、会社の社長になりすまして電話をかけ、緊急の送金を要求するような犯罪に悪用されています。</p>
+<p><b>③ ディープフェイク映像（AIによる偽映像）</b></p>
+<p>実在する人物の顔や声を使って、本人が実際には発言していない映像を作る技術です。</p>
+<p>有名投資家や著名人が、特定の投資商品を勧めているように見せかける詐欺広告などにも悪用されています。</p>
+<p><b>④ 個人情報を利用した標的型詐欺（名指し型の詐欺）</b></p>
+<p>例えば、氏名、住所、電話番号、利用している証券会社などの情報が犯罪者の手に渡ったとします。</p>
+<p>すると犯罪者は、それらの情報を組み合わせて、本物の金融機関の担当者のように振る舞うことができます。</p>
+<p>さらにAIを使うことで、狙った相手一人ひとりに合わせた自然な会話やメッセージを作成できるのです。</p></div>
+<div class="notes-src" id="notes-c1b"><h5>2. 米国では年間3兆円を超える被害</h5>
+<p>米FBI（連邦捜査局）の2025年インターネット犯罪報告書によると、年間の報告被害額は約208億7,700万ドルに達しました。</p>
+<blockquote><b>2025年 米国のインターネット犯罪による報告被害額</b><br><b>約208.8億ドル（約3兆1,300億円）</b><br>※1ドル150円で換算。米FBIの公表データ。（www.ic3.gov）</blockquote>
+<p>この数字は、AI犯罪だけではなく、インターネット犯罪全体の被害額です。</p>
+<p>一方、AIの関与が報告された犯罪だけでも、2025年には22,364件、被害額は約8億9,300万ドル（<b>日本円で約1,340億円</b>）に達しています。（www.fbi.gov）</p>
+<p>つまり、AIを悪用した犯罪は、<b>決して遠い未来の話ではありません。</b></p>
+<p>すでに現実の被害につながっています。</p></div>
+<div class="notes-src" id="notes-c1c"><h5>【皆様への問いかけ】</h5>
+<p>皆様、もし自分の家族から電話があり、「今すぐお金を振り込んでほしい」と言われたら、どうしますか？</p>
+<p>その声が本人そっくりだったとしても、本当に本人であるとは限らない時代が始まっています。</p>
+<p>これからは、声や映像、メールの文章が自然だからといって、それだけで信用してはいけないということです。</p></div>
+<div class="notes-src" id="notes-c2a"><h5>第②章 実際に発生した大規模ハッキング・個人情報流出事件</h5>
+<p><span class="dir">20:15〜20:40 | 25分</span></p>
+<p>ここからは、実際に発生した事件を紹介します。</p>
+<p>皆様に最も理解していただきたいのは、サイバー犯罪がすでに私たちの生活や企業活動、そして大切な金融資産に直接影響しているということです。</p>
+<h5>1. 日本国内で相次ぐ情報流出</h5>
+<p>まずは代表的な企業の事例です。</p>
+<table><tr><th>企業・サービス</th><th>時期</th><th>流出・影響規模</th></tr><tr><td>佐川急便</td><td>2026年9〜10月</td><td>最大約5,323万件</td></tr><tr><td>無印良品</td><td>2026年10月</td><td>最大約2,726万件</td></tr><tr><td>EPARK PeakManager（サロン・整体院等の予約システム）</td><td>2026年7〜9月</td><td>約2,218万件（登録データ数）</td></tr><tr><td>カプコン</td><td>2026年10月</td><td>約1,177万件</td></tr><tr><td>焼肉きんぐ</td><td>2026年10月</td><td>約1,079万件</td></tr><tr><td>アサヒグループ</td><td>2025年9月</td><td>約229万件</td></tr><tr><td>アスクル</td><td>2025年10月</td><td>約134万件</td></tr><tr><td>GMOリサーチ＆AI</td><td>2026年10月</td><td>約89.4万件</td></tr><tr><td>KADOKAWA</td><td>2024年6月</td><td>約25.4万人</td></tr></table>
+<p>※こちらは、すでに流出が確認された件数や、流出の可能性がある件数、同じ人の重複データなどを含んだ各社の発表数字であり、実際の被害人数を単純比較したものではありません。（www2.sagawa-exp.co.jp）</p>
+<p>これらは、日本国内で発生した事件のほんの一部です。</p></div>
+<div class="notes-src" id="notes-c2b"><h5>事例① 佐川急便</h5>
+<p>2026年9月、佐川急便のウェブサービスへの不正アクセスが確認されました。</p>
+<p>10月23日に公表された資料では、最大約5,323万件の個人情報が流出した可能性があるとされています。</p>
+<p>これは同じ人のデータが重複している件数も含むため、<b>5,323万人分の流出</b>が確定したわけではありません。</p>
+<p>しかし、荷物の配送に関する情報が危険にさらされたことは重大です。</p>
+<p>私たちの氏名や住所、連絡先といった情報が悪用されれば、配送会社を装った不在通知の偽メール（SMS）などの詐欺につながる可能性があります。（www2.sagawa-exp.co.jp）</p>
+<h5>事例② アサヒグループ</h5>
+<p>2025年9月29日、アサヒグループが大規模なサイバー攻撃を受けました。</p>
+<p>調査では、攻撃者がネットワーク機器を経由して社内ネットワークに侵入したことが判明しています。</p>
+<p>顧客や従業員、その家族、取引先などの<b>個人情報が流出したおそれがあると発表されました。</b>（Newsroom | Asahi Group）</p>
+<p>さらにこの事件では、情報流出だけでなく実際の企業活動にも<b>大きな支障が出ています。</b></p>
+<p>サイバー攻撃は、単にデータが盗まれるだけの問題ではありません。</p>
+<p>工場の生産活動や物流、販売などをストップさせてしまう可能性があります。</p>
+<p>投資家として考えれば、企業の業績や株価にも直結する重要なリスクです。</p>
+<h5>事例③ GMOインターネットグループ</h5>
+<p>GMOリサーチ＆AIが運営するアンケートサイト「infoQ」は、2026年10月に不正アクセスを受けました。</p>
+<p>89万4,082件の個人情報が外部へ持ち出されたことが確認されています。</p>
+<p>さらに、611件、合計約287万円相当のポイントが、<b>本人の知らないうちに勝手に</b>Amazonギフトコードへ交換される被害も発生しました。</p>
+<p>会社は不正に交換されたポイントを全額補填する方針です。（GMOリサーチ＆AI）</p>
+<p>ここで注目したいのは、GMOがインターネット関連事業やセキュリティ関連事業を幅広く展開している、ITのプロフェッショナル企業グループだということです。</p>
+<p>そのような専門企業グループであっても、サイバー攻撃の被害に遭っています。</p></div>
+<div class="notes-src" id="notes-c2c"><h5>2. 私たちの身近な企業でも被害が発生</h5>
+<p>先ほどの表にあった無印良品や焼肉きんぐ以外にも、皆様が日常的に利用している身近な企業や機関で被害が相次いでいます。</p>
+<ul><li><b>タイムズカー</b>：会員情報や運転免許証など本人確認書類関連情報の流出</li><li><b>リンツ（チョコレート店）</b>：約315万件の会員情報流出</li><li><b>JAL</b>：約9.2万人の予約情報に流出のおそれ</li><li><b>ANA</b>：約3.78万人の予約情報に流出のおそれ</li><li><b>佐賀大学</b>：約8万人の情報に流出の可能性があり、付属病院の患者情報も対象となったおそれ</li></ul>
+<p>JALとANAについては、両社自体ではなく、両社が利用していた外部の航空予約システムへの不正アクセスが原因です。予約情報に加えて、一部のパスポート番号も流出したおそれがあります。（faq-jp.jal.co.jp）</p>
+<p>ここで皆様に考えていただきたいことがあります。</p>
+<p>私たちは普段、さまざまなアプリやサービスを利用する際、氏名、住所、電話番号、メールアドレスなどを登録します。</p>
+<p>しかし、それらの情報が企業側や委託先でどのように管理されているかを、私たち利用者が完全に把握することはできません。</p>
+<p><b>つまり、自分自身が直接ハッキングされなくても、普段利用している企業を通じて個人情報が危険にさらされる場合があるのです。</b></p></div>
+<div class="notes-src" id="notes-c2d"><h5>3. 情報流出の件数は急増しているのか？</h5>
+<p>セキュリティ企業のマクニカが集計したデータでは、次の数字が紹介されています。</p>
+<table><tr><th>年</th><th>集計件数</th></tr><tr><td>2024年</td><td>372万件</td></tr><tr><td>2025年</td><td>3,345万件</td></tr><tr><td>2026年（10月30日時点）</td><td>3億6,639万件</td></tr></table>
+<p>この集計上では、2024年から桁違いに増えています。</p>
+<p>ただし、こちらは報道された各社の件数を単純合算したものですので、公式統計ではなく、あくまで全体の傾向を見る参考データとしてご覧ください。</p>
+<p>また、件数が急増した背景には、1件数千万件にのぼる超大規模事件が相次いだことも影響しています。</p>
+<p>重要なのは、サイバー攻撃によってこれほど膨大な個人情報が現実に危険にさらされているということです。</p></div>
+<div class="notes-src" id="notes-c2e"><h5>4. Binance（バイナンス）の史上最大規模のハッキング</h5>
+<p>ここからは海外の重大事件です。</p>
+<p>2026年10月29日、世界最大級の暗号資産（仮想通貨）取引所であるBinance（バイナンス）が大規模なサイバー攻撃を受けました。</p>
+<p>Binanceは、<b>ホットウォレットに不正侵入され</b>、約63億ドル相当の暗号資産が不正に引き出されたと発表しています。（Binance Support）</p>
+<blockquote><b>Binance公表の流出額</b><br><b>約63億ドル（約9,450億円相当）</b><br>※1ドル150円で換算した概算。事件は調査継続中です。</blockquote>
+<p>2025年2月には、同じく大手取引所のBybit（バイビット）で約15億ドル（約2,250億円）相当の暗号資産が盗まれ、当時の過去最大規模とされていました。</p>
+<p>今回のBinanceの被害額は、その約4.2倍に相当します。</p></div>
+<div class="notes-src" id="notes-c2f"><h5>ホットウォレットとは何か？</h5>
+<p>ホットウォレットとは、インターネットに常時接続された状態で暗号資産を管理する「オンラインのお財布（普段使いの財布のような仕組み）」です。</p>
+<p>すぐ取引や送金ができる便利な反面、インターネットに繋がっているため、外部からのハッキングの標的になりやすいリスクがあります。</p>
+<p>Binanceは、利用者保護基金と自社の資金を使って顧客には損失を負担させない方針を示しています。</p>
+<p>ただし、実際の回復状況や事件の全容については引き続き確認が必要です。</p>
+<h5>【皆様への問いかけ】</h5>
+<p>皆様、約9,450億円という数字を想像してみてください。</p>
+<p>これほど巨額の資産が、たった一度のハッキング事件で流出したということです。</p>
+<p>世界最大級の取引所であっても攻撃を完全に防げなかったことは、非常に重大な問題です。</p>
+<p>暗号資産を保有する場合、価格の上がり下がりだけではなく、預けている取引所のセキュリティも重要なリスクになるのです。</p></div>
+<div class="notes-src" id="notes-c2g"><h5>5. 日本の証券口座乗っ取り事件</h5>
+<p>続いて、株式投資を行っている皆様に最も直接関係する問題です。</p>
+<p>2025年、日本の証券口座への不正アクセスが急増しました。</p>
+<p>金融庁の公表データによると、2025年の不正アクセス件数は17,701件、実際に勝手に売買された不正取引件数は9,848件にのぼりました。（www.fsa.go.jp）</p>
+<h5>主な手口</h5>
+<ol><li>証券会社を装った偽メールを送る。</li><li>メール内のリンクから、本物そっくりの偽サイトに誘導する。</li><li>入力されたIDやパスワード、認証情報を盗み取る。</li><li>本人になりすまして本物の証券口座にログインする。</li><li><b>保有している株式を勝手にすべて売却し、見知らぬ別の銘柄を勝手に購入する。</b></li></ol></div>
+<div class="notes-src" id="notes-c2h"><p>ここで、「なぜ犯人はお金を直接引き出さずに、勝手に別の株を買うのか？」と疑問に思われるかもしれません。</p>
+<p>実は、日本の証券口座からは、あらかじめ登録された本人名義の銀行口座にしか出金できないため、犯人の口座へ直接お金を振り込むことはできない仕組みになっています。</p>
+<p>そのため犯人は、あらかじめ自分たちで安く買い集めておいた「普段ほとんど取引されない無名の株（小型株や中国株など）」を、乗っ取った皆様の口座のお金で無理やり高値で大量に買わせます。そして株価が跳ね上がったところで、犯人が自分の口座で売り抜けて利益を奪い取るのです。</p>
+<p>例えば、1,000万円の株式資産を保有している方がいたとします。</p>
+<p>犯人に口座へ侵入され、大切に持っていた株を勝手に売られて無名株を高値で買わされた結果、直後にその株が暴落し、大きな損失を被る被害が相次いでいます。</p>
+<p>もちろん、必ず全額を失うわけではありませんが、自分の知らないうちに大切な資産が大きく損なわれてしまう非常に深刻な犯罪です。</p>
+<h5>証券会社は被害を補償してくれるのか？</h5>
+<p>2025年5月、日本証券業協会と証券会社10社は、一定の被害補償を行う方針を発表しました。</p>
+<p>しかし、<b>無条件で全額補償されるというわけではありません。</b></p>
+<p>利用者側のパスワード管理状況なども含め、各社の方針や個別の事情によって判断されます。（日本証券業協会）</p>
+<p>皆様に強くお伝えしたいのは、<b>被害に遭ってから補償に頼るのではなく、最初から被害を防ぐ設定をしておくことが何より重要だということです。</b></p></div>
+<div class="notes-src" id="notes-c3a"><h5>第③章 個人情報が流出すると何が起こるのか？</h5>
+<p><span class="dir">20:40〜20:55 | 15分</span></p>
+<p>ここまで、数多くの情報流出事件をご紹介しました。</p>
+<p>では、私たち自身の情報が流出した場合、具体的に何が起こるのでしょうか。</p>
+<h5>1. 個人情報は組み合わせることで危険性が高まる</h5>
+<p>例えば、氏名や住所だけが流出したからといって、直ちに金融資産が盗まれるわけではありません。</p>
+<p>しかし、別々の場所から漏れた次の情報が、犯罪者の手元で1つに組み合わされたらどうでしょうか。</p>
+<ul><li>氏名</li><li>生年月日</li><li>住所</li><li>電話番号</li><li>メールアドレス</li><li>利用している金融機関・証券会社</li><li>投資している銘柄</li><li>保有している資産額の情報</li></ul>
+<p>これらが犯罪者の手に渡ると、「本物の担当者だ」と信用させるための強力な材料として悪用されてしまいます。</p></div>
+<div class="notes-src" id="notes-c3b"><h5>2. 金融機関を装った詐欺</h5>
+<p>例えば、次のような電話がかかってきたとします。</p>
+<p>「〇〇証券のセキュリティ担当です。お客様の口座で不審なアクセスが確認されました」</p>
+<p>しかも相手は、あなたの名前だけでなく、住所や実際に利用している証券会社まで正確に知っています。</p>
+<p>こうなると、普段なら警戒する方でも「本物の証券会社からの連絡だ」と信用してしまうかもしれません。</p>
+<p>しかし、相手が知っているその情報は、過去の別の情報流出事件から集められたものかもしれないのです。</p>
+<p>さらにAIを使えば、プロのオペレーターのような自然な受け答えも簡単にできてしまいます。</p></div>
+<div class="notes-src" id="notes-c3c"><h5>3. メールアカウントが乗っ取られる危険</h5>
+<p>ここで皆様に考えていただきたいのが、普段使っている「メールアドレス」の重要性です。</p>
+<p>多くの証券会社や銀行、ネットサービスでは、パスワードを忘れたときの再設定や、ログイン時の確認コードの受け取りにメールを利用しています。</p>
+<p>そのため、もし大元のメールアカウント（GmailやYahoo!メールなど）が乗っ取られてしまうと、それに紐づく他の金融サービスまで芋づる式に乗っ取られる危険があります。</p>
+<p>証券口座や銀行口座だけでなく、その「鍵の受け皿」となっているメールアカウントも厳重に守る必要があります。</p></div>
+<div class="notes-src" id="notes-c3d"><h5>4. 身分証明書の情報が流出した場合</h5>
+<p>運転免許証やマイナンバーカードなどの画像データが流出・悪用されると、本人になりすまして勝手にローンやクレジットカードを申し込まれる危険性も考えられます。</p>
+<p>もちろん、金融機関側にも本人確認の審査があるため、画像データが流出しただけで必ず不正契約が成立するわけではありません。</p>
+<p>それでも、万が一の不正利用への備えは知っておく必要があります。</p>
+<p><b>この章の結論は、個人情報の流出は「漏れたその瞬間」だけで終わる問題ではなく、数ヶ月後・数年後にあなたを狙う詐欺や不正契約の材料にされる可能性があるということです。</b></p></div>
+<div class="notes-src" id="notes-c4a"><h5>第④章 今後さらに深刻化する脅威と国家レベルの対策</h5>
+<p><span class="dir">20:55〜21:10 | 15分</span></p>
+<p>ここからは、今後のサイバー犯罪のさらなる進化と、国レベルの対策について説明します。</p>
+<h5>1. AIによって攻撃がさらに高度化する可能性</h5>
+<p>今後は、次のような新しい攻撃への警戒が必要です。</p>
+<ul><li><b>AIによるリアルタイムの音声・映像偽造</b>（ビデオ通話でも本人そっくりに化ける）</li><li><b>個人情報に基づく標的型詐欺</b>（個人の状況に合わせたオーダーメイド型の詐欺）</li><li><b>AIエージェントを悪用する攻撃</b>（人間に代わってパソコンや社内システムを自動操作するAIを乗っ取る攻撃）</li><li><b>ログイン状態の乗っ取り</b>（パスワードだけでなく、ログイン済みの状態を示すデータそのものを盗み取る攻撃）</li><li><b>金融・電力・物流など重要インフラへの攻撃</b></li></ul>
+<p>今後、AIが企業や個人のシステムと深く連携するほど、AIに与えた権限をどう守るかが極めて重要になります。</p></div>
+<div class="notes-src" id="notes-c4b"><h5>2. サイバー攻撃は国家安全保障の問題</h5>
+<p>日本政府は2025年7月、「国家サイバー統括室」を設置しました。</p>
+<p>政府全体のサイバーセキュリティ政策をまとめ、司令塔となる組織です。（国家サイバー統括室）</p>
+<p>サイバー攻撃は、金融機関だけでなく、電力、水道、通信、空港などの社会インフラにも影響を及ぼす可能性があります。</p>
+<p>仮に大規模な停電や通信障害が引き起こされれば、私たちの生活や経済活動に重大な被害が出ることになります。</p></div>
+<div class="notes-src" id="notes-c4c"><h5>3. 能動的サイバー防御とは？</h5>
+<p>これまでの日本は、攻撃を受けて被害が出てから対処する「受け身の防御」が中心でした。</p>
+<p>それに対し「能動的サイバー防御」とは、攻撃の予兆を事前に察知し、法律で定められた厳格な条件のもとで、<b>被害が発生する前に対処する</b>考え方です。</p>
+<p>日本でも2025年に関連法が成立し、制度の整備が進められています。（内閣官房 国家サイバー統括室）</p>
+<p>もちろん、政府が無制限にどこへでも侵入できるという意味ではなく、法的な条件と独立機関の監督のもとで運用される仕組みです。</p>
+<h5>4. 国家間のサイバー攻撃</h5>
+<p>サイバー攻撃には、犯罪グループによる金銭目的だけでなく、国家が関与する情報収集や安全保障に関わるものもあります。</p>
+<p>2026年10月、日本の国家サイバー統括室と警察庁は、中国政府関連の攻撃グループを支援する企業について、米国などの関係国と共同で注意喚起を公表しました。（www.cyber.go.jp）</p>
+<p>ここから分かるのは、サイバー攻撃がすでに「国と国との防衛問題」になっているということです。</p></div>
+<div class="notes-src" id="notes-c4e"><h5>5. PHPの重大な脆弱性（弱点）問題</h5>
+<p>2026年10月21日、世界中のホームページやブログを動かすために裏側で広く使われている「PHP」というプログラムに、<b>重大なセキュリティ上の弱点（いわゆる脆弱性）</b>が報告されました。</p>
+<p>これを受け、高市総理が夜間にSNSを通じて異例の緊急対応を呼びかけました。</p>
+<p>修正プログラムの速やかな適用や、間に合わない場合はウェブサイトの一時停止にまで言及しています。（INTERNET Watch）</p>
+<p>今回のPHP問題はAIによって起きたものではありませんが、たった一つのプログラムの弱点が、国全体の危機になり得ることを示しています。</p>
+<p><b>サイバーセキュリティは、もはや企業のIT担当者だけの問題ではありません。国の安全保障や経済活動、そして投資環境にも直結する重要課題となっています。</b></p></div>
+<div class="notes-src" id="notes-c5a"><h5>第⑤章 個人情報と金融資産を守る具体的な対策</h5>
+<p><span class="dir">21:10〜21:35 | 25分・最重要</span></p>
+<p>皆様、ここまでサイバー犯罪の恐ろしさについて説明してきました。</p>
+<p>しかし、怖さを知るだけでは意味がありません。</p>
+<p>今回の勉強会で最も重要なのは、<b>「私たちが今日から具体的に何をすればよいのか」</b>ということです。7つの具体策をお伝えします。</p>
+<h5>1. パスキー認証を利用する</h5>
+<p>まず真っ先に確認していただきたいのが、証券口座や銀行口座のログイン認証方法です。</p>
+<p>「パスキー」とは、従来のパスワードの代わりに、スマートフォンの顔認証や指紋認証を使ってログインする最新の認証方式です。</p>
+<p>従来のパスワード認証と比べて、偽サイトへ誘導するフィッシング詐欺に非常に強い特徴があります。</p>
+<p><b>なぜなら、パスキーは「本物の公式サイト」と「ご自身のスマホ」が直接ペアとして登録されるため、万が一本物そっくりの偽サイトを開いてしまってもパスキー自体が作動せず、情報が盗まれない仕組みになっているからです。</b></p>
+<p>日本でも、SBI証券、楽天証券、マネックス証券などがパスキー認証の導入・強化を進めています。（www.sbisec.co.jp）</p>
+<p>ただし、パスキーも100%万能ではありません。スマホやパソコン自体がウイルス等で乗っ取られたり、パスワード再設定などの「復旧手続き」の抜け穴を悪用されたりする危険は残ります。</p>
+<p>そのため、次の対策と組み合わせることが重要です。</p></div>
+<div class="notes-src" id="notes-c5b"><h5>2. 金融機関の公式サイト（ブックマーク・公式アプリ）からログインする</h5>
+<p>銀行や証券会社を装ったメールやSMSが届いても、<b>メール内のリンクからは絶対にログインしない</b>ようにしてください。</p>
+<p>普段のログインは、スマートフォンの公式アプリを使うか、あらかじめブラウザの<b>ブックマーク（お気に入り）に登録しておいた正しい公式サイト</b>からアクセスする習慣をつけてください。</p>
+<p>また、ログインした時や注文が成立した時にメールが届く「ログイン通知」「取引通知」も必ずオンにしておきましょう。万が一の異変にいち早く気づくためです。</p></div>
+<div class="notes-src" id="notes-c5c"><h5>3. パスワードを使い回さない</h5>
+<p>複数のサイトで同じパスワードを使っていると、どこか1つの通販サイトやアンケートサイトから情報が漏れただけで、同じパスワードで証券口座やメールまで突破されてしまいます。</p>
+<p>特に「証券口座・銀行口座」と「メインのメールアドレス」には、他とは一切かぶらない専用の複雑なパスワードを設定してください。</p>
+<p>覚えきれない場合は、スマートフォン標準のパスワード管理機能や管理アプリを活用するのも有効です。</p>
+<h5>4. スマートフォンとパソコンを最新の状態に保つ</h5>
+<p>スマートフォンのOSやパソコン、アプリには、後からセキュリティ上の弱点が見つかることがあります。</p>
+<p>それを塞ぐのが「アップデート（更新）」です。先ほどのPHPの問題も、更新プログラムの適用が最大の防御策でした。</p>
+<p>「あとで更新する」と放置せず、常に最新の状態に保つことが大切です。</p></div>
+<div class="notes-src" id="notes-c5e"><h5>5. 信用情報機関の「本人申告制度」を知っておく</h5>
+<p>ここで、あまり知られていませんが、いざという時に非常に役立つ対策をご紹介します。</p>
+<p>日本には、個人のクレジットカードやローンの契約履歴を管理している公的な「信用情報機関」が3つあります。銀行やカード会社は、審査のときに必ずここを確認します。</p>
+<table><tr><th>信用情報機関</th><th>主な対象分野</th></tr><tr><td><b>JICC</b>（日本信用情報機構）</td><td>消費者金融・信販・クレジットなど</td></tr><tr><td><b>CIC</b>（シー・アイ・シー）</td><td>クレジットカード・携帯電話の分割払いなど</td></tr><tr><td><b>KSC</b>（全国銀行個人信用情報センター）</td><td>銀行・信用金庫などのローン</td></tr></table>
+<p>もし運転免許証などの本人確認書類を盗まれたり、情報が漏れて「他人に勝手にお金を借りられるかもしれない」という強い懸念がある場合には、これらの機関に「私の情報が悪用されるおそれがあります」と登録しておく<b>「本人申告制度」</b>を利用できます。（株式会社日本信用情報機構）</p>
+<p>登録しておくと、犯人があなたになりすましてカードやローンを申し込んでも、審査の段階で金融機関側が気づき、ストップがかかりやすくなります。</p>
+<p>もちろん、一般的なメールアドレスが漏れた程度で全員がすぐ申告する必要はありませんが、免許証やマイナンバー等の本人確認情報が危ないときの「最後の盾」としてぜひ知っておいてください。</p></div>
+<div class="notes-src" id="notes-c5f"><h5>6. 家族間の本人確認ルール（合言葉・かけ直し）を決める</h5>
+<p>今後、AIによる声の複製（ボイスクローン）がさらに広がると、電話口の「聞き慣れた家族の声」だけで本人だと信じるのは危険です。</p>
+<p>家族や知人から突然お金に関する電話があった場合は、<b>「一度電話を切って、自分が元から登録している家族の番号へかけ直す」</b>、あるいは<b>「家族だけの合言葉を決めておく」</b>といったルールをご家庭で共有しておいてください。</p></div>
+<div class="notes-src" id="notes-c5g"><h5>7. 万が一、被害に遭った場合の初動対応</h5>
+<p>もし不正アクセスや身に覚えのない取引に気づいた場合は、パニックにならず、直ちに次の順番で動いてください。</p>
+<ol><li><b>金融機関・証券会社へ直ちに連絡する。</b></li><li><b>取引や出金の一時停止を依頼する。</b></li><li><b>別の安全な端末から、メールアドレスと口座のパスワードを変更する。</b></li><li><b>不審なログイン履歴や、勝手なアプリ連携がないか確認する。</b></li><li><b>画面のスクリーンショット等で、取引履歴や通知メールの証拠を保存する。</b></li><li><b>警察のサイバー犯罪相談窓口などの関係機関へ相談する。</b></li></ol></div>
+<div class="notes-src" id="notes-c5h"><h5>【皆様へのお願い】</h5>
+<p>皆様、今日の勉強会が終わったら、ぜひ今夜のうちに<b>ご自身の証券口座のセキュリティ設定（パスキーや二段階認証、ログイン通知）</b>を確認してください。</p>
+<p>長年かけて築き上げてきた大切な資産を守るために、できることからすぐ始めていただきたいと思います。</p>
+<p>「資産防衛」というと、現金比率や分散投資ばかりを考えがちですが、これからは<b>デジタル上の資産防衛</b>が必要不可欠です。</p></div>
+<div class="notes-src" id="notes-c6a"><h5>第⑥章 サイバーセキュリティ企業と今後の成長性</h5>
+<p><span class="dir">21:35〜22:00 | 25分・投資分析編</span></p>
+<p>さて、ここからは未来塾らしく、株式投資の視点からこの問題を考えていきたいと思います。</p>
+<p>ここまで数多くのサイバー攻撃についてご紹介してきましたが、投資家として一つ重要な視点があります。</p>
+<p>それは、<b>「世界が直面する大きな問題の裏側には、その問題を解決する企業の大きな成長機会が存在する」</b>ということです。</p>
+<p>AIの普及、クラウドの拡大、社会のデジタル化が進むほど、企業も国家もセキュリティへの支出を減らすことはできません。つまり、サイバーセキュリティの需要は今後さらに高まると考えられます。</p>
+<p>ただし、「市場が伸びること」と「特定の企業の株価が上がること」はイコールではありません。</p>
+<p>ここは投資家として冷静に数字で分析する必要があります。</p></div>
+<div class="notes-src" id="notes-c6b"><h5>1. 世界を代表するセキュリティ企業</h5>
+<p>今回ご紹介するのは、米国に上場している世界トップクラスの4社です。</p>
+<table><tr><th>企業名</th><th>ティッカー（証券コード）</th><th>主な強み</th></tr><tr><td><b>Palo Alto Networks</b>（パロアルト・ネットワークス）</td><td>PANW</td><td>総合セキュリティ基盤（業界最大手）</td></tr><tr><td><b>CrowdStrike</b>（クラウドストライク）</td><td>CRWD</td><td>脅威の検知・パソコンやサーバー等の端末保護</td></tr><tr><td><b>Fortinet</b>（フォーティネット）</td><td>FTNT</td><td>社内ネットワークの防御機器・システム</td></tr><tr><td><b>Zscaler</b>（ジースケイラー）</td><td>ZS</td><td>ゼロトラスト（無条件に信用せず毎回確認するクラウド防衛）</td></tr></table>
+<p>この中でも今回は、特に代表的な<b>Palo Alto Networks（パロアルト・ネットワークス）</b>と<b>CrowdStrike（クラウドストライク）</b>の2社を中心に見ていきます。</p></div>
+<div class="notes-src" id="notes-c6c"><h5>2. Palo Alto Networks（パロアルト・ネットワークス）の強み</h5>
+<p>Palo Alto Networksは、企業のネットワークやクラウド、パソコン端末、社員のIDなどを幅広く守る総合セキュリティ企業です。</p>
+<p>最大の特徴は、<b>バラバラだった複数のセキュリティ機能を「1つにまとめて提供する（統合プラットフォーム化）」戦略</b>です。</p>
+<p>これまで多くの企業は、ネットワーク用、パソコン用、クラウド用と別々の会社のセキュリティ製品を入れていましたが、それでは管理が複雑になり、隙間を突かれるリスクもありました。</p>
+<p>それらをPalo Altoの製品に丸ごと統合できれば、企業にとっては管理が楽になり、トータルのコスト削減にもつながります。</p>
+<p>同社の直近通期（2026年度）の売上高は<b>114.8億ドル（約1兆7,200億円）</b>でした。</p>
+<p>また、来期（2027年度）については売上高<b>141億〜142億ドル（約2兆1,000億円規模）</b>という力強い会社予想を示しています。（Palo Alto Networks）</p></div>
+<div class="notes-src" id="notes-c6d"><h5>3. CrowdStrike（クラウドストライク）の強み</h5>
+<p>CrowdStrikeは、従業員のパソコンや企業のサーバーといった「端末（エンドポイント）」をAIで監視・防御する技術を中核とし、クラウドやID保護などにも事業を広げています。</p>
+<p>最大の特徴は、<b>クラウドを利用したサブスクリプション（継続課金）型のビジネスモデル</b>です。</p>
+<p>同社の直近通期（2026年度）の売上高は<b>48.1億ドル（約7,200億円）</b>でした。</p>
+<p>また、2026年度末時点の「年間経常収益（ARR）」は<b>約52.5億ドル（約7,800億円）</b>となり、前年から<b>24%増加</b>しています。（CrowdStrike Holdings）</p>
+<p>この「ARR（年間経常収益）」とは、毎年継続して入ってくるサブスク契約の売上がどれほど積み上がっているかを見るための、非常に重要な指標です。</p>
+<p>ただし、同社は2024年7月にソフトウェアの更新ミスによる世界的なシステム障害を起こした過去もあり、製品の信頼性や運用品質を維持できるかどうかも投資家として注視すべきポイントです。</p></div>
+<div class="notes-src" id="notes-c6e"><h5>4. 両社の業績比較</h5>
+<p><b>Palo Alto NetworksとCrowdStrikeの年間売上高（直近2026年度決算）</b></p>
+<ul><li><b>Palo Alto Networks</b>：114.8億ドル（約1兆7,200億円）</li><li><b>CrowdStrike</b>：48.1億ドル（約7,200億円）</li></ul>
+<p>会社の規模ではPalo Alto Networksが2倍以上大きく、一方でCrowdStrikeも年率20%を超える高い継続収益の成長を続けています。</p>
+<p>ただし、投資判断にあたっては、売上高や成長率だけでなく、競合に対する優位性、利益率、そして「現在の株価が割高か割安か」を合わせて見る必要があります。</p></div>
+<div class="notes-src" id="notes-c6f"><h5>5. 2030年に向けて考える</h5>
+<p>ここで、仮に企業の売上高が今後も毎年成長し続けた場合を試算してみます。</p>
+<ul><li>売上高が<b>年平均15%</b>で4年間成長した場合 ➔ <b>約1.75倍</b></li><li>売上高が<b>年平均20%</b>で4年間成長した場合 ➔ <b>約2.07倍（約2倍）</b></li></ul>
+<p>しかし、<b>「4年間で売上が2倍になったからといって、株価も必ず2倍になるわけではない」</b>という点が株式投資の重要なポイントです。</p>
+<p>株価には、売上の成長だけでなく、利益率の改善、市場の期待度、米国の金利動向、発行済株式数の増減、そして投資家が許容する株価の倍率（PERなど）が大きく影響します。</p></div>
+<div class="notes-src" id="notes-c6g"><h5>6. 未来塾の投資フレームで分析する</h5>
+<p>皆様、未来塾ではこれまで、次の6つの順序で投資対象を分析することを大切にしてきました。</p>
+<ol><li><b>国家</b>：サイバー防衛政策・法整備の強化</li><li><b>世界</b>：AIの普及・社会のデジタル化</li><li><b>産業</b>：サイバーセキュリティ需要の拡大</li><li><b>企業</b>：各社の競争力・売上と利益の成長</li><li><b>株価</b>：現在の株価が割高か・割安かの判断</li><li><b>戦略</b>：どの価格水準で買うか・リスク管理</li></ol>
+<p>今回のサイバーセキュリティ産業も、まったく同じようにこのフレームワークに当てはめることができます。</p>
+<p>国レベルでサイバー防衛が急務となり、世界中でAIとデジタル化が進み、セキュリティ産業の需要が確実に増えていく。</p>
+<p>では、その需要をどの企業が最も多く取り込み、利益として成長させられるのか。</p>
+<p>そして、その将来の成長が「今の株価」にどこまで織り込まれているのか。</p>
+<p>これらを順番に冷静に判断することが重要です。</p></div>
+<div class="notes-src" id="notes-c6h"><h5>【会員様へ伝えたいこと】</h5>
+<p>今回取り上げたセキュリティ企業について、私は非常に重要な成長産業の一つとして注目しています。</p>
+<p>しかし、どんなに将来性が高い優良企業だからといって、<b>「どんなに高い株価で買ってもよい」というわけではありません。</b></p>
+<p>その企業がこれから成長するかどうかという「企業の成長性」と、今の株価で買って利益を出しやすいかという「株式の投資妙味（お買い得度）」は、しっかり分けて考える必要があります。</p>
+<p>これからも未来塾では、企業の実力と株価の評価を冷静に分析しながら、皆様と一緒に将来の投資機会を見極めていきたいと思います。</p></div>
+<div class="notes-src" id="notes-end"><h5>最後に：未来塾の皆様へ</h5>
+<p><b>資産を増やす知識と、資産を守る知識。</b></p>
+<p>皆様、本日はAIの進化によって生じる新たな脅威と、実際に発生しているサイバー犯罪についてお話ししました。</p>
+<p>これまで未来塾では、世界経済や金融市場を分析し、将来成長する企業を見極めるための勉強を重ねてきました。</p>
+<p>しかし、これからの時代はそれだけでは十分ではありません。</p>
+<p>AIの進歩は、私たちに大きな投資機会をもたらす一方で、個人情報や金融資産を危険にさらす新たなリスクも生み出しています。</p>
+<p>長年かけて築き上げてきた大切な資産を守るためには、投資で増やす知識だけでなく、サイバーセキュリティについての正しい知識も必要です。</p>
+<p>そして同時に、こうした世界的な問題を解決する企業には、新たな成長の機会が生まれています。</p>
+<p>私たち投資家は、その両面を理解する必要があります。</p>
+<p><b>「資産を増やす知識」そして「大切な資産を守る知識」。</b></p>
+<p>この二つを身につけることが、これからの時代を生きる投資家にとって、ますます重要になると私は考えています。</p>
+<p>本日学んだ内容を、ぜひご自身と大切なご家族の資産を守るために役立てていただければ幸いです。</p>
+<p>本日も最後までご参加いただき、ありがとうございました。</p></div>
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  // 100-cell grid: 4 cells = AI-related share (8.93 / 208.8 ≈ 4.3%)
+  const g=document.getElementById('g100');
+  if(g){for(let k=0;k<100;k++){const i=document.createElement('i');if(k>=96)i.className='ai';g.appendChild(i)}}
+
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>未来塾 緊急特別ZOOM勉強会｜AIの進化がもたらす新たな脅威</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='台本　'+(i+1)+' / '+total;
+    // on phones every step is shown at once (one page = one scroll)
+    setStep(slides[i],mq.matches?(+slides[i].dataset.steps||0):0);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  // step-by-step builds: elements with data-s light up as the step counter grows
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  stage.addEventListener('click',e=>{if(e.target.closest('.fs,.card[data-s],.row2,.lv,.ci'))step(slides[cur])});
+
+  /* enlarge each slide's content to fill the body area (desktop only) */
+  function autofit(){
+    slides.forEach(s=>{
+      const b=s.querySelector('.body');if(!b)return;
+      let w=b.querySelector(':scope>.fitw');
+      if(!w){w=document.createElement('div');w.className='fitw';while(b.firstChild)w.appendChild(b.firstChild);b.appendChild(w)}
+      w.style.zoom='';if(mq.matches)return;
+      const H=b.getBoundingClientRect().height/(parseFloat(getComputedStyle(stage).transform.split(',')[3])||1);
+      let z=1;
+      const h=()=>w.getBoundingClientRect().height/(parseFloat(getComputedStyle(stage).transform.split(',')[3])||1);
+      while(z<1.65){w.style.zoom=(z+0.02).toFixed(2);if(h()>H-4)break;z+=0.02}
+      w.style.zoom=z.toFixed(2);
+    });
+  }
+  autofit();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(autofit);
+  if(mq.addEventListener)mq.addEventListener('change',autofit);
+
+  const probe=new Image();probe.onerror=()=>document.body.classList.add('noimg');
+  probe.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=40&q=10&auto=format&fit=crop';
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  window.__go=go;
+  const h=parseInt(location.hash.slice(1));go(h>0?h-1:0);
+})();
+</script>
+</body>
+</html>
