@@ -1,0 +1,1419 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第⑤章 補足資料　金融資産を守る具体的な方法｜未来塾</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== TriFuse brand tokens (05_ブランド資産/build_template.py の実測値) ===== */
+:root{
+  --navy:#0F1B2D; --ink:#16233A; --ink2:#5A6B82; --paper:#F7F9FC; --white:#FFFFFF;
+  --sky:#65CCFE; --muted:#8A9AB0; --rule:#D8DFE8;
+  --b1:#2B5FA8; --b2:#65CCFE; --b3:#40B69A; --b4:#82D548; --b5:#FEDA37; --b6:#F88039;
+  --warn:#F88039; --warnT:#B5500F; --safe:#2B5FA8; --ok:#2E9A7F; --okT:#1F7A63;
+  --brand:linear-gradient(90deg,#2B5FA8,#65CCFE,#40B69A,#82D548,#FEDA37,#F88039);
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,monospace;
+  --bg:var(--paper); --card:#FFFFFF; --cardline:var(--rule);
+}
+.theme-photo{--bg:#FFFFFF; --card:#F7F9FC}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E9EDF3;color:var(--ink);font-family:var(--font);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.theme-trifuse .only-b{display:none!important}
+.theme-photo .only-a{display:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;position:relative;transform-origin:center center;background:var(--bg);overflow:hidden;box-shadow:0 10px 50px rgba(15,27,45,.18)}
+.slide{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(26px)}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide.prev{transform:translateX(-26px)}
+
+/* ----- header band ----- */
+.hd{position:absolute;left:0;top:0;right:0;height:104px;background:var(--navy);color:#fff;padding:0 56px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
+.hd::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--brand)}
+.hd .chap{font-size:15px;font-weight:700;color:var(--sky);letter-spacing:.12em;margin-bottom:4px}
+.hd h2{font-size:31px;font-weight:900;line-height:1.25;letter-spacing:.01em}
+.hd .hbg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.hd .hbg.mono{filter:grayscale(1) contrast(1.1)}
+.theme-photo .hd{background:linear-gradient(100deg,#0F1B2D,#2B5FA8)}
+.theme-photo .hd .hbg+.shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,27,45,.92) 0%,rgba(15,27,45,.78) 45%,rgba(15,27,45,.35) 100%)}
+.credit{position:absolute;right:14px;bottom:10px;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.02em;z-index:3}
+.body{position:absolute;left:56px;right:56px;top:128px;bottom:58px}
+.ft{position:absolute;left:0;right:0;bottom:0;height:44px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;padding:0 56px;font-size:12px;color:var(--muted);background:var(--bg)}
+.ft .no{font-family:var(--mono)}
+
+/* ----- common parts ----- */
+.card{background:var(--card);border:1px solid var(--cardline);border-radius:14px;padding:18px 20px}
+.theme-trifuse .card{box-shadow:0 2px 10px rgba(15,27,45,.05)}
+.lead{font-size:17px;color:var(--ink2);line-height:1.75}
+.hl{color:var(--safe);font-weight:900}
+.wt{color:var(--warnT);font-weight:900}
+.okt{color:var(--okT);font-weight:900}
+.mono{font-family:var(--mono)}
+.t3{font-size:19px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:30px;background:#EAF4FF;color:var(--safe)}
+.tag.w{background:#FFF1E6;color:var(--warnT)}
+.tag.g{background:#E7F6F1;color:var(--okT)}
+.row{display:flex;gap:18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fade{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .fade{opacity:1;transform:none}
+.slide.active .d1{transition-delay:.1s}.slide.active .d2{transition-delay:.25s}.slide.active .d3{transition-delay:.4s}
+.slide.active .d4{transition-delay:.55s}.slide.active .d5{transition-delay:.7s}.slide.active .d6{transition-delay:.85s}
+.ico{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.btn{background:#fff;color:var(--ink);border:1.5px solid var(--rule);border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700}
+.btn:hover{border-color:var(--safe)}
+.btn.pr{background:var(--safe);color:#fff;border-color:var(--safe)}
+.hint{font-size:12px;color:var(--muted)}
+.quote{border-left:5px solid var(--safe);background:var(--card);border-radius:0 12px 12px 0;padding:14px 20px;font-size:18px;font-weight:700;line-height:1.7}
+.theme-trifuse .quote{background:#fff}
+
+/* step flows (advance with →) */
+.flow{display:flex;align-items:stretch}
+.fs{flex:1;background:var(--card);border:1.5px solid var(--cardline);border-radius:12px;padding:12px 10px;text-align:center;font-size:16px;font-weight:700;line-height:1.5;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.32;transform:scale(.96);transition:all .45s ease;min-height:132px}
+.fs .n{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:4px}
+.fs .ico{width:34px;height:34px;color:var(--muted);margin-bottom:6px;transition:color .4s}
+.fs.on{opacity:1;transform:none;border-color:var(--c,var(--safe));box-shadow:0 8px 24px -12px var(--c,var(--safe))}
+.fs.on .ico,.fs.on .n{color:var(--c,var(--safe))}
+.fs.last.on{background:color-mix(in srgb,var(--c,var(--safe)) 12%,#fff)}
+.fa{width:28px;display:flex;align-items:center;justify-content:center;color:var(--rule);font-size:20px;transition:color .4s}
+.fa.on{color:var(--c,var(--safe))}
+.stepbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+
+/* ===== 警告ランプ（点滅）とマーケット・ティッカー ===== */
+.metric.alert{border-color:rgba(248,128,57,.55)}
+.metric .alamp{position:absolute;right:58px;top:18px;width:11px;height:11px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 0 rgba(248,128,57,.7);animation:alamp 1.8s infinite}
+@keyframes alamp{0%{box-shadow:0 0 0 0 rgba(248,128,57,.7)}70%{box-shadow:0 0 0 12px rgba(248,128,57,0)}100%{box-shadow:0 0 0 0 rgba(248,128,57,0)}}
+.ticker{position:absolute;left:0;right:0;height:36px;background:var(--navy);color:#fff;overflow:hidden;display:flex;align-items:center;z-index:4}
+.theme-photo .ticker{top:360px}
+.theme-trifuse .ticker{top:0}
+.ticker .tk-lbl{flex:none;height:100%;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--safe);font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.06em;z-index:1}
+.ticker .tk-lbl i{width:8px;height:8px;border-radius:50%;background:var(--warn);animation:tkblink 1.2s steps(2,start) infinite}
+@keyframes tkblink{to{visibility:hidden}}
+.ticker .tk-track{display:flex;flex:none;white-space:nowrap;animation:tk 32s linear infinite}
+.ticker .tk-run{display:flex;gap:34px;padding-right:34px;font-family:var(--mono);font-size:16px;font-weight:700}
+.ticker .tk-run span{display:inline-flex;gap:8px;align-items:center}
+.ticker .tk-run em{font-style:normal;font-family:var(--font);font-weight:500;font-size:14px;color:#B9C7DA}
+.ticker .up{color:var(--warn)}.ticker .dn{color:var(--sky)}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mobile .ticker{position:relative;top:auto;bottom:auto}
+@media (prefers-reduced-motion:reduce){.ticker .tk-track,.metric .alamp{animation:none}}
+
+/* ===== S00 cover ===== */
+.cover{position:absolute;inset:0}
+.theme-trifuse .cover{background:linear-gradient(90deg,#EAF4FF,#FFF3E3)}
+.cover .brandbar{position:absolute;left:0;right:0;bottom:0;height:14px;background:var(--brand)}
+.cover .kicker{font-size:16px;color:var(--ink2);font-weight:700;letter-spacing:.06em}
+.cover h1{font-size:50px;font-weight:900;line-height:1.22;color:var(--ink);letter-spacing:.01em}
+.cover h1 .hl2{color:var(--safe)}
+.cover .sub{font-size:19px;color:var(--ink2);line-height:1.7;font-weight:500}
+.theme-trifuse .cover-text{position:absolute;left:72px;top:150px;width:720px;display:flex;flex-direction:column;gap:22px}
+.theme-photo .cover-text{position:absolute;left:64px;right:64px;top:416px;display:flex;flex-direction:column;gap:12px}
+.theme-photo .cover h1{font-size:46px}
+.theme-photo .cover .sub{font-size:17px}
+.cover-ill{position:absolute;right:56px;top:120px;width:440px;height:460px}
+.cover-photos{position:absolute;left:0;right:0;top:0;height:360px;display:grid;grid-template-columns:1fr 1fr}
+.cph{position:relative;overflow:hidden;background:linear-gradient(135deg,#16233A,#2B5FA8)}
+.cph+.cph{background:linear-gradient(135deg,#2B5FA8,#16233A)}
+.noimg .credit{display:none}
+.cph .pbg{position:absolute;inset:0;background-size:cover;background-position:center}
+.cph .pbg.mono{filter:grayscale(1) contrast(1.1)}
+.cph .lbl{position:absolute;left:22px;bottom:18px;background:rgba(255,255,255,.94);color:var(--ink);font-weight:900;font-size:16px;padding:6px 14px;border-radius:30px;z-index:2}
+.cph .lbl small{font-weight:500;color:var(--ink2);margin-left:6px;font-size:13px}
+.cph .credit{bottom:auto;top:10px}
+.cover-vs{position:absolute;left:50%;top:150px;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;background:#fff;border:3px solid var(--warn);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;color:var(--warnT);font-size:19px;z-index:3}
+.cover .date{font-family:var(--mono);font-size:14px;color:var(--muted)}
+
+/* ===== chrome ===== */
+#progress{position:absolute;left:0;top:0;height:4px;background:var(--sky);transition:width .4s ease;z-index:20}
+#nav{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:50;opacity:.3;transition:opacity .3s}
+#nav:hover{opacity:1}
+#nav button{background:#fff;color:var(--ink);border:1px solid var(--rule);border-radius:8px;width:40px;height:34px;font-size:14px}
+#nav button.wide{width:auto;padding:0 12px;font-size:13px}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(255,255,255,.98);border-top:4px solid var(--sky);padding:16px 32px 60px;font-size:16px;line-height:1.95;color:var(--ink);transform:translateY(100%);transition:transform .35s ease;z-index:40;box-shadow:0 -10px 30px rgba(15,27,45,.12)}
+#notes.show{transform:none}
+#notes h4{font-size:13px;color:var(--safe);letter-spacing:.12em;margin-bottom:6px}
+#notes p{margin-bottom:8px}
+#notes .dir{display:block;color:var(--warnT);font-size:14px;background:#FFF5EC;border-radius:6px;padding:2px 10px;margin:6px 0}
+#notes ul,#notes ol{margin:4px 0 10px 1.6em}
+#help{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;font-size:12px;color:var(--ink2);z-index:50;transition:opacity .6s;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:6px}
+#help.hide{opacity:0;pointer-events:none}
+.notes-src{display:none}
+/* ===== smartphone (portrait): reflow each slide into a vertical scrolling page ===== */
+.mobile,.mobile body{height:auto;overflow:auto}
+.mobile #viewport{position:static;display:block}
+.mobile #stage{width:100%;height:auto;min-height:100vh;transform:none!important;box-shadow:none;overflow:visible}
+.mobile .slide{position:relative;inset:auto;display:none;transform:none;transition:none;opacity:1;padding-bottom:92px}
+.mobile .slide.active{display:block}
+.mobile .hd{position:relative;height:auto;padding:16px 16px 18px}
+.mobile .hd h2{font-size:21px}
+.mobile .hd .chap{font-size:12px}
+.mobile .body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:16px 14px 8px;display:flex!important;flex-direction:column;gap:14px!important}
+.mobile .body>*{margin-top:0!important;margin-bottom:0!important}
+.mobile .ft{position:relative;height:auto;padding:12px 14px;font-size:11px;gap:8px}
+.mobile .g2,.mobile .g3,.mobile .sim,.mobile .sale,.mobile .waves,.mobile .checks,.mobile .pillars,.mobile .drop2,.mobile .lamps{grid-template-columns:1fr!important}
+.mobile .g4{grid-template-columns:1fr 1fr}
+.mobile .row,.mobile .crises{flex-direction:column}
+.mobile .card{padding:14px}
+.mobile .lead,.mobile p{font-size:15px!important}
+.mobile .quote{font-size:16px!important}
+.mobile .t3{font-size:17px}
+.mobile svg:not(.ico){max-width:100%;height:auto!important}
+/* step flows stack vertically */
+.mobile .flow{flex-direction:column;gap:2px}
+.mobile .fs{min-height:0;flex-direction:row;gap:10px;text-align:left;justify-content:flex-start;padding:10px 12px;font-size:15px}
+.mobile .fs br{display:none}
+.mobile .fs .ico{margin:0;width:30px;height:30px}
+.mobile .fs .n{margin:0;min-width:48px}
+.mobile .fa{width:auto;height:16px;transform:rotate(90deg);font-size:14px}
+.mobile .stepbar{flex-wrap:wrap}
+.mobile .dominos{margin-left:0}
+.mobile .landing{flex-basis:100%;margin:4px 0 0;height:60px}
+/* cover */
+.mobile .cover{position:relative;inset:auto;padding-bottom:20px}
+.mobile .cover-photos{position:relative;height:200px}
+.mobile .cover-vs{top:70px;width:46px;height:46px;font-size:15px}
+.mobile .cover-text{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;padding:22px 18px 10px;gap:12px!important}
+.mobile .cover h1{font-size:30px!important}
+.mobile .cover .sub{font-size:15px!important}
+.mobile .cover-ill{position:relative;right:auto;top:auto;display:block;width:calc(100% - 36px);height:auto;margin:6px 18px 0}
+.mobile .cover .brandbar{position:relative;margin-top:18px}
+.mobile .cph .lbl{font-size:13px;left:10px;bottom:10px}
+/* individual slides */
+.mobile .ask{font-size:22px}
+.mobile .wrow{grid-template-columns:52px 1fr 76px}
+.mobile .wrow .v{font-size:16px}
+.mobile .metric .val{font-size:28px}
+.mobile .chain{flex-wrap:wrap;justify-content:center}
+.mobile .cn{flex:0 0 30%}
+.mobile .ca{display:none}
+.mobile .fedbox{margin-top:0}
+.mobile .hist{gap:20px}
+.mobile .hrow{grid-template-columns:30px 1fr 74px;row-gap:6px}
+.mobile .hrow .track{grid-column:1 / -1;height:26px}
+.mobile .hrow .pct{font-size:22px}
+.mobile .hrow .nm{font-size:16px}
+.mobile .half-lb{display:none}
+.mobile .conv{font-size:15px}
+.mobile .card[style*="1fr 230px"]{grid-template-columns:1fr!important;justify-items:center}
+.mobile .card[style*="1fr 230px"] .sandwich{width:240px!important;height:192px!important}
+.mobile .perbox{gap:10px;height:200px;padding-top:24px}
+.mobile .perbox .pb{flex:0 0 64px}
+.mobile .perres{font-size:26px}
+.mobile div:has(>.hint){flex-direction:column;gap:4px}
+.mobile .pcard .big{font-size:32px}
+.mobile .venn{width:540px;zoom:.66}
+.mobile .stage2{min-width:0}.mobile .st .k{flex-shrink:0}
+.mobile .tug{grid-template-columns:1fr;justify-items:center}
+.mobile .tug .side{width:100%}
+.mobile .srow{grid-template-columns:86px 1fr 62px 62px;gap:6px;font-size:13px}
+.mobile .srow .sp,.mobile .shead span:last-child{display:none}
+.mobile .srow .rate{font-size:12px}
+.mobile .srow .after{font-size:14px}.mobile .srow .loss{font-size:12px}
+.mobile .sim-amount input{width:150px;font-size:26px}
+.mobile .recover .big{font-size:15px}.mobile .recover .big b{font-size:18px}
+.mobile .check{grid-template-columns:28px 34px 1fr 30px;padding:12px;gap:10px}
+.mobile .check .ico{width:32px;height:32px}
+.mobile .check h3{font-size:16px}
+.mobile .meter{flex-direction:column;align-items:stretch}
+.mobile .meter .ml{min-width:0;text-align:left}
+.mobile .stock h3{font-size:24px}
+.mobile .stock .bigi{width:52px;height:52px}
+.mobile .theme-photo .stock .sbg,.mobile.theme-photo .stock .sbg{width:100%;opacity:.35}
+.mobile .q{font-size:15px}
+.mobile .keymsg{font-size:21px;padding:16px}
+.mobile .domrow{height:130px;gap:4px;padding:0}
+.mobile .dm .block{width:26px;height:74px}
+.mobile .dm .lb{font-size:11px}
+.mobile .punch{font-size:17px;padding:14px}
+.mobile .mon{flex-wrap:wrap}
+.mobile .si{grid-template-columns:30px 36px 1fr;padding:12px;gap:10px}
+.mobile .si .n{font-size:22px}.mobile .si .ico{width:32px;height:32px}
+.mobile .si h4{font-size:16px}
+.mobile #progress{position:fixed}
+.mobile #nav{opacity:1;left:0;right:0;bottom:0;justify-content:center;gap:10px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--rule)}
+.mobile #nav button{height:44px;width:64px;font-size:17px}
+.mobile #nav button.wide{width:auto;padding:0 18px;font-size:15px}
+.mobile #bFull{display:none}
+.mobile #notes{max-height:60vh;padding:14px 16px 90px;font-size:15px;z-index:60}
+.mobile #help{display:none}
+
+
+/* ===== 2026年11月 AIの脅威 追加部品 ===== */
+.small{font-size:13px;color:var(--ink2);line-height:1.6}
+.src{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.disc{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:12px}
+.col{display:flex;flex-direction:column;gap:12px}
+.ctr{text-align:center}
+.red{color:var(--warnT)}
+.st0{opacity:.22;transition:opacity .45s ease,transform .45s ease,box-shadow .45s;transform:translateY(6px)}
+.st0.on{opacity:1;transform:none}
+.card.st0.on{box-shadow:0 10px 26px -16px rgba(15,27,45,.5)}
+.hide0{opacity:0;transition:opacity .45s ease,transform .45s ease;transform:translateY(8px)}
+.hide0.on{opacity:1;transform:none}
+svg .hide0{transform:none}
+.big{font-family:var(--mono);font-weight:700;color:var(--ink);line-height:1.1}
+.big small{font-family:var(--font);font-size:.42em;color:var(--ink2);margin-left:4px;font-weight:700}
+.big.w{color:var(--warnT)}
+.lbl{font-size:14px;font-weight:700;color:var(--ink2)}
+.keymsg{font-size:22px;font-weight:900;line-height:1.55;text-align:center;padding:16px 22px;border-radius:14px;background:#EAF4FF;color:var(--ink);border:1.5px solid #BBD7F5}
+.keymsg.w{background:#FFF5EC;border-color:#F9C9A6}
+.keymsg b{color:var(--safe)}.keymsg.w b{color:var(--warnT)}
+
+/* numbered cards */
+.nc{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:center;padding:14px 18px}
+.nc .nb{width:44px;height:44px;border-radius:50%;background:var(--safe);color:#fff;font-family:var(--mono);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
+.nc.w .nb{background:var(--warn)}
+.nc h4{font-size:19px;font-weight:900;line-height:1.35}
+.nc p{font-size:14.5px;color:var(--ink2);line-height:1.55;margin-top:3px}
+.ic-card{display:flex;flex-direction:column;gap:6px}
+.ic-card .ico{width:44px;height:44px;color:var(--safe)}
+.ic-card.w .ico{color:var(--warnT)}
+.ic-card h4{font-size:18px;font-weight:900;line-height:1.35}
+.ic-card p{font-size:14px;color:var(--ink2);line-height:1.6}
+.ic-card .k{display:inline-block;align-self:flex-start;font-size:13px;font-weight:900;padding:3px 10px;border-radius:20px;background:#FFF1E6;color:var(--warnT)}
+
+/* agenda */
+.ag{display:grid;grid-template-columns:150px 48px 1fr 250px;gap:14px;align-items:center;padding:9px 16px;border-radius:12px;border:1.5px solid var(--rule);background:#fff}
+.ag .tm{font-family:var(--mono);font-weight:700;color:var(--ink2);font-size:16px}
+.ag .no{width:40px;height:40px;border-radius:50%;background:#EAF4FF;color:var(--safe);font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center}
+.ag h4{font-size:20px;font-weight:900}
+.ag .dur{height:16px;background:#EEF2F7;border-radius:8px;overflow:hidden;position:relative}
+.ag .dur i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--brand);transition:width .8s ease}
+.ag.on .dur i{width:var(--w)}
+.ag .mn{font-family:var(--mono);font-size:13px;color:var(--ink2);margin-top:3px}
+.ag.hot{border-color:#F9C9A6;background:#FFFAF5}
+.ag.hot .no{background:var(--warn);color:#fff}
+
+/* horizontal bars */
+.hb{display:grid;grid-template-columns:250px 1fr 150px;gap:14px;align-items:center}
+.hb .nm{font-size:17px;font-weight:900;line-height:1.25}
+.hb .nm small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.hb .tr{height:28px;background:#EEF2F7;border-radius:6px;overflow:hidden}
+.hb .tr i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#FDBA8C,#F88039);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.hb .v{font-family:var(--mono);font-weight:700;font-size:21px;text-align:right;color:var(--warnT)}
+.hb .v small{font-family:var(--font);font-size:12px;color:var(--ink2);margin-left:2px}
+.slide.active .hbs.auto .hb .tr i{width:var(--w)}
+.hb.on .tr i{width:var(--w)}
+.hbs.auto .hb:nth-child(2) i{transition-delay:.12s}.hbs.auto .hb:nth-child(3) i{transition-delay:.24s}.hbs.auto .hb:nth-child(4) i{transition-delay:.36s}.hbs.auto .hb:nth-child(5) i{transition-delay:.48s}.hbs.auto .hb:nth-child(6) i{transition-delay:.6s}.hbs.auto .hb:nth-child(7) i{transition-delay:.72s}.hbs.auto .hb:nth-child(8) i{transition-delay:.84s}.hbs.auto .hb:nth-child(9) i{transition-delay:.96s}
+.hb.blue .tr i{background:linear-gradient(90deg,#65CCFE,#2B5FA8)}
+.hb.blue .v{color:var(--safe)}
+
+/* vertical bars */
+.vb{display:flex;align-items:flex-end;justify-content:center;gap:56px;height:330px;padding-top:40px;border-bottom:2px solid var(--rule)}
+.vb .c{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;width:150px;position:relative}
+.vb .bar{width:120px;height:0;border-radius:10px 10px 0 0;background:linear-gradient(180deg,#F88039,#FDBA8C);transition:height 1.1s cubic-bezier(.2,.8,.2,1)}
+.vb .c.blue .bar{background:linear-gradient(180deg,#2B5FA8,#65CCFE)}
+.vb .c.on .bar{height:var(--h)}
+.vb .val{font-family:var(--mono);font-weight:700;font-size:24px;margin-bottom:6px;opacity:0;transition:opacity .4s .5s;white-space:nowrap}
+.vb .c.on .val{opacity:1}
+.vb .val small{font-family:var(--font);font-size:13px;color:var(--ink2)}
+.vb .yr{position:absolute;bottom:-34px;font-size:15px;font-weight:900;white-space:nowrap}
+.vb .yr small{font-weight:500;color:var(--ink2);font-size:12px}
+.mult{display:inline-block;font-family:var(--mono);font-weight:700;font-size:18px;color:#fff;background:var(--warn);border-radius:30px;padding:3px 12px}
+
+/* 100-cell grid */
+.grid100{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;width:300px}
+.grid100 i{aspect-ratio:1;border-radius:4px;background:#BBD7F5;transition:background .4s}
+.slide.s2 .grid100 i.ai{background:var(--warn)}
+
+/* phone call */
+.call .bubble{transition:opacity .45s,transform .45s}
+.call .wave rect{transform-box:fill-box;transform-origin:center;animation:wv 1s ease-in-out infinite alternate}
+.call .wave rect:nth-child(2n){animation-delay:.25s}.call .wave rect:nth-child(3n){animation-delay:.5s}
+@keyframes wv{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+.ring{animation:ring 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ring{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(-7deg)}20%,40%{transform:rotate(7deg)}}
+.stamp{opacity:0;transform:scale(1.6) rotate(-10deg);transform-box:fill-box;transform-origin:center;transition:all .45s cubic-bezier(.3,1.5,.5,1)}
+.stamp.on{opacity:1;transform:scale(1) rotate(-10deg)}
+.no3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.no3 .card{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:900;position:relative}
+.no3 .ico{width:36px;height:36px;color:var(--ink2)}
+.no3 .xx{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:32px;height:32px;color:var(--warnT);stroke-width:5}
+
+/* case cards */
+.case{display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--warn)}
+.case .hd2{display:flex;align-items:center;gap:10px}
+.case .hd2 .ico{width:38px;height:38px;color:var(--warnT)}
+.case h3{font-size:21px;font-weight:900}
+.case .dt{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.case .num{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--warnT);line-height:1.1}
+.case .num small{font-family:var(--font);font-size:13px;color:var(--ink2)}
+.case ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.case li{font-size:14.5px;line-height:1.55;padding-left:16px;position:relative;color:var(--ink)}
+.case li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.case .lesson{margin-top:auto;font-size:14.5px;font-weight:900;background:#EAF4FF;color:var(--safe);border-radius:8px;padding:7px 10px;line-height:1.5}
+
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:14px;font-weight:900;padding:5px 12px;border-radius:30px;background:#FFF1E6;color:var(--warnT);border:1.5px solid #F9C9A6}
+.chip.b{background:#EAF4FF;color:var(--safe);border-color:#BBD7F5}
+.chip.g{background:#E7F6F1;color:var(--okT);border-color:#B5E3D4}
+
+/* company tiles */
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.tile{text-align:center;padding:14px 10px}
+.tile .ico{width:40px;height:40px;color:var(--warnT);margin:0 auto 6px;display:block}
+.tile b{font-size:17px;display:block}
+.tile .n{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--warnT);margin:4px 0}
+.tile p{font-size:12.5px;color:var(--ink2);line-height:1.5}
+
+/* hot wallet */
+.hw .atk{opacity:0;transition:opacity .4s}
+.slide.s2 .hw .atk{opacity:1}
+.hw .atkline{stroke-dasharray:6 8;animation:mflow2 .8s linear infinite}
+@keyframes mflow2{to{stroke-dashoffset:-14}}
+.hw .coins{transition:transform 1.2s ease,opacity 1.2s}
+.slide.s2 .hw .coins{transform:translate(170px,-6px);opacity:.15}
+.hw .net{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* pump chart */
+.pump .pl{stroke-dasharray:900;stroke-dashoffset:900;transition:stroke-dashoffset 1.1s ease}
+.pump .pl.on{stroke-dashoffset:0}
+
+/* profile merge */
+.merge{display:grid;grid-template-columns:1.25fr 56px 1fr;gap:12px;align-items:center}
+.pieces{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;background:#fff;border:1.5px solid var(--rule);font-size:16px;font-weight:900}
+.pc small{font-size:11.5px;color:var(--muted);font-weight:500;margin-left:auto;white-space:nowrap}
+.pc .ico{width:24px;height:24px;color:var(--warnT)}
+.arrbig{font-size:40px;color:var(--warn);text-align:center;font-weight:900}
+.profile{border:2px solid var(--warn);background:#FFF9F4;border-radius:14px;padding:16px 18px}
+.profile .pr{display:flex;justify-content:space-between;border-bottom:1px dashed #F3C8A8;padding:6px 0;font-size:15.5px}
+.profile .pr span{color:var(--ink2)}
+.profile .pr b{font-family:var(--mono)}
+
+/* hub (email) */
+.hub .spk{stroke:#BBD7F5;stroke-width:4;transition:stroke .4s}
+.hub .nd circle{fill:#fff;stroke:#BBD7F5;stroke-width:3;transition:all .4s}
+.hub .nd use{color:var(--safe);transition:color .4s}
+.hub .nd.on circle{stroke:var(--warn);fill:#FFF1E6}
+.hub .nd.on use{color:var(--warnT)}
+.hub .spk.on{stroke:var(--warn)}
+.hub .center circle{fill:#EAF4FF;stroke:var(--safe);stroke-width:4;transition:all .4s}
+.slide.s2 .hub .center circle{fill:#FFE3CF;stroke:var(--warn)}
+.hub .center use{color:var(--safe)}.slide.s2 .hub .center use{color:var(--warnT)}
+
+/* timeline (later) */
+.later{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;padding-top:12px}
+.later::before{content:"";position:absolute;left:12%;right:12%;top:40px;height:5px;border-radius:3px;background:#EEF2F7}
+.lt{text-align:center;position:relative}
+.lt .dot{width:58px;height:58px;border-radius:50%;margin:0 auto 8px;background:#fff;border:3px solid var(--rule);display:flex;align-items:center;justify-content:center;transition:all .4s}
+.lt .dot .ico{width:30px;height:30px;color:var(--muted)}
+.lt.on .dot{border-color:var(--warn);background:#FFF1E6}.lt.on .dot .ico{color:var(--warnT)}
+.lt b{font-size:18px}
+.lt p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-top:4px;padding:0 10px}
+
+/* active defense timeline */
+.adt{position:relative;height:150px}
+.adt .ln{position:absolute;left:30px;right:30px;top:62px;height:8px;border-radius:4px;background:linear-gradient(90deg,#BBD7F5,#FDBA8C,#F88039)}
+.adt .pt{position:absolute;top:32px;width:180px;text-align:center;transform:translateX(-50%)}
+.adt .pt .d{width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid var(--ink2);margin:20px auto 8px}
+.adt .pt b{font-size:17px}
+.adt .pin{position:absolute;top:0;transform:translateX(-50%);font-size:14px;font-weight:900;padding:4px 12px;border-radius:20px;white-space:nowrap;opacity:0;transition:opacity .4s}
+.adt .pin.on{opacity:1}
+.adt .pin.old{background:#EEF2F7;color:var(--ink2)}
+.adt .pin.new{background:var(--safe);color:#fff}
+
+/* infra ring */
+.infra .nd{transition:all .4s}
+.infra .nd circle{fill:#fff;stroke:var(--rule);stroke-width:3}
+.infra .nd use{color:var(--ink2)}
+.infra .nd.on circle{stroke:var(--warn);fill:#FFF1E6}.infra .nd.on use{color:var(--warnT)}
+.infra .lk{stroke:var(--rule);stroke-width:3;stroke-dasharray:5 6}
+.infra .lk.on{stroke:var(--warn)}
+
+/* php tower */
+.tower .site{transition:transform .6s ease,fill .4s}
+.slide.s1 .tower .crack{opacity:1}
+.tower .crack{opacity:0;transition:opacity .3s}
+.slide.s1 .tower .wob{animation:wob .4s ease-in-out 3}
+@keyframes wob{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.tower .wob{transform-box:view-box}
+.slide.s3 .tower .base{fill:#E7F6F1;stroke:var(--ok)}
+.slide.s3 .tower .crack{opacity:0}
+.tower .patch{opacity:0;transition:opacity .4s}.slide.s3 .tower .patch{opacity:1}
+
+/* seven measures */
+.seven{display:flex;gap:8px}
+.seven span{flex:1;text-align:center;font-size:13.5px;font-weight:900;padding:7px 4px;border-radius:8px;background:#EEF2F7;color:var(--ink2);line-height:1.3}
+.seven span.cur{background:var(--safe);color:#fff}
+
+/* passkey */
+.pk .lnk{stroke:var(--ok);stroke-width:4;stroke-dasharray:8 8;animation:mflow2 1s linear infinite}
+.pk .fake{opacity:.25;transition:opacity .4s}.slide.s2 .pk .fake{opacity:1}
+.pk .no{opacity:0;transition:opacity .4s .3s}.slide.s2 .pk .no{opacity:1}
+.pk .ok{opacity:0;transition:opacity .4s}.slide.s1 .pk .ok{opacity:1}
+
+/* toggles */
+.tg{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:900;padding:12px 16px}
+.tg .sw{width:58px;height:32px;border-radius:16px;background:#D8DFE8;position:relative;transition:background .35s;flex:none}
+.tg .sw::after{content:"";position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .35s;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.tg.on .sw{background:var(--ok)}
+.tg.on .sw::after{transform:translateX(26px)}
+.tg .ico{width:30px;height:30px;color:var(--safe)}
+
+/* password reuse */
+.pw .lkd{transition:all .4s}
+.pw .lkd rect{fill:#fff;stroke:var(--rule);stroke-width:3;transition:all .4s}
+.pw .lkd.on rect{stroke:var(--warn);fill:#FFF1E6}
+.pw .chain{stroke:var(--warn);stroke-width:4;stroke-dasharray:500;stroke-dashoffset:500;transition:stroke-dashoffset 1s ease}
+.pw .chain.on{stroke-dashoffset:0}
+
+/* steps list */
+.sl{display:flex;flex-direction:column;gap:9px}
+.sl .row2{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center;padding:10px 16px;border-radius:12px;border:1.5px solid var(--rule);background:#fff}
+.sl .row2 .nb{width:40px;height:40px;border-radius:50%;background:var(--safe);color:#fff;font-family:var(--mono);font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:center}
+.sl .row2 b{font-size:18.5px}
+.sl .row2.w .nb{background:var(--warn)}
+.sl .row2 p{font-size:13.5px;color:var(--ink2);margin-top:2px}
+
+/* checklist */
+.cl{display:flex;flex-direction:column;gap:12px}
+.cl .ci{display:flex;align-items:center;gap:16px;font-size:21px;font-weight:900;padding:14px 18px}
+.cl .bx{width:36px;height:36px;border-radius:8px;border:3px solid var(--rule);display:flex;align-items:center;justify-content:center;flex:none;transition:all .35s}
+.cl .bx .ico{width:26px;height:26px;color:#fff;stroke-width:6;opacity:0;transition:opacity .3s}
+.cl .ci.on .bx{background:var(--ok);border-color:var(--ok)}
+.cl .ci.on .bx .ico{opacity:1}
+.cl .ci small{font-size:13.5px;color:var(--ink2);font-weight:500;display:block}
+
+/* growth bars */
+.gb{display:flex;align-items:flex-end;gap:12px;height:230px;border-bottom:2px solid var(--rule);padding:0 8px}
+.gb .g{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.gb .g i{display:block;width:100%;border-radius:6px 6px 0 0;height:0;transition:height .7s ease}
+.gb.a .g i{background:linear-gradient(180deg,#65CCFE,#2B5FA8)}
+.gb.b .g i{background:linear-gradient(180deg,#FEDA37,#F88039)}
+.gb .g.on i{height:var(--h)}
+.gb .g span{font-family:var(--mono);font-weight:700;font-size:15px;margin-bottom:4px;opacity:0;transition:opacity .3s .4s}
+.gb .g.on span{opacity:1}
+.gb .g label{position:absolute;bottom:-24px;font-size:12px;color:var(--ink2);white-space:nowrap}
+
+/* framework stack */
+.fw{display:flex;flex-direction:column;gap:6px}
+.fw .lv{display:grid;grid-template-columns:44px 96px 1fr;gap:12px;align-items:center;padding:8px 16px;border-radius:10px;background:#fff;border:1.5px solid var(--rule)}
+.fw .lv .nb{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--safe)}
+.fw .lv b{font-size:20px}
+.fw .lv span{font-size:16px;color:var(--ink2)}
+.fw .lv.on{border-color:var(--c);box-shadow:0 8px 20px -14px var(--c)}
+.fw .lv.on .nb{color:var(--c)}
+
+/* platform merge */
+.plat .pt{transition:transform .9s cubic-bezier(.3,1.1,.5,1)}
+.slide.s1 .plat .pt{transform:translate(0,170px)}
+.plat .box{opacity:0;transition:opacity .5s .5s}.slide.s1 .slide.s1 .plat .pt{transform:translate(0,170px)}
+.plat .box{opacity:1}
+
+/* ARR stack */
+.arr .blk{opacity:0;transform:translateY(-20px);transition:opacity .35s,transform .35s cubic-bezier(.3,1.4,.5,1)}
+.slide.active .arr .blk{opacity:1;transform:none}
+.arr .blk:nth-child(2){transition-delay:.15s}.arr .blk:nth-child(3){transition-delay:.3s}.arr .blk:nth-child(4){transition-delay:.45s}.arr .blk:nth-child(5){transition-delay:.6s}.arr .blk:nth-child(6){transition-delay:.75s}
+
+/* balance (two pillars) */
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.pillar{border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.pillar .ico{width:64px;height:64px}
+.pillar h3{font-size:28px;font-weight:900}
+.pillar p{font-size:15.5px;line-height:1.65;color:var(--ink2)}
+.pillar.grow{background:#EAF4FF;border:2px solid #BBD7F5}.pillar.grow .ico,.pillar.grow h3{color:var(--safe)}
+.pillar.guard{background:#E7F6F1;border:2px solid #B5E3D4}.pillar.guard .ico,.pillar.guard h3{color:var(--okT)}
+
+/* two-side */
+.vs2{display:grid;grid-template-columns:1fr 60px 1fr;align-items:stretch;gap:10px}
+.vs2 .side{border-radius:14px;padding:16px 18px}
+.vs2 .mid{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:22px;color:var(--ink2)}
+.vs2 .good{background:#E7F6F1;border:1.5px solid #B5E3D4}
+.vs2 .bad{background:#FFF1E6;border:1.5px solid #F9C9A6}
+.vs2 h4{font-size:19px;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vs2 h4 .ico{width:30px;height:30px}
+.vs2 .good h4{color:var(--okT)}.vs2 .bad h4{color:var(--warnT)}
+.vs2 p{font-size:15px;line-height:1.6;color:var(--ink)}
+
+/* company table */
+.ct{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.co{padding:16px;display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--rule)}
+.co .tk{font-family:var(--mono);font-weight:700;font-size:28px;color:var(--ink)}
+.co b{font-size:16px;line-height:1.35}
+.co b small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.co p{font-size:14px;color:var(--ink2);line-height:1.55}
+.co.focus{border-top-color:var(--safe);background:#F4F9FF}
+.co.focus .tk{color:var(--safe)}
+
+#notes table{border-collapse:collapse;margin:6px 0 10px;font-size:14px}
+#notes td,#notes th{border:1px solid var(--rule);padding:3px 8px}
+#notes blockquote{border-left:4px solid var(--sky);padding:2px 10px;margin:6px 0;background:#F4F9FF}
+#notes h5{font-size:15px;margin:10px 0 4px;color:var(--safe)}
+
+/* mobile */
+.mobile .ag{grid-template-columns:1fr 40px;row-gap:4px}
+.mobile .ag .tm{grid-column:1/-1;order:-1;font-size:13px}
+.mobile .ag h4{font-size:16px}
+.mobile .ag>div:last-child{grid-column:1/-1}
+.mobile .hb{grid-template-columns:1fr 110px!important;row-gap:4px}
+.mobile .hb .tr{grid-column:1/-1;order:3;height:18px}
+.mobile .hb .nm{font-size:15px}.mobile .hb .v{font-size:17px}
+.mobile .tiles,.mobile .ct{grid-template-columns:1fr 1fr}
+.mobile .no3,.mobile .merge,.mobile .vs2,.mobile .pillars,.mobile .later{grid-template-columns:1fr}
+.mobile .later::before{display:none}
+.mobile .vb{gap:12px;height:260px}.mobile .vb .c{width:90px}.mobile .vb .bar{width:70px}.mobile .vb .val{font-size:15px}
+.mobile .arrbig{transform:rotate(90deg)}
+.mobile .pieces{grid-template-columns:1fr 1fr}
+.mobile .seven{flex-wrap:wrap}.mobile .seven span{flex:0 0 30%}
+.mobile .keymsg{font-size:17px;padding:12px}
+.mobile .big{font-size:34px!important}
+.mobile .fw .lv{grid-template-columns:30px 70px 1fr;padding:8px 10px}.mobile .fw .lv b{font-size:16px}.mobile .fw .lv span{font-size:13px}
+.mobile .cl .ci{font-size:17px}
+.mobile .adt{height:auto;display:flex;flex-direction:column;gap:6px}
+.mobile .adt .ln{display:none}
+.mobile .adt .pt,.mobile .adt .pin{position:static;transform:none;width:auto;opacity:1}
+.mobile .adt .pt .d{display:none}
+.mobile .grid100{width:220px}
+.mobile .st0,.mobile .hide0{opacity:1;transform:none}
+.mobile .pillar h3{font-size:22px}
+.mobile .wide-svg{zoom:.55}
+
+.co[data-s].on{border-top-color:var(--safe);background:#F4F9FF}.co[data-s].on .tk{color:var(--safe)}
+
+.theme-photo .cover h1{font-size:54px}
+.theme-photo .cover .sub{font-size:20px}
+.cover .chaps{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cover .chaps span{font-size:14px;font-weight:900;padding:5px 12px;border-radius:30px;background:#EAF4FF;color:var(--safe);border:1.5px solid #BBD7F5}
+.cover .chaps span.w{background:#FFF1E6;color:var(--warnT);border-color:#F9C9A6}
+
+.seven span.done{background:#E7F6F1;color:var(--okT)}
+
+.seven.ten{gap:5px}.seven.ten span{font-size:12px;padding:7px 2px;white-space:nowrap;letter-spacing:-.02em}
+.mobile .seven.ten span{flex:0 0 18%}
+</style>
+</head>
+<body class="theme-photo">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-barrel" viewBox="0 0 64 64"><path d="M18 10h28c3 0 4 2 4 4v38c0 2-1 4-4 4H18c-3 0-4-2-4-4V14c0-2 1-4 4-4z"/><path d="M14 21h36M14 45h36"/><path d="M32 25c-4 5-5 7-5 9a5 5 0 0 0 10 0c0-2-1-4-5-9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-truck" viewBox="0 0 64 64"><rect x="4" y="18" width="34" height="24" rx="2"/><path d="M38 26h12l8 8v8H38z"/><circle cx="16" cy="46" r="5"/><circle cx="48" cy="46" r="5"/></symbol>
+<symbol id="i-ship" viewBox="0 0 64 64"><path d="M4 38h56l-7 12H11z"/><path d="M40 38V26h10v12M45 26v-6"/><path d="M12 38v-7h22v7"/><path d="M4 58c4-3 8-3 12 0s8 3 12 0 8-3 12 0 8 3 12 0"/></symbol>
+<symbol id="i-factory" viewBox="0 0 64 64"><path d="M6 56V30l13 8v-8l13 8v-8l13 8V12h10v44z"/><path d="M4 56h56"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 64 64"><path d="M32 58V30"/><path d="M32 34c0-12-8-18-20-18 0 12 8 18 20 18z"/><path d="M32 28c0-10 8-16 18-16 0 10-8 16-18 16z"/><path d="M18 58h28"/></symbol>
+<symbol id="i-cart" viewBox="0 0 64 64"><path d="M4 18h8l6 24h28l6-16H15"/><circle cx="22" cy="50" r="4"/><circle cx="42" cy="50" r="4"/><path d="M47 16V2M41 8l6-6 6 6"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 64 64"><rect x="6" y="16" width="46" height="36" rx="5"/><path d="M38 28h18v12H38a6 6 0 0 1 0-12z"/><path d="M14 10h28"/></symbol>
+<symbol id="i-bond" viewBox="0 0 64 64"><path d="M14 6h26l10 10v42H14z"/><path d="M40 6v10h10"/><circle cx="25" cy="30" r="4"/><circle cx="39" cy="46" r="4"/><path d="M40 28 24 48"/></symbol>
+<symbol id="i-drop" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 64 64"><path d="M26 36V10a6 6 0 0 1 12 0v26a12 12 0 1 1-12 0z"/><path d="M32 20v22" stroke-width="5"/><circle cx="32" cy="46" r="6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-bank" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/></symbol>
+<symbol id="i-bank-crack" viewBox="0 0 64 64"><path d="M6 24 32 8l26 16z"/><path d="M12 28v20M24 28v20M40 28v20M52 28v20M6 54h52"/><path d="M33 9l-5 12 7 8-6 12 5 12" stroke-width="3.5"/></symbol>
+<symbol id="i-fed" viewBox="0 0 64 64"><path d="M4 22 28 8l24 14z"/><path d="M9 26v18M20 26v18M36 26v18M47 26v18M4 50h48"/><rect x="40" y="38" width="22" height="20" rx="3" fill="#fff"/><path d="M45 38v-5a6 6 0 0 1 12 0v5"/></symbol>
+<symbol id="i-virus" viewBox="0 0 64 64"><circle cx="32" cy="32" r="13"/><path d="M32 19V9M32 45v10M19 32H9M45 32h10M23 23l-7-7M41 41l7 7M41 23l7-7M23 41l-7 7"/></symbol>
+<symbol id="i-chip" viewBox="0 0 64 64"><rect x="16" y="16" width="32" height="32" rx="3"/><rect x="25" y="25" width="14" height="14"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></symbol>
+<symbol id="i-house" viewBox="0 0 64 64"><path d="M6 30 32 8l26 22"/><path d="M13 25v31h38V25"/><path d="M27 56V40h10v16"/></symbol>
+<symbol id="i-chart-down" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 16l10 10 8-6 10 14 10 10"/><path d="M42 44h10V34"/></symbol>
+<symbol id="i-chart-up" viewBox="0 0 64 64"><path d="M8 6v50h50"/><path d="M14 44l10-10 8 6 10-14 10-10"/><path d="M42 16h10v10"/></symbol>
+<symbol id="i-percent" viewBox="0 0 64 64"><circle cx="16" cy="20" r="6"/><circle cx="34" cy="48" r="6"/><path d="M38 14 12 54"/><path d="M52 44V10M45 17l7-7 7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 64 64"><circle cx="32" cy="18" r="9"/><path d="M14 58c0-13 8-22 18-22s18 9 18 22"/></symbol>
+<symbol id="i-users" viewBox="0 0 64 64"><circle cx="22" cy="20" r="8"/><circle cx="44" cy="22" r="7"/><path d="M6 56c0-11 7-19 16-19s16 8 16 19"/><path d="M36 40c2-2 5-3 8-3 8 0 14 7 14 17"/></symbol>
+<symbol id="i-spread" viewBox="0 0 64 64"><path d="M4 30c18 0 28-2 46-18"/><path d="M4 34c18 0 28 2 46 18"/><path d="M57 16v32M52 21l5-5 5 5M52 43l5 5 5-5"/></symbol>
+<symbol id="i-report" viewBox="0 0 64 64"><path d="M12 6h28l10 10v42H12z"/><path d="M40 6v10h10"/><path d="M18 26l8 8 6-5 12 14"/><path d="M36 43h8v-8"/></symbol>
+<symbol id="i-yen" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26"/><path d="M20 16l12 16 12-16M32 32v18M22 34h20M22 42h20"/></symbol>
+<symbol id="i-car" viewBox="0 0 64 64"><path d="M6 40l6-14c1-3 3-4 6-4h28c3 0 5 1 6 4l6 14v10H6z"/><path d="M6 40h52"/><circle cx="18" cy="50" r="5"/><circle cx="46" cy="50" r="5"/></symbol>
+<symbol id="i-pc" viewBox="0 0 64 64"><rect x="6" y="10" width="52" height="34" rx="3"/><path d="M24 56h16M32 44v12"/><path d="M14 34l10-8 8 6 8-12 10 4"/></symbol>
+<symbol id="i-tower" viewBox="0 0 64 64"><path d="M32 18 20 60M32 18l12 42M25 42h14M23 51h18"/><circle cx="32" cy="14" r="4"/><path d="M21 5a14 14 0 0 0 0 18M43 5a14 14 0 0 1 0 18M14 1a22 22 0 0 0 0 26M50 1a22 22 0 0 1 0 26"/></symbol>
+<symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 4 54 12v16c0 14-9 25-22 32C19 53 10 42 10 28V12z"/><path d="M22 32l7 7 14-14"/></symbol>
+<symbol id="i-coins" viewBox="0 0 64 64"><ellipse cx="26" cy="18" rx="18" ry="7"/><path d="M8 18v10c0 4 8 7 18 7s18-3 18-7V18"/><path d="M8 28v10c0 4 8 7 18 7"/><ellipse cx="42" cy="42" rx="16" ry="6"/><path d="M26 42v10c0 3 7 6 16 6s16-3 16-6V42"/></symbol>
+<symbol id="i-eye" viewBox="0 0 64 64"><path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/></symbol>
+<symbol id="i-search" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17"/><path d="M40 40l18 18"/></symbol>
+<symbol id="i-warning" viewBox="0 0 64 64"><path d="M32 6 60 56H4z"/><path d="M32 24v14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-link" viewBox="0 0 64 64"><path d="M26 38l12-12"/><path d="M22 30l-6 6a9 9 0 0 0 12 12l6-6"/><path d="M42 34l6-6a9 9 0 0 0-12-12l-6 6"/></symbol>
+<symbol id="i-sunrise" viewBox="0 0 64 64"><path d="M4 46h56"/><path d="M18 46a14 14 0 0 1 28 0"/><path d="M32 16v8M12 26l6 5M52 26l-6 5M14 54h36"/></symbol>
+<symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 8v48M18 56h28M10 18h44"/><path d="M10 18l-7 16h14zM54 18l-7 16h14z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 64 64"><path d="M44 40A20 20 0 0 1 24 12a20 20 0 1 0 20 28z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 64 64"><path d="M14 58V6"/><path d="M14 8h34l-8 10 8 10H14"/></symbol>
+</defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-mail" viewBox="0 0 64 64"><rect x="6" y="14" width="52" height="36" rx="4"/><path d="M8 17l24 18 24-18"/></symbol>
+<symbol id="i-phone" viewBox="0 0 64 64"><rect x="18" y="4" width="28" height="56" rx="5"/><path d="M28 10h8"/><circle cx="32" cy="52" r="2.5" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-lock" viewBox="0 0 64 64"><rect x="12" y="28" width="40" height="30" rx="5"/><path d="M20 28v-8a12 12 0 0 1 24 0v8"/><circle cx="32" cy="42" r="4"/><path d="M32 46v5"/></symbol>
+<symbol id="i-key" viewBox="0 0 64 64"><circle cx="20" cy="32" r="11"/><path d="M31 32h27M50 32v9M42 32v6"/></symbol>
+<symbol id="i-mic" viewBox="0 0 64 64"><rect x="23" y="6" width="18" height="32" rx="9"/><path d="M14 30a18 18 0 0 0 36 0M32 48v10M22 58h20"/></symbol>
+<symbol id="i-video" viewBox="0 0 64 64"><rect x="4" y="16" width="40" height="32" rx="4"/><path d="M44 28l16-9v26l-16-9z"/><circle cx="24" cy="29" r="5"/><path d="M15 43c2-5 6-7 9-7s7 2 9 7"/></symbol>
+<symbol id="i-target" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M48 16l8-8M50 8h6v6"/></symbol>
+<symbol id="i-idcard" viewBox="0 0 64 64"><rect x="4" y="12" width="56" height="40" rx="5"/><circle cx="21" cy="29" r="6"/><path d="M11 44c2-5 6-7 10-7s8 2 10 7M38 24h14M38 32h14M38 40h9"/></symbol>
+<symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="25"/><path d="M7 32h50M32 7c-8 8-10 17-10 25s2 17 10 25M32 7c8 8 10 17 10 25s-2 17-10 25"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 64 64"><path d="M36 4 12 36h18l-4 24 24-32H32z"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 64 64"><path d="M52 24A22 22 0 0 0 12 22M12 40a22 22 0 0 0 40 2"/><path d="M52 10v14H38M12 54V40h14"/></symbol>
+<symbol id="i-bell" viewBox="0 0 64 64"><path d="M16 44V30a16 16 0 0 1 32 0v14l5 6H11z"/><path d="M26 54a6 6 0 0 0 12 0"/></symbol>
+<symbol id="i-bookmark" viewBox="0 0 64 64"><path d="M16 6h32v52L32 46 16 58z"/></symbol>
+<symbol id="i-finger" viewBox="0 0 64 64"><path d="M20 50c-3-5-4-11-4-18a16 16 0 0 1 32 0"/><path d="M26 54c-2-6-3-13-3-22a9 9 0 0 1 18 0c0 6 0 11-1 16"/><path d="M32 58c-1-8-2-17-2-26M48 42c0 5-1 9-2 13"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 64 64"><path d="M18 48a12 12 0 0 1-1-24 16 16 0 0 1 31 4 10 10 0 0 1-2 20z"/></symbol>
+<symbol id="i-server" viewBox="0 0 64 64"><rect x="10" y="6" width="44" height="16" rx="3"/><rect x="10" y="24" width="44" height="16" rx="3"/><rect x="10" y="42" width="44" height="16" rx="3"/><path d="M18 14h4M18 32h4M18 50h4"/></symbol>
+<symbol id="i-check" viewBox="0 0 64 64"><path d="M12 34l13 13 27-30"/></symbol>
+<symbol id="i-x" viewBox="0 0 64 64"><path d="M16 16l32 32M48 16 16 48"/></symbol>
+<symbol id="i-robot" viewBox="0 0 64 64"><rect x="12" y="20" width="40" height="32" rx="7"/><path d="M32 20v-9"/><circle cx="32" cy="9" r="3"/><circle cx="24" cy="35" r="4"/><circle cx="40" cy="35" r="4"/><path d="M25 45h14M6 32v10M58 32v10"/></symbol>
+<symbol id="i-hood" viewBox="0 0 64 64"><path d="M10 58c0-16 6-30 22-44 16 14 22 28 22 44"/><path d="M22 40c2-8 6-12 10-12s8 4 10 12c-4 3-16 3-20 0z"/></symbol>
+<symbol id="i-cart2" viewBox="0 0 64 64"><path d="M4 12h8l6 28h30l6-20H15"/><circle cx="22" cy="50" r="4"/><circle cx="44" cy="50" r="4"/></symbol>
+<symbol id="i-plane" viewBox="0 0 64 64"><path d="M6 36l52-22-12 40-12-12-10 10v-14l22-18-30 22z"/></symbol>
+<symbol id="i-hospital" viewBox="0 0 64 64"><rect x="8" y="14" width="48" height="44" rx="3"/><path d="M32 22v20M22 32h20M24 58V48h16v10"/></symbol>
+<symbol id="i-gift" viewBox="0 0 64 64"><rect x="8" y="24" width="48" height="12"/><path d="M12 36v22h40V36M32 24v34"/><path d="M32 24c-4-10-16-12-16-4 0 4 8 4 16 4zM32 24c4-10 16-12 16-4 0 4-8 4-16 4z"/></symbol>
+<symbol id="i-code" viewBox="0 0 64 64"><path d="M22 18 8 32l14 14M42 18l14 14-14 14M36 12 28 52"/></symbol>
+<symbol id="i-water" viewBox="0 0 64 64"><path d="M32 6C22 20 16 30 16 39a16 16 0 0 0 32 0c0-9-6-19-16-33z"/><path d="M24 40a8 8 0 0 0 8 8"/></symbol>
+<symbol id="i-signal" viewBox="0 0 64 64"><path d="M32 58V30"/><circle cx="32" cy="26" r="4"/><path d="M22 16a14 14 0 0 0 0 20M42 16a14 14 0 0 1 0 20M14 8a26 26 0 0 0 0 36M50 8a26 26 0 0 1 0 36"/></symbol>
+<symbol id="i-layers" viewBox="0 0 64 64"><path d="M32 6 4 20l28 14 28-14z"/><path d="M4 32l28 14 28-14M4 44l28 14 28-14"/></symbol>
+<symbol id="i-radar" viewBox="0 0 64 64"><circle cx="32" cy="32" r="25"/><circle cx="32" cy="32" r="15"/><path d="M32 32 50 14"/><circle cx="42" cy="24" r="3" fill="currentColor" stroke="none"/></symbol>
+</defs></svg>
+
+<div id="viewport"><div id="stage">
+<div id="progress"></div>
+<!-- ================= 表紙 ================= -->
+<section class="slide" data-n="title">
+  <div class="cover">
+    <div class="cover-photos">
+      <div class="cph"><div class="pbg" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200&q=80&auto=format&fit=crop')"></div><span class="lbl">資産を守る<small>今日からの10ステップ</small></span><span class="credit">Photo: FLY:D / Unsplash</span></div>
+      <div class="cph"><div class="pbg" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&q=80&auto=format&fit=crop')"></div><span class="lbl">家族で守る<small>確認とルールづくり</small></span><span class="credit">Photo: rupixen / Unsplash</span></div>
+    </div>
+    <div class="cover-text" style="top:390px">
+      <div class="kicker fade d1">未来塾 緊急特別ZOOM勉強会「AIの進化がもたらす新たな脅威」 ｜ 第⑤章 補足・追加資料</div>
+      <h1 class="fade d2">金融資産を守る<span class="hl2">具体的な方法</span></h1>
+      <p class="sub fade d3">AI時代の個人資産防衛と家族のセキュリティ対策</p>
+      <div class="date fade d5" style="order:9">2026.11.3（火・祝）</div>
+      <div class="chaps fade d4"><span>① 認証</span><span>② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span class="w">⑩ チェックリスト</span></div>
+    </div>
+    <div class="brandbar"></div>
+  </div>
+</section>
+
+<!-- ================= はじめに ================= -->
+<section class="slide" data-n="intro" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">はじめに：投資家にとっての新しい資産防衛</span><h2>怖さを知るだけでなく、守る行動へ</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="g2" style="grid-template-columns:1fr 1fr;gap:18px">
+      <div class="card fade d1"><div class="lbl">これまでの資産防衛</div><div class="chips" style="margin-top:8px"><span class="chip b">現金比率の調整</span><span class="chip b">分散投資</span><span class="chip b">為替リスクの管理</span><span class="chip b">景気後退への備え</span></div><p class="small" style="margin-top:8px">もちろん、非常に重要</p></div>
+      <div class="card st0" data-s="1" style="border:2px solid #B5E3D4;background:#F3FBF8"><div class="lbl">これからは、それに加えて</div><div style="font-size:30px;font-weight:900;color:var(--okT);margin-top:6px;display:flex;align-items:center;gap:10px"><svg class="ico" style="width:40px;height:40px"><use href="#i-shield"/></svg>サイバーセキュリティ</div></div>
+    </div>
+    <div class="card st0" data-s="2" style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center">
+      <div class="big" style="font-size:44px">3,000<small>万円</small></div>
+      <p class="lead" style="font-size:16px">長年かけて築いた資産でも、証券口座が不正に操作されれば、知らないうちに保有株を売却されたり、不正な売買で大きな損失を被ったりする可能性がある</p>
+    </div>
+    <div class="pillars hide0" data-s="3" style="gap:14px">
+      <div class="pillar grow" style="padding:14px"><h3 style="font-size:22px">投資で利益を上げる能力</h3></div>
+      <div class="pillar guard" style="padding:14px"><h3 style="font-size:22px">資産を安全に管理する能力</h3></div>
+    </div>
+    <div class="keymsg hide0" data-s="3" style="font-size:18px;padding:10px">この2つは<b>別々に必要</b>。ここから10のステップで解説します</div>
+  </div></div>
+</section>
+
+<!-- ================= ① a ================= -->
+<section class="slide" data-n="s1a" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">① 証券口座・銀行口座を守る最も重要な認証対策</span><h2>パスワードだけに頼る時代は終わりつつある</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="cur">① 認証</span><span>② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="card fade d1" style="display:flex;align-items:center;gap:14px"><svg class="ico" style="width:40px;height:40px;color:var(--safe)"><use href="#i-search"/></svg><p style="font-size:17px;font-weight:700">今、どの方法でログインしていますか？　<span class="chip b">IDとパスワードだけ</span> <span class="chip b">SMSの認証コード</span> <span class="chip b">顔・指紋認証</span></p></div>
+    <div style="font-size:17px;font-weight:900">ワンタイムパスワードまでリアルタイムで盗む手口</div>
+    <div class="flow">
+      <div class="fs" data-s="1"><span class="n">1</span><svg class="ico"><use href="#i-mail"/></svg>証券会社を装う<br>メール・SMS</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><span class="n">2</span><svg class="ico"><use href="#i-link"/></svg>そっくりな偽サイトで<br>ID・パスワード入力</div><div class="fa" data-s="3">▶</div>
+      <div class="fs" data-s="3" style="--c:var(--warn)"><span class="n">3</span><svg class="ico"><use href="#i-phone"/></svg>スマホに届いた<br>使い捨て番号も入力</div><div class="fa" data-s="4">▶</div>
+      <div class="fs last" data-s="4" style="--c:var(--warn)"><span class="n">4</span><svg class="ico"><use href="#i-robot"/></svg>犯人のプログラムが<br>数秒で本物へ自動入力</div>
+    </div>
+    <div class="keymsg w hide0" data-s="4" style="font-size:18px;padding:10px">パスワード＋SMS認証を設定していても、<b>それだけで絶対に安全とは言えない</b></div>
+  </div></div>
+</section>
+
+<!-- ================= ① b パスキー ================= -->
+<section class="slide" data-n="s1b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">① 認証対策　パスキー認証とは何か？</span><h2>顔や指紋は送らない。「本人です」の合図だけを送る</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="cur">① 認証</span><span>② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="flow">
+      <div class="fs" data-s="1" style="--c:var(--ok)"><span class="n">端末の中</span><svg class="ico"><use href="#i-finger"/></svg>顔認証・指紋認証・<br>画面ロックのPIN</div><div class="fa" data-s="1">▶</div>
+      <div class="fs" data-s="1" style="--c:var(--ok)"><span class="n">端末の中</span><svg class="ico"><use href="#i-check"/></svg>「間違いなく本人だ」<br>と端末が確認</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><span class="n">送るもの</span><svg class="ico"><use href="#i-key"/></svg>確認結果の合図だけを<br>暗号化して送る</div><div class="fa" data-s="2">▶</div>
+      <div class="fs last" data-s="2"><span class="n">証券会社</span><svg class="ico"><use href="#i-bank"/></svg>正規のサイトと<br>ペアなのでログイン</div>
+    </div>
+    <div class="g2" style="gap:14px">
+      <div class="card st0" data-s="1"><b style="font-size:17px">顔や指紋のデータは証券会社に送られない</b><p class="small">本人確認は、スマートフォンやパソコンの端末側で行う</p></div>
+      <div class="card st0" data-s="3" style="border:2px solid #B5E3D4"><b style="font-size:17px">偽サイトではパスキー自体が作動しない</b><p class="small">「正規のウェブサイト」と「ご自身のスマホの認証情報」が直接ペア。盗んで別のサイトで使えない → フィッシングに強い</p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ① c 確認4項目 ================= -->
+<section class="slide" data-n="s1c" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">① 認証対策　どの証券会社で使えるのか？</span><h2>ご自身の証券会社で、この4つを確認する</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:12px">
+    <div class="seven ten fade d1"><span class="cur">① 認証</span><span>② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <p class="lead fade d1" style="font-size:15.5px">SBI証券・楽天証券・マネックス証券など主要証券会社で、パスキーや強固な多要素認証の導入が進む。ただし、対応サービス・端末・設定方法・必須化の状況は<b>証券会社ごとに異なる</b>。公式サイト・公式アプリで確認を。</p>
+    <div class="cl" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="card ci" data-s="1"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>パスキー認証を利用できるか</div></div>
+      <div class="card ci" data-s="2"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>ログイン時の多要素認証<small>二段階認証など</small></div></div>
+      <div class="card ci" data-s="3"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>出金時にも追加認証が必要か<small>取引時も</small></div></div>
+      <div class="card ci" data-s="4"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>ログイン通知・取引通知<small>受け取れる設定になっているか</small></div></div>
+    </div>
+    <div class="keymsg hide0" data-s="4" style="font-size:17px;padding:10px">入口のログインだけでなく、<b>「出金」「出金先銀行口座の変更」</b>にも強い本人確認を</div>
+  </div></div>
+</section>
+
+<!-- ================= ① d 鍵と保管場所 ================= -->
+<section class="slide" data-n="s1d" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">① 認証対策　パスキーにも弱点はある</span><h2>「鍵」と「鍵の保管場所」の両方を守る</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="cur">① 認証</span><span>② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="grid-template-columns:1fr 60px 1fr;gap:12px;align-items:stretch">
+      <div class="card fade d1" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center"><svg class="ico" style="width:56px;height:56px;color:var(--safe)"><use href="#i-key"/></svg><b style="font-size:20px">証券口座の鍵（パスキー）</b><p class="small">機種変更しても引き継げるよう同期される</p></div>
+      <div class="mid" style="display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--ink2)">▶</div>
+      <div class="card st0" data-s="1" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center"><svg class="ico" style="width:56px;height:56px;color:var(--safe)"><use href="#i-cloud"/></svg><b style="font-size:20px">鍵の保管場所</b><p class="small">iPhoneは「Apple Account（旧Apple ID）」<br>Androidは「Googleアカウント」</p></div>
+    </div>
+    <div class="card nc w st0" data-s="2"><span class="nb">!</span><div><h4>保管場所のアカウントが乗っ取られると、保存された認証情報まで悪用される危険</h4><p>2026年10月には、AppleやGoogleのアカウントの不正利用で証券口座にも被害が及ぶ可能性について、証券会社から注意喚起が出ている</p></div></div>
+    <div class="keymsg hide0" data-s="3" style="font-size:19px;padding:12px">パスキーを設定するだけでなく、<b>スマホのアカウント自体も強固に保護</b>する</div>
+  </div></div>
+</section>
+
+<!-- ================= ② a メール ================= -->
+<section class="slide" data-n="s2a" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">② メールアカウントを守ることが金融資産の防衛につながる</span><h2>証券口座だけ厳重でも、メールが昔のままでは危ない</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="cur">② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="quote fade d1" style="font-size:17px">「証券口座は厳重に管理している一方で、メールには昔から同じ簡単なパスワード」…という方はいませんか？</div>
+    <div class="g3">
+      <div class="card ic-card st0" data-s="1"><svg class="ico"><use href="#i-refresh"/></svg><h4>再設定・本人確認はメール</h4><p>多くのサービスが、パスワード再設定や本人確認の連絡にメールを使う</p></div>
+      <div class="card ic-card w st0" data-s="2"><svg class="ico"><use href="#i-mail"/></svg><h4>乗っ取られると</h4><p>金融機関からの重要な通知を勝手に見られる・消される。再設定の手続きに悪用される</p></div>
+      <div class="card ic-card st0" data-s="3"><svg class="ico"><use href="#i-shield"/></svg><h4>すぐ全口座が開くわけではない</h4><p>金融機関には追加の認証がある。それでも、他の金融サービスへの侵入の突破口になる危険は十分にある</p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ② b 6つの対策 ================= -->
+<section class="slide" data-n="s2b" data-steps="6">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">② メールアカウント　具体的な対策</span><h2>メール・スマホのアカウントで実施したい6つの対策</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:12px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="cur">② メール</span><span>③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="gap:10px 16px">
+      <div class="sl"><div class="row2 st0" data-s="1"><span class="nb">1</span><div><b>Gmail・Apple Accountにもパスキーや二段階認証</b></div></div>
+      <div class="row2 st0" data-s="2"><span class="nb">2</span><div><b>証券口座とメールで同じパスワードを使わない</b></div></div>
+      <div class="row2 st0" data-s="3"><span class="nb">3</span><div><b>再設定用の電話番号・予備メールが正しいか確認</b></div></div></div>
+      <div class="sl"><div class="row2 st0" data-s="4"><span class="nb">4</span><div><b>ログイン履歴に見覚えのない端末がないか確認</b></div></div>
+      <div class="row2 w st0" data-s="5"><span class="nb">5</span><div><b>見知らぬアドレスへの「自動転送設定」がないか</b><p>侵入した犯人が、証券会社からの通知をこっそり転送させる手口がある</p></div></div>
+      <div class="row2 st0" data-s="6"><span class="nb">6</span><div><b>古い端末・不要な連携アプリの権限を見直す</b></div></div></div>
+    </div>
+    <div class="keymsg hide0" data-s="6" style="font-size:17px;padding:10px">知らない端末が登録されていたら、<b>直ちにログアウトさせ、アカウントの保護措置</b>を</div>
+  </div></div>
+</section>
+
+<!-- ================= ③ a ================= -->
+<section class="slide" data-n="s3a" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">③ フィッシング詐欺を防ぐ具体的な方法</span><h2>本物そっくりのメールを信用しない</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="cur">③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="grid-template-columns:1.2fr 1fr;gap:20px;align-items:center">
+      <div class="card fade d1" style="border:2px solid #BBD7F5;padding:0;overflow:hidden">
+        <div style="background:#2B5FA8;color:#fff;font-weight:900;padding:8px 16px;display:flex;align-items:center;gap:8px"><svg class="ico" style="width:22px;height:22px"><use href="#i-mail"/></svg>〇〇証券　公式ロゴ付き</div>
+        <p style="padding:16px;font-size:19px;font-weight:900;line-height:1.6">「お客様の証券口座に不審なログインが確認されました。安全確保のため、至急本人確認を行ってください」</p>
+        <div style="padding:0 16px 16px"><span class="btn pr" style="display:inline-block">本人確認はこちら ▶</span> <span class="small">リンク先も本物とほとんど同じ</span></div>
+      </div>
+      <div class="col" style="gap:12px">
+        <div class="card st0" data-s="1"><div class="lbl">以前</div><p style="font-size:16px;font-weight:700">不自然な日本語・不鮮明なロゴで見抜けることもあった</p></div>
+        <div class="card st0" data-s="2" style="background:#FFFAF5;border-color:#F9C9A6"><div class="lbl">いま</div><p style="font-size:16px;font-weight:700">生成AIで自然な日本語の詐欺メールが簡単に作れる</p></div>
+      </div>
+    </div>
+    <div class="keymsg w hide0" data-s="2" style="font-size:19px;padding:12px">「文章が自然だから本物だろう」とは<b>判断できない</b></div>
+  </div></div>
+</section>
+
+<!-- ================= ③ b ================= -->
+<section class="slide" data-n="s3b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">③ フィッシング　絶対に習慣にしていただきたいこと</span><h2>本文中のリンクからは、絶対にログインしない</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="cur">③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="flow">
+      <div class="fs" data-s="1" style="--c:var(--warn)"><span class="n">1</span><svg class="ico"><use href="#i-mail"/></svg>金融機関から<br>メール・SMSが届く</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2"><span class="n">2</span><svg class="ico"><use href="#i-x"/></svg>いったん<br>そのメールを閉じる</div><div class="fa" data-s="3">▶</div>
+      <div class="fs last" data-s="3" style="--c:var(--ok)"><span class="n">3</span><svg class="ico"><use href="#i-bookmark"/></svg>公式アプリ／保存済みの<br>ブックマークから開く</div>
+    </div>
+    <div class="card nc w hide0" data-s="3"><span class="nb">!</span><div><h4>Googleなどで検索して開くときも注意</h4><p>検索結果の上部の広告（スポンサー枠）に偽サイトが紛れ込むケースがある。あらかじめ正しい公式サイトを確認し、ブックマークに保存しておく</p></div></div>
+  </div></div>
+</section>
+
+<!-- ================= ③ c 電話 ================= -->
+<section class="slide" data-n="s3c" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">③ フィッシング　電話での詐欺にも注意する</span><h2>認証コードは、電話口で誰にも教えない</h2><span class="credit only-b">Photo: rupixen / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="cur">③ フィッシング</span><span>④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+      <div class="card fade d1" style="display:flex;gap:12px;align-items:flex-start;background:#F4F9FF">
+        <svg class="ico ring" style="width:48px;height:48px;color:var(--safe);flex:none"><use href="#i-phone"/></svg>
+        <p style="font-size:18px;font-weight:900;line-height:1.6">「○○銀行のセキュリティ担当です。口座が不正利用されています。確認のため、今届いた認証コードを教えてください」</p>
+      </div>
+      <div class="col" style="gap:10px">
+        <div class="card nc w st0" data-s="1"><span class="nb"><svg class="ico" style="width:22px;height:22px;color:#fff"><use href="#i-x"/></svg></span><div><h4>認証コード・パスワードを教えない</h4><p>名前や口座情報の一部を知っていても、過去の流出情報かもしれない</p></div></div>
+        <div class="card nc w st0" data-s="2"><span class="nb"><svg class="ico" style="width:22px;height:22px;color:#fff"><use href="#i-x"/></svg></span><div><h4>遠隔操作アプリ・画面共有に応じない</h4><p>「手続きをサポートするので、このアプリを」と誘導されても入れない</p></div></div>
+      </div>
+    </div>
+    <div class="keymsg hide0" data-s="3" style="font-size:18px;padding:10px">着信の番号さえ偽装されることがある。<b>一度切り、自分で確認した公式窓口へ</b></div>
+  </div></div>
+</section>
+
+<!-- ================= ④ a ================= -->
+<section class="slide" data-n="s4a" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">④ パスワード管理を根本から見直す</span><h2>使い回しは「パスワードリスト攻撃」の入口</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="cur">④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="grid-template-columns:1fr 1fr;gap:18px">
+      <div class="card fade d1"><b style="font-size:18px" class="wt">パスワードリスト攻撃</b><p class="lead" style="font-size:15.5px;margin-top:6px">1つのサービスで流出したIDとパスワードを使い、犯人が他のサイトにも次々と不正ログインを試みる</p>
+        <div class="chips" style="margin-top:10px"><span class="chip">通販で流出</span><span class="chip">→ 証券口座</span><span class="chip">→ メール</span><span class="chip">→ 銀行</span></div></div>
+      <div class="card st0" data-s="1"><b style="font-size:18px" class="okt">基本的な対策</b>
+        <ul style="margin:8px 0 0 1.2em;font-size:15px;line-height:1.85"><li>サービスごとに異なるパスワード</li><li>長く推測されにくい（英大文字・小文字・数字・記号）</li><li>生年月日・電話番号・名前を避ける</li><li>他人に教えない</li><li>メールやLINEで安易に送らない</li></ul></div>
+    </div>
+    <div class="keymsg hide0" data-s="2" style="font-size:18px;padding:10px">何十個もの複雑なパスワードを頭で覚えるのは現実的に難しい → <b>パスワード管理サービス</b></div>
+  </div></div>
+</section>
+
+<!-- ================= ④ b ================= -->
+<section class="slide" data-n="s4b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">④ パスワード管理　利用できるサービスの例</span><h2>1つの親パスワード（または顔・指紋）で守る「金庫」</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:12px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="cur">④ パスワード</span><span>⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="ct" style="gap:12px">
+      <div class="card co focus fade d1"><div class="tk" style="font-size:19px">Apple「パスワード」</div><p>iPhone・iPad・Macに標準搭載。パスワードやパスキーを簡単に管理</p></div>
+      <div class="card co focus fade d2"><div class="tk" style="font-size:19px">Google パスワード マネージャー</div><p>Android・Chromeに標準搭載。Googleアカウントと連携</p></div>
+      <div class="card co fade d3"><div class="tk" style="font-size:19px">1Password</div><p>iPhoneとWindowsなど複数端末に対応する世界的な専用サービス</p></div>
+      <div class="card co fade d4"><div class="tk" style="font-size:19px">Bitwarden</div><p>無料から複数端末に対応する人気の専用サービス</p></div>
+    </div>
+    <div class="g3">
+      <div class="card nc st0" data-s="1"><span class="nb">1</span><div><h4>初めてなら標準搭載から</h4><p>iPhoneは「パスワード」、Android・Chromeは「Google パスワード マネージャー」</p></div></div>
+      <div class="card nc w st0" data-s="2"><span class="nb">!</span><div><h4>金庫自体を守る</h4><p>管理サービスの二段階認証・画面ロック・アカウントの復旧方法を確認</p></div></div>
+      <div class="card nc st0" data-s="3"><span class="nb">↻</span><div><h4>定期変更より優先すること</h4><p>使い回しの解消・漏えいしたパスワードの変更・パスキーなど強力な認証の導入</p></div></div>
+    </div>
+  </div></div>
+</section>
+<!-- ================= ⑤ a 端末 ================= -->
+<section class="slide" data-n="s5a" data-steps="4">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑤ スマートフォンとパソコンを安全に管理する</span><h2>証券会社が強固でも、自分の端末が危険なら被害に</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:12px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="cur">⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <p class="lead fade d1" style="font-size:15.5px">ウイルスなどの悪意のあるソフトウェアで、ログイン情報を盗まれたり、画面の操作を監視されたりすることがある。実践したい4項目：</p>
+    <div class="g4">
+      <div class="card ic-card st0" data-s="1"><svg class="ico"><use href="#i-refresh"/></svg><h4>1 OS・アプリを最新に</h4><p>iOS・Windows Updateを確認し、可能なら「自動更新」を有効に。弱点を塞ぐ修正が入っている</p></div>
+      <div class="card ic-card st0" data-s="2"><svg class="ico"><use href="#i-lock"/></svg><h4>2 画面ロック</h4><p>顔認証・指紋認証・推測されにくいパスコード</p></div>
+      <div class="card ic-card st0" data-s="3"><svg class="ico"><use href="#i-x"/></svg><h4>3 不審なアプリを入れない</h4><p>メールやSMSのリンクからではなく、App Store・Google Playや正規の提供元から</p></div>
+      <div class="card ic-card st0" data-s="4"><svg class="ico"><use href="#i-search"/></svg><h4>4 紛失に備える</h4><p>iPhone「探す」・Android「デバイスを探す」を有効に。重要なデータはバックアップ</p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑤ b Wi-Fi ================= -->
+<section class="slide" data-n="s5b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑤ 端末の管理　外出先の無料Wi-Fiの注意点</span><h2>大事な金融取引は、無料Wi-Fiでしない</h2><span class="credit only-b">Photo: Adi Goldstein / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="cur">⑤ 端末</span><span>⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="vs2 fade d1">
+      <div class="side bad"><h4><svg class="ico"><use href="#i-signal"/></svg>ホテル・飲食店・駅の無料Wi-Fi</h4><p>通信の暗号化は一般的になったが、本物のWi-Fi名に似せた<b>偽のアクセスポイント</b>や不正な接続誘導に注意</p></div>
+      <div class="mid">▶</div>
+      <div class="side good st0" data-s="1"><h4><svg class="ico"><use href="#i-phone"/></svg>スマホの回線（4G・5G）・自宅の通信</h4><p>証券口座・銀行口座へのログイン、売買、送金は、信頼できる通信環境で</p></div>
+    </div>
+    <div class="card nc w st0" data-s="2"><span class="nb">!</span><div><h4>公共Wi-Fiを使うときも、接続先が正しいか確認</h4></div></div>
+    <div class="card nc w st0" data-s="3"><span class="nb">!</span><div><h4>「この接続ではプライバシーが保護されません」「証明書に問題があります」</h4><p>こうした赤い警告画面が出たら、絶対に操作を続けない</p></div></div>
+  </div></div>
+</section>
+
+<!-- ================= ⑥ a 流出したら ================= -->
+<section class="slide" data-n="s6a" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑥ 個人情報が流出した場合に取るべき行動</span><h2>まず「流出した情報の種類」を確認する</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="cur">⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="card fade d1" style="display:flex;gap:14px;align-items:center;background:#F4F9FF"><svg class="ico" style="width:44px;height:44px;color:var(--safe)"><use href="#i-mail"/></svg><p style="font-size:18px;font-weight:900">「お客様の個人情報が流出した可能性があります」とお詫びの連絡が届いたら</p></div>
+    <div class="g2" style="gap:16px">
+      <div class="card st0" data-s="1" style="border-top:6px solid var(--b2)"><b style="font-size:18px">メールアドレス・電話番号の場合</b>
+        <ul style="margin:8px 0 0 1.2em;font-size:15px;line-height:1.8"><li>不審なメール・電話・SMSが増える可能性</li><li>特に、漏れたサービスや金融機関を装う連絡に注意</li><li>パスワードも流出したなら速やかに変更</li><li>同じパスワードを使い回していたサービスも、すべて変更</li></ul></div>
+      <div class="card st0" data-s="2" style="border-top:6px solid var(--warn)"><b style="font-size:18px" class="wt">本人確認書類・金融口座の情報の場合</b><p class="lead" style="font-size:15px;margin-top:8px">対応の優先順位が変わる。運転免許証やマイナンバーカードの情報なら、なりすまし契約への警戒が必要 → 次のページ</p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑥ b 本人申告 ================= -->
+<section class="slide" data-n="s6b" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑥ 流出時の行動　本人確認書類の情報が流出した場合</span><h2>信用情報機関の「本人申告制度」を活用する</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:12px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="cur">⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g3 fade d1">
+      <div class="card co focus" style="border-top-color:var(--b3)"><div class="tk" style="font-size:22px">CIC</div><p>クレジットカード・携帯分割払い等</p></div>
+      <div class="card co focus" style="border-top-color:var(--b1)"><div class="tk" style="font-size:22px">JICC</div><p>消費者金融・信販・クレジット等</p></div>
+      <div class="card co focus" style="border-top-color:var(--b6)"><div class="tk" style="font-size:22px">KSC</div><p>全国銀行個人信用情報センター／銀行系ローン等</p></div>
+    </div>
+    <div class="flow">
+      <div class="fs" data-s="1" style="--c:var(--ok)"><span class="n">1</span><svg class="ico"><use href="#i-report"/></svg>なりすましの心配を<br>本人申告で登録</div><div class="fa" data-s="2">▶</div>
+      <div class="fs" data-s="2" style="--c:var(--warn)"><span class="n">2</span><svg class="ico"><use href="#i-hood"/></svg>犯人があなたになりすまし<br>カード・ローンを申込</div><div class="fa" data-s="2">▶</div>
+      <div class="fs last" data-s="2" style="--c:var(--ok)"><span class="n">3</span><svg class="ico"><use href="#i-warning"/></svg>照会画面に注意喚起<br>審査がより慎重に</div>
+    </div>
+    <div class="g2 hide0" data-s="3" style="gap:12px">
+      <div class="card nc w"><span class="nb">!</span><div><h4>100%防げるわけではない</h4></div></div>
+      <div class="card nc w"><span class="nb">!</span><div><h4>3機関に一括登録されない</h4><p>各機関の制度・手続きを個別に確認</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑥ c 開示 ================= -->
+<section class="slide" data-n="s6c" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑥ 流出時の行動　自分の信用情報を確認する</span><h2>「開示請求」で、知らない契約がないか確かめる</h2><span class="credit only-b">Photo: Taylor Vick / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:16px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="cur">⑥ 流出したら</span><span>⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="grid-template-columns:1fr 1.1fr;gap:20px;align-items:center">
+      <div class="card fade d1" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center"><svg class="ico" style="width:64px;height:64px;color:var(--safe)"><use href="#i-search"/></svg><b style="font-size:20px">スマートフォンや郵送で<br>各機関に開示請求</b><p class="small">自分の名義でどのようなローンやクレジット契約が登録されているかを確認できる</p></div>
+      <div class="col" style="gap:12px">
+        <div class="card nc w st0" data-s="1"><span class="nb">!</span><div><h4>信用情報に登録されない種類の契約もある</h4><p>開示請求だけで、すべての不正利用を発見できるわけではない</p></div></div>
+        <div class="keymsg hide0" data-s="2" style="font-size:18px">流出の内容に応じて、<b>必要な対策を組み合わせる</b></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑦ a 家族 ================= -->
+<section class="slide" data-n="s7a" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑦ 家族全員で共有すべきセキュリティ対策</span><h2>家族を思う気持ちが狙われる（ボイスクローン）</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="cur">⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="g2" style="grid-template-columns:1fr 1fr;gap:20px;align-items:center">
+      <div class="card fade d1" style="display:flex;gap:14px;align-items:flex-start;background:#FFFAF5;border-color:#F9C9A6"><svg class="ico ring" style="width:52px;height:52px;color:var(--warnT);flex:none"><use href="#i-phone"/></svg><p style="font-size:20px;font-weight:900;line-height:1.6">「お父さん、事故を起こしてしまった。今すぐ100万円必要だから振り込んでほしい」</p></div>
+      <div class="col" style="gap:12px">
+        <div class="card st0" data-s="1"><b style="font-size:17px">声は本人そっくり。でも本当に本人？</b><p class="small">SNSなどに投稿されたわずかな音声からでも、AIで本人そっくりの声を模倣できる</p></div>
+        <div class="keymsg w hide0" data-s="2" style="font-size:18px">「声が似ている」だけで<b>本人と判断するのは危険</b></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑦ b 5つのルール ================= -->
+<section class="slide" data-n="s7b" data-steps="5">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑦ 家族のセキュリティ　家族で決めておきたい5つのルール</span><h2>ご家族で共有しておきたい5つのルール</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:10px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="cur">⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="sl">
+      <div class="row2 st0" data-s="1"><span class="nb">1</span><div><b>突然のお金の要求には、その場で応じない</b><p>どれほど緊急だと言われても、いったん落ち着く</p></div></div>
+      <div class="row2 st0" data-s="2"><span class="nb">2</span><div><b>必ず別の連絡方法で本人確認</b><p>電話を一度切り、電話帳に以前から登録している家族の番号へ自分からかけ直す</p></div></div>
+      <div class="row2 st0" data-s="3"><span class="nb">3</span><div><b>家族だけの「合言葉」を決めておく</b><p>普段の会話やSNSから推測されないもの。合言葉だけに頼らず、必ず「一度切って折り返す」と組み合わせる</p></div></div>
+      <div class="row2 st0" data-s="4"><span class="nb">4</span><div><b>認証コードやパスワードを家族間でも安易に共有しない</b><p>家族のLINEが乗っ取られているケースもある</p></div></div>
+      <div class="row2 st0" data-s="5"><span class="nb">5</span><div><b>不審な連絡を受けたら、一人で判断せず家族に相談</b><p>特に高齢のご家族へ：警察・銀行・証券会社を名乗る人物からお金や口座の話が出たら、一度切って家族に相談</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑦ c 整理 ================= -->
+<section class="slide" data-n="s7c" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑦ 家族のセキュリティ　家族で確認・整理しておくべき情報</span><h2>「緊急時の連絡先・手順」と「秘密の認証情報」は分ける</h2><span class="credit only-b">Photo: Markus Spiske / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="cur">⑦ 家族</span><span>⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="vs2">
+      <div class="side good fade d1"><h4><svg class="ico"><use href="#i-check"/></svg>家族で整理しておく</h4>
+        <ul style="margin:4px 0 0 1.2em;font-size:15px;line-height:1.85"><li>主な金融機関・証券会社の名称</li><li>緊急時（口座停止など）の連絡先電話番号</li><li>スマホ紛失時の対応方法・携帯会社の連絡先</li><li>家族間での緊急連絡手段</li><li>重要なアカウントの復旧方法</li></ul></div>
+      <div class="mid">≠</div>
+      <div class="side bad st0" data-s="1"><h4><svg class="ico"><use href="#i-x"/></svg>そのまま保存しない</h4><p style="font-size:16px">パスワードや認証コードを、家族共有のLINEグループやスマホのメモ帳に保存することは避ける</p></div>
+    </div>
+    <div class="keymsg hide0" data-s="2" style="font-size:18px;padding:10px">連絡先や手順は共有し、<b>秘密にすべき認証情報は分けて管理</b>する</div>
+  </div></div>
+</section>
+
+<!-- ================= ⑧ a 口座の機能 ================= -->
+<section class="slide" data-n="s8a" data-steps="3">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑧ 証券口座・銀行口座で確認すべき追加の安全対策</span><h2>侵入されても、いち早く気づき、被害を抑える機能</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="done">⑦ 家族</span><span class="cur">⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="col" style="gap:10px">
+      <div class="card tg" data-s="1"><div style="display:flex;align-items:center;gap:12px;flex:1"><svg class="ico"><use href="#i-bell"/></svg><span style="flex:1">ログイン通知</span><span class="sw"></span></div><span class="small" style="flex:1.3">身に覚えのないログインを早期に発見</span></div>
+      <div class="card tg" data-s="2"><div style="display:flex;align-items:center;gap:12px;flex:1"><svg class="ico"><use href="#i-bell"/></svg><span style="flex:1">取引通知</span><span class="sw"></span></div><span class="small" style="flex:1.3">株式の売買や資金移動を通知。不正取引の早期発見</span></div>
+      <div class="card tg" data-s="3"><div style="display:flex;align-items:center;gap:12px;flex:1"><svg class="ico"><use href="#i-bell"/></svg><span style="flex:1">出金通知・出金制限</span><span class="sw"></span></div><span class="small" style="flex:1.3">資金が動くときに通知。1日の振込限度額や出金先口座の制限も</span></div>
+    </div>
+    <div class="keymsg hide0" data-s="3" style="font-size:18px;padding:12px">日常的に多額の送金をしないなら、<b>振込限度額を低めに下げておく</b>のも有効な防衛策</div>
+  </div></div>
+</section>
+
+<!-- ================= ⑧ b 定期確認 ================= -->
+<section class="slide" data-n="s8b" data-steps="6">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑧ 口座の機能　定期的な口座確認</span><h2>最低でも月に1回、この6項目を確認する</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:12px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="done">⑦ 家族</span><span class="cur">⑧ 口座の機能</span><span>⑨ 被害時</span><span>⑩ チェック</span></div>
+    <p class="lead fade d1" style="font-size:15.5px">長期投資で普段ほとんどログインしない方ほど、不正な操作に気づくのが遅れる可能性がある。</p>
+    <div class="cl" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div class="card ci" data-s="1"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>保有銘柄と保有数量</div></div>
+      <div class="card ci" data-s="2"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>売買履歴<small>見覚えのない取引は？</small></div></div>
+      <div class="card ci" data-s="3"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>入出金履歴</div></div>
+      <div class="card ci" data-s="4"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>登録されている出金先銀行口座<small>変更されていないか</small></div></div>
+      <div class="card ci" data-s="5"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>登録メールアドレスや電話番号</div></div>
+      <div class="card ci" data-s="6"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>ログイン履歴や通知</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑨ 被害時 ================= -->
+<section class="slide" data-n="s9" data-steps="5">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑨ 万が一、被害に遭った場合の初動対応（詳細手順）</span><h2>実際に動くときの5つの段階</h2><span class="credit only-b">Photo: Maxim Hopman / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:9px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="done">⑦ 家族</span><span class="done">⑧ 口座の機能</span><span class="cur">⑨ 被害時</span><span>⑩ チェック</span></div>
+    <div class="sl">
+      <div class="row2 w st0" data-s="1"><span class="nb">1</span><div><b>金融機関へ直ちに電話連絡</b><p>利用停止・取引制限・出金停止などを相談。番号は不審なメールのものではなく、公式サイトやカード裏面で確認した正式な窓口</p></div></div>
+      <div class="row2 st0" data-s="2"><span class="nb">2</span><div><b>認証情報を保護する</b><p>安全な別の端末からパスワードを変更。使い回し先もすべて。メール・Apple Account・Googleアカウントへの侵入が疑われるなら、大元の保護を優先</p></div></div>
+      <div class="row2 st0" data-s="3"><span class="nb">3</span><div><b>証拠を保存する</b><p>不審なメール・SMS・取引履歴・ログイン通知をスクリーンショットや写真で。「いつ・何に気づき・どう対応したか」を時系列で記録</p></div></div>
+      <div class="row2 st0" data-s="4"><span class="nb">4</span><div><b>警察へ相談する</b><p>緊急性が高ければ110番、緊急でない相談は警察相談専用電話「#9110」。金融機関への連絡と並行して</p></div></div>
+      <div class="row2 st0" data-s="5"><span class="nb">5</span><div><b>補償について確認する</b><p>証券業界は一定の補償方針を示すが、無条件で全額ではない。発見と連絡を1分でも早く</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= ⑩ チェックリスト ================= -->
+<section class="slide" data-n="s10" data-steps="10">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">⑩ 未来塾の会員様に実践していただきたい10項目</span><h2>実践用チェックリスト</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:10px">
+    <div class="seven ten fade d1"><span class="done">① 認証</span><span class="done">② メール</span><span class="done">③ フィッシング</span><span class="done">④ パスワード</span><span class="done">⑤ 端末</span><span class="done">⑥ 流出したら</span><span class="done">⑦ 家族</span><span class="done">⑧ 口座の機能</span><span class="done">⑨ 被害時</span><span class="cur">⑩ チェック</span></div>
+    <div class="cl" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px">
+      <div class="card ci" data-s="1" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>① 証券会社のパスキー認証・多要素認証を確認</div></div>
+      <div class="card ci" data-s="2" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>② 銀行口座の認証方法と振込限度額を確認</div></div>
+      <div class="card ci" data-s="3" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>③ Gmail・Apple Account・Googleアカウントを強化</div></div>
+      <div class="card ci" data-s="4" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>④ 公式アプリ・ブックマークから開く（メールのリンクは使わない）</div></div>
+      <div class="card ci" data-s="5" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>⑤ 使い回しをやめ、パスワード管理機能を活用</div></div>
+      <div class="card ci" data-s="6" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>⑥ スマホ・パソコンのOS・アプリを最新に</div></div>
+      <div class="card ci" data-s="7" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>⑦ ログイン通知・取引通知を有効に</div></div>
+      <div class="card ci" data-s="8" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>⑧ 保有銘柄・売買履歴・入出金履歴を定期的に確認</div></div>
+      <div class="card ci" data-s="9" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>⑨ 家族で詐欺への対応ルール（かけ直し・合言葉）を共有</div></div>
+      <div class="card ci" data-s="10" style="font-size:16px;padding:9px 14px"><span class="bx"><svg class="ico"><use href="#i-check"/></svg></span><div>⑩ 金融機関の緊急連絡先を確認しておく</div></div>
+    </div>
+    <p class="small ctr">すべてを一度に実施する必要はありません。まずは重要な金融口座と、その認証に使うメールやスマートフォンから。</p>
+  </div></div>
+</section>
+
+<!-- ================= おわりに ================= -->
+<section class="slide" data-n="end" data-steps="2">
+  <header class="hd"><div class="hbg only-b" style="background-image:url('https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1600&q=80&auto=format&fit=crop')"></div><div class="shade only-b"></div><span class="chap">おわりに：資産を守ることも投資家の責任</span><h2>資産を増やす知識と、資産を守る知識</h2><span class="credit only-b">Photo: FLY:D / Unsplash</span></header>
+  <div class="body"><div class="col" style="gap:14px">
+    <p class="lead fade d1" style="font-size:16px">優れた投資判断で資産を2倍に増やせても、不正アクセスで失えば長年の努力が報われない。守る対策は、難しい専門技術ばかりではありません。</p>
+    <div class="chips fade d2" style="justify-content:center"><span class="chip g">パスキーを設定する</span><span class="chip g">怪しいメールのリンクを開かない</span><span class="chip g">パスワードを使い回さない</span><span class="chip g">口座の取引履歴を確認する</span><span class="chip g">突然の送金依頼は一度切って本人確認</span></div>
+    <div class="pillars">
+      <div class="pillar grow st0" data-s="1" style="padding:16px"><svg class="ico"><use href="#i-chart-up"/></svg><h3>資産を増やす知識</h3></div>
+      <div class="pillar guard st0" data-s="2" style="padding:16px"><svg class="ico"><use href="#i-shield"/></svg><h3>資産を守る知識</h3></div>
+    </div>
+    <div class="keymsg hide0" data-s="2" style="font-size:19px;padding:12px">この二つが揃ってこそ、<b>本当の意味での資産形成</b>が実現する</div>
+    <p class="small ctr">ぜひ、ご自身の金融口座のセキュリティ設定を見直し、大切なご家族にもこの内容を共有してください。</p>
+  </div></div>
+</section>
+
+</div></div>
+<div id="nav"><button id="bPrev" title="前へ（←）">◀</button><button id="bNext" title="次へ（→）">▶</button><button class="wide" id="bNotes" title="台本（N）">台本</button><button class="wide" id="bFull" title="全画面（F）">全画面</button></div>
+<div id="notes"><h4 id="notesHead">台本</h4><div id="notesBody"></div></div>
+<div id="help">← → でスライド移動・N で台本・F で全画面</div>
+<div class="notes-src" id="notes-title"><h5>第⑤章 補足・追加資料：金融資産を守る具体的な方法</h5>
+<h5>AI時代の個人資産防衛と家族のセキュリティ対策</h5></div>
+<div class="notes-src" id="notes-intro"><h5>はじめに：投資家にとっての新しい資産防衛</h5>
+<p>講義本編では、AIを悪用した犯罪、企業への大規模なサイバー攻撃、個人情報流出、そして日本国内で発生した証券口座の乗っ取り事件などについてお話ししました。</p>
+<p>これらの事件を知って、恐ろしいと感じられた方も多いのではないでしょうか。</p>
+<p>しかし、最も重要なのは、犯罪の恐ろしさを知ることだけではありません。</p>
+<p><b>実際に私たち自身が、どのような対策を取れば大切な金融資産を守ることができるのか。</b></p>
+<p>本資料では、第⑤章でお伝えした内容をさらに掘り下げ、ご自身やご家族で実践していただくための具体的な確認手順や注意点を補足します。</p>
+<p>私たちはこれまで、投資における資産防衛というと、現金比率の調整、分散投資、為替リスクの管理、景気後退への備えなどを考えてきました。</p>
+<p>もちろん、それらは非常に重要です。</p>
+<p>しかし、これからの投資家には、それに加えて新しい資産防衛の知識が必要になります。</p>
+<p>それが、<b>サイバーセキュリティ</b>です。</p>
+<p>例えば、皆様が長年かけて築いてきた金融資産が3,000万円あったとします。</p>
+<p>どれほど優れた企業を選び、長期投資で資産を増やしてきたとしても、証券口座が不正に操作されれば、自分の知らないうちに保有株式を売却されたり、不正な売買によって大きな損失を被ったりする可能性があります。</p>
+<p>つまり、<b>「投資で利益を上げる能力」と「その資産を安全に管理する能力」は、別々に必要</b>なのです。</p>
+<p>ここからは、個人が実践できる具体的な対策を10のステップで詳しく解説していきます。</p></div>
+<div class="notes-src" id="notes-s1a"><h5>① 証券口座・銀行口座を守る最も重要な認証対策</h5>
+<h5>1．パスワードだけに頼る時代は終わりつつある</h5>
+<p>まず、皆様にあらためて確認していただきたいことがあります。</p>
+<p>現在利用している証券会社や銀行では、どのような方法でログインしていますか？</p>
+<p>IDとパスワードだけでしょうか。</p>
+<p>それとも、スマートフォンに届く認証コードを入力していますか？</p>
+<p>あるいは、顔認証や指紋認証を利用しているでしょうか。</p>
+<p>従来、インターネット上の金融サービスでは、IDとパスワードが本人確認の基本でした。</p>
+<p>しかし現在では、パスワードを盗み取る手口が非常に高度化しています。</p>
+<p>例えば、犯罪者は証券会社の公式サイトにそっくりな偽サイトを作成します。</p>
+<p>そして、証券会社を装ったメールやSMS（ショートメッセージ）を送り、利用者を偽サイトへ誘導します。</p>
+<p>利用者がそこでIDやパスワードを入力すると、その情報がそのまま犯罪者に渡ってしまうのです。</p>
+<p>さらに近年では、スマホに届く使い捨ての「ワンタイムパスワード」までリアルタイムで盗み取るフィッシング攻撃も問題となっています。利用者が偽サイトに番号を入力した瞬間に、裏で待機している犯人のプログラムがその番号を数秒以内に本物の証券サイトへ自動入力してログインしてしまう手口です。</p>
+<p>つまり、パスワードに加えてSMS認証などを設定していても、それだけで絶対に安全とは言えません。</p></div>
+<div class="notes-src" id="notes-s1b"><h5>2．パスキー認証とは何か？</h5>
+<p>そこで本編でも最優先の対策としてご紹介したのが<b>「パスキー認証」</b>です。ここでその仕組みをもう少し詳しく補足します。</p>
+<p>パスキーとは、従来のパスワードに代わり、暗号技術を使って本人確認を行う仕組みです。</p>
+<p>スマートフォンの顔認証や指紋認証、端末のロック解除用PIN（暗証番号）などを利用してログインできます。</p>
+<p>「顔や指紋のデータが証券会社に送られるの？」と心配される方もいますが、顔や指紋そのものを証券会社へ送信するわけではありません。</p>
+<p>スマートフォンやパソコンの端末側で「間違いなく本人だ」と確認を行い、その確認結果の合図だけを暗号化して証券会社へ送る仕組みです。</p>
+<p>この仕組みの大きな特徴は、<b>「正規のウェブサイト」と「ご自身のスマホの認証情報」が直接ペアとして結び付いていること</b>です。</p>
+<p>そのため、犯罪者が本物そっくりの偽サイトを作ったとしても、偽サイト上ではパスキー自体が作動せず、従来のパスワードのように情報を盗んで別のサイトで使うことができません。</p>
+<p>これが、パスキーがフィッシング攻撃に強いとされる理由です。</p></div>
+<div class="notes-src" id="notes-s1c"><h5>3．どの証券会社で使えるのか？</h5>
+<p>日本国内では、SBI証券、楽天証券、マネックス証券などの主要証券会社を含め、パスキーや強固な多要素認証（パスワードに加えてスマホアプリや生体認証などを組み合わせる二段階以上の確認）の導入が進められています。</p>
+<p>ただし、対応するサービス、端末、設定方法、必須化の状況は証券会社ごとに異なります。</p>
+<p>皆様には、まず普段利用している証券会社の公式サイトや公式アプリから、次の4つの項目を確認していただきたいと思います。</p>
+<ol><li><b>パスキー認証</b>を利用できるか。</li><li>ログイン時に<b>多要素認証（二段階認証など）</b>が設定されているか。</li><li>取引や<b>出金時にも追加認証</b>が必要になっているか。</li><li><b>ログイン通知や取引通知</b>を受け取れる設定になっているか。</li></ol>
+<p>特に大切なのは、入口のログインだけでなく、「出金」や「出金先銀行口座の変更」などにも強い本人確認が設定されていることです。</p></div>
+<div class="notes-src" id="notes-s1d"><h5>4．パスキーにも弱点はある（補足注意点）</h5>
+<p>本編でも「パスキーは万能ではない」とお伝えしましたが、ここで一つ重要な注意点を補足します。</p>
+<p>実は、スマートフォンで設定したパスキーは、機種変更時にも引き継げるよう、iPhoneなら「Apple Account（旧Apple ID）」、Androidなら「Googleアカウント」の中に保管・同期される仕組みになっています。</p>
+<p>そのため、パスキーを管理しているApple AccountやGoogleアカウント自体が犯人に乗っ取られた場合、そこに保存された認証情報まで悪用される危険性があります。</p>
+<p>実際に2026年10月には、証券会社から、AppleやGoogleのアカウントが不正利用されることによって証券口座にも被害が及ぶ可能性について注意喚起が出されています。</p>
+<p>そのため、証券口座にパスキーを設定するだけでなく、そのパスキーを管理しているスマホのアカウント自体も強固に保護する必要があります。</p>
+<p><b>ぜひ覚えていただきたいのは、「証券口座の鍵（パスキー）」と「その鍵を保管する場所（Apple・Googleアカウント）」の両方を守る必要があるということです。</b></p></div>
+<div class="notes-src" id="notes-s2a"><h5>② メールアカウントを守ることが金融資産の防衛につながる</h5>
+<p>次に補足するのは、メールアカウントの具体的な守り方です。</p>
+<p>皆様は、普段利用しているGmailやiCloudメール、Yahoo!メールなどについて、どれほどセキュリティを意識しているでしょうか。</p>
+<p>「証券口座は大切だからパスワードを厳重に管理している一方で、メールアカウントには昔から同じ簡単なパスワードを使っている」という方もいるかもしれません。</p>
+<p>しかし、本編の第③章でも触れたとおり、メールアカウントは非常に重要です。</p>
+<p>なぜなら、多くのインターネットサービスでは、パスワードを忘れたときの再設定や本人確認の連絡にメールが使われているからです。</p>
+<p>もし犯罪者が皆様のメールアカウントを乗っ取った場合、金融機関から届く重要な通知メールを勝手に確認・削除されたり、パスワード再設定の手続きに悪用されたりする可能性があります。</p>
+<p>もちろん、各金融機関には追加の認証があるため、メールアカウントを乗っ取られただけで直ちにすべての証券口座や銀行口座へ自由にアクセスできるわけではありません。</p>
+<p>それでも、メールアカウントの乗っ取りが他の金融サービスへの侵入の突破口になる危険性は十分にあります。</p></div>
+<div class="notes-src" id="notes-s2b"><h5>具体的な対策</h5>
+<p>メールやスマホのアカウントについて、次の6つの対策を実施してください。</p>
+<ul><li><b>Gmail（Googleアカウント）やApple Accountなどにも、パスキーや二段階認証を設定する。</b></li><li><b>証券口座とメールで同じパスワードを使わない。</b></li><li><b>アカウントの再設定用電話番号や予備メールアドレスが、現在使っている正しいものか確認する。</b></li><li><b>ログイン履歴を見て、見覚えのない端末（知らないパソコンやスマホ）がログインしていないか確認する。</b></li><li><b>メールの設定画面で、見知らぬアドレスへの「自動転送設定」が追加されていないか確認する</b>（※一度侵入した犯人が、証券会社からの大事な通知メールをこっそり自分の元へ転送させる手口があるためです）。</li><li><b>すでに使わなくなった古い端末や、不要な連携アプリのアクセス権限を見直す。</b></li></ul>
+<p>特に、ログイン履歴や登録端末の確認は重要です。自分の知らない端末が登録されていた場合には、直ちにログアウトさせ、アカウントの保護措置を取ってください。</p></div>
+<div class="notes-src" id="notes-s3a"><h5>③ フィッシング詐欺を防ぐ具体的な方法</h5>
+<p>次に、日常生活の中で最も遭遇しやすいフィッシング詐欺への具体的な対処法を補足します。</p>
+<h5>1．本物そっくりのメールを信用しない</h5>
+<p>例えば、次のようなメールが届いたとします。</p>
+<p>「お客様の証券口座に不審なログインが確認されました。安全確保のため、至急本人確認を行ってください」</p>
+<p>メールには証券会社の公式ロゴが掲載され、文章も非常に自然です。</p>
+<p>しかも、リンク先の画面も本物の証券会社とほとんど同じです。</p>
+<p>以前であれば、不自然な日本語や不鮮明なロゴなどから偽物を見抜けることもありました。</p>
+<p>しかし、生成AIの普及によって、自然な日本語の詐欺メールを作ることが容易になっています。</p>
+<p>今後は「文章が自然だから本物だろう」と判断することはできないと考えてください。</p></div>
+<div class="notes-src" id="notes-s3b"><h5>2．絶対に習慣にしていただきたいこと</h5>
+<p>そこで、皆様に強くお勧めしたいのが次の行動習慣です。</p>
+<p><b>「金融機関からメールやSMSが届いても、その本文中のリンクからは絶対にログインしない」</b></p>
+<p>これを基本的な習慣にしてください。</p>
+<p>重要なお知らせが届いた場合には、いったんそのメールを閉じます。</p>
+<p>そして、スマートフォンに登録している<b>公式アプリ</b>や、以前から保存している正しい公式サイトの<b>ブックマーク（お気に入り）</b>からアクセスしてください。</p>
+<p>公式サイトをGoogleなどで検索してアクセスする場合も、検索結果の上部に表示される広告（スポンサー枠）に偽サイトが紛れ込んでいるケースがあるため注意が必要です。</p>
+<p>あらかじめ正しい公式サイトを確認し、ブックマークに保存しておくことをお勧めします。</p></div>
+<div class="notes-src" id="notes-s3c"><h5>3．電話での詐欺にも注意する</h5>
+<p>メールだけでなく、電話での詐欺にも注意が必要です。</p>
+<p>例えば、次のような電話がかかってきたとします。</p>
+<p>「○○銀行のセキュリティ担当です。お客様の口座が不正利用されています。確認のため、今届いた認証コードを教えてください」</p>
+<p>相手が自分の名前や口座情報の一部を知っていたとしても、それだけで信用してはいけません。過去に流出した個人情報が悪用されている可能性があるからです。</p>
+<ul><li><b>認証コード（ワンタイムパスワード）やパスワードを電話口で相手に教えてはいけません。</b></li><li><b>「手続きをサポートするので、このアプリを入れてください」などと誘導されても、指示された遠隔操作アプリ（外部からスマホやパソコンを操作できるアプリ）をインストールしたり、画面共有を開始したりしないでください。</b></li></ul>
+<p>また、着信画面に表示される電話番号自体が、本物の銀行や警察の番号に偽装される場合もあります。</p>
+<p>不審な電話は一度切り、自分で確認した金融機関の公式窓口へ問い合わせてください。</p></div>
+<div class="notes-src" id="notes-s4a"><h5>④ パスワード管理を根本から見直す</h5>
+<p>続いて、本編でもお伝えした「パスワードの使い回し禁止」を、実際にどう管理すればよいのかを補足します。</p>
+<p>複数のサービスで同じパスワードを使い回している場合、一つのサービスで情報が流出すると、犯人はそのIDとパスワードを使って他のサイトにも次々と不正ログインを試みます。</p>
+<p>これを<b>「パスワードリスト攻撃」</b>と呼びます。</p>
+<h5>1．理想的なパスワード管理</h5>
+<p>基本的な対策は次のとおりです。</p>
+<ul><li>サービスごとに異なるパスワードを設定する。</li><li>長く、推測されにくいパスワード（英大文字・小文字・数字・記号の組み合わせ）を利用する。</li><li>生年月日や電話番号、名前など、推測されやすい情報を避ける。</li><li>他人にパスワードを教えない。</li><li>パスワードをメールやLINEで安易に送らない。</li></ul>
+<p>ただし、何十個もあるサービスごとに異なる複雑なパスワードをすべて頭で記憶することは、現実的には難しいと思います。</p>
+<p>そこで利用を検討していただきたいのが、<b>「パスワード管理サービス」</b>です。</p></div>
+<div class="notes-src" id="notes-s4b"><h5>2．利用できるサービスの例</h5>
+<p>パスワード管理サービスとは、<b>1つの親パスワードやスマホの顔認証・指紋認証さえ守れば、サイトごとに異なる複雑なパスワードを自動で作成し、安全な金庫のように記憶・自動入力してくれる仕組み</b>です。</p>
+<p>代表的なものには、以下があります。</p>
+<table><tr><th>サービス</th><th>特徴</th></tr><tr><td><b>Appleの「パスワード」アプリ</b></td><td>iPhone・iPad・Macに標準搭載。パスワードやパスキーを簡単に管理できる</td></tr><tr><td><b>Google パスワード マネージャー</b></td><td>AndroidスマホやChromeブラウザに標準搭載。Googleアカウントと連携</td></tr><tr><td><b>1Password（ワンパスワード）</b></td><td>iPhoneとWindowsなど複数端末での管理に対応する世界的な専用サービス</td></tr><tr><td><b>Bitwarden（ビットワーデン）</b></td><td>無料から複数端末に対応する人気のパスワード管理専用サービス</td></tr></table>
+<p>初めての方は、まずiPhoneなら最初から入っている「パスワード」アプリ、AndroidやChromeなら「Google パスワード マネージャー」から使い始めるのが最も手軽です。</p>
+<p>ただし、パスワード管理サービス自体が「重要な情報の保管場所（金庫）」になります。管理サービス自体の二段階認証を強化し、端末の画面ロックを設定して、アカウントの復旧方法も確認しておく必要があります。</p>
+<p>なお、昔は「パスワードを定期的に変更しましょう」と言われていましたが、現在は定期変更だけを目的にするのではなく、<b>「使い回しの解消」「漏えいしたパスワードの変更」「パスキーなどの強力な認証の導入」</b>を優先してください。</p></div>
+<div class="notes-src" id="notes-s5a"><h5>⑤ スマートフォンとパソコンを安全に管理する</h5>
+<p>次に、皆様が普段使用しているスマートフォンやパソコン自体の安全対策を補足します。</p>
+<p>証券会社のセキュリティが強固であっても、利用者自身の端末が危険な状態であれば、被害につながる可能性があります。</p>
+<p>例えば、ウイルスなどの悪意のあるソフトウェアによって、ログイン情報が盗み取られたり、画面の操作を監視されたりすることがあります。</p>
+<h5>1．基本的なセキュリティ対策</h5>
+<p>実践していただきたいのは、次の4項目です。</p>
+<p><b>第一に、OS（基本ソフト）とアプリを最新の状態に保つことです。</b></p>
+<p>iPhoneであればiOS、WindowsのパソコンであればWindows Updateなどを定期的に確認し、可能であれば「自動更新」を有効にしておきます。更新には、新しく見つかったセキュリティの弱点（脆弱性）を塞ぐ重要な修正が含まれています。</p>
+<p><b>第二に、画面ロックを設定することです。</b></p>
+<p>顔認証や指紋認証、推測されにくいパスコードを利用してください。</p>
+<p><b>第三に、不審なアプリをインストールしないことです。</b></p>
+<p>メールやSMSのリンクからアプリを入れるのではなく、原則として公式のアプリストア（App StoreやGoogle Play）や正規の提供元から入手してください。</p>
+<p><b>第四に、端末の紛失に備えることです。</b></p>
+<p>万が一の紛失時に遠隔でロックできるよう、iPhoneの「探す」やAndroidの「デバイスを探す」機能を有効にしておきます。また、重要なデータは適切にバックアップしてください。</p></div>
+<div class="notes-src" id="notes-s5b"><h5>2．外出先の無料Wi-Fi（公共Wi-Fi）の注意点</h5>
+<p>ホテルや飲食店、駅などの無料Wi-Fiを利用する方も多いと思います。</p>
+<p>現在の金融サービスでは通信の暗号化が一般的ですが、本物のWi-Fi名に似せた「偽のWi-Fiアクセスポイント」や不正な接続誘導などには注意が必要です。</p>
+<p><b>結論として、重要な金融取引（証券口座や銀行口座へのログイン・売買・送金）を行う場合には、外出先の無料Wi-Fiは使わず、ご自身のスマートフォンの回線（4Gや5G）や自宅の信頼できる通信環境を利用することをお勧めします。</b></p>
+<p>普段、公共Wi-Fiを利用する場合も、接続先が正しいかを確認し、もしブラウザに「この接続ではプライバシーが保護されません」「証明書に問題があります」といった赤い警告画面が表示された場合には、絶対に操作を続けないでください。</p></div>
+<div class="notes-src" id="notes-s6a"><h5>⑥ 個人情報が流出した場合に取るべき行動</h5>
+<p>では、実際に利用している企業から「お客様の個人情報が流出した可能性があります」とお詫びの連絡が届いた場合は、具体的にどう動けばよいのでしょうか。</p>
+<p>まず大切なのは、<b>「流出した情報の種類」</b>を確認することです。</p>
+<p>メールアドレスだけが流出した場合と、本人確認書類や金融口座に関する情報が流出した場合では、対応の優先順位が異なります。</p>
+<h5>1．メールアドレスや電話番号が流出した場合</h5>
+<p>この場合には、不審なメールや電話、SMSが増える可能性があります。</p>
+<p>特に、情報が漏れたそのサービスや金融機関を装った連絡には注意してください。</p>
+<p>パスワードも流出した可能性がある場合は、該当サービスのパスワードを速やかに変更します。同じパスワードを他のサービスでも使い回していた場合は、そちらもすべて変更が必要です。</p></div>
+<div class="notes-src" id="notes-s6b"><h5>2．本人確認書類の情報が流出した場合（信用情報機関の活用）</h5>
+<p>運転免許証やマイナンバーカードなどの情報が悪用される可能性がある場合には、本人になりすました契約申込みなどへの警戒が必要です。</p>
+<p>その際に役立つのが、本編でもご紹介した<b>信用情報機関の「本人申告制度」</b>です。</p>
+<p>日本には主に、<b>CIC</b>（クレジットカード・携帯分割払い等）、<b>JICC</b>（消費者金融・信販・クレジット等）、<b>全国銀行個人信用情報センター（KSC）</b>（銀行系ローン等）という3つの信用情報機関があります。</p>
+<p>これらの機関には、本人確認書類の紛失・盗難や情報流出によって「他人に名前を勝手に使われる（なりすまし契約をされる）心配」があるときに申告できる制度があります。</p>
+<p>本人申告情報を登録しておくと、万が一犯人があなたになりすましてカードやローンを申し込んでも、審査する金融機関が信用情報を照会した際に画面へ注意喚起が表示され、審査がより慎重に行われるようになります。</p>
+<p>ただし、登録したからといって不正な契約を100%必ず防げるわけではありません。また、1か所に申請すれば3つの機関すべてに一括登録されるわけではないため、各機関の制度や手続きを個別に確認してください。</p></div>
+<div class="notes-src" id="notes-s6c"><h5>3．自分の信用情報を確認する（開示請求）</h5>
+<p>もう一つの確認方法が、信用情報の<b>「開示請求」</b>です。</p>
+<p>スマートフォンや郵送などで各機関に開示請求を行うと、「現在、自分の名義でどのようなローンやクレジット契約が登録されているか」を確認できます。自分の知らない契約が存在しないかを確かめる手段になります。</p>
+<p>ただし、信用情報に登録されない種類の契約もあり、開示請求だけですべての不正利用を発見できるわけではありません。</p>
+<p>重要なのは、情報流出の内容に応じて、必要な対策を組み合わせて取るということです。</p></div>
+<div class="notes-src" id="notes-s7a"><h5>⑦ 家族全員で共有すべきセキュリティ対策</h5>
+<p>続いて、本編の「家族間の本人確認方法」をさらに具体化した、家族全員で共有すべき対策です。</p>
+<p>現在の詐欺は、金融機関への直接的なハッキングだけでなく、家族を思う感情や信頼関係を悪用する手口も増えています。</p>
+<h5>1．AIによる音声の偽造（ボイスクローン）</h5>
+<p>例えば、ご自身の息子さんや娘さんから突然電話がかかってきたとします。</p>
+<p>「お父さん、事故を起こしてしまった。今すぐ100万円必要だから振り込んでほしい」</p>
+<p>声は本人そっくりです。しかし、それが本当に本人だと確認できるでしょうか。</p>
+<p>本編でお話ししたとおり、現在ではSNSなどに投稿されたわずかな音声からでも、AIで本人そっくりの声を模倣する技術が発達しています。</p>
+<p>そのため、今後は「声が似ている」という理由だけで本人と判断することは危険です。</p></div>
+<div class="notes-src" id="notes-s7b"><h5>2．家族で決めておきたい5つのルール</h5>
+<p>ぜひ次の5つのルールをご家族で共有しておいてください。</p>
+<p><b>ルール①：突然のお金の要求には、その場で応じない。</b></p>
+<p>どれほど緊急だと言われても、いったん落ち着いてください。</p>
+<p><b>ルール②：必ず別の連絡方法で本人確認をする。</b></p>
+<p>電話を一度切り、以前から電話帳に登録している家族の電話番号へ自分からかけ直してください。</p>
+<p><b>ルール③：家族間で「合言葉」を決めておく。</b></p>
+<p>普段の会話やSNSから推測されない家族だけの合言葉を決めておく方法もあります。ただし、合言葉だけに頼らず、必ず「一度切って折り返し電話する」ことと組み合わせます。</p>
+<p><b>ルール④：認証コードやパスワードを家族間でも安易に共有しない。</b></p>
+<p>家族だからといって金融口座のパスワードを教えたり、LINEで認証コードを送ったりすることが安全とは限りません（家族のLINEが乗っ取られているケースもあるためです）。</p>
+<p><b>ルール⑤：不審な連絡を受けたら、一人で判断せず家族に相談する。</b></p>
+<p>特に高齢のご家族には、警察や銀行、証券会社を名乗る人物から突然お金や口座の話が出た場合、必ず一度電話を切って家族に相談するよう伝えてください。</p></div>
+<div class="notes-src" id="notes-s7c"><h5>3．家族で確認・整理しておくべき情報</h5>
+<p>万が一、スマートフォンを紛失したり、不正アクセスが発生したりした場合に備え、次のような情報を整理しておくことも重要です。</p>
+<ul><li>利用している主な金融機関・証券会社の名称</li><li>緊急時（口座停止など）の金融機関の連絡先電話番号</li><li>スマートフォン紛失時の対応方法・携帯会社の連絡先</li><li>家族間での緊急連絡手段</li><li>重要なアカウントの復旧方法</li></ul>
+<p>※ただし、<b>パスワードや認証コードを家族共有のLINEグループやスマホのメモ帳にそのまま保存することは避けてください。</b>「緊急時に必要な連絡先や手順」と「秘密にすべき認証情報（パスワード）」は分けて管理することが重要です。</p></div>
+<div class="notes-src" id="notes-s8a"><h5>⑧ 証券口座・銀行口座で確認すべき追加の安全対策</h5>
+<p>冒頭の①では「入口のログイン認証（パスキーなど）」について説明しましたが、証券口座や銀行口座には、<b>「万が一侵入されたときにいち早く気づき、被害を抑えるための機能」</b>もあります。あわせて設定を確認してください。</p>
+<h5>1．ログイン通知</h5>
+<p>自分の口座にログインがあった際、メールやアプリで通知を受ける仕組みです。身に覚えのないログインを早期に発見するために役立ちます。</p>
+<h5>2．取引通知</h5>
+<p>株式の売買や資金移動が行われた際に通知を受け取る仕組みです。不正取引の早期発見につながります。</p>
+<h5>3．出金通知・出金制限（振込限度額の設定）</h5>
+<p>銀行口座や証券口座から資金が移動する際に通知を受け取る機能です。</p>
+<p>また金融機関によっては、1日あたりの「振込限度額の設定」や「出金先口座の制限」などを利用できます。日常的に多額の送金を行わない方は、必要以上に大きな振込限度額を設定しない（低めに下げておく）ことも有効な防衛策です。</p></div>
+<div class="notes-src" id="notes-s8b"><h5>4．定期的な口座確認</h5>
+<p>長期投資を基本とし、普段は証券口座へほとんどログインしない方もいらっしゃると思います。</p>
+<p>しかし、長期間確認しないことで、不正な操作に気付くのが遅れる可能性があります。最低でも月に1回程度は、次の項目を確認する習慣をお勧めします。</p>
+<ul><li>保有銘柄と保有数量</li><li>売買履歴</li><li>入出金履歴</li><li>登録されている出金先銀行口座</li><li>登録メールアドレスや電話番号</li><li>ログイン履歴や通知</li></ul>
+<p>特に、売買履歴や出金先口座に見覚えのない変更がないかを確認することが重要です。</p></div>
+<div class="notes-src" id="notes-s9"><h5>⑨ 万が一、被害に遭った場合の初動対応（詳細手順）</h5>
+<p>どれほど対策を取っていても、被害に遭う可能性を完全にゼロにすることはできません。</p>
+<p>本編でお伝えした初動対応について、実際に動く際の5つの段階を詳しく整理しておきます。</p>
+<h5>第一段階：金融機関へ直ちに連絡する</h5>
+<p>証券口座や銀行口座で不正アクセス、不審な取引、不正送金などが疑われた場合には、まず該当する金融機関へ速やかに電話連絡してください。口座の利用停止や取引制限、出金停止など、必要な措置を相談します。</p>
+<p>※電話番号は不審なメールに書かれたものではなく、必ず公式サイトやカード裏面などで確認した正式な窓口を利用してください。</p>
+<h5>第二段階：認証情報を保護する</h5>
+<p>パスワードが盗まれた可能性がある場合は、ウイルス感染のない安全な別の端末からパスワードを変更してください。同じパスワードを他のサービスでも使用している場合は、それらもすべて変更します。</p>
+<p>メールやApple Account、Googleアカウントへの侵入も疑われる場合には、大元であるそちらの保護を優先的に進めます。</p>
+<h5>第三段階：証拠を保存する</h5>
+<p>不審なメール、SMS、勝手に売買された取引履歴、ログイン通知、画面表示などをスクリーンショットや写真で保存してください。「いつ、どのような異常に気づき、どう対応したか」を時系列で記録しておくことも重要です。後日の調査や補償手続きで役立つ可能性があります。</p>
+<h5>第四段階：警察へ相談する</h5>
+<p>不正アクセスや詐欺の被害が疑われる場合には、警察へ相談してください。</p>
+<p>緊急性が高い場合は<b>110番</b>、緊急でない相談には警察相談専用電話<b>「#9110」</b>などを利用できます。金融機関への連絡と警察への相談は、状況に応じて並行して進めることが大切です。</p>
+<h5>第五段階：補償について確認する</h5>
+<p>本編でも触れたとおり、証券口座の不正取引については証券業界で一定の被害補償を行う方針が示されていますが、すべての被害について無条件で全額補償されるわけではありません。</p>
+<p>個別の被害状況や日頃の認証情報の管理状況などを踏まえて判断されるため、被害の発見と連絡を1分でも早く行うことが重要です。</p></div>
+<div class="notes-src" id="notes-s10"><h5>⑩ 未来塾の会員様に実践していただきたい10項目チェックリスト</h5>
+<p>最後に、本資料の内容を実践用のチェックリストにまとめました。ご自身の設定を見直す際にご活用ください。</p>
+<ul><li>[ ] <b>① 利用している証券会社のパスキー認証・多要素認証を確認する。</b></li><li>[ ] <b>② 銀行口座の認証方法と振込限度額を確認する。</b></li><li>[ ] <b>③ GmailやApple Account、Googleアカウントのセキュリティを強化する。</b></li><li>[ ] <b>④ 金融機関の公式アプリや公式サイトをブックマーク登録し、メールのリンクから開かない。</b></li><li>[ ] <b>⑤ パスワードの使い回しをやめ、パスワード管理機能を活用する。</b></li><li>[ ] <b>⑥ スマートフォンとパソコンのOS・アプリを最新の状態にする。</b></li><li>[ ] <b>⑦ 口座のログイン通知・取引通知を有効にする。</b></li><li>[ ] <b>⑧ 証券口座の保有銘柄・売買履歴・入出金履歴を定期的に確認する。</b></li><li>[ ] <b>⑨ 家族間で詐欺への対応ルール（かけ直し・合言葉）を共有する。</b></li><li>[ ] <b>⑩ 不正アクセスが疑われた場合の金融機関の緊急連絡先を確認しておく。</b></li></ul>
+<p>すべてを一度に実施する必要はありません。</p>
+<p>まずは重要な金融口座と、その認証に使用しているメールやスマートフォンから対策を始めてください。</p></div>
+<div class="notes-src" id="notes-end"><h5>おわりに：資産を守ることも投資家の責任</h5>
+<p>これまで私たちは、株式市場の動向を分析し、将来成長する企業を見極め、どのタイミングで投資するべきかを学んできました。それらは、投資家として非常に重要な知識です。</p>
+<p>しかし、これからの時代には、もう一つ重要な能力が必要になります。</p>
+<p>それは、<b>築き上げた金融資産を犯罪から守る能力</b>です。</p>
+<p>仮に優れた投資判断によって資産を2倍に増やせたとしても、その資産が不正アクセスによって失われてしまえば、長年の努力が報われなくなる可能性があります。</p>
+<p>そして、資産を守るための対策は、決して難しい専門技術ばかりではありません。</p>
+<ul><li>パスキーを設定する。</li><li>怪しいメールのリンクを開かない。</li><li>パスワードを使い回さない。</li><li>口座の取引履歴を確認する。</li><li>家族からの突然の送金依頼には、一度切って必ず本人確認をする。</li></ul>
+<p>こうした一つひとつの行動が、大切な資産を守ることにつながります。</p>
+<p><b>「資産を増やす知識と、資産を守る知識。この二つが揃ってこそ、本当の意味での資産形成が実現する。」</b></p>
+<p>これからの時代、投資家にとってサイバーセキュリティは、決して他人事ではありません。</p>
+<p>ぜひ今回の講義と本資料をきっかけに、ご自身の金融口座のセキュリティ設定を見直し、大切なご家族にもこの内容を共有してください。皆様が長年かけて築き上げてきた大切な資産を、これからも安全に守り続けられることを願っています。</p></div>
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let cur=0;
+  const mq=matchMedia('(max-width: 820px) and (orientation: portrait)');
+  function fit(){
+    document.documentElement.classList.toggle('mobile',mq.matches);
+    if(mq.matches){stage.style.transform='';return}
+    const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+s+')';
+  }
+  if(mq.addEventListener)mq.addEventListener('change',fit);
+  addEventListener('resize',fit);fit();
+
+  // 100-cell grid: 4 cells = AI-related share (8.93 / 208.8 ≈ 4.3%)
+  const g=document.getElementById('g100');
+  if(g){for(let k=0;k<100;k++){const i=document.createElement('i');if(k>=96)i.className='ai';g.appendChild(i)}}
+
+  slides.forEach((s,i)=>{
+    if(i===0)return;
+    const f=document.createElement('div');f.className='ft';
+    f.innerHTML='<span>未来塾｜第⑤章 補足資料　金融資産を守る具体的な方法</span><span class="no">'+String(i+1).padStart(2,'0')+' / '+total+'</span>';
+    s.appendChild(f);
+  });
+
+  function go(i){
+    i=Math.max(0,Math.min(total-1,i));
+    slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('prev',k<i)});
+    cur=i;
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';
+    const src=document.getElementById('notes-'+slides[i].dataset.n);
+    document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
+    document.getElementById('notesHead').textContent='台本　'+(i+1)+' / '+total;
+    // on phones every step is shown at once (one page = one scroll)
+    fitSlide(slides[i]);
+    setStep(slides[i],mq.matches?(+slides[i].dataset.steps||0):0);
+    if(mq.matches)window.scrollTo(0,0);
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  // step-by-step builds: elements with data-s light up as the step counter grows
+  function setStep(s,n){
+    s.dataset.cur=n;
+    s.querySelectorAll('[data-s]').forEach(el=>el.classList.toggle('on',+el.dataset.s<=n));
+    for(let k=1;k<=8;k++)s.classList.toggle('s'+k,k<=n);
+  }
+  function step(s){
+    const max=+s.dataset.steps||0,n=+s.dataset.cur||0;
+    if(n<max){setStep(s,n+1);return true}
+    return false;
+  }
+  function next(){if(step(slides[cur]))return;go(cur+1)}
+  function prev(){go(cur-1)}
+  document.getElementById('bNext').onclick=next;
+  document.getElementById('bPrev').onclick=prev;
+  let tx=null,ty=null;
+  addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY},{passive:true});
+  addEventListener('touchend',e=>{if(tx===null)return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;tx=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}},{passive:true});
+  const notes=document.getElementById('notes');
+  document.getElementById('bNotes').onclick=()=>notes.classList.toggle('show');
+  function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  document.getElementById('bFull').onclick=full;
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+    else if(e.key==='n'||e.key==='N')notes.classList.toggle('show');
+    else if(e.key==='f'||e.key==='F')full();
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+  });
+  // a click anywhere on the slide advances, like a presentation remote
+  stage.addEventListener('click',e=>{if(mq.matches||e.target.closest('button,a,input'))return;next()});
+
+  /* enlarge the shown slide's content to fill the body area (desktop only).
+     Done lazily per slide with a short binary search so the page never freezes. */
+  function fitSlide(s){
+    const b=s.querySelector('.body');if(!b||s.dataset.fit)return;
+    let w=b.querySelector(':scope>.fitw');
+    if(!w){w=document.createElement('div');w.className='fitw';while(b.firstChild)w.appendChild(b.firstChild);b.appendChild(w)}
+    w.style.zoom='';s.dataset.fit='1';if(mq.matches)return;
+    const H=b.getBoundingClientRect().height,base=w.getBoundingClientRect().height;
+    if(!H||!base)return;
+    let lo=1,hi=1.65;
+    for(let k=0;k<7;k++){const m=(lo+hi)/2;w.style.zoom=m.toFixed(3);if(w.getBoundingClientRect().height>H-4)hi=m;else lo=m}
+    w.style.zoom=lo.toFixed(3);
+  }
+  function refit(){slides.forEach(s=>delete s.dataset.fit);fitSlide(slides[cur])}
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(refit);
+  if(mq.addEventListener)mq.addEventListener('change',refit);
+
+  const probe=new Image();probe.onerror=()=>document.body.classList.add('noimg');
+  probe.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=40&q=10&auto=format&fit=crop';
+  setTimeout(()=>document.getElementById('help').classList.add('hide'),6000);
+  window.__go=go;
+  const h=parseInt(location.hash.slice(1));go(h>0?h-1:0);
+})();
+</script>
+</body>
+</html>
