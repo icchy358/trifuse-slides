@@ -674,7 +674,7 @@ svg .hide0{transform:none}
       <h1 class="fade d2">AIの進化がもたらす<span class="hl2">新たな脅威</span></h1>
       <p class="sub fade d3">〜あなたの個人情報と金融資産は本当に安全なのか？〜</p>
       <div class="chaps fade d4"><span>① AIとサイバー犯罪</span><span>② 大規模ハッキング</span><span>③ 流出すると</span><span>④ 今後の脅威と国の対策</span><span class="w">⑤ 資産を守る方法</span><span>⑥ セキュリティ企業と投資</span></div>
-      <div class="date fade d5">2026.11.3（火・祝）20:00〜 ｜ 講師：岩渕</div>
+      <div class="date fade d5">2026.11.3（火・祝）20:00〜</div>
     </div>
     <div class="brandbar"></div>
   </div>
@@ -1824,7 +1824,8 @@ svg .hide0{transform:none}
     else if(e.key==='Home')go(0);
     else if(e.key==='End')go(total-1);
   });
-  stage.addEventListener('click',e=>{if(e.target.closest('.fs,.card[data-s],.row2,.lv,.ci'))step(slides[cur])});
+  // a click anywhere on the slide advances, like a presentation remote
+  stage.addEventListener('click',e=>{if(mq.matches||e.target.closest('button,a,input'))return;next()});
 
   /* enlarge each slide's content to fill the body area (desktop only) */
   function autofit(){
