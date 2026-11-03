@@ -1789,6 +1789,7 @@ svg .hide0{transform:none}
     document.getElementById('notesBody').innerHTML=src?src.innerHTML:'';
     document.getElementById('notesHead').textContent='台本　'+(i+1)+' / '+total;
     // on phones every step is shown at once (one page = one scroll)
+    fitSlide(slides[i]);
     setStep(slides[i],mq.matches?(+slides[i].dataset.steps||0):0);
     if(mq.matches)window.scrollTo(0,0);
     try{history.replaceState(null,'','#'+(i+1))}catch(e){}
@@ -1827,23 +1828,22 @@ svg .hide0{transform:none}
   // a click anywhere on the slide advances, like a presentation remote
   stage.addEventListener('click',e=>{if(mq.matches||e.target.closest('button,a,input'))return;next()});
 
-  /* enlarge each slide's content to fill the body area (desktop only) */
-  function autofit(){
-    slides.forEach(s=>{
-      const b=s.querySelector('.body');if(!b)return;
-      let w=b.querySelector(':scope>.fitw');
-      if(!w){w=document.createElement('div');w.className='fitw';while(b.firstChild)w.appendChild(b.firstChild);b.appendChild(w)}
-      w.style.zoom='';if(mq.matches)return;
-      const H=b.getBoundingClientRect().height/(parseFloat(getComputedStyle(stage).transform.split(',')[3])||1);
-      let z=1;
-      const h=()=>w.getBoundingClientRect().height/(parseFloat(getComputedStyle(stage).transform.split(',')[3])||1);
-      while(z<1.65){w.style.zoom=(z+0.02).toFixed(2);if(h()>H-4)break;z+=0.02}
-      w.style.zoom=z.toFixed(2);
-    });
+  /* enlarge the shown slide's content to fill the body area (desktop only).
+     Done lazily per slide with a short binary search so the page never freezes. */
+  function fitSlide(s){
+    const b=s.querySelector('.body');if(!b||s.dataset.fit)return;
+    let w=b.querySelector(':scope>.fitw');
+    if(!w){w=document.createElement('div');w.className='fitw';while(b.firstChild)w.appendChild(b.firstChild);b.appendChild(w)}
+    w.style.zoom='';s.dataset.fit='1';if(mq.matches)return;
+    const H=b.getBoundingClientRect().height,base=w.getBoundingClientRect().height;
+    if(!H||!base)return;
+    let lo=1,hi=1.65;
+    for(let k=0;k<7;k++){const m=(lo+hi)/2;w.style.zoom=m.toFixed(3);if(w.getBoundingClientRect().height>H-4)hi=m;else lo=m}
+    w.style.zoom=lo.toFixed(3);
   }
-  autofit();
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(autofit);
-  if(mq.addEventListener)mq.addEventListener('change',autofit);
+  function refit(){slides.forEach(s=>delete s.dataset.fit);fitSlide(slides[cur])}
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(refit);
+  if(mq.addEventListener)mq.addEventListener('change',refit);
 
   const probe=new Image();probe.onerror=()=>document.body.classList.add('noimg');
   probe.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=40&q=10&auto=format&fit=crop';
