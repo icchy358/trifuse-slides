@@ -23,6 +23,30 @@ h1 span{background:var(--brand);-webkit-background-clip:text;background-clip:tex
 .stats b{display:block;font-size:30px;font-weight:900;line-height:1.1}
 .stats .p b{color:#2B8A5E}
 .stats span{font-size:12px;color:var(--note)}
+.pitch{margin:18px 0 0;background:#fff;border:1px solid var(--rule);border-radius:20px;padding:24px 26px;box-shadow:0 10px 30px -22px rgba(27,39,51,.45)}
+.pitch .ey{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--note)}
+.pitch h2{margin:6px 0 10px;font-size:clamp(22px,2.6vw,32px);line-height:1.45;font-weight:900}
+.pitch .ld{margin:0;font-size:15px;line-height:1.9;color:var(--sub);max-width:52em}
+.pitch .wh{margin:22px 0 8px;font-size:13px;font-weight:900;letter-spacing:.08em;color:var(--ink)}
+.why,.stages{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.why{grid-template-columns:repeat(3,1fr);counter-reset:w}
+.why li,.stages li{position:relative;background:var(--soft);border-radius:12px;padding:12px 14px 12px 46px;display:flex;flex-direction:column;gap:4px}
+.why li{counter-increment:w}
+.why li::before,.stages i{content:counter(w);position:absolute;left:14px;top:12px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:900;font-style:normal;display:flex;align-items:center;justify-content:center}
+.why b,.stages b{font-size:14px;line-height:1.6}
+.why span,.stages span{font-size:12.5px;line-height:1.7;color:var(--sub)}
+.stages{grid-template-columns:repeat(4,1fr)}
+.stages em{font-style:normal;font-size:12px;font-weight:700;color:var(--ink)}
+.goals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.goals div{border:1px solid var(--rule);border-top:5px solid var(--c);border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--c) 5%,#fff)}
+.goals small{display:block;font-size:12px;font-weight:900;color:color-mix(in srgb,var(--c) 80%,#000);margin-bottom:4px}
+.goals p{margin:0;font-size:13.5px;line-height:1.75}
+.promise{margin:12px 0 0;padding:10px 14px;border-radius:10px;background:var(--soft);font-size:13.5px;font-weight:700}
+.pitch .sl{margin:0 0 10px;font-size:13.5px;color:var(--sub)}
+.pitch .sdo{margin:12px 0 0;font-size:13.5px;line-height:1.8}
+.pitch .snote{margin:6px 0 0;font-size:12px;line-height:1.7;color:var(--note)}
+@media (max-width:1180px){.stages,.goals{grid-template-columns:repeat(2,1fr)}.why{grid-template-columns:1fr}}
+@media (max-width:560px){.stages,.goals{grid-template-columns:1fr}.pitch{padding:18px 16px}}
 .howto{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .howto li{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;background:#fff;border:1px solid var(--rule);border-radius:14px;padding:12px 14px;box-shadow:0 6px 18px -16px rgba(27,39,51,.4)}
 .howto i{grid-row:1/3;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:13px;color:#fff;background:linear-gradient(135deg,#2B6CCD,#63BDFC)}
@@ -139,6 +163,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--rule);font-si
 <p class="safe"><b>SAFE</b>S 守る（情報セキュリティ）／ A 見抜く（真贋）／ F 仕組みを知る（金融）／ E 世界を読む（経済）</p></div>
 <div class="stats"><div class="p"><b>189</b><span>本すべて、押すと資料が開きます</span></div></div>
 </header>
+<section class="pitch"><div class="ey">体系で学ぶ</div><h2>体系立てて、遠回りせずに、一人前へ</h2><p class="ld">TriFuse でいう一人前とは、自分で判断できる人のことです。4つの分野とも、いちばん上の段（L3）では「自分で判断できる」ところまで進みます。</p><div class="wh">遠回りしない仕組み</div><ol class="why"><li><b>用語の数ではなく、原理で段を分けています。</b><span>覚える言葉を増やすことより、多くの場面で使える原理を身につけることに重きを置きます。</span></li><li><b>前提は、いつも同じ分野の中にあります。</b><span>ほかの分野が終わるのを待たずに、1つの分野を最後まで進められます。次の段へ進む関門は、卒業課題だけです。</span></li><li><b>一度学んだ原理が、別の分野でもう一度出てきます。</b><span>分野をまたぐつながりは89本あります。</span></li></ol><div class="wh">L3 で、できるようになること</div><div class="goals"><div style="--c:#2B6CCD"><small>S 守る</small><p>自分の資産を誰がどう狙うかを書き出し、家族への引き継ぎまで含めて守り方を組み立てられる</p></div><div style="--c:#F26039"><small>A 見抜く</small><p>初めて見る手口でも、決まった点検の手順で見抜ける</p></div><div style="--c:#31997A"><small>F 仕組みを知る</small><p>自分の資産配分を、理由をつけて組み立て、説明し、直せる</p></div><div style="--c:#E0A100"><small>E 世界を読む</small><p>ニュースの因果を3手先までたどり、自分の見立てが外れる条件まで言える</p></div></div><p class="promise">当たる予想や、儲かる銘柄は教えません。「予想が当たること」は、卒業の条件にもしていません。</p><div class="wh">おすすめの進め方（一例）</div><p class="sl">全部を通すと約32週（週4時間のとき）。どの順で進めても構いません。</p><ol class="stages"><li><i>1</i><b>守りを固める</b><em>4分野の L0 と、S・A の L1 ・ 41本 ・ 約7週</em><span>口座の守りを整え、典型的な詐欺の手口を見分けられる</span></li><li><i>2</i><b>お金の仕組み</b><em>F・E の L1 ・ 38本 ・ 約6週</em><span>「元本保証・月利5%」がなぜ成り立たないかを説明でき、ニュースに出る指標の意味が分かる</span></li><li><i>3</i><b>原理</b><em>4分野の L2 ・ 64本 ・ 約11週</em><span>攻撃や詐欺の手口、価格や景気の動きを、仕組みから説明できる</span></li><li><i>4</i><b>実践</b><em>4分野の L3 ・ 46本 ・ 約8週</em><span>上の「L3 で、できるようになること」の4つ</span></li></ol><p class="sdo">1本読むごとに、自分の口座や家計で1つ確かめてください。段の終わりの卒業課題は、自分の言葉で書きます。</p><p class="snote">週は、1本を40分（本文を読む時間に、資料を見て手を動かす時間を足したもの）、週4時間として見積もった目安です。実際に測った時間ではありません。</p></section>
 <ol class="howto"><li><i>1</i><b>レーンを1本えらぶ</b><span>S・A・F・E のどれでも。迷ったら A 真贋から</span></li><li><i>2</i><b>いちばん左（L0）を、上から番号順に読む</b><span>前提となる知識は、必ず同じレーンの中にあります。他のレーンを先に終える必要は、一度もありません</span></li><li><i>3</i><b>破線の箱まで来たら、次の段（L1）へ</b><span>破線＝そのレベルの卒業課題。ここが唯一の関門です</span></li><li><i>4</i><b>他のレーンは、いつ始めても、いつ止めてもよい</b><span>終わるのを待つ必要はありません</span></li></ol>
 <div class="bar"><div class="tabs" role="tablist"><button type="button" class="on" data-lane="all">すべて</button><button type="button" data-lane="s" style="--c:#2B6CCD;--c2:#63BDFC;--cd:var(--s)">S 情報セキュリティ</button><button type="button" data-lane="a" style="--c:#F26039;--c2:#FDAC36;--cd:var(--a)">A 真贋</button><button type="button" data-lane="f" style="--c:#31997A;--c2:#67CA6A;--cd:var(--f)">F 金融</button><button type="button" data-lane="e" style="--c:#E0A100;--c2:#FEE640;--cd:var(--e)">E 経済</button></div>
 <button type="button" class="tog" id="links" aria-pressed="false">つながりを見る</button>
@@ -161,7 +186,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--rule);font-si
 <p class="small">全体のうち、看板になる3本だけを線で描いています。押すと、その線と両端の項目が光ります。</p></section>
 </div>
 <div class="must"><b>全 189 本、すべて資料が開けます</b><p>順序・内容は、見直して変えることがあります。</p></div>
-<footer>swimlane_map v0.7 ／ 出典：カリキュラム設計_4レーン体系.md §8・§8-2（189 項目・ここでも出てくる 89 本）／ 資料：make_site.py の DECKS（189 本）</footer>
+<footer>swimlane_map v0.8 ／ 出典：カリキュラム設計_4レーン体系.md §8・§8-2（189 項目・ここでも出てくる 89 本）／ 資料：make_site.py の DECKS（189 本）</footer>
 </main>
 <div class="pop" id="pop" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
 <script>
