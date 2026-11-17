@@ -358,7 +358,7 @@ svg .sv{transform:none}
 <div class="cover"><div class="cover-text">
  <p class="kicker">単発の解説 ｜ ビットコインのオプション</p>
  <h1 class="head">プットとデルタヘッジの仕組み</h1>
- <p class="sub">前半：プットとは何か（買取保証券のたとえ）。<br>後半：プットを売った業者は、なぜ先物を売るのか。投資家と業者が「いつ・何をして・どうもうけるか」を、時間の順に絵で追います。</p>
+ <p class="sub">前半：プットとは何か（買取保証券のたとえ）。<br>後半：プットを売った業者は、なぜ先物をショートするのか。投資家と業者が「いつ・何をして・どうもうけるか」を、時間の順に絵で追います。</p>
  <div class="card exbox"><b>数字はすべて説明用の例です。</b>ビットコイン 6.5万ドル、満期まで30日、6万ドルのプット1枚（ビットコイン1枚分）を保険料2,000ドルで売買した、として計算しました。実際の値段や業者の動きではありません。</div>
  <button class="btn pr start" data-go="1">はじめる ▶</button>
 </div>
@@ -474,7 +474,7 @@ svg .sv{transform:none}
  <div class="card" style="padding:18px 24px"><h4 style="font-size:27px;margin-bottom:6px">投資家の、満期の日の損得（縦は損得のドル）</h4><svg viewBox="0 0 1000 480" width="1000" height="480"><line x1="70" y1="300.0" x2="930" y2="300.0" stroke="#8A9AB0" stroke-width="2"/><text x="66" y="308.0" text-anchor="end" font-size="20" fill="#5A6B82">0</text><polyline class="drawline" data-s="3" points="80.0,60.0 348.8,300.0 416.0,360.0 920.0,360.0" fill="none" stroke="#16233A" stroke-width="6" stroke-linejoin="round"/><line x1="80.0" y1="294.0" x2="80.0" y2="306.0" stroke="#8A9AB0" stroke-width="2"/><text x="80.0" y="420" text-anchor="middle" font-size="22" fill="#5A6B82">5万</text><line x1="248.0" y1="294.0" x2="248.0" y2="306.0" stroke="#8A9AB0" stroke-width="2"/><text x="248.0" y="420" text-anchor="middle" font-size="22" fill="#5A6B82">5.5万</text><line x1="416.0" y1="294.0" x2="416.0" y2="306.0" stroke="#8A9AB0" stroke-width="2"/><text x="416.0" y="420" text-anchor="middle" font-size="22" fill="#5A6B82">6万</text><line x1="584.0" y1="294.0" x2="584.0" y2="306.0" stroke="#8A9AB0" stroke-width="2"/><text x="584.0" y="420" text-anchor="middle" font-size="22" fill="#5A6B82">6.5万</text><line x1="752.0" y1="294.0" x2="752.0" y2="306.0" stroke="#8A9AB0" stroke-width="2"/><text x="752.0" y="420" text-anchor="middle" font-size="22" fill="#5A6B82">7万</text><line x1="920.0" y1="294.0" x2="920.0" y2="306.0" stroke="#8A9AB0" stroke-width="2"/><text x="920.0" y="420" text-anchor="middle" font-size="22" fill="#5A6B82">7.5万</text><g class="sv" data-s="3"><text x="668.0" y="342.0" text-anchor="middle" font-size="24" font-weight="900" fill="#B5500F">6万以上なら −2,000</text><text x="264.8" y="105.0" font-size="24" font-weight="900" fill="#1F7A63">5.8万より下で得</text><circle cx="348.8" cy="300.0" r="9" fill="#16233A"/><text x="362.8" y="284.0" font-size="21" font-weight="700" fill="#16233A">5.8万で損得0</text></g><text x="500" y="460" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">満期の日のビットコインの値段（ドル）</text></svg><p class="note">ビットコイン1枚分の例。手数料は入れていません。</p></div>
 </div></section>
 <section class="slide page" data-n="hedge" data-steps="3">
-<header class="hd"><span class="chap">② 契約のすぐあと（ビットコイン 6.5万ドル）</span><h2 class="head">業者はすぐに先物を0.3枚売り、損と得を打ち消す</h2><span class="num">09</span></header>
+<header class="hd"><span class="chap">② 契約のすぐあと（ビットコイン 6.5万ドル）</span><h2 class="head">業者はすぐに先物を0.3枚ショートし、損と得を打ち消す</h2><span class="num">09</span></header>
 <div class="body g2" style="grid-template-columns:1.15fr 1fr;align-items:start">
  <svg viewBox="0 0 1000 600" width="1000" height="600" class="seesaw">
   <text x="500" y="44" text-anchor="middle" font-size="28" font-weight="900" fill="#16233A">ビットコインが 1,000ドル 下がったら？</text>
@@ -485,42 +485,42 @@ svg .sv{transform:none}
     <text x="280" y="350" text-anchor="middle" font-size="24" font-weight="700" fill="#5A6B82">売った保険が値上がり</text>
     <text x="280" y="410" text-anchor="middle" font-size="44" font-weight="900" fill="#B5500F">−300ドル</text></g>
    <g class="sv" data-s="2"><rect x="570" y="300" width="300" height="150" rx="18" fill="#E7F6F1" stroke="#40B69A" stroke-width="3"/>
-    <text x="720" y="350" text-anchor="middle" font-size="24" font-weight="700" fill="#5A6B82">売った先物0.3枚の得</text>
+    <text x="720" y="350" text-anchor="middle" font-size="24" font-weight="700" fill="#5A6B82">先物ショート0.3枚の得</text>
     <text x="720" y="410" text-anchor="middle" font-size="44" font-weight="900" fill="#1F7A63">＋300ドル</text></g>
   </g>
   <g class="sv" data-s="3"><rect x="330" y="100" width="340" height="90" rx="45" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="3"/><text x="500" y="158" text-anchor="middle" font-size="36" font-weight="900" fill="#2B5FA8">合計 0ドル</text></g>
  </svg>
  <div class="kp">
   <div class="card"><h4>保険だけだと損が出る</h4><p>6.5万ドルのとき、1,000ドル下がると、売った保険の値打ちが<b>約300ドル</b>上がります（例の計算）。業者から見ると、その分が損です。</p></div>
-  <div class="card sv" data-s="2"><h4 class="okt">先物を0.3枚売っておく</h4><p>先物を売っておくと、1,000ドル下がるごとに 0.3 × 1,000 = <b>300ドルの得</b>。先物は、満期を待たずに売り買いできる約束です。</p></div>
+  <div class="card sv" data-s="2"><h4 class="okt">先物を0.3枚ショートしておく</h4><p>先物をショートしておくと、1,000ドル下がるごとに 0.3 × 1,000 = <b>300ドルの得</b>。ここでの「売る」は<b>先物のショート</b>（値下がりで得をする立場）を持つことで、現物のビットコインは売りません。一般には無期限先物などを使い、業者によっては現物を使うこともあります。</p></div>
   <div class="card sv" data-s="3" style="border-color:#2B5FA8"><h4 style="color:#2B5FA8">これがデルタヘッジ</h4><p>「0.3」がデルタ（1,000ドル動くと保険がいくら動くかの割合）。値段が少し動いても損得が出ない形にします。上がったときは損と得が逆になり、やはり打ち消し合います。</p></div>
   <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><span class="hint">→ キーでも進みます</span></div>
  </div>
 </div></section>
 <section class="slide page" data-n="down" data-steps="3">
-<header class="hd"><span class="chap">③ 値段が下がったとき</span><h2 class="head">6万ドルに近づくほど、業者は先物を売り足す</h2><span class="num">10</span></header>
+<header class="hd"><span class="chap">③ 値段が下がったとき</span><h2 class="head">6万ドルに近づくほど、業者は先物のショートを増やす</h2><span class="num">10</span></header>
 <div class="body g2" style="grid-template-columns:1.2fr 1fr;align-items:start">
- <svg viewBox="0 0 1000 800" width="1000" height="800"><line x1="60" y1="251.1" x2="960" y2="251.1" stroke="#B5500F" stroke-width="3" stroke-dasharray="10 8"/><text x="60" y="281.1" font-size="21" font-weight="700" fill="#B5500F">約束の値段 6万ドル</text><line class="sv" data-s="2" x1="150" y1="128.9" x2="500" y2="202.2" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><line class="sv" data-s="3" x1="500" y1="202.2" x2="850" y2="251.1" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><g class="sv" data-s="1"><circle cx="150" cy="128.9" r="11" fill="#16233A"/><text x="150" y="104.9" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.5万ドル</text><rect x="90" y="550.0" width="120" height="150.0" rx="8" fill="#2B5FA8"/><text x="150" y="536.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.3枚</text><text x="150" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">きょう（満期まで30日）</text><rect x="45" y="350" width="210" height="44" rx="22" fill="#EAF4FF"/><text x="150" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#2B5FA8">0.3枚 売る</text></g><g class="sv" data-s="2"><circle cx="500" cy="202.2" r="11" fill="#16233A"/><text x="500" y="178.2" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.2万ドル</text><rect x="440" y="500.0" width="120" height="200.0" rx="8" fill="#2B5FA8"/><text x="500" y="486.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.4枚</text><text x="500" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">10日後</text><rect x="395" y="350" width="210" height="44" rx="22" fill="#FFF1E6"/><text x="500" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#B5500F">0.1枚 売り足す</text></g><g class="sv" data-s="3"><circle cx="850" cy="251.1" r="11" fill="#16233A"/><text x="850" y="227.1" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6万ドル</text><rect x="790" y="450.0" width="120" height="250.0" rx="8" fill="#2B5FA8"/><text x="850" y="436.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.5枚</text><text x="850" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">20日後</text><rect x="745" y="350" width="210" height="44" rx="22" fill="#FFF1E6"/><text x="850" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#B5500F">0.1枚 売り足す</text></g><line x1="60" y1="700" x2="960" y2="700" stroke="#D8DFE8" stroke-width="3"/><text x="500" y="784" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">青い棒：業者が売っている先物（ビットコイン何枚分か）</text></svg>
+ <svg viewBox="0 0 1000 800" width="1000" height="800"><line x1="60" y1="251.1" x2="960" y2="251.1" stroke="#B5500F" stroke-width="3" stroke-dasharray="10 8"/><text x="60" y="281.1" font-size="21" font-weight="700" fill="#B5500F">約束の値段 6万ドル</text><line class="sv" data-s="2" x1="150" y1="128.9" x2="500" y2="202.2" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><line class="sv" data-s="3" x1="500" y1="202.2" x2="850" y2="251.1" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><g class="sv" data-s="1"><circle cx="150" cy="128.9" r="11" fill="#16233A"/><text x="150" y="104.9" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.5万ドル</text><rect x="90" y="550.0" width="120" height="150.0" rx="8" fill="#2B5FA8"/><text x="150" y="536.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.3枚</text><text x="150" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">きょう（満期まで30日）</text><rect x="45" y="350" width="210" height="44" rx="22" fill="#EAF4FF"/><text x="150" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#2B5FA8">ショート 0.3枚</text></g><g class="sv" data-s="2"><circle cx="500" cy="202.2" r="11" fill="#16233A"/><text x="500" y="178.2" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.2万ドル</text><rect x="440" y="500.0" width="120" height="200.0" rx="8" fill="#2B5FA8"/><text x="500" y="486.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.4枚</text><text x="500" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">10日後</text><rect x="395" y="350" width="210" height="44" rx="22" fill="#FFF1E6"/><text x="500" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#B5500F">ショート ＋0.1枚</text></g><g class="sv" data-s="3"><circle cx="850" cy="251.1" r="11" fill="#16233A"/><text x="850" y="227.1" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6万ドル</text><rect x="790" y="450.0" width="120" height="250.0" rx="8" fill="#2B5FA8"/><text x="850" y="436.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.5枚</text><text x="850" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">20日後</text><rect x="745" y="350" width="210" height="44" rx="22" fill="#FFF1E6"/><text x="850" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#B5500F">ショート ＋0.1枚</text></g><line x1="60" y1="700" x2="960" y2="700" stroke="#D8DFE8" stroke-width="3"/><text x="500" y="784" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">青い棒：業者の先物ショートの量（ビットコイン何枚分か）</text></svg>
  <div class="kp">
   <div class="card sv" data-s="1"><h4>きょう 6.5万ドル：0.3枚</h4><p>1,000ドル下がると、保険の値打ちは約300ドル動く。</p></div>
-  <div class="card sv" data-s="2"><h4 class="wt">10日後 6.2万ドル：0.4枚に</h4><p>約束の6万に近づき、保険が当たりそうになった。1,000ドルの動きで保険が約400ドル動くので、0.1枚売り足す。</p></div>
-  <div class="card sv" data-s="3"><h4 class="wt">20日後 6万ドル：0.5枚に</h4><p>ちょうど約束の値段。保険は約500ドル動くので、さらに0.1枚売り足す。<b>下がるほど売る</b>のがポイントです。</p></div>
+  <div class="card sv" data-s="2"><h4 class="wt">10日後 6.2万ドル：0.4枚に</h4><p>約束の6万に近づき、保険が当たりそうになった。1,000ドルの動きで保険が約400ドル動くので、先物のショートを0.1枚増やす。</p></div>
+  <div class="card sv" data-s="3"><h4 class="wt">20日後 6万ドル：0.5枚に</h4><p>ちょうど約束の値段。保険は約500ドル動くので、ショートをさらに0.1枚増やす。<b>下がるほどショートを増やす</b>のがポイントです。</p></div>
   <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><span class="hint">→ キーでも進みます</span></div>
  </div>
 </div></section>
 <section class="slide page" data-n="up" data-steps="3">
-<header class="hd"><span class="chap">④ 値段が上がったとき</span><h2 class="head">保険が当たりにくくなるので、業者は先物を買い戻す</h2><span class="num">11</span></header>
+<header class="hd"><span class="chap">④ 値段が上がったとき</span><h2 class="head">保険が当たりにくくなるので、業者は先物のショートを減らす</h2><span class="num">11</span></header>
 <div class="body g2" style="grid-template-columns:1.2fr 1fr;align-items:start">
- <svg viewBox="0 0 1000 800" width="1000" height="800"><line x1="60" y1="282.4" x2="960" y2="282.4" stroke="#B5500F" stroke-width="3" stroke-dasharray="10 8"/><text x="60" y="312.4" font-size="21" font-weight="700" fill="#B5500F">約束の値段 6万ドル</text><line class="sv" data-s="2" x1="150" y1="194.4" x2="500" y2="141.6" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><line class="sv" data-s="3" x1="500" y1="141.6" x2="850" y2="106.4" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><g class="sv" data-s="1"><circle cx="150" cy="194.4" r="11" fill="#16233A"/><text x="150" y="170.4" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.5万ドル</text><rect x="90" y="550.0" width="120" height="150.0" rx="8" fill="#2B5FA8"/><text x="150" y="536.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.3枚</text><text x="150" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">きょう（満期まで30日）</text><rect x="45" y="350" width="210" height="44" rx="22" fill="#EAF4FF"/><text x="150" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#2B5FA8">0.3枚 売る</text></g><g class="sv" data-s="2"><circle cx="500" cy="141.6" r="11" fill="#16233A"/><text x="500" y="117.6" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.8万ドル</text><rect x="440" y="600.0" width="120" height="100.0" rx="8" fill="#2B5FA8"/><text x="500" y="586.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.2枚</text><text x="500" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">10日後</text><rect x="395" y="350" width="210" height="44" rx="22" fill="#E7F6F1"/><text x="500" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#1F7A63">0.1枚 買い戻す</text></g><g class="sv" data-s="3"><circle cx="850" cy="106.4" r="11" fill="#16233A"/><text x="850" y="82.4" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">7万ドル</text><rect x="790" y="696.0" width="120" height="4.0" rx="8" fill="#2B5FA8"/><text x="850" y="682.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0枚</text><text x="850" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">20日後</text><rect x="745" y="350" width="210" height="44" rx="22" fill="#E7F6F1"/><text x="850" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#1F7A63">0.2枚 買い戻す</text></g><line x1="60" y1="700" x2="960" y2="700" stroke="#D8DFE8" stroke-width="3"/><text x="500" y="784" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">青い棒：業者が売っている先物（ビットコイン何枚分か）</text></svg>
+ <svg viewBox="0 0 1000 800" width="1000" height="800"><line x1="60" y1="282.4" x2="960" y2="282.4" stroke="#B5500F" stroke-width="3" stroke-dasharray="10 8"/><text x="60" y="312.4" font-size="21" font-weight="700" fill="#B5500F">約束の値段 6万ドル</text><line class="sv" data-s="2" x1="150" y1="194.4" x2="500" y2="141.6" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><line class="sv" data-s="3" x1="500" y1="141.6" x2="850" y2="106.4" stroke="#16233A" stroke-width="6" stroke-linecap="round"/><g class="sv" data-s="1"><circle cx="150" cy="194.4" r="11" fill="#16233A"/><text x="150" y="170.4" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.5万ドル</text><rect x="90" y="550.0" width="120" height="150.0" rx="8" fill="#2B5FA8"/><text x="150" y="536.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.3枚</text><text x="150" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">きょう（満期まで30日）</text><rect x="45" y="350" width="210" height="44" rx="22" fill="#EAF4FF"/><text x="150" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#2B5FA8">ショート 0.3枚</text></g><g class="sv" data-s="2"><circle cx="500" cy="141.6" r="11" fill="#16233A"/><text x="500" y="117.6" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">6.8万ドル</text><rect x="440" y="600.0" width="120" height="100.0" rx="8" fill="#2B5FA8"/><text x="500" y="586.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0.2枚</text><text x="500" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">10日後</text><rect x="395" y="350" width="210" height="44" rx="22" fill="#E7F6F1"/><text x="500" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#1F7A63">ショート −0.1枚</text></g><g class="sv" data-s="3"><circle cx="850" cy="106.4" r="11" fill="#16233A"/><text x="850" y="82.4" text-anchor="middle" font-size="27" font-weight="900" fill="#16233A">7万ドル</text><rect x="790" y="696.0" width="120" height="4.0" rx="8" fill="#2B5FA8"/><text x="850" y="682.0" text-anchor="middle" font-size="30" font-weight="900" fill="#2B5FA8">0枚</text><text x="850" y="740" text-anchor="middle" font-size="22" fill="#5A6B82">20日後</text><rect x="745" y="350" width="210" height="44" rx="22" fill="#E7F6F1"/><text x="850" y="381" text-anchor="middle" font-size="23" font-weight="900" fill="#1F7A63">ショート −0.2枚</text></g><line x1="60" y1="700" x2="960" y2="700" stroke="#D8DFE8" stroke-width="3"/><text x="500" y="784" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">青い棒：業者の先物ショートの量（ビットコイン何枚分か）</text></svg>
  <div class="kp">
-  <div class="card sv" data-s="1"><h4>きょう 6.5万ドル：0.3枚</h4><p>契約のすぐあとに売った分。</p></div>
-  <div class="card sv" data-s="2"><h4 class="okt">10日後 6.8万ドル：0.2枚に</h4><p>約束の6万から遠ざかり、保険の値打ちが動きにくくなった。売りすぎになるので0.1枚買い戻す。</p></div>
-  <div class="card sv" data-s="3"><h4 class="okt">20日後 7万ドル：ほぼ0枚に</h4><p>満期が近く、保険が当たる見込みはほとんど無い。残りを買い戻す。<b>上がるほど買う</b>のがポイントです。</p></div>
+  <div class="card sv" data-s="1"><h4>きょう 6.5万ドル：0.3枚</h4><p>契約のすぐあとにショートした分。</p></div>
+  <div class="card sv" data-s="2"><h4 class="okt">10日後 6.8万ドル：0.2枚に</h4><p>約束の6万から遠ざかり、保険の値打ちが動きにくくなった。ショートが多すぎるので0.1枚買い戻して減らす。</p></div>
+  <div class="card sv" data-s="3"><h4 class="okt">20日後 7万ドル：ほぼ0枚に</h4><p>満期が近く、保険が当たる見込みはほとんど無い。残りのショートも買い戻して0に。<b>上がるほどショートを減らす</b>のがポイントです。</p></div>
   <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><span class="hint">→ キーでも進みます</span></div>
  </div>
 </div></section>
 <section class="slide page" data-n="try">
-<header class="hd"><span class="chap">動かしてみる</span><h2 class="head">値段と残りの日数で、業者が売っておく先物の量が変わる</h2><span class="num">12</span></header>
+<header class="hd"><span class="chap">動かしてみる</span><h2 class="head">値段と残りの日数で、業者が持つ先物のショートの量が変わる</h2><span class="num">12</span></header>
 <div class="body g2" style="grid-template-columns:1.2fr 1fr;align-items:start">
  <div class="card" style="padding:18px 24px">
   <svg id="tryChart" viewBox="0 0 1000 520" width="1000" height="520"></svg>
@@ -531,8 +531,8 @@ svg .sv{transform:none}
    <div class="days"><span class="hint">満期まで</span><button class="btn dbtn on" data-d="30">30日</button><button class="btn dbtn" data-d="10">10日</button><button class="btn dbtn" data-d="2">2日</button></div></div>
   <div class="card"><div class="mrow"><span>保険（6万ドルのプット）の値打ち</span><b id="tPut" class="mono">2,047</b></div>
    <div class="mrow"><span>1,000ドル下がったときの保険の値上がり</span><b id="tMove" class="mono wt">280</b></div>
-   <div class="mrow big2"><span>業者が売っておく先物</span><b id="tHedge" class="mono hl">0.28枚</b></div></div>
-  <p class="note">6万ドルのあたりで線が急になります。満期が近いほど急です。そこでは少しの値動きで、売り足す量が大きく変わります。計算は一般的なオプションの値段の式（ブラック・ショールズ）で、値動きの大きさを年57%と置いた例です。</p>
+   <div class="mrow big2"><span>業者が持つ先物のショート</span><b id="tHedge" class="mono hl">0.28枚</b></div></div>
+  <p class="note">6万ドルのあたりで線が急になります。満期が近いほど急です。そこでは少しの値動きで、ショートの量が大きく変わります。計算は一般的なオプションの値段の式（ブラック・ショールズ）で、値動きの大きさを年57%と置いた例です。</p>
  </div>
 </div></section>
 <section class="slide page" data-n="expiry" data-steps="3">
@@ -548,7 +548,7 @@ svg .sv{transform:none}
   <p class="lab">業者</p>
   <table class="pl"><tr><td>保険料</td><td>＋2,000</td></tr><tr><td>払う支払い</td><td>0</td></tr><tr><td>先物の損得</td><td>−1,300</td></tr>
   <tr class="tot"><td>合計</td><td class="pos">＋700</td></tr></table>
-  <p class="note">保険は使われずに終わる。業者は買い戻しのたびに少し損をした。</p>
+  <p class="note">保険は使われずに終わる。業者はショートを減らすたびに少し損をした。</p>
 </div>
   <div class="card sv sc" data-s="2">
   <h4 style="color:#B5500F">B 大きく下がった</h4>
@@ -570,7 +570,7 @@ svg .sv{transform:none}
   <p class="lab">業者</p>
   <table class="pl"><tr><td>保険料</td><td>＋2,000</td></tr><tr><td>払う支払い</td><td>−2,000</td></tr><tr><td>先物の損得</td><td>−700</td></tr>
   <tr class="tot"><td>合計</td><td class="neg">−700</td></tr></table>
-  <p class="note">下がって売り、上がって買い戻すたびに損が重なり、業者は赤字。</p>
+  <p class="note">下がってショートを増やし、上がって減らすたびに損が重なり、業者は赤字。</p>
 </div>
  </div>
  <div style="margin-top:14px"><div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><span class="hint">→ キーでも進みます</span></div></div>
@@ -579,7 +579,7 @@ svg .sv{transform:none}
 <header class="hd"><span class="chap">⑥ 業者のもうけ方</span><h2 class="head">業者のもうけは「保険料 − 調整のたびの小さな損」</h2><span class="num">14</span></header>
 <div class="body g2" style="grid-template-columns:1.05fr 1fr;align-items:start">
  <div class="kp">
-  <div class="card"><h4>調整すると、少しずつ損が出る</h4><svg viewBox="0 0 920 290" width="920" height="290"><polyline points="40.0,120.0 180.0,230.0 320.0,110.0 460.0,240.0 600.0,120.0 740.0,220.0 880.0,130.0" fill="none" stroke="#16233A" stroke-width="5" stroke-linejoin="round"/><circle cx="180" cy="230" r="10" fill="#F88039"/><text x="180" y="272" text-anchor="middle" font-size="22" font-weight="900" fill="#B5500F">安くなってから売る</text><circle cx="320" cy="110" r="10" fill="#2E9A7F"/><text x="320" y="86" text-anchor="middle" font-size="22" font-weight="900" fill="#1F7A63">高くなってから買い戻す</text><circle cx="460" cy="240" r="10" fill="#F88039"/><text x="460" y="282" text-anchor="middle" font-size="22" font-weight="900" fill="#B5500F">安くなってから売る</text><circle cx="600" cy="120" r="10" fill="#2E9A7F"/><text x="600" y="96" text-anchor="middle" font-size="22" font-weight="900" fill="#1F7A63">高くなってから買い戻す</text><circle cx="740" cy="220" r="10" fill="#F88039"/><text x="740" y="262" text-anchor="middle" font-size="22" font-weight="900" fill="#B5500F">安くなってから売る</text></svg><p>下がったら売り足し、上がったら買い戻す。いつも<b>動いたあと</b>に売り買いするので、少しずつ損が出ます。値段が大きく揺れるほど、この損はふくらみます。</p></div>
+  <div class="card"><h4>調整すると、少しずつ損が出る</h4><svg viewBox="0 0 920 290" width="920" height="290"><polyline points="40.0,120.0 180.0,230.0 320.0,110.0 460.0,240.0 600.0,120.0 740.0,220.0 880.0,130.0" fill="none" stroke="#16233A" stroke-width="5" stroke-linejoin="round"/><circle cx="180" cy="230" r="10" fill="#F88039"/><text x="180" y="272" text-anchor="middle" font-size="21" font-weight="900" fill="#B5500F">安値でショート増</text><circle cx="320" cy="110" r="10" fill="#2E9A7F"/><text x="320" y="86" text-anchor="middle" font-size="22" font-weight="900" fill="#1F7A63">高値でショート減</text><circle cx="460" cy="240" r="10" fill="#F88039"/><text x="460" y="282" text-anchor="middle" font-size="21" font-weight="900" fill="#B5500F">安値でショート増</text><circle cx="600" cy="120" r="10" fill="#2E9A7F"/><text x="600" y="96" text-anchor="middle" font-size="22" font-weight="900" fill="#1F7A63">高値でショート減</text><circle cx="740" cy="220" r="10" fill="#F88039"/><text x="740" y="262" text-anchor="middle" font-size="21" font-weight="900" fill="#B5500F">安値でショート増</text></svg><p>下がったらショートを増やし、上がったらショートを減らす（買い戻す）。いつも<b>動いたあと</b>に売り買いするので、少しずつ損が出ます。値段が大きく揺れるほど、この損はふくらみます。</p></div>
  </div>
  <div class="kp">
   <div class="card sv" data-s="1"><h4>満期までに、保険料2,000ドルがいくら残ったか（例）</h4><svg viewBox="0 0 1000 400" width="1000" height="400"><line x1="40" y1="260" x2="960" y2="260" stroke="#8A9AB0" stroke-width="2"/><line x1="40" y1="60.0" x2="960" y2="60.0" stroke="#2B5FA8" stroke-width="2" stroke-dasharray="8 8"/><text x="960" y="48.0" text-anchor="end" font-size="20" fill="#2B5FA8">保険料 2,000</text><rect class="grow" data-s="2" x="65" y="90" width="150" height="170" rx="8" fill="#2E9A7F" style="transform-origin:50% 100%"/><text class="sv" data-s="2" x="140" y="130" text-anchor="middle" font-size="27" font-weight="900" fill="#fff">＋1,700</text><text x="140" y="300" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">静かに動いた</text><rect class="grow" data-s="2" x="290" y="140" width="150" height="120" rx="8" fill="#2E9A7F" style="transform-origin:50% 100%"/><text class="sv" data-s="2" x="365" y="180" text-anchor="middle" font-size="27" font-weight="900" fill="#fff">＋1,200</text><text x="365" y="300" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">下がりきった</text><rect class="grow" data-s="2" x="515" y="190" width="150" height="70" rx="8" fill="#2E9A7F" style="transform-origin:50% 100%"/><text class="sv" data-s="2" x="590" y="230" text-anchor="middle" font-size="27" font-weight="900" fill="#fff">＋700</text><text x="590" y="300" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">上がりきった</text><rect class="grow" data-s="2" x="740" y="260" width="150" height="70" rx="8" fill="#F88039" style="transform-origin:50% 0%"/><text class="sv" data-s="2" x="815" y="364" text-anchor="middle" font-size="27" font-weight="900" fill="#B5500F">−700</text><text x="815" y="390" text-anchor="middle" font-size="22" font-weight="700" fill="#16233A">上下に大きく揺れた</text></svg></div>
@@ -601,7 +601,7 @@ svg .sv{transform:none}
 <text x="450" y="132" text-anchor="middle" font-size="22" fill="#5A6B82">保険が当たりそうになる</text>
 <rect x="560" y="440" width="320" height="140" rx="20" fill="#EAF4FF" stroke="#2B5FA8" stroke-width="3"/>
 <text x="720" y="494" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">多くの業者が同時に</text>
-<text x="720" y="534" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">先物を売り足す</text>
+<text x="720" y="534" text-anchor="middle" font-size="27" font-weight="900" fill="#2B5FA8">先物のショートを増やす</text>
 <rect x="20" y="440" width="320" height="140" rx="20" fill="#FFF1E6" stroke="#F88039" stroke-width="3"/>
 <text x="180" y="494" text-anchor="middle" font-size="27" font-weight="900" fill="#B5500F">その売りで</text>
 <text x="180" y="534" text-anchor="middle" font-size="27" font-weight="900" fill="#B5500F">値段がさらに下がる</text>
@@ -610,7 +610,7 @@ svg .sv{transform:none}
 </g></svg></div>
  <div class="kp">
   <div class="card sv" data-s="1"><h4>6万ドルにプットがたくさん残っている</h4><p>建玉（いま残っている保険の量）の図で、6万ドルのプットの棒が高いとき、その保険を売った業者もたくさんいる、と考えられます。</p></div>
-  <div class="card sv" data-s="2"><h4 class="wt">近づくと、みんなが同時に売る</h4><p>6万に近いほど売り足す量が大きく変わるので、業者の先物の売りが重なり、その売りがさらに値段を押し下げます。6万を大きく割ってしまうと、売り足す量の変化は小さくなります。</p></div>
+  <div class="card sv" data-s="2"><h4 class="wt">近づくと、みんなが同時にショートを増やす</h4><p>6万に近いほどショートを増やす量が大きく変わるので、業者の先物の売り注文が重なり、その売りがさらに値段を押し下げます。6万を大きく割ってしまうと、ショートを増やす量の変化は小さくなります。</p></div>
   <div class="card sv" data-s="3" style="border-color:#F88039;background:#FFF8F2"><h4 class="wt">ここは推測を含みます</h4><p>これは「業者がプットを売った側」のときだけです。投資家がプットを売り、業者が買っているなら逆で、下がると業者は買うので下げにブレーキがかかります。Coinglass の建玉や出来高の図では、どちらが売った側かは分かりません。</p></div>
   <div class="stepbar"><button class="btn pr" data-next>次の段階 ▶</button><span class="hint">→ キーでも進みます</span></div>
  </div>
@@ -620,7 +620,7 @@ svg .sv{transform:none}
 <div class="body sumb" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:start">
  <div class="card fade d1 a3"><span class="no">1</span><div><h4>図の横軸は約束の値段</h4><p>2万ドルのプットの売買は、2万を割ったときの保険の売買。値段が2万になったわけではない。</p></div></div>
  <div class="card fade d2 a3"><span class="no">2</span><div><h4>投資家は保険料を払って下げに備える</h4><p>例：2,000ドル払い、5.8万より下で得。下がらなければ2,000ドルを失う。</p></div></div>
- <div class="card fade d3 a3"><span class="no">3</span><div><h4>業者は先物で損得を消し続ける</h4><p>下がれば売り足し、上がれば買い戻す。もうけは保険料の残りと売値・買値の差。</p></div></div>
+ <div class="card fade d3 a3"><span class="no">3</span><div><h4>業者は先物で損得を消し続ける</h4><p>下がればショートを増やし、上がれば減らす（買い戻す）。もうけは保険料の残りと売値・買値の差。</p></div></div>
  <div class="card fade d4 a3"><span class="no">4</span><div><h4>取引所は担保を預かるだけ</h4><p>売った側から証拠金を預かり、払えなくなるのを防ぐ。ヘッジはしない。</p></div></div>
  <div class="card fade d5 a3" style="grid-column:1/-1"><span class="no">5</span><div><h4>プットの山の近くで、下げが速まることがある</h4><p>業者がプットを売った側のときに限る。図からはどちら側かは分からないので、目安として使う。</p></div></div>
  <p class="note fade d6" style="grid-column:1/-1">この資料は仕組みの説明で、売り買いを勧めるものではありません。数字はすべて例で、ブラック・ショールズの式（値動きの大きさ 年57%、金利0）で計算し、0.1枚単位に丸めています。業者の調整は、説明のため10日ごとにしています（実際はもっと細かく行います）。</p>
@@ -637,13 +637,13 @@ svg .sv{transform:none}
 <div class="notes-src" id="notes-axis"><p>Coinglass のオプションの図で、1枚目（建玉）は「いま残っている保険の量」、2枚目（出来高）は「今日売買された量」です。どちらも横軸は約束の値段（行使価格）です。</p><p>「2万ドルのプットの出来高が多い」は、「2万ドルを割ったら払われる保険が今日よく売買された」という意味で、値段が2万ドルまで下がったことではありません。遠い値段の保険は保険料が安いので、大暴落への備えとして買われることがあります。</p></div>
 <div class="notes-src" id="notes-cast"><p>マーケットメイカーは、いつでも売り買いの相手になる業者です。値上がりや値下がりに賭けるのではなく、売値と買値の差や保険料でもうけるので、値動きの損得をデルタヘッジで消します。</p><p>取引所（例：Deribit）は、売買の場所を用意し、売った側から証拠金を預かります。足りなくなると強制的に決済して、払えなくなるのを防ぎます。取引所自身はヘッジをしません。</p></div>
 <div class="notes-src" id="notes-buy"><p>例：ビットコイン6.5万ドルのとき、投資家が「6万ドルのプット」1枚（ビットコイン1枚分）を2,000ドルで買います。</p><p>満期に5.8万ドルより下なら得、6万ドル以上なら2,000ドルを失います。業者は2,000ドルを受け取りますが、下がるほど払う額が増える立場になります。</p></div>
-<div class="notes-src" id="notes-hedge"><p>保険の値打ちは、ビットコインの値段とともに動きます。例の計算では、6.5万ドルのとき1,000ドル下がると保険が約300ドル値上がりします。この割合（0.3）をデルタと呼びます。</p><p>業者は先物を0.3枚売っておくことで、1,000ドル下がっても300ドルの得が出て、保険の損と打ち消し合います。上がったときは、保険の得と先物の損が打ち消し合います。</p></div>
-<div class="notes-src" id="notes-down"><p>値段が約束の6万ドルに近づくほど、保険が当たりそうになり、値動きに対する保険の動きが大きくなります（デルタが大きくなる）。</p><p>そのため業者は、6.2万ドルで0.4枚、6万ドルで0.5枚と、先物の売りを増やします。数字は例の計算を0.1枚単位に丸めたものです。</p></div>
-<div class="notes-src" id="notes-up"><p>値段が上がり約束の値段から遠ざかると、保険が当たりにくくなり、デルタが小さくなります。業者は売りすぎになった先物を買い戻します。</p><p>例では6.8万ドルで0.2枚、7万ドル（満期まで10日）でほぼ0枚です。</p></div>
-<div class="notes-src" id="notes-try"><p>つまみを動かすと、その値段で業者が売っておく先物の量（デルタ）が変わります。満期まで30日・10日・2日を切り替えると、満期が近いほど6万ドルのあたりで線が急になります。</p><p>計算はブラック・ショールズの式で、値動きの大きさを年57%、金利を0と置いた例です。</p></div>
+<div class="notes-src" id="notes-hedge"><p>保険の値打ちは、ビットコインの値段とともに動きます。例の計算では、6.5万ドルのとき1,000ドル下がると保険が約300ドル値上がりします。この割合（0.3）をデルタと呼びます。</p><p>業者は先物を0.3枚ショートしておくことで、1,000ドル下がっても300ドルの得が出て、保険の損と打ち消し合います。上がったときは、保険の得と先物の損が打ち消し合います。</p></div>
+<div class="notes-src" id="notes-down"><p>値段が約束の6万ドルに近づくほど、保険が当たりそうになり、値動きに対する保険の動きが大きくなります（デルタが大きくなる）。</p><p>そのため業者は、6.2万ドルで0.4枚、6万ドルで0.5枚と、先物のショートを増やします。数字は例の計算を0.1枚単位に丸めたものです。</p></div>
+<div class="notes-src" id="notes-up"><p>値段が上がり約束の値段から遠ざかると、保険が当たりにくくなり、デルタが小さくなります。業者は多すぎるショートを買い戻して減らします。</p><p>例では6.8万ドルで0.2枚、7万ドル（満期まで10日）でほぼ0枚です。</p></div>
+<div class="notes-src" id="notes-try"><p>つまみを動かすと、その値段で業者が持つ先物のショートの量（デルタ）が変わります。満期まで30日・10日・2日を切り替えると、満期が近いほど6万ドルのあたりで線が急になります。</p><p>計算はブラック・ショールズの式で、値動きの大きさを年57%、金利を0と置いた例です。</p></div>
 <div class="notes-src" id="notes-expiry"><p>業者が10日ごとに調整した場合の例です。</p><p>A 上がりきった（7.2万）：投資家 −2,000、業者 ＋2,000 −1,300（買い戻しの損）＝ ＋700。</p><p>B 大きく下がった（5.5万）：投資家 5,000 − 2,000 ＝ ＋3,000、業者 ＋2,000 − 5,000 ＋ 4,200（先物の得）＝ ＋1,200。</p><p>C 上下に大きく揺れた（5.8万）：投資家 2,000 − 2,000 ＝ 0、業者 ＋2,000 − 2,000 − 700 ＝ −700。</p></div>
-<div class="notes-src" id="notes-profit"><p>業者は、下がったあとに売り足し、上がったあとに買い戻します。いつも動いたあとに売り買いするので、少しずつ損が出ます。</p><p>保険料は「満期までにこのくらい揺れる」という見込みで決まります。実際の揺れが見込みより小さければ保険料が残ってもうけになり、大きければ赤字になります。ほかに、売値と買値の差もうけになります。</p><p>例の4つ：静かに動いた（6.5→6.3→6.6→6.6万）＋1,700、下がりきった ＋1,200、上がりきった ＋700、上下に大きく揺れた −700。</p></div>
-<div class="notes-src" id="notes-accel"><p>6万ドルのプットがたくさん残っていて、それを売ったのが業者なら、6万ドルに近づくと多くの業者が同時に先物を売り足します。その売りで値段がさらに下がる、という流れで下げが速くなることがあります。</p><p>ただし、投資家がプットを売って業者が買っている場合は逆で、業者は下がると先物を買うので、下げにブレーキがかかります。Coinglass の図からはどちら側かは分からないため、ここは推測を含みます。</p></div>
+<div class="notes-src" id="notes-profit"><p>業者は、下がったあとにショートを増やし、上がったあとに買い戻して減らします。いつも動いたあとに売り買いするので、少しずつ損が出ます。</p><p>保険料は「満期までにこのくらい揺れる」という見込みで決まります。実際の揺れが見込みより小さければ保険料が残ってもうけになり、大きければ赤字になります。ほかに、売値と買値の差もうけになります。</p><p>例の4つ：静かに動いた（6.5→6.3→6.6→6.6万）＋1,700、下がりきった ＋1,200、上がりきった ＋700、上下に大きく揺れた −700。</p></div>
+<div class="notes-src" id="notes-accel"><p>6万ドルのプットがたくさん残っていて、それを売ったのが業者なら、6万ドルに近づくと多くの業者が同時に先物のショートを増やします（先物の売り注文）。その売りで値段がさらに下がる、という流れで下げが速くなることがあります。</p><p>ただし、投資家がプットを売って業者が買っている場合は逆で、業者は下がると先物を買うので、下げにブレーキがかかります。Coinglass の図からはどちら側かは分からないため、ここは推測を含みます。</p></div>
 <div class="notes-src" id="notes-sum"><p>デルタヘッジは、保険を売った業者が、先物で損得を消し続ける仕組みです。投資家は保険料を払って下げに備え、業者は保険料の残りでもうけ、取引所は担保を預かります。</p></div>
 <script>
 // 数字の台帳（点検の道具が読む）：ページの数だけ
@@ -755,7 +755,7 @@ const DATA = {pages: 16};
     o+='<polyline points="'+p+'" fill="none" stroke="#2B5FA8" stroke-width="6" stroke-linejoin="round"/>';
     const [pv,dl]=put(S,days),h=-dl;
     o+='<line x1="'+X(S)+'" y1="'+Y(h)+'" x2="'+X(S)+'" y2="440" stroke="#16233A" stroke-width="2" stroke-dasharray="4 6"/><circle cx="'+X(S)+'" cy="'+Y(h)+'" r="14" fill="#F88039" stroke="#fff" stroke-width="4"/>';
-    o+='<text x="520" y="506" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">ビットコインの値段（ドル）と、業者が売っておく先物の量</text>';
+    o+='<text x="520" y="506" text-anchor="middle" font-size="21" font-weight="700" fill="#16233A">ビットコインの値段（ドル）と、業者が持つ先物のショートの量</text>';
     svg.innerHTML=o;
     document.getElementById('tPrice').textContent=S.toLocaleString();
     document.getElementById('tPut').textContent=Math.round(pv).toLocaleString()+'ドル';
