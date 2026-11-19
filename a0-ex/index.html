@@ -110,7 +110,7 @@ body.cover #title{display:block}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'a0-ex shirokuma v0.1';
+const VERSION = 'a0-ex shirokuma v0.1.1';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -143,7 +143,7 @@ const B = [
   {f: 'ask', o: 'chin', p: {...RT, k1: 1, k2: 1, k3: 1, k4: 1, smk: 1}, b: ['q', 'なぜそんなに儲かるのか'], l: ['k4', 'jar'], t: `4つ目の基準は、「利益の源泉についての説明不能」です。なぜそんなに儲かるのかと尋ねたとき、「独自のAIアルゴリズム」「海外の特別な人脈」といった中身のない専門用語で煙に巻く話には、そもそも説明できる仕組みがありません。`},
  ]},
  {ch: '3節', ttl: '3. 演習の具体的な手順', zf: .46, steps: [
-  {f: 'listen', o: 'look', p: {pp: 1, sv: .5, ad: .4}, b: ['m', '題材を選ぶところから'], l: ['dai'], t: `課題は、次の3つのステップで作ります。所要時間は15分程度です。題材は、架空の例か、すでに公表されて確定した事例から選んでください。この課題では、個別の勧誘が違法かどうかの判断はしません。`},
+  {f: 'listen', o: 'look', p: {pp: 1, sv: .5, ad: .4}, b: ['m', '題材を選ぶところから'], l: ['dai'], t: `課題は、次の3つのステップで作ります。所要時間は15分程度です。題材は、架空例か、公表済みで確定した事例から選んでください。この課題では、個別の勧誘が違法かどうかの判断はしません。`},
   {f: 'search', o: 'point', p: {pp: 1, sv: .5, ad: 1, pk: 1}, b: ['m', 'これを題材にしてみる'], l: ['src3'], t: `ステップ1では、身の回りで見かけた怪しい勧誘文や投資の広告を1つ選びます。SNSのタイムライン、動画広告、知人からのメッセージなど、題材は何でも構いません。`},
   {f: 'focus', o: 'chin', p: {pp: 1, sv: 1, kp: 1, scan: 1, ad: .3, pk: 1, pd: 1}, b: ['m', '順番に、当ててみる'], l: ['four'], t: `ステップ2では、その話が前節の4大基準（元本保証と高利回り、急かし、紹介経由、説明不能）に当てはまるかを照らし合わせます。`},
   {f: 'wry', o: 'write', p: {pp: 1, sv: .5, kp: .5, ad: .3, pk: 1, pd: 1, r1: 1, hla: 1}, b: ['q', '「怪しいから」'], l: ['whyq', 'aim'], t: `ステップ3では、当てはまった項目ごとに、**「なぜそれが怪しい兆候と言えるのか」という理由を自分の言葉で1行ずつ書きます**。ただ「怪しいから」と書くのではなく、相手の狙いや、話の仕組みの矛盾にまで踏み込んで書くのが合格のポイントです。`},
@@ -332,7 +332,7 @@ const L = {
  lost: {h: '冷静に考える時間と、周りに相談する機会', c: 'q', at: () => { const p = lostPos(); return [p[0] - p[3], p[2] + p[3] + 5, 'l']; }},
  sep: {h: '人間関係の信頼と、投資話の安全性', c: 'q', at: () => { const f = friendPos(), c = cardPos(); return [(f[0] + c[0]) / 2 - (LAND ? 110 : 90), f[1] + f[2] * 2.6, 'l']; }},
  jar: {h: '「独自のAIアルゴリズム」「海外の特別な人脈」', c: 'q', at: () => { const a = routeA(), s = zs() * .5; return [a[0] - s * 5, a[1] + s * 2.2, 'l']; }},
- dai: {h: '架空の例か、すでに公表されて確定した事例', c: 'q', at: srcAt},
+ dai: {h: '架空例か、公表済みで確定した事例', c: 'q', at: srcAt},
  src3: {h: 'SNSのタイムライン、動画広告、知人からのメッセージ', c: 'q', at: srcAt},
  four: {h: '元本保証と高利回り、急かし、紹介経由、説明不能', c: 'q', at: underSv},
  whyq: {h: '「なぜそれが怪しい兆候と言えるのか」', c: 'q', at: () => { const v = paperRect(); return [v.x, v.y + v.h + 3, 'l']; }},
