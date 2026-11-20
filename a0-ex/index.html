@@ -117,7 +117,7 @@ body.pcfit #title{right:64px;top:144px;width:min(563.2px,560px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'a0-ex shirokuma v0.3';
+const VERSION = 'a0-ex shirokuma v0.3.1';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -155,7 +155,7 @@ const B = [
   {f: 'focus', o: 'chin', p: {pp: 1, sv: 1, kp: 1, scan: 1, ad: .3, pk: 1, pd: 1}, b: ['m', '順番に、当ててみる'], l: ['four'], t: `ステップ2では、その話が前節の4大基準（元本保証と高利回り、急かし、紹介経由、説明不能）に当てはまるかを照らし合わせます。`},
   {f: 'wry', o: 'write', p: {pp: 1, sv: .5, kp: .5, ad: .3, pk: 1, pd: 1, r1: 1, hla: 1}, b: ['q', '「怪しいから」'], l: ['whyq', 'aim'], t: `ステップ3では、当てはまった項目ごとに、**「なぜそれが怪しい兆候と言えるのか」という理由を自分の言葉で1行ずつ書きます**。ただ「怪しいから」と書くのではなく、相手の狙いや、話の仕組みの矛盾にまで踏み込んで書くのが合格のポイントです。`},
  ]},
- {ch: '4節', ttl: '4. 提出物の記入見本', zf: .5, steps: [
+ {ch: '4節', ttl: '4. 提出物の記入見本', zf: .46,   /* spfit: 表を少し低くする（スマホの低い画面で、ペンギンの吹き出しが表の下のふちにかかっていた。zf はスマホの縦向きだけで効く） */ steps: [
   {f: 'read', o: 'idle', p: {pp: 1, pz: 1}, b: ['m', '簡単な表でいいんだ'], l: ['ex'], t: `提出物は、A4の紙の半分ほどに収まる簡単な表です。次の記入例を参考にして作ってください。`},
   {f: 'serious', o: 'write', p: {pp: 1, pz: 1, r1: 1, hla: 1}, b: ['q', '見知らぬ他人に分ける理由がない'], l: [], tb: {h: TH, r: ['**元本保証と高利回り**', '該当あり', '利益が約束されているなら、銀行から借りて自分で運用すればよく、見知らぬ他人に分ける理由がないため。']}},
   {f: 'halt', o: 'write', p: {pp: 1, pz: 1, r1: 1, r2: 1, hla: 1, hl: 1}, b: ['q', '「先行者利益」'], l: [], tb: {r: ['**決断の急かし**', '該当あり', '「先行者利益」を強調して焦らせ、外部の専門家への相談や裏取りをさせない手口であるため。']}},
