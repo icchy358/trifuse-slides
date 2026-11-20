@@ -87,6 +87,14 @@ body.cover #title{display:block}
  #title{left:14px;right:14px;top:38px;width:auto;padding:14px 16px}
  #title .tk{font-size:11px}#title .tc{font-size:12px;margin-top:6px}#title .tn{font-size:32px}#title .tm{font-size:21px}#title .tg{display:none}
 }
+
+/* pcfit v1.0: スマホの横向き：幅 1280×720 の画面として組み、縮めて映す（大きさは resize() が決める） */
+body.pcfit{transform-origin:0 0;overflow:hidden}
+body.pcfit .hd{max-width:min(768px,720px)}
+body.pcfit .cap,body.pcfit .capm{width:min(1040px,calc(1280px - 28px))}
+body.pcfit .nav #lg{display:block}
+body.pcfit #tocp{width:min(460px,calc(1280px - 24px));max-height:calc(720px - 140px)}
+body.pcfit #title{right:64px;top:144px;width:min(563.2px,560px)}
 </style>
 </head>
 <body>
@@ -106,7 +114,7 @@ body.cover #title{display:block}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'a0-01 shirokuma v0.3';
+const VERSION = 'a0-01 shirokuma v0.3.2';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -757,8 +765,17 @@ function tick(ms) {
   fN++; if (t - fT > 1) { $('#fps').textContent = VERSION + '｜場面' + (bi + 1) + '-' + (st + 1) + '｜毎秒' + fN + 'コマ' + (errs.length ? '｜絵の失敗 ' + errs.length + ' 件' : ''); fN = 0; fT = t; }
   requestAnimationFrame(tick);
 }
+let FIT = 1, FX = 0, FY = 0;   /* pcfit v1.0: スマホの横向きで縮める倍率と、真ん中に置くためのずらし（1・0 は縮めない） */
+const GBCR = Element.prototype.getBoundingClientRect;
+Element.prototype.getBoundingClientRect = function () { const r = GBCR.call(this); if (FIT === 1) return r;
+  const x = (r.left - FX) / FIT, y = (r.top - FY) / FIT, w = r.width / FIT, h = r.height / FIT;
+  return {x, y, left: x, top: y, width: w, height: h, right: x + w, bottom: y + h}; };
 function resize() {
-  W = innerWidth; H = innerHeight; LAND = W >= H; DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const vw = innerWidth, vh = innerHeight, fit = vw >= vh && vh < 500;
+  FIT = fit ? Math.min(vw / 1280, vh / 720) : 1; FX = fit ? Math.round((vw - 1280 * FIT) / 2) : 0; FY = fit ? Math.round((vh - 720 * FIT) / 2) : 0;
+  const bs = document.body.style; document.body.classList.toggle('pcfit', fit);
+  bs.width = fit ? '1280px' : ''; bs.height = fit ? '720px' : ''; bs.transform = fit ? 'translate(' + FX + 'px,' + FY + 'px) scale(' + FIT + ')' : '';
+  W = fit ? 1280 : vw; H = fit ? 720 : vh; LAND = W >= H; DPR = Math.min(window.devicePixelRatio || 1, 2);
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   GOLD = LAND ? [16, 37, 58] : [4, 17, 22];
   measure(); show(true);
@@ -776,7 +793,9 @@ addEventListener('touchend', e => { if (sx0 === null) return; const dx = e.chang
 if (!g) fail('このブラウザは絵を描く機能が使えません');
 else {
   try {
-    addEventListener('resize', resize);
+    /* pcfit v1.0: シロクマの一言の数と段の数を、開いたときに確かめる（違えば資料の検査が不合格にする） */
+B.forEach((b, i) => { const n = KS[i] ? KS[i].length : 0; if (n !== b.steps.length) console.error('シロクマの一言の数が段の数と合わない：場面' + (i + 1) + '（段 ' + b.steps.length + '・一言 ' + n + '）'); });
+addEventListener('resize', resize);
     resize();
     const qs = new URLSearchParams(location.search);   /* 住所の末尾に ?b=場面&s=段 を付けると、その段から開く */
     if (qs.get('b')) go((+qs.get('b') || 1) - 1, true, (+qs.get('s') || 1) - 1);
