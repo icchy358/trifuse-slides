@@ -87,6 +87,10 @@ body.cover #title{display:block}
  #title{left:14px;right:14px;top:38px;width:auto;padding:14px 16px}
  #title .tk{font-size:11px}#title .tc{font-size:12px;margin-top:6px}#title .tn{font-size:32px}#title .tm{font-size:21px}#title .tg{display:none}
 }
+@media (max-width:370px){
+ .nav{gap:4px}.nav button{height:34px;font-size:14px}.nav #toc{padding:0 8px;font-size:15px}.nav #pv{min-width:34px}.nav #nx{min-width:60px;padding:0 6px}
+ #dots{gap:2px}#dots button{width:18px;height:18px;font-size:9px;border-radius:9px}
+}
 
 /* pcfit v1.0: スマホの横向き：幅 1280×720 の画面として組み、縮めて映す（大きさは resize() が決める） */
 body.pcfit{transform-origin:0 0;overflow:hidden}
@@ -114,7 +118,7 @@ body.pcfit #title{right:64px;top:144px;width:min(563.2px,560px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'a0-01 shirokuma v0.3.2';
+const VERSION = 'a0-01 shirokuma v0.3.3';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
