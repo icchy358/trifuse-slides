@@ -118,7 +118,7 @@ body.pcfit #title{right:64px;top:144px;width:min(563.2px,560px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'a0-01 shirokuma v0.3.3';
+const VERSION = 'a0-01 shirokuma v0.4';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -418,7 +418,8 @@ function placeLabs() {
     x = clamp(x, 6, Math.max(6, W - w - 6)); y = clamp(y, top, Math.max(top, bot - h));
     const hit = yy => placed.some(p => x < p.x + p.w + 3 && p.x < x + w + 3 && yy < p.y + p.h + 3 && p.y < yy + h + 3);
     let ok = !hit(y);
-    for (let n = 1; n <= 10 && !ok; n++) for (const sg of [1, -1]) { const yy = y + sg * n * (h * .5 + 4); if (!ok && yy >= top && yy + h <= bot && !hit(yy)) { y = yy; ok = true; } }
+    if (!LAND) { const q = spFind(Lb, ay, x, y, w, h, top, bot, placed); ok = !!q; if (q) { x = q[0]; y = q[1]; } }   /* spfit v1.0 */
+    else for (let n = 1; n <= 10 && !ok; n++) for (const sg of [1, -1]) { const yy = y + sg * n * (h * .5 + 4); if (!ok && yy >= top && yy + h <= bot && !hit(yy)) { y = yy; ok = true; } }
     if (!ok || bot - top < h) { el.style.visibility = 'hidden'; el.dataset.off = '1'; continue; }
     el.dataset.off = '0'; el.style.visibility = 'visible'; el.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)'; placed.push({x, y, w, h});
   }
@@ -429,7 +430,42 @@ const FONT = '"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Got
 const rnd = i => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
 const note = m => { if (!errs.includes(m) && errs.length < 20) { errs.push(m); console.error('絵の失敗 ' + m); } };   /* 失敗は隠さず、記録にも出す（撮る道具が数えられるように） */
 const safe = (name, fn) => { g.save(); try { fn(); } catch (e) { note(name + ': ' + e.message); } g.restore(); };
-function rr(x, y, w, h, r) { r = Math.max(0, Math.min(r, w / 2, h / 2)); g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+/* spfit v1.0: スマホの縦向きで、絵の字と大きな枠の場所を1コマごとに控える（札と吹き出しをそこへ重ねないため）。パソコンと横向きでは何もしない */
+let REC = false; const OBS = {t: [], p: []};
+const spBox = (x0, y0, x1, y1) => { const m = g.getTransform(), X = [], Y = []; for (const [px, py] of [[x0, y0], [x1, y0], [x0, y1], [x1, y1]]) { X.push((m.a * px + m.c * py + m.e) / DPR); Y.push((m.b * px + m.d * py + m.f) / DPR); }
+  const x = Math.min(...X), y = Math.min(...Y); return {x, y, w: Math.max(...X) - x, h: Math.max(...Y) - y}; };
+if (g) { const ft = g.fillText.bind(g);
+  g.fillText = function (s, x, y, mw) { if (REC && !LAND && g.globalAlpha > .3 && String(s).trim().length > 1) { try { const m = g.measureText(s), w = m.width, l = g.textAlign === 'center' ? x - w / 2 : g.textAlign === 'right' || g.textAlign === 'end' ? x - w : x;
+      OBS.t.push(spBox(l, y - m.actualBoundingBoxAscent, l + w, y + m.actualBoundingBoxDescent)); } catch (e) {} }
+    return mw === undefined ? ft(s, x, y) : ft(s, x, y, mw); }; }
+const spHit = (a, b, m) => a.x < b.x + b.w + m && b.x < a.x + a.w + m && a.y < b.y + b.h + m && b.y < a.y + a.h + m;
+const spCross = (a, b) => spHit(a, b, 0) && !(a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h);   /* 枠のふちをまたいでいる */
+function spFind(Lb, ay, x0, y0, w, h, top, bot, placed) {
+  const foot = !Lb.bub && ay >= S.bot - 2, hard = [];   /* foot＝足もとに置く札（体の下の端に重ねてよい） */
+  const pen = {x: HX - R * .95, y: HY - R * .95, w: R * 1.9, h: R * 1.9}, kuma = {x: BX - RB * 1.1, y: BY - RB * 4.3, w: RB * 2.2, h: RB * 2.2};
+  const low = o => ({x: o.x + o.w * .15, y: o.y + o.h * .4, w: o.w * .7, h: o.h * .6});   /* 自分の吹き出しは、頭の上に乗るのはよいが、顔までは下げない */
+  hard.push(Lb.bub === 1 && !Lb.el.classList.contains('up') ? low(pen) : pen, Lb.bub === 2 ? low(kuma) : kuma);
+  if (!Lb.bub && !foot) hard.push({x: PX - R * 1.25, y: HY, w: R * 2.5, h: Math.max(0, S.bot - HY)}, {x: BX - RB * 1.5, y: BY - RB * 2.2, w: RB * 3, h: Math.max(0, S.bot - BY + RB * 2.2)});
+  for (const sel of ['#src', '#title']) { const e = $(sel), cs = e && getComputedStyle(e); if (cs && cs.display !== 'none' && cs.visibility !== 'hidden') { const r = e.getBoundingClientRect(); hard.push({x: r.left, y: r.top, w: r.width, h: r.height}); } }
+  const ok = (x, y, lv) => { const a = {x, y, w, h};
+    if (placed.some(p => spHit(a, p, 3))) return false;
+    if (lv < 3 && hard.some(o => spHit(a, o, 0))) return false;
+    if (lv < 2 && OBS.t.some(o => spHit(a, o, 1))) return false;
+    if (lv < 1 && OBS.p.some(o => spCross(a, o))) return false;
+    return true; };
+  const at = c => { const x = clamp(x0 + c[0], 6, Math.max(6, W - w - 6)), y = y0 + c[1]; return y >= top && y + h <= bot ? [x, y] : null; };
+  if (ok(x0, y0, 0) && y0 >= top && y0 + h <= bot) { Lb.off = null; return [x0, y0]; }   /* 元の場所が空いていれば、そこに置く */
+  /* 前のコマで決めた場所がまだ使えれば、動かさない（ちらつかせない）。もっと良い場所は 15 コマに1回だけ探し直す */
+  if (Lb.off && (Lb.off[2] === 0 || (deck.frames + (Lb.n = Lb.n || labs.indexOf(Lb) * 5)) % 15)) { const q = at(Lb.off); if (q && ok(q[0], q[1], Lb.off[2])) return q; }
+  const my = Math.min(200, 10 * (h * .5 + 4)), cs = [[0, 0]];
+  for (let dy = 6; dy <= my; dy += 6) cs.push([0, dy], [0, -dy]);
+  if (!Lb.bub) for (let dx = 18; dx <= 216; dx += 18) for (let dy = -Math.min(my, 96); dy <= Math.min(my, 96); dy += 8) cs.push([dx, dy], [-dx, dy]);
+  cs.sort((a, b) => Math.hypot(a[0], a[1] * 1.1) - Math.hypot(b[0], b[1] * 1.1));
+  /* 枠のふちを避けるためだけには、64px より遠くへ動かさない（指している物から札を離さない。そのときは元の作りのまま、ふちにかけておく） */
+  for (let lv = 0; lv <= 3; lv++) for (const c of cs) { if (lv === 0 && Math.hypot(c[0], c[1]) > 64) break; const q = at(c); if (q && ok(q[0], q[1], lv)) { Lb.off = [c[0], c[1], lv]; return q; } }
+  return null;
+}
+function rr(x, y, w, h, r) { r = Math.max(0, Math.min(r, w / 2, h / 2)); if (REC && !LAND && w >= 90 && h >= 50 && g.globalAlpha > .25) OBS.p.push(spBox(x, y, x + w, y + h)); g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
 function circ(x, y, r) { g.beginPath(); g.arc(x, y, Math.max(0, r), 0, 6.2832); }
 function txt(s, x, y, size, color, align, weight) { g.font = (weight || 700) + ' ' + size + 'px ' + FONT; g.fillStyle = color; g.textAlign = align || 'left'; g.textBaseline = 'top'; g.fillText(s, x, y); }
 function wrapT(s, x, y, mw, size, color, weight, lh) { g.font = (weight || 700) + ' ' + size + 'px ' + FONT; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'top'; let line = '', yy = y; lh = lh || size * 1.4;
@@ -563,15 +599,15 @@ function checkLine(t) { const k = P.ln; if (k < .01) return; const p = linePts()
 
 /* ───────── 1節：3つの理由（内側）と、外を通る話 ───────── */
 const BP = [[-1.55, -5.0], [-1.95, -3.85], [-2.0, -2.75]];
-function badges() { if (P.bo < .01 && P.b1 < .01) return; const r = R * .4;
-  BP.forEach((b, i) => { const x = Math.max(r + 4, PX + b[0] * R), y = PYc + b[1] * R, f = [P.b1, P.b2, P.b3][i];   /* 寄ったときも画面の左へはみ出させない */
+function badges() { if (P.bo < .01 && P.b1 < .01) return; const r = R * (LAND ? .4 : .3);   /* spfit: スマホの縦向きは小さくして、頭の左に縦に並べる（体の後ろに隠さない） */
+  BP.forEach((b, i) => { const x = LAND ? Math.max(r + 4, PX + b[0] * R) : r + 3, y = PYc + (LAND ? b[1] : -5 + i) * R, f = [P.b1, P.b2, P.b3][i];   /* 寄ったときも画面の左へはみ出させない */
     if (P.lk > .01) { g.strokeStyle = 'rgba(254,218,55,' + .8 * P.lk + ')'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y); g.lineTo(lerp(x, HX, P.lk * .8), lerp(y, HY, P.lk * .8)); g.stroke(); }
     g.globalAlpha = P.bo * .7; g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.setLineDash([4, 4]); circ(x, y, r); g.stroke(); g.setLineDash([]);
     if (f > .01) { g.globalAlpha = f; g.fillStyle = '#FEDA37'; circ(x, y, r * (.6 + .4 * f)); g.fill(); g.font = '800 ' + Math.round(r * 1.1) + 'px ' + FONT; g.fillStyle = '#16233A'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(i + 1), x, y + r * .06); }
     g.globalAlpha = 1; }); }
 const zs = () => Math.min(Z.w, Z.h) * (LAND ? .16 : .2);
 /* 「親切な相談」「知り合いの紹介」の顔をした話。外から内側へ入ってきて、主役の手前に出る（腕に隠さない） */
-function friendGeo() { const ex = PX + R * 2.2, ey = PYc - R * 3.0; return [zx(LAND ? .45 : .55), zy(LAND ? .6 : .45), (zx(.2) + ex) / 2, ey - R * .9, ex, ey]; }
+function friendGeo() { const ex = LAND ? PX + R * 2.2 : PX + R * .7, ey = LAND ? PYc - R * 3.0 : PYc - R * 5.65;   /* spfit: スマホの縦向きは頭の上で止める（顔と吹き出しに重ねない） */ return [zx(LAND ? .45 : .55), zy(LAND ? .6 : .45), (zx(.2) + ex) / 2, ey - R * .9, ex, ey]; }
 function friendCard() { const k = P.e3; if (k < .01) return; const q = qp(friendGeo(), k), sc = .55 + .45 * k, w = R * 3.0 * sc, h = R * sc, x = q[0] - w / 2, y = q[1] - h / 2;
   g.globalAlpha = Math.min(1, k * 3); g.fillStyle = '#fffdf4'; g.beginPath(); g.moveTo(x + w * .1, y + h - 2); g.lineTo(x + w * .03, y + h * 1.3); g.lineTo(x + w * .26, y + h - 2); g.closePath(); g.fill();
   rr(x, y, w, h, h * .28); g.fill(); g.strokeStyle = '#FEDA37'; g.lineWidth = 2; g.stroke();
@@ -710,7 +746,7 @@ function sheet(t) { const a = P.sheet; if (a < .01) return; const v = sheetRect(
 /* ───────── 送り ───────── */
 const deck = window.__deck = {version: VERSION, beats: B.length, missing: 'check_text.py で数える', setErrors: errs, steps: B.map(b => b.steps.length), step: 0, frames: 0};
 function placeSrc() { const el = $('#src'); if (!B[bi].src) { el.style.display = 'none'; return; }
-  const top = Lt.top, h = Lt.bot - Lt.top, zf = B[bi].zf || .38, z = LAND ? {x: W * .54, y: top + 4, w: W * .44, h: h - 10} : {x: W * .04, y: top + 2, w: W * .92, h: h * zf};
+  const top = Lt.top, h = Lt.bot - Lt.top, zf = B[bi].zf || .38, z = LAND ? {x: W * .54, y: top + 4, w: W * .44, h: h - 10} : {x: W * .04, y: top + 2, w: W * .92, h: Math.min(h * zf - 46, Lt.bot - Math.min(h * .07, W * .095) * 3.85 - 52 - top)};   /* spfit: 出典の欄は、2人の吹き出しの上までで止める */
   el.style.display = 'block'; el.style.left = z.x + 'px'; el.style.top = z.y + 'px'; el.style.width = z.w + 'px'; el.style.maxHeight = z.h + 'px'; }
 function show(instant) {
   const b = B[bi], s = b.steps[st];
@@ -761,9 +797,9 @@ function tick(ms) {
   Lc.top += (Lt.top - Lc.top) * k; Lc.bot += (Lt.bot - Lc.bot) * k;
   layout(); geom();
   g.setTransform(DPR, 0, 0, DPR, 0, 0);
-  safe('背景', () => backdrop(t)); safe('建物', building); safe('ニュース', () => tvCrowd(t)); safe('人びと', () => crowd7(t)); safe('人影', () => shadow(t));
+  OBS.t = []; OBS.p = []; safe('背景', () => backdrop(t)); REC = true; safe('建物', building); safe('ニュース', () => tvCrowd(t)); safe('人びと', () => crowd7(t)); safe('人影', () => shadow(t));
   safe('画面', () => phoneScreen(t)); safe('門', () => gate(t)); safe('ノート', () => sheet(t)); safe('外を通る話', () => envelopes(t)); safe('問い', () => questions(t));
-  safe('線', () => checkLine(t)); safe('理由', badges); safe('気づき', () => lamp(t)); safe('ペンギン', () => person(t)); safe('親切な顔の話', friendCard); safe('覆い', () => cocoon(t)); safe('シロクマ', () => bear(t)); safe('手前', fore);
+  safe('線', () => checkLine(t)); safe('理由', badges); safe('気づき', () => lamp(t)); REC = false; safe('ペンギン', () => person(t)); REC = true; safe('親切な顔の話', friendCard); REC = false; safe('覆い', () => cocoon(t)); safe('シロクマ', () => bear(t)); safe('手前', fore);
   try { placeLabs(); } catch (e) { note('札: ' + e.message); }
   deck.frames++;
   fN++; if (t - fT > 1) { $('#fps').textContent = VERSION + '｜場面' + (bi + 1) + '-' + (st + 1) + '｜毎秒' + fN + 'コマ' + (errs.length ? '｜絵の失敗 ' + errs.length + ' 件' : ''); fN = 0; fT = t; }
