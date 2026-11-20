@@ -93,7 +93,7 @@ body.cover #title{display:block}
 }
 
 /* pcfit v1.0: スマホの横向き：幅 1280×720 の画面として組み、縮めて映す（大きさは resize() が決める） */
-body.pcfit{transform-origin:0 0;overflow:hidden}
+body.pcfit{transform-origin:0 0;overflow:hidden;position:fixed;left:0;top:0}
 body.pcfit .hd{max-width:min(768px,720px)}
 body.pcfit .cap,body.pcfit .capm{width:min(1040px,calc(1280px - 28px))}
 body.pcfit #tocp{width:min(460px,calc(1280px - 24px));max-height:calc(720px - 140px)}
@@ -117,7 +117,7 @@ body.pcfit #title{right:64px;top:144px;width:min(563.2px,560px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'a0-ex shirokuma v0.2';
+const VERSION = 'a0-ex shirokuma v0.3';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -315,7 +315,7 @@ function geom() {
 const nearP = () => LAND ? [PX + R * 2.2, PYc - R * .9, 'l'] : [8, S.bot, 'l'];
 const underSv = () => { const v = svPos(); return [v[0] - v[2] * 1.15, v[1] + v[2] * 1.32, 'l']; };
 const underDoc = () => { const v = docRect(); return [v.x, v.y + v.h + 4, 'l']; };
-const underSt = i => () => { const p = stampPos(i); return [p[0], p[1] + p[2] + 32]; };
+const underSt = i => () => { const p = stampPos(i); if (LAND) return [p[0], p[1] + p[2] + 32]; const q = stampPos(0); return [W - 6, q[1] - q[2] - 2, 'r']; };   /* spfit: スマホの縦向きは丸の列の上に置く（丸の間には入りきらない） */
 const reasonCol = () => { const q = rowGeo(); return [q.x + q.c1 + q.c2 + (q.w - q.c1 - q.c2) / 2, q.v.y + q.v.h + 30]; };
 const srcAt = () => { const p = adPos(1); return [p[0], p[1] - p[2] * .7]; };
 const tokAt = i => () => { const p = tokPos(i); return [p[0] + p[2] * 1.5, p[1] - p[2], 'l']; };
@@ -347,7 +347,7 @@ const L = {
  ex: {h: '記入例', c: 'q', at: () => { const v = paperRect(); return [v.x + v.w - 8, v.y + v.h - 2, 'r']; }},
  ito: {h: '意図を見抜く言葉', c: 'q', at: reasonCol},
  axis: {h: '評価軸', c: 'q', at: reasonCol},
- self: {h: 'セルフチェック', c: 'q', at: () => { const p = stampPos(0); return [p[0], p[1] - p[2] - 2]; }},
+ self: {h: 'セルフチェック', c: 'q', at: () => { const p = stampPos(0); return LAND ? [p[0], p[1] - p[2] - 2] : [W - 6, p[1] - p[2] - 2, 'r']; }},
  c1q: {h: '「引っかかる理由」', c: 'q', at: underSt(0)},
  c2q: {h: '仕組みの不自然さ', c: 'q', at: underSt(1)},
  c3q: {h: '友人に注意を促すような口調', c: 'q', at: underSt(2)},
@@ -380,13 +380,13 @@ function placeLabs() {
     else { let p = null; try { p = Lb.d.at(); } catch (e) { p = null; }
       if (!p || !isFinite(p[0]) || !isFinite(p[1])) { el.style.visibility = 'hidden'; el.dataset.off = '1'; continue; }
       ax = p[0]; ay = p[1]; mode = p[2] || Lb.d.m || 'c'; }
-    const w = el.offsetWidth, h = el.offsetHeight;
+    let w = el.offsetWidth, h = el.offsetHeight;
     /* 置き方：l＝左上を合わせる、b＝左下を合わせる、r＝右下を合わせる、ほか＝真ん中の上に置く */
     let x = mode === 'l' || mode === 'b' ? ax : mode === 'r' ? ax - w : ax - w / 2, y = mode === 'l' ? ay : ay - h - 6;
     x = clamp(x, 6, Math.max(6, W - w - 6)); y = clamp(y, top, Math.max(top, bot - h));
     const hit = yy => placed.some(p => x < p.x + p.w + 3 && p.x < x + w + 3 && yy < p.y + p.h + 3 && p.y < yy + h + 3);
     let ok = !hit(y);
-    if (!LAND) { const q = spFind(Lb, ay, x, y, w, h, top, bot, placed); ok = !!q; if (q) { x = q[0]; y = q[1]; } }   /* spfit v1.0 */
+    if (!LAND) { const q = spPlace(Lb, ax, ay, mode, top, bot, placed); ok = !!q; if (q) { x = q[0]; y = q[1]; w = q[2]; h = q[3]; } }   /* spfit v1.1 */
     else for (let n = 1; n <= 10 && !ok; n++) for (const sg of [1, -1]) { const yy = y + sg * n * (h * .5 + 4); if (!ok && yy >= top && yy + h <= bot && !hit(yy)) { y = yy; ok = true; } }
     if (!ok || bot - top < h) { el.style.visibility = 'hidden'; el.dataset.off = '1'; continue; }
     el.dataset.off = '0'; el.style.visibility = 'visible'; el.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)'; placed.push({x, y, w, h});
@@ -398,7 +398,7 @@ const FONT = '"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Got
 const rnd = i => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
 const note = m => { if (!errs.includes(m) && errs.length < 20) { errs.push(m); console.error('絵の失敗 ' + m); } };   /* 失敗は隠さず、記録にも出す */
 const safe = (name, fn) => { g.save(); try { fn(); } catch (e) { note(name + ': ' + e.message); } g.restore(); };
-/* spfit v1.0: スマホの縦向きで、絵の字と大きな枠の場所を1コマごとに控える（札と吹き出しをそこへ重ねないため）。パソコンと横向きでは何もしない */
+/* spfit v1.1: スマホの縦向きで、絵の字と大きな枠の場所を1コマごとに控える（札と吹き出しをそこへ重ねないため）。パソコンと横向きでは何もしない */
 let REC = false; const OBS = {t: [], p: []};
 const spBox = (x0, y0, x1, y1) => { const m = g.getTransform(), X = [], Y = []; for (const [px, py] of [[x0, y0], [x1, y0], [x0, y1], [x1, y1]]) { X.push((m.a * px + m.c * py + m.e) / DPR); Y.push((m.b * px + m.d * py + m.f) / DPR); }
   const x = Math.min(...X), y = Math.min(...Y); return {x, y, w: Math.max(...X) - x, h: Math.max(...Y) - y}; };
@@ -407,8 +407,8 @@ if (g) { const ft = g.fillText.bind(g);
       OBS.t.push(spBox(l, y - m.actualBoundingBoxAscent, l + w, y + m.actualBoundingBoxDescent)); } catch (e) {} }
     return mw === undefined ? ft(s, x, y) : ft(s, x, y, mw); }; }
 const spHit = (a, b, m) => a.x < b.x + b.w + m && b.x < a.x + a.w + m && a.y < b.y + b.h + m && b.y < a.y + a.h + m;
-const spCross = (a, b) => spHit(a, b, 0) && !(a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h);   /* 枠のふちをまたいでいる */
-function spFind(Lb, ay, x0, y0, w, h, top, bot, placed) {
+const spCross = (a, b) => spHit(a, b, 0) && !(a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h && a.w * a.h < b.w * b.h * .3);   /* 枠や丸のふちをまたいでいる。または、中に入っていても枠の3割以上を隠している */
+function spFind(Lb, ay, x0, y0, w, h, top, bot, placed, mx) {   /* mx＝ゆるめてよい所まで（0＝全部守る場所だけ） */
   const foot = !Lb.bub && ay >= S.bot - 2, hard = [];   /* foot＝足もとに置く札（体の下の端に重ねてよい） */
   const pen = {x: HX - R * .95, y: HY - R * .95, w: R * 1.9, h: R * 1.9}, kuma = {x: BX - RB * 1.1, y: BY - RB * 4.3, w: RB * 2.2, h: RB * 2.2};
   const low = o => ({x: o.x + o.w * .15, y: o.y + o.h * .4, w: o.w * .7, h: o.h * .6});   /* 自分の吹き出しは、頭の上に乗るのはよいが、顔までは下げない */
@@ -419,22 +419,40 @@ function spFind(Lb, ay, x0, y0, w, h, top, bot, placed) {
     if (placed.some(p => spHit(a, p, 3))) return false;
     if (lv < 3 && hard.some(o => spHit(a, o, 0))) return false;
     if (lv < 2 && OBS.t.some(o => spHit(a, o, 1))) return false;
-    if (lv < 1 && OBS.p.some(o => spCross(a, o))) return false;
+    if (lv < 1 && OBS.p.some(o => !(o.c && Lb.ax >= o.x && Lb.ax <= o.x + o.w && Lb.ay >= o.y && Lb.ay <= o.y + o.h) && spCross(a, o))) return false;   /* 札が指している丸（自分の目印）は避けない */
     return true; };
   const at = c => { const x = clamp(x0 + c[0], 6, Math.max(6, W - w - 6)), y = y0 + c[1]; return y >= top && y + h <= bot ? [x, y] : null; };
-  if (ok(x0, y0, 0) && y0 >= top && y0 + h <= bot) { Lb.off = null; return [x0, y0]; }   /* 元の場所が空いていれば、そこに置く */
+  /* 元の場所が空いていれば、そこに置く。いちど動かした札は、元の場所が 30 コマ続けて空くまで戻さない（脈を打つ丸などで行き来させない） */
+  if (ok(x0, y0, 0) && y0 >= top && y0 + h <= bot) { Lb.okc = (Lb.okc || 0) + 1; if (!Lb.off || Lb.okc > 30) { Lb.off = null; return [x0, y0]; } } else Lb.okc = 0;
   /* 前のコマで決めた場所がまだ使えれば、動かさない（ちらつかせない）。もっと良い場所は 15 コマに1回だけ探し直す */
-  if (Lb.off && (Lb.off[2] === 0 || (deck.frames + (Lb.n = Lb.n || labs.indexOf(Lb) * 5)) % 15)) { const q = at(Lb.off); if (q && ok(q[0], q[1], Lb.off[2])) return q; }
+  if (Lb.off && Lb.off[2] <= mx && (Lb.off[2] === 0 || (deck.frames + (Lb.n = Lb.n || labs.indexOf(Lb) * 5)) % 15)) { const q = at(Lb.off); if (q && ok(q[0], q[1], Lb.off[2])) return q; }
   const my = Math.min(200, 10 * (h * .5 + 4)), cs = [[0, 0]];
   for (let dy = 6; dy <= my; dy += 6) cs.push([0, dy], [0, -dy]);
   if (!Lb.bub) for (let dx = 18; dx <= 216; dx += 18) for (let dy = -Math.min(my, 96); dy <= Math.min(my, 96); dy += 8) cs.push([dx, dy], [-dx, dy]);
   cs.sort((a, b) => Math.hypot(a[0], a[1] * 1.1) - Math.hypot(b[0], b[1] * 1.1));
   /* 枠のふちを避けるためだけには、64px より遠くへ動かさない（指している物から札を離さない。そのときは元の作りのまま、ふちにかけておく） */
-  for (let lv = 0; lv <= 3; lv++) for (const c of cs) { if (lv === 0 && Math.hypot(c[0], c[1]) > 64) break; const q = at(c); if (q && ok(q[0], q[1], lv)) { Lb.off = [c[0], c[1], lv]; return q; } }
+  for (let lv = 0; lv <= mx; lv++) for (const c of cs) { if (lv === 0 && Math.hypot(c[0], c[1]) > 64) break; const q = at(c); if (q && ok(q[0], q[1], lv)) { Lb.off = [c[0], c[1], lv]; return q; } }
   return null;
 }
-function rr(x, y, w, h, r) { r = Math.max(0, Math.min(r, w / 2, h / 2)); if (REC && !LAND && w >= 90 && h >= 50 && g.globalAlpha > .25) OBS.p.push(spBox(x, y, x + w, y + h)); g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
-function circ(x, y, r) { g.beginPath(); g.arc(x, y, Math.max(0, r), 0, 6.2832); }
+/* 札は、いまの幅で全部守れる場所が無ければ、幅を狭めて（2行に折って）探し直す。吹き出しの幅は変えない */
+function spPlace(Lb, ax, ay, mode, top, bot, placed) {
+  Lb.ax = ax; Lb.ay = ay; const el = Lb.el, tryW = (mw, mx) => { if (!Lb.bub) el.style.maxWidth = mw ? mw + 'px' : ''; const w = el.offsetWidth, h = el.offsetHeight;
+    const x = clamp(mode === 'l' || mode === 'b' ? ax : mode === 'r' ? ax - w : ax - w / 2, 6, Math.max(6, W - w - 6)), y = clamp(mode === 'l' ? ay : ay - h - 6, top, Math.max(top, bot - h));
+    const q = spFind(Lb, ay, x, y, w, h, top, bot, placed, mx); return q && [q[0], q[1], w, h]; };
+  if (Lb.bub) {   /* 吹き出しは、全部守れる場所が無ければ、字を 11.5px・11px に下げて（行を減らして）探し直す */
+    if (Lb.fs > 0) { const q = tryW(0, 0); if (q) return q; Lb.fs = undefined; Lb.off = null; }
+    if (Lb.fs === 0 && (deck.frames + labs.indexOf(Lb) * 5) % 15) return tryW(0, 3);
+    el.style.fontSize = ''; let q = tryW(0, 0); if (q) { Lb.fs = 0; return q; }
+    for (const fs of ['11.5px', '11px']) { el.style.fontSize = fs; Lb.off = null; q = tryW(0, 0); if (q) { Lb.fs = 1; return q; } }
+    el.style.fontSize = ''; Lb.off = null; Lb.fs = 0; return tryW(0, 3); }
+  if (Lb.mw > 0) { const q = tryW(Lb.mw, 0); if (q) return q; Lb.mw = undefined; Lb.off = null; }
+  if (Lb.mw === 0 && (deck.frames + labs.indexOf(Lb) * 5) % 15) return tryW(0, 3);   /* 幅の探し直しは 15 コマに1回 */
+  let q = tryW(0, 0); if (q) { Lb.mw = 0; return q; }
+  for (const f of [.44, .36, .26]) { Lb.off = null; q = tryW(Math.round(W * f), 0); if (q) { Lb.mw = Math.round(W * f); return q; } }
+  Lb.off = null; Lb.mw = 0; return tryW(0, 3);
+}
+function rr(x, y, w, h, r) { r = Math.max(0, Math.min(r, w / 2, h / 2)); if (REC && !LAND && w >= 40 && h >= 40 && g.globalAlpha > .25) OBS.p.push(spBox(x, y, x + w, y + h)); g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function circ(x, y, r) { if (REC && !LAND && r >= 12 && r <= 70 && g.globalAlpha > .25) OBS.p.push(Object.assign(spBox(x - r, y - r, x + r, y + r), {c: 1})); g.beginPath(); g.arc(x, y, Math.max(0, r), 0, 6.2832); }
 function txt(s, x, y, size, color, align, weight) { g.font = (weight || 700) + ' ' + size + 'px ' + FONT; g.fillStyle = color; g.textAlign = align || 'left'; g.textBaseline = 'top'; g.fillText(s, x, y); }
 function glow(x, y, r, rgb, a) { if (a <= .003 || r <= 0) return; const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, 'rgba(' + rgb + ',' + a + ')'); gr.addColorStop(1, 'rgba(' + rgb + ',0)'); g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); }
 function pawn(x, y, s, color) { g.fillStyle = color; g.beginPath(); g.ellipse(x, y, s * .44, s * .92, 0, Math.PI, Math.PI * 2); g.closePath(); g.fill(); circ(x, y - s * 1.2, s * .34); g.fill(); }
@@ -586,7 +604,7 @@ function card(x, y, s, rot) { g.save(); g.translate(x, y); g.rotate(rot); const 
 function msg() { if (P.mv < .01) return; const [x, y, s] = cardPos(); g.globalAlpha = P.mv * (1 - .4 * P.bn); card(x, y, s, P.bn * .9); }
 
 /* ───────── 1節：話の中身（よくできた資料）に見入るほど、引き込まれる。学びは、ふるいに集まる ───────── */
-function docRect() { return {x: zx(.3), y: zy(LAND ? .14 : .08), w: Z.w * .42, h: Z.h * (LAND ? .74 : .86)}; }
+function docRect() { return {x: zx(LAND ? .3 : .22),   /* spfit: スマホの縦向きは束を左へ寄せる（右の送り手の上の札「相手のペース」が束のふちにかからないように） */ y: zy(LAND ? .14 : .08), w: Z.w * .42, h: Z.h * (LAND ? .74 : .86)}; }
 function docs() { const a = P.dc; if (a < .01) return; const v = docRect(), d = clamp(P.dp, 0, 1), n = 1 + Math.round(4 * d), f = Math.max(6, v.w / 12);
   g.globalAlpha = a;
   for (let o = n - 1; o >= 0; o--) { g.save(); g.translate(v.x + v.w / 2 + o * v.w * .055, v.y + v.h / 2 - o * v.h * .025); g.rotate(o * .03); g.fillStyle = o ? '#dfe6f1' : '#fffdf4'; rr(-v.w / 2, -v.h / 2, v.w, v.h, 6); g.fill(); g.strokeStyle = 'rgba(22,35,58,.25)'; g.lineWidth = 1; g.stroke(); g.restore(); }
@@ -664,7 +682,7 @@ function paper() { const a = P.pp; if (a < .01) return; const q = rowGeo(), v = 
     if (P.c1 > .01) { g.globalAlpha = a * P.c1; g.strokeStyle = '#1d8a5a'; g.lineWidth = Math.max(2, q.rh * .07); g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(q.x + q.w - q.rh * .42, cy); g.lineTo(q.x + q.w - q.rh * .3, cy + q.rh * .13); g.lineTo(q.x + q.w - q.rh * .1, cy - q.rh * .15); g.stroke(); g.globalAlpha = a; } }   /* どの行にも理由がある */
   const em = Math.max(P.rc, P.ax); if (em > .01) { g.globalAlpha = a * em; g.strokeStyle = '#e0a400'; g.lineWidth = 3; rr(x3 + 1, q.y0 - 1, w3 - 1, q.rh * 4 + 1, 5); g.stroke(); } }   /* 見られるのは、理由の欄 */
 /* 自分で確かめる印（上から：どの行にも理由／仕組みを指している／自分の言葉） */
-function stampPos(i) { return [zx(LAND ? .86 : .88), zy(.2 + i * .3), Math.min(Z.h * .11, Z.w * .08)]; }
+function stampPos(i) { return [zx(LAND ? .86 : .88), zy(LAND ? .2 + i * .3 : .3 + i * .27),   /* spfit: スマホの縦向きは列を少し下げる（上に札を置く場所を空ける） */ Math.min(Z.h * .11, Z.w * .08)]; }
 function stamps() { const a = P.c0; if (a < .01) return; const cs = [P.c1, P.c2, P.c3];
   for (let i = 0; i < 3; i++) { const [x, y, r] = stampPos(i), k = clamp(cs[i], 0, 1), on = k > .5, col = on ? '#16233A' : '#9fb7d8';
     g.globalAlpha = a; g.fillStyle = on ? '#fffdf4' : '#0c1830'; circ(x, y, r); g.fill(); g.strokeStyle = on ? '#1d8a5a' : '#9fb7d8'; g.lineWidth = on ? 3 : 1.5; g.setLineDash(on ? [] : [4, 4]); g.stroke(); g.setLineDash([]);
@@ -716,7 +734,7 @@ function show(instant) {
   const all = B.reduce((a, x) => a + x.steps.length, 0), done = B.slice(0, bi).reduce((a, x) => a + x.steps.length, 0) + st + 1;
   $('#pg').textContent = '場面 ' + (bi + 1) + '/' + B.length + ' ・ ' + done + '/' + all;
   target();
-  if (instant) { Object.assign(P, T); Lc.top = Lt.top; Lc.bot = Lt.bot; }
+  if (instant) { OBS.t = []; OBS.p = []; Object.assign(P, T); Lc.top = Lt.top; Lc.bot = Lt.bot; }
   layout(); geom(); buildLabs(s); placeSrc(); placeLabs();
   deck.step = st;
   markNav();
@@ -746,7 +764,7 @@ function back() { if (st > 0) { st--; show(false); } else if (bi > 0) { bi--; st
 window.go = go; window.cur = () => bi;
 
 let last = 0, fT = 0, fN = 0;
-function tick(ms) {
+function tick(ms) { if (innerWidth !== VW0 || innerHeight !== VH0) resize();   /* pcfit v1.1: 画面の大きさが、並べたときと違っていたら並べ直す */
   const t = ms / 1000, dt = clamp(t - last, 0, .05), k = 1 - Math.exp(-dt * 4.2); last = t; NOW = t;
   for (const key in DEF) P[key] += (T[key] - P[key]) * k;
   Lc.top += (Lt.top - Lc.top) * k; Lc.bot += (Lt.bot - Lc.bot) * k;
@@ -760,13 +778,13 @@ function tick(ms) {
   fN++; if (t - fT > 1) { $('#fps').textContent = VERSION + '｜場面' + (bi + 1) + '-' + (st + 1) + '｜毎秒' + fN + 'コマ' + (errs.length ? '｜絵の失敗 ' + errs.length + ' 件' : ''); fN = 0; fT = t; }
   requestAnimationFrame(tick);
 }
-let FIT = 1, FX = 0, FY = 0;   /* pcfit v1.0: スマホの横向きで縮める倍率と、真ん中に置くためのずらし（1・0 は縮めない） */
+let FIT = 1, FX = 0, FY = 0, VW0 = 0, VH0 = 0;   /* pcfit v1.0: スマホの横向きで縮める倍率と、真ん中に置くためのずらし（1・0 は縮めない） */
 const GBCR = Element.prototype.getBoundingClientRect;
 Element.prototype.getBoundingClientRect = function () { const r = GBCR.call(this); if (FIT === 1) return r;
   const x = (r.left - FX) / FIT, y = (r.top - FY) / FIT, w = r.width / FIT, h = r.height / FIT;
   return {x, y, left: x, top: y, width: w, height: h, right: x + w, bottom: y + h}; };
 function resize() {
-  const vw = innerWidth, vh = innerHeight, fit = vw >= vh && vh < 500;
+  const vw = innerWidth, vh = innerHeight, fit = vw >= vh && vh < 500; VW0 = vw; VH0 = vh;
   FIT = fit ? Math.min(vw / 1280, vh / 720) : 1; FX = fit ? Math.round((vw - 1280 * FIT) / 2) : 0; FY = fit ? Math.round((vh - 720 * FIT) / 2) : 0;
   const bs = document.body.style; document.body.classList.toggle('pcfit', fit);
   bs.width = fit ? '1280px' : ''; bs.height = fit ? '720px' : ''; bs.transform = fit ? 'translate(' + FX + 'px,' + FY + 'px) scale(' + FIT + ')' : '';

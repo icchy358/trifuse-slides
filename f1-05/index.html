@@ -92,7 +92,7 @@ body.cover #title{display:grid;grid-template-columns:auto auto 1fr auto;column-g
 }
 
 /* pcfit v1.0: スマホの横向き：幅 1280×720 の画面として組み、縮めて映す（大きさは resize() が決める） */
-body.pcfit{transform-origin:0 0;overflow:hidden}
+body.pcfit{transform-origin:0 0;overflow:hidden;position:fixed;left:0;top:0}
 body.pcfit .hd{max-width:min(768px,720px)}
 body.pcfit .cap,body.pcfit .capm{width:min(1040px,calc(1280px - 28px))}
 body.pcfit #src{padding:clamp(10px,15.36px,26px) clamp(14px,20.48px,34px);font-size:clamp(14px,min(14.72px,15.12px),24px)}
@@ -119,7 +119,7 @@ body.pcfit #title .tm{font-size:clamp(34px,46.08px,68px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'f1-05 shirokuma v0.7.1';
+const VERSION = 'f1-05 shirokuma v0.7.2';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -975,15 +975,15 @@ function frame(ms) {
   deck.frames++;
   fN++; if (t - fT > 1) { $('#fps').textContent = VERSION + '｜場面' + (bi + 1) + '-' + (st + 1) + '｜毎秒' + fN + 'コマ' + (errs.length ? '｜絵の失敗 ' + errs.length + ' 件' : ''); fN = 0; fT = t; }
 }
-function tick(ms) { frame(ms); requestAnimationFrame(tick); }
+function tick(ms) { if (innerWidth !== VW0 || innerHeight !== VH0) resize();   /* pcfit v1.1: 画面の大きさが、並べたときと違っていたら並べ直す */ frame(ms); requestAnimationFrame(tick); }
 window.__frame = () => frame(performance.now());
-let FIT = 1, FX = 0, FY = 0;   /* pcfit v1.0: スマホの横向きで縮める倍率と、真ん中に置くためのずらし（1・0 は縮めない） */
+let FIT = 1, FX = 0, FY = 0, VW0 = 0, VH0 = 0;   /* pcfit v1.0: スマホの横向きで縮める倍率と、真ん中に置くためのずらし（1・0 は縮めない） */
 const GBCR = Element.prototype.getBoundingClientRect;
 Element.prototype.getBoundingClientRect = function () { const r = GBCR.call(this); if (FIT === 1) return r;
   const x = (r.left - FX) / FIT, y = (r.top - FY) / FIT, w = r.width / FIT, h = r.height / FIT;
   return {x, y, left: x, top: y, width: w, height: h, right: x + w, bottom: y + h}; };
 function resize() {
-  const vw = innerWidth, vh = innerHeight, fit = vw >= vh && vh < 500;
+  const vw = innerWidth, vh = innerHeight, fit = vw >= vh && vh < 500; VW0 = vw; VH0 = vh;
   FIT = fit ? Math.min(vw / 1280, vh / 720) : 1; FX = fit ? Math.round((vw - 1280 * FIT) / 2) : 0; FY = fit ? Math.round((vh - 720 * FIT) / 2) : 0;
   const bs = document.body.style; document.body.classList.toggle('pcfit', fit);
   bs.width = fit ? '1280px' : ''; bs.height = fit ? '720px' : ''; bs.transform = fit ? 'translate(' + FX + 'px,' + FY + 'px) scale(' + FIT + ')' : '';
