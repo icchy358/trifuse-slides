@@ -123,7 +123,7 @@ body.pcfit #title .tm{font-size:clamp(34px,46.08px,68px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'f1-05 shirokuma v0.9';
+const VERSION = 'f1-05 shirokuma v0.10';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -231,6 +231,8 @@ const G_STEP = {"2-1": {"p": {"z": 1, "x": 0.43, "y": 0.87, "s": 0.5, "f": -1}},
 /* スマホの縦向きで、横向きと同じ情報を入れるのに要る高さ（横幅 500 の台紙の単位。場面-段は 0 から数える） */
 const ZN = {"1-4": 284, "2-6": 288, "2-7": 288, "2-8": 288, "2-9": 288, "3-2": 258, "3-3": 258, "3-4": 258, "3-5": 258, "3-6": 258, "7-6": 280, "7-7": 280};
 B.forEach((b, i) => b.steps.forEach((s, j) => { const z = ZN[i + '-' + j]; if (z) s.zn = z; }));
+/* v0.10：7節（まとめの3枚＋3つの絵。最後の段は次の章の札も）と、結び（ノートの紙の下の絵。紙は画面の単位で描くので、要る高さは画面の幅から出す） */
+[[8, 0, 266], [8, 1, 266], [8, 2, 266], [8, 3, 266], [8, 4, 266], [8, 5, 312], [9, 0, noteZ(8.1, 98)], [9, 1, noteZ(10.9, 44)], [9, 2, noteZ(10.9, 44)], [9, 3, noteZ(9.9, 62)]].forEach(([i, j, z]) => { B[i].steps[j].zn = z; });
 B.forEach((b, i) => { if (G_SCENE[i]) b.g = G_SCENE[i]; b.steps.forEach((s, j) => { const q = G_STEP[i + '-' + j]; if (!q) return; s.g = q; if (q.pp) s.pl = Object.assign({}, s.pl, q.pp); }); });
 const SRC = [
  ['財務省「国債とは」', 'https://www.mof.go.jp/jgbs/summary/kokusai.html', '5節：国債は国の発行する債券'],
@@ -776,9 +778,9 @@ function noteSheet(t) { const a = P.qnt; if (a < .01) return; const f = FS(), w 
   g.globalAlpha = a; card(x, y, w, h, '#fffdf4', '#c9a24a', 2.5); txt('このノート', x + w / 2, y + f * .5, f * 1.05, '#5a3c12', 'center', 800);
   wrapT('債券＝貸付の証書。約束は利息と元本の返済。信用力と利回りは逆向き', x + f * .8, y + f * 2.0, w - f * 1.6, f * .85, NAVY, 700, f * 1.3);
   txt('事実と構造の説明', x + w / 2, y + h - f * 1.35, f * .8, '#8a7a5a', 'center', 700);
-  if (P.qout > .01) { g.globalAlpha = a * P.qout; const items = ['どの商品を選ぶか', 'いくら入れるか', 'いつ動くか'], bw = (Z.w * .92 - f) / 3, by = y + h + f * 1.4;
+  if (P.qout > .01) { g.globalAlpha = a * P.qout; const items = ['どの商品を選ぶか', 'いくら入れるか', 'いつ動くか'], bw = (Z.w * .92 - f) / 3, by = y + h + f * (LAND ? 1.4 : 1.2);
     txt('ノートの外', zx(.5), by - f * 1.1, f * .8, DIM, 'center', 700);
-    items.forEach((s, i) => { const bx = zx(.04) + i * (bw + f * .5); g.strokeStyle = DIM; g.setLineDash([5, 5]); g.lineWidth = 1.5; rr(bx, by, bw, f * 2.3, 8); g.stroke(); g.setLineDash([]); txt(s, bx + bw / 2, by + f * .65, f * .82, '#dbe7f7', 'center', 700); }); }
+    items.forEach((s, i) => { const bx = zx(.04) + i * (bw + f * .5); g.strokeStyle = DIM; g.setLineDash([5, 5]); g.lineWidth = 1.5; rr(bx, by, bw, f * (LAND ? 2.3 : 1.6), 8); g.stroke(); g.setLineDash([]); txt(s, bx + bw / 2, by + f * (LAND ? .65 : .35), f * .82, '#dbe7f7', 'center', 700); }); }
   if (P.qdbt > .01) { g.globalAlpha = a * P.qdbt; const r = f * 2.0, cx = Math.min(x + w + r * 1.4, Z.x + Z.w - r * 1.6), cy = y + h * .45; g.fillStyle = 'rgba(101,204,254,.16)'; circ(cx, cy, r); g.fill(); g.strokeStyle = BLU; g.lineWidth = 4; g.stroke(); g.lineCap = 'round'; g.lineWidth = 6; g.beginPath(); g.moveTo(cx + r * .72, cy + r * .72); g.lineTo(cx + r * 1.4, cy + r * 1.4); g.stroke();
     txt('出典で疑う', zx(.5), y + h + f * 1.0, f * .9, BLU, 'center', 800); }
   g.globalAlpha = 1; }
@@ -836,6 +838,52 @@ function plPort(s) { const q = s.pl || {}, o = {}; for (const k of ['qcv', 'qex'
    v0.8 で「縦では別の見せ方」にしていた12段（1節の5段目・比べる表の4段・2節の値札の5段・6節の円で数える2段）を、横向きと同じ中身で描く。
    どれも横幅 500 の小さい台紙（PBW）に描く。段ごとに「要る高さ」（ZN）を持ち、その段だけ絵の枠を広げて 2人を小さくする（引きの絵）。
    枠に入りきらない低い画面では、絵をまるごと縮める（pbn）。パソコンとスマホの横向き（LAND）では、ここの関数は1つも呼ばれない。 */
+/* ───────── 字の無い絵も、縦向きに入れる（v0.10・2026-11-21）─────────
+   社長の指摘「縦型には横型下段にある絵が表示されていない。縦型に3つ表示させるの難しいなら1つずつ適切な絵を切替えて表示されれば問題ない」。
+   7節の下の3つの絵（年表・シーソー・3つの関門）、結びの絵（このノートで見たこと／ノートの外の3つ／出典の資料6つ）、カフェの立場の小さい絵を、縦向きにも描く。
+   3つの絵は小さくすれば横に並ぶので、横向きと同じく3つ並べ、説明した札の絵が点く。
+   絵の部品の名前（__partFns）と mark() は、点検 sp_parts.py が横向きと縦向きを見比べるための印（絵は変えない）。 */
+window.__partFns = ['pawn', 'house', 'miniCert', 'miniLine', 'lane', 'money', 'coin', 'gateMark'];
+function mark(n) { if (window.__marks && g.globalAlpha > .45) window.__marks.add(n); }
+/* 3つの小さい絵（台紙の単位。高さ 92）：年表／信用力と利回りのシーソー／3つの関門 */
+function tilesRowP(y, t, a, ons) { [6, 170, 334].forEach((x, i) => { const on = ons[i], cx = x + 80; g.globalAlpha = a * (on ? 1 : .4);
+  card(x, y, 160, 92, 'rgba(12,24,48,.55)', on ? 'rgba(254,218,55,.7)' : 'rgba(159,183,216,.35)', 1.5);
+  if (i === 0) { g.save(); g.translate(x + 18, y + 74); g.scale(.5, .5); miniLine(0, 240, 0, t); g.restore(); }
+  if (i === 1) { mark('シーソー'); const ang = .2 * Math.sin(t * .6), py = y + 64, L = 44; g.fillStyle = '#aebbd3'; g.beginPath(); g.moveTo(cx, py); g.lineTo(cx - 10, py + 18); g.lineTo(cx + 10, py + 18); g.closePath(); g.fill();
+    const lx = cx - L * Math.cos(ang), ly = py + L * Math.sin(ang), rx = cx + L * Math.cos(ang), ry = py - L * Math.sin(ang); cross(lx, ly, rx, ry, '#eef2f7', 4);
+    g.fillStyle = BLU; circ(lx, ly - 9, 7); g.fill(); g.fillStyle = YEL; circ(rx, ry - 9, 7); g.fill();
+    txt('信用力', lx + 4, ly - 38, 16, '#dbe7f7', 'center', 800); txt('利回り', rx - 4, ry - 38, 16, YEL, 'center', 800); }
+  if (i === 2) { mark('gateMark'); const yr = y + 66; g.strokeStyle = 'rgba(219,231,247,.6)'; g.lineWidth = 2; g.setLineDash([3, 8]); g.lineCap = 'round'; g.beginPath(); g.moveTo(x + 14, yr); g.lineTo(x + 146, yr); g.stroke(); g.setLineDash([]);
+    for (let n = 1; n <= 3; n++) { const gx = x + 40 * n; g.fillStyle = '#7f93ad'; g.fillRect(gx - 2, yr - 14, 4, 28); g.fillStyle = '#2B5FA8'; circ(gx, yr - 26, 12); g.fill(); txt(String(n), gx, yr - 35, 17, '#fff', 'center', 900); } } }); }
+/* 7節：まとめの3枚 → 3つの小さい絵 → 次の章 */
+function summaryP(t) { const a = P.qsm; if (a < .01) return;
+  const S3 = [['約束は、利息と元本の支払いまで', '値上がりは約束の外', P.qs1], ['利回りの高さは、信用力の裏返し', '高い利回り＝危険料', P.qs2], ['元本が戻る3つの前提', '持つ期間・発行体が続くこと・通貨', P.qs3]];
+  pbn(P.qnx > .5 ? 310 : 264, () => { const x = 4, w = 492, rh = 50, gap = 5;
+    S3.forEach(([h, d, k], i) => { const y = 2 + i * (rh + gap), on = k > .5; g.globalAlpha = a * (on ? 1 : .45);
+      card(x, y, w, rh, on ? 'rgba(255,253,244,.97)' : 'rgba(12,24,48,.85)', on ? YEL : 'rgba(159,183,216,.6)', 2); txt(h, x + 14, y + 5, 18, on ? NAVY : '#fff', 'left', 800); txt(d, x + 14, y + 28, 16, on ? '#5a4a32' : DIM, 'left', 600); });
+    tilesRowP(168, t, a, S3.map(r => r[2] > .5));
+    if (P.qnx > .01) { g.globalAlpha = a * P.qnx; card(196, 268, 300, 38, 'rgba(43,108,205,.95)'); txt('次の章：投資信託 ›', 346, 277, 20, '#fff', 'center', 800); } });
+  g.globalAlpha = 1; }
+/* 結び：ノートの紙（noteSheet。画面の単位で描く）の下に、横向きの絵を置く。m＝紙と字の下の端（字の大きさの何倍か） */
+function noteZ(m, add) { return () => { const k = W * .92 / 500; let f = 16; for (let i = 0; i < 2; i++) f = clamp(Math.min(W * .92, f * m + 8 + add * k) / 21, 16, 22); return (f * m + 8) / k + add; }; }
+function noteArtP(t) { const a = P.qnt; if (a < .01) return; const f = FS(), k = Z.w / PBW, yb = m => (f * m + 8) / k;
+  const n0 = a * (1 - clamp(P.qout, 0, 1)) * (1 - clamp(P.qdbt, 0, 1)), o = a * clamp(P.qout, 0, 1), q = a * clamp(P.qdbt, 0, 1);
+  pb(() => {
+    if (n0 > .01) tilesRowP(yb(8.1), t, n0, [true, true, true]);   /* このノートで見たこと（7節と同じ3つ） */
+    if (o > .01) { const y = yb(10.9) + 21;   /* ノートの外の3つ（選ぶ・いくら・いつ）。字の札のすぐ下に、同じ順で置く */
+      [93, 250, 407].forEach((cx, i) => { g.globalAlpha = o; if (!i) mark('ノートの外の絵'); g.save(); g.translate(cx, y); g.scale(.38, .38); g.strokeStyle = DIM; g.fillStyle = 'rgba(159,183,216,.22)'; g.lineWidth = 3; rr(-112, -50, 224, 104, 8); g.beginPath();   /* 絵の場所を、吹き出しを重ねない物として覚えさせる（線は引かない） */
+        if (i === 0) [-78, 0, 78].forEach(dx => { rr(dx - 30, -42, 60, 84, 8); g.fill(); g.stroke(); });
+        if (i === 1) [1, 2, 3].forEach((n, kk) => { for (let j = 0; j < n; j++) { g.beginPath(); g.ellipse((kk - 1) * 78, 34 - j * 20, 30, 11, 0, 0, 6.2832); g.fill(); g.stroke(); } });
+        if (i === 2) { circ(0, 0, 48); g.fill(); g.stroke(); g.lineCap = 'round'; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.sin(t * .5) * 34, -Math.cos(t * .5) * 34); g.moveTo(0, 0); g.lineTo(18, 10); g.stroke(); }
+        g.restore(); }); }
+    if (q > .01) { g.globalAlpha = q; g.save(); g.translate(0, yb(9.9)); g.scale(.45, .45); for (let i = 0; i < 6; i++) miniCert(62 + i * 172, 6 + Math.sin(t * 1.2 + i) * 5, 90, 118); g.restore(); } });   /* 出典の資料（6つ） */
+  g.globalAlpha = 1; }
+/* カフェ：立場の名前の下に、横向きの札と同じ小さい絵（共同経営者＝人と会社、貸す側＝人と借用書） */
+function cafeIconsP() { const a = P.qcf; if (a < .01) return;
+  pb(() => { g.globalAlpha = a * (.75 + .25 * clamp(P.qha || 0, 0, 1)); pawn(18, 52, 15, BLU); house(42, 52, 18, 24, 2);
+    g.globalAlpha = a * (.75 + .25 * clamp(P.qhb || 0, 0, 1)); pawn(458, 52, 15, GRN); miniCert(471, 32, 23, 19); });
+  g.globalAlpha = 1; }
+
 function pbn(need, fn) { pb((Hb) => { const s = Math.min(1, Hb / need); if (s < 1) { g.translate(PBW * (1 - s) / 2, 0); g.scale(s, s); } fn(); }); }
 /* 年表（台紙の単位）：線の高さ y。上に 70、下に 24 使う。売る年の印（TLM）は 100万円 の札と同じ高さに置く */
 function timeP(y, a) { const x0 = 36, x1 = 436, n = 5; g.globalAlpha = a; g.strokeStyle = '#dbe7f7'; g.lineWidth = 3; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke();
@@ -903,7 +951,7 @@ function gatesFxP() { const a = P.qgt; if (a < .01) return;
       g.fillStyle = col; rr(x + 104, yy, full * v / 150, 20, 4); g.fill(); txt(v + '万円', x + 110 + full * v / 150, yy + 1, 18, '#fff', 'left', 800); });
     const yr = 262, xs = [104, 180, 250, 320, 392], q = clamp(P.qrd, 0, 4), i0 = Math.min(3, Math.floor(q)), stop = i => i === 0 || i === 4 ? xs[i] : xs[i] - 30, bx = lerp(stop(i0), stop(i0 + 1), q - i0);
     g.globalAlpha = a; g.lineCap = 'round'; g.lineWidth = 4; g.strokeStyle = GRN; g.beginPath(); g.moveTo(xs[0], yr); g.lineTo(bx, yr); g.stroke();
-    g.strokeStyle = 'rgba(219,231,247,.6)'; g.lineWidth = 2.5; g.setLineDash([3, 9]); g.beginPath(); g.moveTo(bx, yr); g.lineTo(xs[4], yr); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = 'rgba(219,231,247,.6)'; g.lineWidth = 2.5; g.setLineDash([3, 9]); g.beginPath(); g.moveTo(bx, yr); g.lineTo(xs[4], yr); g.stroke(); g.setLineDash([]); mark('gateMark');
     for (let i = 1; i <= 3; i++) { const st = q > i + .5 ? 2 : Math.abs(q - i) <= .5 ? 1 : 0; g.fillStyle = st === 1 ? YEL : st === 2 ? GRN : '#2B5FA8'; circ(xs[i], yr, 13); g.fill(); txt(String(i), xs[i], yr - 10, 19, st === 0 ? '#fff' : NAVY, 'center', 900); }
     g.fillStyle = '#fff'; circ(bx, yr, 9); g.fill(); g.fillStyle = GRN; circ(bx, yr, 5.5); g.fill();
     txt('債券を買う', 6, yr - 9, 16, '#dbe7f7', 'left', 700); txt('元本が戻る', 494, yr - 9, 16, q > 3.5 ? GRN : DIM, 'right', 800); });
@@ -946,7 +994,7 @@ function cafeNamesP() { const a = P.qcf; if (a < .01) return;
 function roadP() { const a = P.qgt * (1 - clamp(P.qfx, 0, 1)); if (a < .01) return; const f = FS();
   pb((Hb, k) => { const yr = (4 + 3 * (f * 2.4 + f * .35)) / k + 20, xs = [100, 176, 250, 324, 392], q = clamp(P.qrd, 0, 4), i0 = Math.min(3, Math.floor(q)), stop = i => i === 0 || i === 4 ? xs[i] : xs[i] - 30, bx = lerp(stop(i0), stop(i0 + 1), q - i0);
     g.globalAlpha = a; g.lineCap = 'round'; g.lineWidth = 4; g.strokeStyle = GRN; g.beginPath(); g.moveTo(xs[0], yr); g.lineTo(bx, yr); g.stroke();
-    g.strokeStyle = 'rgba(219,231,247,.6)'; g.lineWidth = 2.5; g.setLineDash([3, 9]); g.beginPath(); g.moveTo(bx, yr); g.lineTo(xs[4], yr); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = 'rgba(219,231,247,.6)'; g.lineWidth = 2.5; g.setLineDash([3, 9]); g.beginPath(); g.moveTo(bx, yr); g.lineTo(xs[4], yr); g.stroke(); g.setLineDash([]); mark('gateMark');
     for (let i = 1; i <= 3; i++) { const st = q > i + .5 ? 2 : Math.abs(q - i) <= .5 ? 1 : 0;   /* 関門の番号は、道の上に置く */
       g.fillStyle = st === 1 ? YEL : st === 2 ? GRN : '#2B5FA8'; circ(xs[i], yr, 13); g.fill(); txt(String(i), xs[i], yr - 10, 19, st === 0 ? '#fff' : NAVY, 'center', 900); }
     g.fillStyle = '#fff'; circ(bx, yr, 9); g.fill(); g.fillStyle = GRN; circ(bx, yr, 5.5); g.fill();
@@ -999,7 +1047,7 @@ function gates(t) { if (!LAND) { if (P.qfx > .5) return gatesFxP(); gatesOld(t);
   g.globalAlpha = 1; }
 
 /* 7節：まとめの3枚（字は札の上下の真ん中）、次の章、下に各札に対応する小さな絵（左から順に、上の札の1・2・3枚目） */
-function summary(t) { if (!LAND) return summaryOld(t); const a = P.qsm; if (a < .01) return; const x = 50, w = 900, rh = 78, gap = 14;
+function summary(t) { if (!LAND) return summaryP(t); const a = P.qsm; if (a < .01) return; const x = 50, w = 900, rh = 78, gap = 14;
   const S3 = [['約束は、利息と元本の支払いまで', '値上がりは約束の外', P.qs1], ['利回りの高さは、信用力の裏返し', '高い利回り＝危険料', P.qs2], ['元本が戻る3つの前提', '持つ期間・発行体が続くこと・通貨', P.qs3]];
   S3.forEach(([h, d, k], i) => { const y = 6 + i * (rh + gap), on = k > .5, hy = y + (rh - 26 - 8 - 20.3) / 2; g.globalAlpha = a * (on ? 1 : .45);
     card(x, y, w, rh, on ? 'rgba(255,253,244,.97)' : 'rgba(12,24,48,.85)', on ? YEL : 'rgba(159,183,216,.6)', 2); txt(h, x + 26, hy, 25.5, on ? NAVY : '#fff', 'left', 800); txt(d, x + 26, hy + 34, 20.3, on ? '#5a4a32' : DIM, 'left', 600); });
@@ -1011,7 +1059,7 @@ function tiles3(x, y0, t, a, ons) { const th = 250, tw = 280;
   ons.forEach((on, i) => { const tx = x + i * 310, cx = tx + tw / 2; g.globalAlpha = a * (on ? 1 : .4);
     card(tx, y0, tw, th, 'rgba(12,24,48,.55)', on ? 'rgba(254,218,55,.7)' : 'rgba(159,183,216,.35)', 1.5);
     if (i === 0) miniLine(tx + 34, tx + tw - 38, y0 + 168, t);
-    if (i === 1) { const ang = .2 * Math.sin(t * .6), py = y0 + 176, L = 92;   /* シーソー：信用力が下がると、利回りが上がる */
+    if (i === 1) { mark('シーソー'); const ang = .2 * Math.sin(t * .6), py = y0 + 176, L = 92;   /* シーソー：信用力が下がると、利回りが上がる */
       g.fillStyle = '#aebbd3'; g.beginPath(); g.moveTo(cx, py); g.lineTo(cx - 20, py + 36); g.lineTo(cx + 20, py + 36); g.closePath(); g.fill();
       const lx = cx - L * Math.cos(ang), ly = py + L * Math.sin(ang), rx = cx + L * Math.cos(ang), ry = py - L * Math.sin(ang); cross(lx, ly, rx, ry, '#eef2f7', 6);
       g.fillStyle = BLU; circ(lx, ly - 16, 13); g.fill(); g.fillStyle = YEL; circ(rx, ry - 16, 13); g.fill();
@@ -1035,7 +1083,7 @@ function under(t) { if (!LAND) return;
   if (n0 > .01) tiles3(50, 340, t, n0, [true, true, true]);   /* 結び：このノートで見たこと（7節と同じ3枚） */
   const o = P.qnt * P.qout;
   if (o > .01) { g.lineWidth = 2;   /* 結び：ノートの外の3つ（選ぶ・いくら・いつ） */
-    [189, 500, 811].forEach((cx, i) => { const y = 432; g.globalAlpha = o; g.strokeStyle = DIM; g.fillStyle = 'rgba(12,24,48,.55)'; g.setLineDash([5, 5]); rr(cx - 149, 330, 298, 204, 12); g.fill(); g.stroke(); g.setLineDash([]); g.fillStyle = 'rgba(159,183,216,.22)';
+    [189, 500, 811].forEach((cx, i) => { const y = 432; g.globalAlpha = o; if (!i) mark('ノートの外の絵'); g.strokeStyle = DIM; g.fillStyle = 'rgba(12,24,48,.55)'; g.setLineDash([5, 5]); rr(cx - 149, 330, 298, 204, 12); g.fill(); g.stroke(); g.setLineDash([]); g.fillStyle = 'rgba(159,183,216,.22)';
       if (i === 0) [-78, 0, 78].forEach(dx => { rr(cx + dx - 30, y - 42, 60, 84, 8); g.fill(); g.stroke(); });
       if (i === 1) [1, 2, 3].forEach((n, k) => { for (let j = 0; j < n; j++) { g.beginPath(); g.ellipse(cx + (k - 1) * 78, y + 34 - j * 20, 30, 11, 0, 0, 6.2832); g.fill(); g.stroke(); } });
       if (i === 2) { circ(cx, y, 48); g.fill(); g.stroke(); g.lineCap = 'round'; g.beginPath(); g.moveTo(cx, y); g.lineTo(cx + Math.sin(t * .5) * 34, y - Math.cos(t * .5) * 34); g.moveTo(cx, y); g.lineTo(cx + 18, y + 10); g.stroke(); } }); }
@@ -1126,7 +1174,7 @@ function show(instant) {
   const all = B.reduce((a, x) => a + x.steps.length, 0), done = B.slice(0, bi).reduce((a, x) => a + x.steps.length, 0) + st + 1;
   $('#pg').textContent = '場面 ' + (bi + 1) + '/' + B.length + ' ・ ' + done + '/' + all;
   target();
-  { const zn = !LAND && s.zn || 0; if (zn) { const sh = Lt.bot - Lt.top, rb0 = Math.min(sh * .07, W * .095); T.zq = 1; T.zfp = Math.min(zn * W * .92 / 500 + 4, sh - rb0 * .7 * 4.1 - 44) / sh; } }   /* 要る高さのある段：絵の枠をその高さにする（2人と吹き出しの場所は残す） */
+  { const z0 = !LAND && s.zn || 0, zn = typeof z0 === 'function' ? z0() : z0; if (zn) { const sh = Lt.bot - Lt.top, rb0 = Math.min(sh * .07, W * .095); T.zq = 1; T.zfp = Math.min(zn * W * .92 / 500 + 4, sh - rb0 * .7 * 4.1 - 44) / sh; } }   /* 要る高さのある段：絵の枠をその高さにする（2人と吹き出しの場所は残す） */
   if (instant) { OBS.t = []; OBS.p = []; Object.assign(P, T); Lc.top = Lt.top; Lc.bot = Lt.bot; stepT0 = -1e9; } else stepT0 = NOW;
   layout(); geom(); buildLabs(s); placeSrc(); placeLabs();
   deck.step = st;
@@ -1166,8 +1214,8 @@ function frame(ms) {
   OBS.t = []; OBS.p = []; safe('背景', () => backdrop(t)); REC = true; if (LAND) safe('床', floorLine);
   if (window.__collect) { window.__txt = []; window.__cards = []; }
   const Zs = Z; if (LAND) { Z = {x: 0, y: 0, w: BW, h: BH}; BMODE = true; g.save(); g.translate(BOARD.x, BOARD.y); g.scale(BOARD.k, BOARD.k); }
-  safe('下地', () => under(t)); safe('表紙の絵', () => coverArt(t)); safe('借用書', () => cert(t)); safe('年表', () => timeline(t)); safe('カフェ', () => cafe(t)); if (!LAND) safe('カフェの立場', cafeNamesP); safe('比べる表', () => cmpTable(t)); safe('値札', () => tags(t)); safe('AとB', () => ab(t));
-  safe('柱', () => issuers(t)); safe('前提', () => gates(t)); safe('まとめ', () => summary(t)); safe('ノート', () => noteSheet(t));
+  safe('下地', () => under(t)); safe('表紙の絵', () => coverArt(t)); safe('借用書', () => cert(t)); safe('年表', () => timeline(t)); safe('カフェ', () => cafe(t)); if (!LAND) { safe('カフェの立場', cafeNamesP); safe('カフェの小さい絵', cafeIconsP); } safe('比べる表', () => cmpTable(t)); safe('値札', () => tags(t)); safe('AとB', () => ab(t));
+  safe('柱', () => issuers(t)); safe('前提', () => gates(t)); safe('まとめ', () => summary(t)); safe('ノート', () => noteSheet(t)); if (!LAND) safe('ノートの絵', () => noteArtP(t));
   if (LAND) { g.restore(); Z = Zs; BMODE = false; }
   REC = false; safe('ペンギン', () => person(t)); safe('シロクマ', () => bear(t)); safe('手前', fore);
   try { placeLabs(); } catch (e) { note('札: ' + e.message); }
