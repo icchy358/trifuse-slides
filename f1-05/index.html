@@ -123,7 +123,7 @@ body.pcfit #title .tm{font-size:clamp(34px,46.08px,68px)}
 <noscript><div style="position:fixed;left:16px;right:16px;top:30%;background:#fff;color:#16233A;padding:16px;border-radius:8px;z-index:9">この資料は、ブラウザのスクリプトが切られていると動きません。スクリプトを有効にして開き直してください。</div></noscript>
 <script>
 'use strict';
-const VERSION = 'f1-05 shirokuma v0.8';
+const VERSION = 'f1-05 shirokuma v0.9';
 const $ = s => document.querySelector(s);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -228,6 +228,9 @@ const B = [
    {z:1, x, y, s, f} は絵の枠の中の位置（2人を絵の中に入れる）。z＝絵の枠 [x, y, 幅, 高さ]。pp＝その段だけ絵の動く数を足す */
 const G_SCENE = [{"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}, {"z": [0.42, 0, 0.56, 1], "p": {"z": 1, "x": 0.1, "y": 0.684, "s": 0.34, "f": 1}, "k": [0.08, 1.23, 1.22, 1], "bu": 1}, {"z": [0.42, 0, 0.56, 1], "p": {"z": 1, "x": 0.5, "y": 0.87, "s": 0.5, "f": 1}, "k": [0.08, 1.23, 1.22, 1], "bu": 1}, {"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}, {"z": [0.42, 0, 0.56, 1], "p": {"z": 1, "x": 0.5, "y": 0.98, "s": 0.48, "f": 1}, "k": [0.08, 1.23, 1.22, 1], "bu": 1}, {"z": [0.42, 0, 0.56, 1], "p": {"z": 1, "x": 0.5, "y": 0.98, "s": 0.48, "f": 1}, "k": [0.08, 1.23, 1.22, 1], "bu": 1}, {"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}, {"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}, {"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}, {"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}, {"z": [0.42, 0, 0.56, 1], "p": [0.24, 1.37, 1.41, 1], "k": [0.08, 1.23, 1.22, 1]}];
 const G_STEP = {"2-1": {"p": {"z": 1, "x": 0.43, "y": 0.87, "s": 0.5, "f": -1}}, "2-2": {"p": {"z": 1, "x": 0.57, "y": 0.87, "s": 0.5, "f": 1}}, "2-4": {"p": {"z": 1, "x": 0.57, "y": 0.87, "s": 0.5, "f": 1}}, "2-5": {"p": {"z": 1, "x": 0.57, "y": 0.87, "s": 0.5, "f": 1}}, "2-6": {"p": [0.24, 1.37, 1.41, 1], "bu": 0}, "2-7": {"p": [0.24, 1.37, 1.41, 1], "bu": 0}, "2-8": {"p": [0.24, 1.37, 1.41, 1], "bu": 0}, "2-9": {"p": [0.24, 1.37, 1.41, 1], "bu": 0}, "3-3": {"p": {"z": 1, "x": 0.56, "y": 0.98, "s": 0.42, "f": -1}, "pp": {"qtu": 1}}, "3-7": {"p": {"z": 1, "x": 0.88, "y": 0.98, "s": 0.42, "f": -1}, "pp": {"qtu": 1, "qce": 0}, "bl": 662}, "4-3": {"p": {"z": 1, "x": 0.42, "y": 0.98, "s": 0.48, "f": -1}}, "4-4": {"p": {"z": 1, "x": 0.58, "y": 0.98, "s": 0.48, "f": 1}}, "5-2": {"p": {"z": 1, "x": 0.46, "y": 0.98, "s": 0.48, "f": 1}}, "5-3": {"p": {"z": 1, "x": 0.42, "y": 0.98, "s": 0.48, "f": 1}}, "5-4": {"p": {"z": 1, "x": 0.42, "y": 0.98, "s": 0.48, "f": 1}}, "5-5": {"p": [0.24, 1.37, 1.41, 1], "bu": 0}, "7-2": {"p": {"z": 1, "x": 0.9, "y": 0.285, "s": 0.34, "f": -1}, "bl": 652}, "7-3": {"p": {"z": 1, "x": 0.9, "y": 0.445, "s": 0.34, "f": -1}, "bl": 652}, "7-4": {"p": {"z": 1, "x": 0.9, "y": 0.445, "s": 0.34, "f": -1}, "bl": 652}, "7-5": {"p": {"z": 1, "x": 0.9, "y": 0.606, "s": 0.34, "f": -1}, "bl": 652}, "7-6": {"p": {"z": 1, "x": 0.9, "y": 0.606, "s": 0.34, "f": -1}, "bl": 652}, "7-7": {"p": {"z": 1, "x": 0.9, "y": 0.606, "s": 0.34, "f": -1}, "bl": 652}};
+/* スマホの縦向きで、横向きと同じ情報を入れるのに要る高さ（横幅 500 の台紙の単位。場面-段は 0 から数える） */
+const ZN = {"1-4": 284, "2-6": 288, "2-7": 288, "2-8": 288, "2-9": 288, "3-2": 258, "3-3": 258, "3-4": 258, "3-5": 258, "3-6": 258, "7-6": 280, "7-7": 280};
+B.forEach((b, i) => b.steps.forEach((s, j) => { const z = ZN[i + '-' + j]; if (z) s.zn = z; }));
 B.forEach((b, i) => { if (G_SCENE[i]) b.g = G_SCENE[i]; b.steps.forEach((s, j) => { const q = G_STEP[i + '-' + j]; if (!q) return; s.g = q; if (q.pp) s.pl = Object.assign({}, s.pl, q.pp); }); });
 const SRC = [
  ['財務省「国債とは」', 'https://www.mof.go.jp/jgbs/summary/kokusai.html', '5節：国債は国の発行する債券'],
@@ -247,7 +250,7 @@ const DEF = {
  bk: 0, sil: 0, su: 0, gz: 0, lg: 0, cr: 0, cn: 0, nt: 0, gd: 0, my: 0, qm: 0, lamp: 0, gt: 0, a1: 0, a2: 0, gopen: 0,
  sheet: 0, bnd: 0, trio: 0, spot: 0, mag: 0, ln2: 0, bz: 0,
  pgx: .31, pgy: 1.2, pgs: 1.05, pgf: 1, pgin: 0, pbx: .5, pby: .9, kbx: .08, kby: 1.05, kbs: 1, kbf: 1, zx0: .54, zy0: 0, zw0: .44, zh0: 1, qtu: 0,
- qcv: 0, qex: 0, qf1: 0, qf2: 0, qrd: 0, qtb: 0, qtr: 0,
+ qcv: 0, qex: 0, qf1: 0, qf2: 0, qrd: 0, qtb: 0, qtr: 0, zq: 0, zfp: .38,
  sd: 0, qce: 0, qtm: 0, qyr: 0, qcf: 0, qmx: 10, qeq: 0, qlo: 0, qcl: 0, qha: 0, qhb: 0, qtg: 0, qup: 0, qpr: 0, qwb: 0, qdn: 0, qsame: 0,
  qab: 0, qar: 0, qbr: 0, qhA: 0, qhB: 0, qr1: 0, qb1: 0, qr10: 0, qfee: 0, qx: 0, qis: 0, qp1: 0, qp2: 0, qp3: 0, qord: 0, qyl: 0, qold: 0,
  qgt: 0, qk1: 0, qk2: 0, qk2d: 0, qk3: 0, qfx: 0, qsm: 0, qs1: 0, qs2: 0, qs3: 0, qnx: 0, qnt: 0, qout: 0, qdbt: 0,
@@ -385,8 +388,8 @@ function layout() {
     BY -= Math.abs(Math.sin(NOW * 9)) * clamp(Math.abs(T.kbx - P.kbx) * W / 40, 0, 1) * RB * .3;
     const lim = BX + RB * 1.9 + 12; if (BOARD.x < lim) { const k2 = Math.min(BOARD.k, (Z.x + Z.w - lim) / BW); BOARD = {k: k2, x: lim, y: Z.y + (Z.h - BH * k2) / 2}; }
     R = lerp(S.h * .085, BOARD.k * 60, P.pgin) * P.pgs; PX = lerp(W * P.pgx, BOARD.x + BOARD.k * BW * P.pbx, P.pgin); }   /* 横へ移るあいだは、歩くように少し弾む */   /* シロクマの大きさと位置は、寄り・引きで変えない（いつも同じ所で見守る） */
-  else { const zf = lerp(lerp(B[bi].zf || .38, .32, c), .47, w); R = Math.min(S.h * (1 - zf) * .168, W * .14) * (1 + .15 * c - .1 * w); PX = W * (.30 - .03 * c - .02 * w); Z = {x: W * .04, y: top + 2, w: W * .92, h: S.h * zf};
-    RB = Math.min(S.h * .07, W * .095); BX = W * .80; BY = bot + RB * .3; }   /* スマホで人に寄る段も、シロクマは動かさず全身（腰から上）を画面に残す。人の寄りは控えめにする */
+  else { const zf = lerp(lerp(lerp(B[bi].zf || .38, .32, c), .47, w), P.zfp, clamp(P.zq, 0, 1)); R = Math.min(S.h * (1 - zf) * .168, W * .14) * (1 + .15 * c - .1 * w); PX = W * (.30 - .03 * c - .02 * w); Z = {x: W * .04, y: top + 2, w: W * .92, h: S.h * zf};
+    RB = Math.min(S.h * .07, W * .095) * lerp(1, .7, clamp(P.zq, 0, 1) * clamp((zf - .5) / .12, 0, 1)); BX = W * .80; BY = bot + RB * .3; }   /* スマホで人に寄る段も、シロクマは動かさず全身（腰から上）を画面に残す。人の寄りは控えめにする */
   PY = LAND ? lerp(top + S.h * P.pgy, BOARD.y + BOARD.k * BH * P.pby, P.pgin) - 3.27 * R : bot + R * .25;   /* パソコンは足の位置から体を置く */
   const z = LAND ? Math.max(P.bz, P.bzl) : P.bz;   /* 建物だけが外にある段では、建物を大きく真ん中へ寄せて、右の空きを作らない */
   BL = LAND ? {cx: zx(lerp(.80, .62, z)), by: zy(lerp(.44, .78, z)), w: Z.w * lerp(.34, .62, z)} : {cx: zx(lerp(.83, .6, z)), by: zy(lerp(.68, .94, z)), w: Z.w * lerp(.30, .56, z)};
@@ -641,7 +644,7 @@ function certOld(t) { const a = P.qce * (1 - clamp(Math.max(P.qtm, P.qex), 0, 1)
   g.globalAlpha = 1; }
 
 /* 5年の年表：毎年の利息と、満期の100万円。縦の点線＝売る年・満期 */
-function timeline(t) { const a = P.qtm; if (a < .01) return; const f = FS(), x0 = zx(.08), x1 = zx(.88), y = LAND ? zy(lerp(.9, .48, P.qtu)) : Math.min(zy(.9), Z.y + (P.qtg > .5 ? f * 3.8 + 8 : Z.w * .136) + f * (TLM ? 7.2 : 4.9)), n = 5;
+function timeline(t) { const a = P.qtm; if (a < .01) return; if (!LAND && (P.qtg > .5 || P.qex > .5)) return;   /* 縦向きの値札の段・やり取りの段は、台紙の年表（timeP）が描く */ const f = FS(), x0 = zx(.08), x1 = zx(.88), y = LAND ? zy(lerp(.9, .48, P.qtu)) : Math.min(zy(.9), Z.y + (P.qtg > .5 ? f * 3.8 + 8 : Z.w * .136) + f * (TLM ? 7.2 : 4.9)), n = 5;
   g.globalAlpha = a; g.strokeStyle = '#dbe7f7'; g.lineWidth = 3; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke();
   for (let i = 0; i <= n; i++) { const x = lerp(x0, x1, i / n); g.fillStyle = '#dbe7f7'; circ(x, y, 4); g.fill(); txt(i ? i + '年目' : 'いま', x, y + f * .45, f * .75, DIM, 'center', 600);
     if (i > 0) { g.fillStyle = YEL; circ(x, y - f * 1.15, f * .62); g.fill(); txt('3万', x, y - f * 1.15 - f * .38, f * .72, NAVY, 'center', 800); } }
@@ -683,7 +686,7 @@ function wrapC(s, cx, y, mw, size, color) { const lines = wrapL(s, mw, size);
   lines.forEach((l, i) => txt(l, cx, y + i * size * 1.3, size, color, 'center', 800)); return y + lines.length * size * 1.3; }
 
 /* 2節：あなたの債券（年3%）と新しい募集（年4%）、3年目に売るときの値段 */
-function tags(t) { const a = P.qtg; if (a < .01) return; const f = FS(), w = Math.min(Z.w * .44, f * 11), h = f * 3.8, y = Z.y + 6;
+function tags(t) { if (!LAND) return tagsP(t); const a = P.qtg; if (a < .01) return; const f = FS(), w = Math.min(Z.w * .44, f * 11), h = f * 3.8, y = Z.y + 6;
   g.globalAlpha = a; card(zx(.03), y, w, h, 'rgba(43,108,205,.95)'); txt('あなたの債券', zx(.03) + f * .6, y + f * .45, f * .85, '#dbe7f7', 'left', 600); txt('年3%', zx(.03) + f * .6, y + f * 1.55, f * 1.6, '#fff', 'left', 900);
   if (P.qup > .01) { g.globalAlpha = a * P.qup; const x = zx(.97) - w; card(x, y, w, h, 'rgba(49,153,122,.95)'); txt('新しい募集', x + f * .6, y + f * .45, f * .85, '#e3fff4', 'left', 600); txt('年4%', x + f * .6, y + f * 1.55, f * 1.6, '#fff', 'left', 900);
     txt('世の中の金利が上がった', zx(.5), y + h + f * .3, f * .75, YEL, 'center', 700); }
@@ -824,10 +827,90 @@ const PBW = 500;
 function pb(fn) { const k = Z.w / PBW, bm = BMODE; g.save(); g.translate(Z.x, Z.y); g.scale(k, k); BMODE = true; try { fn(Z.h / k, k); } finally { BMODE = bm; g.restore(); } }
 /* 縦向きで効かせる「パソコン向けの動く数」：表紙の予告・やり取り・前提の道。年表は、借用書だけの段（値札の無い段）でだけ足す */
 function plPort(s) { const q = s.pl || {}, o = {}; for (const k of ['qcv', 'qex', 'qf1', 'qf2', 'qrd']) if (k in q) o[k] = q[k];
-  if ('qtm' in q && s.p && s.p.qce && !s.p.qtg) o.qtm = q.qtm; return o; }
+  if ('qtm' in q && s.p && s.p.qce && !s.p.qtg) o.qtm = q.qtm;
+  if (s.p && s.p.qtg) for (const k of ['qtm', 'qyr']) if (k in q) o[k] = q[k];   /* 値札の段：年表と売る年も、横向きと同じに出す */
+  return o; }
 /* 借用書：やり取りや年表が出る段は、借用書を上の帯にして、その下に絵を置く */
+/* ───────── スマホの縦向きにも、横向きと同じ情報を入れる（v0.9・2026-11-21）─────────
+   社長の指示「12段ぜんぶ入れて。基本的には横向きと同じ情報を縦側でも工夫して入れる様に仕様を固定させなさい」。
+   v0.8 で「縦では別の見せ方」にしていた12段（1節の5段目・比べる表の4段・2節の値札の5段・6節の円で数える2段）を、横向きと同じ中身で描く。
+   どれも横幅 500 の小さい台紙（PBW）に描く。段ごとに「要る高さ」（ZN）を持ち、その段だけ絵の枠を広げて 2人を小さくする（引きの絵）。
+   枠に入りきらない低い画面では、絵をまるごと縮める（pbn）。パソコンとスマホの横向き（LAND）では、ここの関数は1つも呼ばれない。 */
+function pbn(need, fn) { pb((Hb) => { const s = Math.min(1, Hb / need); if (s < 1) { g.translate(PBW * (1 - s) / 2, 0); g.scale(s, s); } fn(); }); }
+/* 年表（台紙の単位）：線の高さ y。上に 70、下に 24 使う。売る年の印（TLM）は 100万円 の札と同じ高さに置く */
+function timeP(y, a) { const x0 = 36, x1 = 436, n = 5; g.globalAlpha = a; g.strokeStyle = '#dbe7f7'; g.lineWidth = 3; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke();
+  for (let i = 0; i <= n; i++) { const x = lerp(x0, x1, i / n); g.fillStyle = '#dbe7f7'; circ(x, y, 4); g.fill(); txt(i ? i + '年目' : 'いま', x, y + 7, 16, DIM, 'center', 600);
+    if (i > 0) { g.fillStyle = YEL; circ(x, y - 20, 14); g.fill(); txt('3万', x, y - 29, 16, NAVY, 'center', 800); } }
+  g.fillStyle = GRN; rr(x1 - 42, y - 70, 84, 30, 8); g.fill(); txt('100万円', x1, y - 65, 20, '#0b2a20', 'center', 800);
+  txt('毎年の利息', lerp(x0, x1, .3), y - 58, 16, YEL, 'center', 700);
+  if (P.qyr > .05 && TLM) { const xm = lerp(x0, x1, P.qyr / n); g.strokeStyle = RED; g.setLineDash([5, 5]); g.lineWidth = 2; g.beginPath(); g.moveTo(xm, y - 48); g.lineTo(xm, y + 4); g.stroke(); g.setLineDash([]);
+    g.font = '800 16px ' + FONT; const tw = g.measureText(TLM).width, far = xm > x1 - 60; txt(TLM, far ? x1 - 50 - tw : clamp(xm - tw / 2, 4, 340 - tw), y - 68, 16, RED, 'left', 800); }
+  g.globalAlpha = 1; }
+/* 1節の5段目：借用書の帯の下に、利息と元本が戻るやり取り（横向きと同じ絵を 0.8 倍で）と、年表を置く */
+function exBackP(t, al) { g.save(); g.translate(0, 72 - 86 * .8); g.scale(.8, .8); const yF = 224, xa = 100, xb = 450, y1 = 132, y2 = 198; g.globalAlpha = al;
+  g.strokeStyle = 'rgba(219,231,247,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(8, yF); g.lineTo(617, yF); g.stroke();
+  pawn(55, yF - 4, 36, '#dbe7f7');
+  [['国', 485, 78, 0], ['自治体', 543, 66, 1], ['会社', 598, 84, 2]].forEach(([nm, cx, hh, kk]) => { house(cx, yF - 6, 40, hh, kk); txt(nm, cx, yF - 6 - hh - (kk === 1 ? 36 : 25), 20, '#fff', 'center', 800); });
+  lane(xa, xb, y1, -1, YEL); txt('利息と元本が戻る', (xa + xb) / 2, y1 - 46, 20, YEL, 'center', 700);
+  for (let i = 0; i < 4; i++) { const u = (t * .1 + (i ? .16 + i * .17 : 0)) % 1, x = lerp(xb - 40, xa + 40, u);   /* 縦向きは道が短いので、流れる玉は3つ（5年ぶんの玉は下の年表にある）。お金と玉が重ならない間を空ける */ g.globalAlpha = al * Math.min(1, u * 8, (1 - u) * 8); if (i) coin(x, y1); else money(x, y1); }
+  g.globalAlpha = al; lane(xa, xb, y2, -1, '#e8cf8a'); txt('借用書（債券）を出す', (xa + xb) / 2, y2 - 42, 20, '#f3e2b0', 'center', 700);
+  miniCert(lerp(xb - 45, xa + 45, ez(Math.min(P.qf1, P.qf2), .5, 1)) - 32, y2 - 22, 64, 44);
+  g.restore(); timeP(256, al); }
+/* 2節の値札の段：値札 → 売るときの値段の札 → 年表 を縦に並べる（横向きと同じ3つ） */
+function tagsP(t) { const a = P.qtg; if (a < .01) return;
+  pbn(258, () => { const w = 240, h = 52;
+    g.globalAlpha = a; card(4, 2, w, h, 'rgba(43,108,205,.95)'); txt('あなたの債券', 16, 20, 16, '#dbe7f7', 'left', 600); txt('年3%', 4 + w - 14, 10, 32, '#fff', 'right', 900);
+    if (P.qup > .01) { g.globalAlpha = a * P.qup; const x = 496 - w; card(x, 2, w, h, 'rgba(49,153,122,.95)'); txt('新しい募集', x + 12, 20, 16, '#e3fff4', 'left', 600); txt('年4%', x + w - 14, 10, 32, '#fff', 'right', 900);
+      txt('世の中の金利が上がった', 250, 58, 16, YEL, 'center', 700); }
+    const s3 = ez(P.qyr, 2, 3) * (1 - ez(P.qyr, 3.5, 4.5)) * clamp(P.qtm, 0, 1), pa = clamp(Math.max(P.qpr, s3), 0, 1);   /* 3年目へ進む段は、横向きと同じく、売るときの値段を問う札を出す */
+    if (pa > .01) { g.globalAlpha = a * pa; const px = 60, pw = 380, py = 80, ph = 76; card(px, py, pw, ph, '#fffdf4', YEL, 2.5);
+      txt(P.qwb > .5 ? '市場で売るときの値段' : '3年目に売るときの値段', px + 14, py + 8, 16, '#5a4a32', 'left', 700);
+      if (P.qwb > .5) { g.strokeStyle = BLU; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= 40; i++) { const xx = px + 16 + (pw - 32) * i / 40, yy = py + ph * .64 + Math.sin(i * .7 + t * 1.6) * 9 + Math.sin(i * .23) * 6; i ? g.lineTo(xx, yy) : g.moveTo(xx, yy); } g.stroke(); txt('日々動く（模式）', px + pw - 14, py + 8, 16, '#8a7a5a', 'right', 600); }
+      else { const k = P.qdn, s = k > .5 ? '97万円' : P.qsame > .5 ? 'ほぼ100万円' : '100万円？', col = k > .5 ? '#C9401C' : NAVY;
+        txt(s, px + pw / 2, py + 28, 40, col, 'center', 900);
+        if (k > .5) { g.globalAlpha = a * pa * k; txt('100万円', px + 16, py + 44, 18, '#8a7a5a', 'left', 700); g.font = '700 18px ' + FONT; cross(px + 14, py + 54, px + 18 + g.measureText('100万円').width, py + 54, '#C9401C', 2); }
+        if (P.qsame > .5) txt('金利が年3%のまま', px + pw - 14, py + 8, 16, '#5a4a32', 'right', 600); } }
+    if (P.qtm > .01) timeP(230, a * clamp(P.qtm, 0, 1)); });
+  g.globalAlpha = 1; }
+/* 比べる表：横向きと同じ、見出し＋4行の表。いま説明している行が点き、先の行は薄い */
+function wrapP(s, w, size, weight) { g.font = weight + ' ' + size + 'px ' + FONT; const lines = []; let line = '';
+  for (const ch of [...s]) { if (g.measureText(line + ch).width > w) { lines.push(line); line = ch; } else line += ch; } if (line) lines.push(line); return lines; }
+const CMPX = [2, 84, 292], CMPW = [78, 204, 206], CMPL = 19;
+function cmpRows() { return CMP.map((r, i) => { const ls = r.map((s, c) => wrapP(s, CMPW[c] - 12, 16, c === 0 || i === 0 ? 800 : 700)); return {ls, h: Math.max(...ls.map(l => l.length)) * CMPL + 3}; }); }
+function cmpP() { const a = P.qtb, q = P.qtr; if (a < .01) return; const rows = cmpRows(), need = rows.reduce((s, r) => s + r.h + 1, 2);
+  pbn(need, () => { let y = 2;
+    rows.forEach((row, i) => { const cur = i > 0 && Math.abs(q - i) < .5, seen = i === 0 || q > i - .5;
+      row.ls.forEach((ls, c) => { g.globalAlpha = a * (seen ? 1 : .35);
+        const fill = i === 0 ? ['rgba(12,24,48,.85)', 'rgba(43,108,205,.95)', 'rgba(49,153,122,.95)'][c] : cur ? 'rgba(255,253,244,.97)' : 'rgba(12,24,48,.85)';
+        card(CMPX[c], y, CMPW[c], row.h, fill, cur ? YEL : 'rgba(159,183,216,.5)', cur ? 2.5 : 1.5);
+        const y0 = y + (row.h - ls.length * CMPL) / 2 + (CMPL - 16) / 2;
+        ls.forEach((l, k) => txt(l, CMPX[c] + 6, y0 + k * CMPL, 16, i === 0 ? '#fff' : cur ? NAVY : '#fff', 'left', c === 0 || i === 0 ? 800 : 700)); });
+      y += row.h + 1; }); });
+  g.globalAlpha = 1; }
+window.__cmpNeed = () => cmpRows().reduce((s, r) => s + r.h + 1, 2);
+/* 6節の円で数える段：3つの札（説明の行つき）→ 円で数えた棒 → 下の道 を縦に並べる（横向きと同じ3つ） */
+function gatesFxP() { const a = P.qgt; if (a < .01) return;
+  const G = [['1', '満期まで持つ', '途中で売ると、97万円（2節の例）', P.qk1], ['2', '発行体が続き、払える', '倒産すると、100万円のうち30万円（例）', P.qk2], ['3', '発行された通貨で数える', '円高で、円で数えた元本が目減りする', P.qk3]];
+  pbn(280, () => { const x = 4, w = 492, rh = 50, gap = 5;
+    G.forEach(([no, h, d, k], i) => { const y = 2 + i * (rh + gap), on = clamp(k, 0, 1), hot = on > .7, dv = ez(on, .3, .7);
+      g.globalAlpha = a; card(x, y, w, rh, hot ? 'rgba(255,253,244,.97)' : 'rgba(12,24,48,.85)', hot ? YEL : 'rgba(159,183,216,.6)', hot ? 2.5 : 1.5);
+      g.fillStyle = hot ? YEL : '#2B5FA8'; circ(x + 24, y + rh / 2, 15); g.fill(); txt(no, x + 24, y + rh / 2 - 11, 20, hot ? NAVY : '#fff', 'center', 900);
+      txt(h, x + 48, y + lerp(16, 5, dv), 18, hot ? NAVY : '#fff', 'left', 800);
+      if (dv > .01) { g.globalAlpha = a * dv; txt(d, x + 48, y + 28, 16, hot ? '#7a2a14' : '#dbe7f7', 'left', 700); } });
+    g.globalAlpha = a * clamp(P.qfx, 0, 1); const y0 = 168, full = 300;
+    txt('満期に戻る1万ドルを、円で数えると', x, y0, 16, YEL, 'left', 700);
+    [['1ドル150円', 150, BLU], ['1ドル120円', 120, RED]].forEach(([lab, v, col], i) => { const yy = y0 + 22 + i * 25; txt(lab, x, yy + 2, 16, '#dbe7f7', 'left', 700);
+      g.fillStyle = col; rr(x + 104, yy, full * v / 150, 20, 4); g.fill(); txt(v + '万円', x + 110 + full * v / 150, yy + 1, 18, '#fff', 'left', 800); });
+    const yr = 262, xs = [104, 180, 250, 320, 392], q = clamp(P.qrd, 0, 4), i0 = Math.min(3, Math.floor(q)), stop = i => i === 0 || i === 4 ? xs[i] : xs[i] - 30, bx = lerp(stop(i0), stop(i0 + 1), q - i0);
+    g.globalAlpha = a; g.lineCap = 'round'; g.lineWidth = 4; g.strokeStyle = GRN; g.beginPath(); g.moveTo(xs[0], yr); g.lineTo(bx, yr); g.stroke();
+    g.strokeStyle = 'rgba(219,231,247,.6)'; g.lineWidth = 2.5; g.setLineDash([3, 9]); g.beginPath(); g.moveTo(bx, yr); g.lineTo(xs[4], yr); g.stroke(); g.setLineDash([]);
+    for (let i = 1; i <= 3; i++) { const st = q > i + .5 ? 2 : Math.abs(q - i) <= .5 ? 1 : 0; g.fillStyle = st === 1 ? YEL : st === 2 ? GRN : '#2B5FA8'; circ(xs[i], yr, 13); g.fill(); txt(String(i), xs[i], yr - 10, 19, st === 0 ? '#fff' : NAVY, 'center', 900); }
+    g.fillStyle = '#fff'; circ(bx, yr, 9); g.fill(); g.fillStyle = GRN; circ(bx, yr, 5.5); g.fill();
+    txt('債券を買う', 6, yr - 9, 16, '#dbe7f7', 'left', 700); txt('元本が戻る', 494, yr - 9, 16, q > 3.5 ? GRN : DIM, 'right', 800); });
+  g.globalAlpha = 1; }
+
 function certP(t) { const a = P.qce, ex = clamp(P.qex, 0, 1), tm = clamp(P.qtm, 0, 1), m = Math.max(ex, tm); if (a < .01 || m < .01) return;
-  pb(() => { g.globalAlpha = a * m; const x = 6, w = 488, lo = tm > .5, h = lo ? 66 : 84, y = 2;   /* 年表の段は帯を低くして、下の年表に場所をゆずる */
+  pbn(tm > .5 && ex > .5 ? 284 : 1, () => { g.globalAlpha = a * m; const x = 6, w = 488, lo = tm > .5, h = lo ? 66 : 84, y = 2;   /* 年表の段は帯を低くして、下の年表に場所をゆずる */
     card(x, y, w, h, '#fffaf0', '#c9a24a', 2.5);
     if (lo) { txt('借用書（債券）', x + 12, y + 4, 16, '#5a3c12', 'left', 800); txt('説明のための例', x + w - 12, y + 4, 16, '#8a7a5a', 'right', 600); }
     else { txt('借用書（債券）', x + w / 2, y + 5, 20, '#5a3c12', 'center', 800); txt('説明のための例', x + 12, y + 8, 16, '#8a7a5a', 'left', 600);
@@ -835,7 +918,7 @@ function certP(t) { const a = P.qce, ex = clamp(P.qex, 0, 1), tm = clamp(P.qtm, 
     const yl = y + (lo ? 23 : 33), yv = y + (lo ? 41 : 52);
     [['貸したお金（元本）', '100万円'], ['利息', '毎年3万円'], ['返す日（満期）', '5年後']].forEach((r, i) => { const cx = x + w * (i * 2 + 1) / 6; txt(r[0], cx, yl, 16, '#5a4a32', 'center', 600); txt(r[1], cx, yv, lo ? 21 : 25, NAVY, 'center', 800);
       if (i) { g.strokeStyle = 'rgba(90,60,18,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x + w * i / 3, yl); g.lineTo(x + w * i / 3, y + h - 6); g.stroke(); } });
-    if (ex < .01 || lo) return;   /* 年表の段は、利息と元本が戻る様子を下の年表が見せる */
+    if (ex < .01) return; if (lo) return exBackP(t, a * ex);   /* 年表の段は、利息と元本が戻る様子を下の年表が見せる */
     const yF = 224, xa = 96, xb = 350, y1 = 132, y2 = 198; g.globalAlpha = a * ex;
     g.strokeStyle = 'rgba(219,231,247,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(6, yF); g.lineTo(494, yF); g.stroke();
     txt('投資家（お金を貸す側）', 6, yF + 5, 16, DIM, 'left', 700); txt('発行体（お金を借りる側）', 494, yF + 5, 16, DIM, 'right', 700);
@@ -894,7 +977,7 @@ function cert(t) { if (!LAND) { certOld(t); return certP(t); } const a = P.qce, 
   g.globalAlpha = 1; }
 
 /* 6節：3つの前提の札（字は札の上下の真ん中）と、下の道。道の関門の番号は札と同じ。玉は説明している関門の手前で止まり、その先は点線 */
-function gates(t) { if (!LAND) { gatesOld(t); return roadP(); } const a = P.qgt; if (a < .01) return; const x = 40, w = lerp(920, 600, clamp(P.pgin, 0, 1)), rh = 78, gap = 22;   /* ペンギンが横に立つ段は、札を縮めて吹き出しの場所を空ける */
+function gates(t) { if (!LAND) { if (P.qfx > .5) return gatesFxP(); gatesOld(t); return roadP(); } const a = P.qgt; if (a < .01) return; const x = 40, w = lerp(920, 600, clamp(P.pgin, 0, 1)), rh = 78, gap = 22;   /* ペンギンが横に立つ段は、札を縮めて吹き出しの場所を空ける */
   const G = [['1', '満期まで持つ', '途中で売ると、97万円（2節の例）', P.qk1], ['2', '発行体が続き、払える', '倒産すると、100万円のうち30万円（例）', P.qk2], ['3', '発行された通貨で数える', '円高で、円で数えた元本が目減りする', P.qk3]];
   G.forEach(([no, h, d, k], i) => { const y = 8 + i * (rh + gap), on = clamp(k, 0, 1), hot = on > .7, dv = ez(on, .3, .7);
     g.globalAlpha = a; card(x, y, w, rh, hot ? 'rgba(255,253,244,.97)' : 'rgba(12,24,48,.85)', hot ? YEL : 'rgba(159,183,216,.6)', hot ? 2.5 : 1.5);
@@ -971,6 +1054,7 @@ function cellText(s, x, y, w, h, size, color, weight) {   /* 四角の中で折�
   for (const ch of [...s]) { if (g.measureText(line + ch).width > w) { lines.push(line); line = ch; } else line += ch; } if (line) lines.push(line);
   const lh = size * 1.35, y0 = y + (h - lines.length * lh) / 2 + (lh - size) / 2; lines.forEach((l, i) => txt(l, x, y0 + i * lh, size, color, 'left', weight)); }
 function cmpTable(t) { const a = P.qtb, q = P.qtr; if (a < .01) return;
+  if (!LAND) return cmpP();
   if (!LAND) {   /* スマホの縦向き：絵の場所が低いので、欄の見出しと、いま説明している1行だけを出す */
     const r = CMP[clamp(Math.round(q), 1, 4)], x = Z.x, w = Z.w, cw = (w - 6) / 2, y0 = Z.y + 4, y1 = y0 + 50, y2 = y1 + 34, h2 = Math.min(88, Z.y + Z.h - y2 - 2); g.globalAlpha = a;
     [0, 1].forEach(c => { const cx = x + c * (cw + 6); card(cx, y0, cw, 44, ['rgba(43,108,205,.95)', 'rgba(49,153,122,.95)'][c]); cellText(CMP[0][c + 1], cx + 7, y0, cw - 14, 44, 11.5, '#fff', 800); });
@@ -1028,7 +1112,7 @@ function show(instant) {
   const kq = (KS[bi] || [])[st] || ['watch', 'rest', null];
   Object.assign(T, KFACE[kq[0]] || {}, kq[1] === 'point' && !LAND ? {kpx: 1.5, kpy: -3.3} : KPOSE[kq[1]] || {});   /* スマホの「指す」は上の絵を指す */
   const tn = TINT[bi] || TINT[0]; T.cam = (CAMS[bi] || [])[st] || 0; T.bzl = BZL[bi] || 0; T.tr = tn[0]; T.tg = tn[1]; T.tb = tn[2];
-  T.sd = b.sd || 0; if (s.cf) Object.assign(CFT, s.cf); TLM = s.tm || (LAND && s.tml) || '';
+  T.sd = b.sd || 0; if (s.cf) Object.assign(CFT, s.cf); TLM = s.tm || s.tml || '';
   { const gs = Object.assign({}, b.g || {}, s.g || {}), zz = gs.z || (b.sd ? [.02, 0, .44, 1] : [.54, 0, .44, 1]);
     T.zx0 = zz[0]; T.zy0 = zz[1]; T.zw0 = zz[2]; T.zh0 = zz[3];
     const zc = zz[0] + zz[2] / 2, pos = (v, d) => !v ? d : v.z ? [zz[0] + zz[2] * v.x, zz[1] + zz[3] * v.y, v.s, v.f] : v;
@@ -1042,6 +1126,7 @@ function show(instant) {
   const all = B.reduce((a, x) => a + x.steps.length, 0), done = B.slice(0, bi).reduce((a, x) => a + x.steps.length, 0) + st + 1;
   $('#pg').textContent = '場面 ' + (bi + 1) + '/' + B.length + ' ・ ' + done + '/' + all;
   target();
+  { const zn = !LAND && s.zn || 0; if (zn) { const sh = Lt.bot - Lt.top, rb0 = Math.min(sh * .07, W * .095); T.zq = 1; T.zfp = Math.min(zn * W * .92 / 500 + 4, sh - rb0 * .7 * 4.1 - 44) / sh; } }   /* 要る高さのある段：絵の枠をその高さにする（2人と吹き出しの場所は残す） */
   if (instant) { OBS.t = []; OBS.p = []; Object.assign(P, T); Lc.top = Lt.top; Lc.bot = Lt.bot; stepT0 = -1e9; } else stepT0 = NOW;
   layout(); geom(); buildLabs(s); placeSrc(); placeLabs();
   deck.step = st;
